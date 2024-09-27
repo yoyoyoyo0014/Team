@@ -166,7 +166,7 @@ CREATE TABLE `point_History` (
 	`ph_type`	varchar(2)	NOT NULL,
 	`ph_content`	varchar(255)	NOT NULL,
 	`ph_me_id`	varchar(15)	NOT NULL,
-	`bu_num`	varchar(255)	NOT NULL,
+	`ph_bu_num`	varchar(255)	NOT NULL,
 	`ph_point`	int	NOT NULL
 );
 
