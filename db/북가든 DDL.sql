@@ -61,7 +61,7 @@ CREATE TABLE `report` (
 CREATE TABLE `report_type` (
 	`rt_num`	int primary key auto_increment	NOT NULL,
 	`rt_name`	varchar(20)	NOT NULL,
-	`rt_category`	varchar(20)	NOT NULL
+	`rt_category`	varchar(20)	NULL
 );
 
 CREATE TABLE `bk_genre` (
