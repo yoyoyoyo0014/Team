@@ -46,7 +46,7 @@ CREATE TABLE `book` (
 	`bk_score`	double	NULL,
 	`bk_reviewCount`	int	NULL,
 	`bk_totalPage`	int	NOT NULL,
-	`bk_ agelimit`	int	NOT NULL
+	`bk_agelimit`	int	NOT NULL
 );
 
 CREATE TABLE `member_state` (
