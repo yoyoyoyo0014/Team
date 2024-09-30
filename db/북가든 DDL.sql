@@ -9,6 +9,7 @@ CREATE TABLE `member` (
 	`me_nickname`	varchar(8) unique	NOT NULL,
 	`me_pw`	varchar(15)	NOT NULL,
 	`me_email`	varchar(50) unique	NOT NULL,
+	`me_adult`	varchar(5)	NOT NULL,
 	`me_authority`	varchar(10)	NOT NULL,
 	`me_fail`	int	NULL,
 	`me_cookie`	varchar(255)	NULL,
