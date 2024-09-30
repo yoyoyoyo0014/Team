@@ -7,10 +7,8 @@ USE BookGarden;
 CREATE TABLE `member` (
 	`me_id`	varchar(15) primary key	NOT NULL,
 	`me_nickname`	varchar(8) unique	NOT NULL,
-	`me_pw`	varchar(15)	NULL,
+	`me_pw`	varchar(15)	NOT NULL,
 	`me_email`	varchar(50) unique	NOT NULL,
-	`me_address`	varchar(255)	NOT NULL,
-	`me_postCode`	varchar(7)	NOT NULL,
 	`me_authority`	varchar(10)	NOT NULL,
 	`me_fail`	int	NULL,
 	`me_cookie`	varchar(255)	NULL,
@@ -73,21 +71,17 @@ CREATE TABLE `bk_genre` (
 CREATE TABLE `cart` (
 	`ca_num`	int primary key auto_increment	NOT NULL,
 	`ca_bk_num`	int	NOT NULL,
-	`ca_me_id`	varchar(15)	NOT NULL,
-	`ca_amount`	int	NOT NULL
+	`ca_me_id`	varchar(15)	NOT NULL
 );
 
 CREATE TABLE `buy` (
 	`bu_num`	varchar(255) primary key	NOT NULL,
 	`bu_me_id`	varchar(15)	NOT NULL,
-	`bu_deliver`	varchar(10)	NOT NULL,
 	`bu_state`	varchar(5)	NOT NULL,
 	`bu_payment`	varchar(15)	NOT NULL,
 	`bu_total`	int	NOT NULL,
 	`bu_ori_total`	int	NOT NULL,
-	`bu_date`	datetime	NOT NULL,
-	`bu_address`	varchar(255)	NULL,
-	`bu_postCode`	varchar(7)	NULL
+	`bu_date`	datetime	NOT NULL
 );
 
 CREATE TABLE `post` (
@@ -116,7 +110,7 @@ CREATE TABLE `book_file` (
 CREATE TABLE `writer` (
 	`wr_num`	int primary key auto_increment	NOT NULL,
 	`wr_name`	varchar(50)	NOT NULL,
-	`wr_profile`	text	NOT NULL
+	`wr_profile`	text	NULL
 );
 
 CREATE TABLE `achievenent` (
@@ -152,8 +146,7 @@ CREATE TABLE `writer_Type` (
 CREATE TABLE `buy_List` (
 	`bl_num`	varchar(255)	NOT NULL,
 	`bl_bk_num`	int	NOT NULL,
-	`bl_me_id`	varchar(15)	NOT NULL,
-	`bl_amount`	int	NOT NULL
+	`bl_me_id`	varchar(15)	NOT NULL
 );
 
 CREATE TABLE `point_Rate` (
@@ -332,7 +325,7 @@ REFERENCES `member` (
 );
 
 ALTER TABLE `point_History` ADD CONSTRAINT `FK_buy_TO_point_History_1` FOREIGN KEY (
-	`bu_num`
+	`ph_bu_num`
 )
 REFERENCES `buy` (
 	`bu_num`
