@@ -1,23 +1,70 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+*.class
+.classpath
+.project
+.settings/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+java_jik/.gitignore
 
-# testing
-/coverage
+MANIFEST.MF
 
-# production
-/build
+*.jar
 
-# misc
+# Miscellaneous
+*.java.hsp
+*.sonarj
+*.sw*
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+build.sh
+integration-repo
+ivy-cache
+argfile*
+activemq-data/
+classes/
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Log files
+jxl.log
+jmx.log
+derby.log
+
+# Gradle artifacts
+.gradle
+.gradletasknamecache
+/build
+buildSrc/build
+/spring-*/build
+/framework-*/build
+/integration-tests/build
+/src/asciidoc/build
+spring-test/test-output/
+
+# Maven artifacts
+/target/
+
+# Eclipse artifacts, including WTP generated manifests
+bin
+.classpath
+.project
+.settings
+.springBeans
+spring-*/src/main/java/META-INF/MANIFEST.MF
+
+# IDEA artifacts and output dirs
+*.iml
+*.ipr
+*.iws
+.idea
+out
+test-output
+atlassian-ide-plugin.xml
+
+# VS Code
+.vscode/
+
+cached-antora-playbook.yml
+
+node_modules
+
+test/
+target/
+
+config.properties
