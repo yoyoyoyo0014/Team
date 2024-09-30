@@ -9,10 +9,11 @@ CREATE TABLE `member` (
 	`me_nickname`	varchar(8) unique	NOT NULL,
 	`me_pw`	varchar(15)	NULL,
 	`me_email`	varchar(50) unique	NOT NULL,
+	`me_phone`	int	NULL,
 	`me_address`	text	NULL,
 	`me_birth`	date	NOT NULL,
-	`me_adult`	boolean	NOT NULL,
-	`me_authority`	varchar(10)	NOT NULL,
+	`me_adult`	int	NOT NULL default '0',
+	`me_authority`	varchar(10)	NOT NULL default 'user',
 	`me_fail`	int	NULL,
 	`me_cookie`	varchar(255)	NULL,
 	`me_report`	int	NULL,
@@ -27,7 +28,7 @@ CREATE TABLE `review` (
 	`re_num`	int primary key auto_increment	NOT NULL,
 	`re_content`	text	NOT NULL,
 	`re_bk_num`	int	NOT NULL,
-	`re_star`	int	NOT NULL,
+	`re_star`	double	NOT NULL,
 	`re_date`	datetime	NOT NULL,
 	`re_me_id`	varchar(15)	NOT NULL
 );
@@ -35,7 +36,7 @@ CREATE TABLE `review` (
 CREATE TABLE `book` (
 	`bk_num`	int primary key auto_increment	NOT NULL,
 	`bk_name`	varchar(50)	NOT NULL,
-	`bk_state`	int	NOT NULL,
+	`bk_state`	varchar(4)	NOT NULL,
 	`bk_date`	datetime	NOT NULL,
 	`bk_sg_num`	int	NOT NULL,
 	`bk_plot`	longtext	NOT NULL,

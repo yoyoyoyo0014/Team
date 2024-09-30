@@ -10,7 +10,7 @@
 <h1>
 	Hello world!  
 </h1>
-<button onclick="requestPay()">결제하기</button>
+<button onclick="requestPay()">카카오톡 결제하기</button>
 <script>
 IMP.init("imp14397622");
 
