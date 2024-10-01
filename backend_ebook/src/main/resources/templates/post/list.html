@@ -17,7 +17,6 @@
       <tr>
         <th>NO</th>
         <th>제목</th>
-        <th>내용</th>
         <th>작성일</th>
       </tr>
       <tr th:if="${item.co_num == 2}">
@@ -31,7 +30,6 @@
         <td style="text-align: left;">
         	<a th:text="${item.po_title}"></a>
         </td>
-        <td th:text="${item.po_content}"></td>
         <td th:text="${item.po_date}"></td>
       </tr>
       <tr th:if="${item.co_num == 2}">
