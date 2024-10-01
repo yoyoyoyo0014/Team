@@ -16,7 +16,9 @@ const App = () => {
 	return(
 		<div className="fix-layout">
       <Header />
-      <Home />
+      <main id="body">
+        <Home />
+      </main>
       <Footer />
     </div>
 	);

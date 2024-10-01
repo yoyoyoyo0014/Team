@@ -39,23 +39,42 @@ body {
 }
 
 /* form element */
-input[type="text"] {
+.form-wrapper {
+	padding: 3em;
+	display: flex;
+	flex-direction: column;
+	gap: 2.2em;
+}
+
+input[type="text"],
+input[type="password"] {
 	padding: 0.7em 1em;
 	background: var(--color-light-grey);
 	border: 0;
 	border-radius: 2em;
 	box-shadow: var(--box-inner-shadow);
 }
+.frm-input {width: 100%;}
 
-.frm-input.full {width: 100%;}
-
-.btn {cursor: pointer; line-height: 1;}
-.btn-basic,
-.btn-point {
-	padding: .8em;
-	border-radius: 1em;
-	box-shadow: var(--box-shadow);
+.input-item {position: relative; padding-left: 9em; display: flex; flex-direction: column; gap: 1em;}
+.input-item label {
+	position: absolute;
+	width: 9em;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
 }
+.input-item label span {
+	display: block;
+	color: var(--color-grey);
+	font-size: var(--small-font-size);
+}
+.input-item input {width: 100%;}
+
+.btn {cursor: pointer; line-height: 1; padding: .8em; border-radius: 2em; box-shadow: var(--box-shadow);}
+.btn.small {font-size: var(--small-font-size);}
+.btn.big {font-size: var(--big-font-size);}
+.btn.full {width: 100%;}
 
 .btn-basic {background: var(--color-light-grey);}
 .btn-point {background: var(--color-brand); color: var(--color-bak);}
@@ -65,10 +84,17 @@ input[type="text"] {
 	font-family: var(--icon-font-family);
 	font-size: var(--font-size);
 }
+.btn.ico.search::before {content: '\f002';}
 
-.btn.ico.search::before {
-	content: '\f002';
+hr {
+	height: 0;
+	border: 0;
+	border-top: 1px solid var(--color-grey);
 }
+
+.txt-left {text-align: left;}
+.txt-right {text-align: right;}
+.txt-center {text-align: center;}
 
 /* search form */
 .search-box {position: relative; width: 70%; float: right;}
@@ -82,6 +108,7 @@ input[type="text"] {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	box-shadow: none;
 }
 
 /* header */
@@ -94,7 +121,7 @@ header {
 #logo {float: left;}
 
 .menu {position: relative; margin-top: 5em; clear: both;}
-.menu .cate-toggle-btn {position: absolute; top: 0; left: 0;}
+.menu .cate-toggle-btn {position: absolute; top: 0; left: 0; border-radius: 1em;}
 
 .gnb {padding: 0 5em 0 4em; line-height: 2.8em; display: flex; justify-content: space-between;}
 .gnb .site-menu ul li {float: left; padding-right: 1.5em;}
@@ -113,12 +140,16 @@ header {
 .main {height: 10000px; clear: both;}
 
 /* footer */
-
 footer {
 	position: absolute;
-	top: 100%;
 	left: 0;
 	width: 100%;
 	height: 200px;
 	background: var(--color-light-grey);
+}
+
+/* page element */
+.page-title {
+	font-size: 1.8em;
+	padding-bottom: 1em;
 }
