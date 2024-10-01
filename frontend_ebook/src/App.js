@@ -18,7 +18,7 @@ function App() {
   const [str, setStr] = useState('');
 
     useEffect(() => {
-        fetch('/api/api/test')
+        fetch('/api/test')
             .then((res) => res.text())
             .then(res=>{
               setStr(res);
