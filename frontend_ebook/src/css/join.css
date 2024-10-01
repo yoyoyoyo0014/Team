@@ -1,0 +1,21 @@
+@charset 'utf-8';
+
+.join-form form {
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.input-item.postal {
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+}
+
+.join-form button[type="submit"] {
+	font-weight: 900;
+	margin: 0 auto;
+	display: block;
+	padding-left: 5em;
+	padding-right: 5em;
+	margin-top: 1.5em;
+}
