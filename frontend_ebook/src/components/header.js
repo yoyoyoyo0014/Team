@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import Input from "./input";
-import Button from "./button";
+import { Input } from "./form/input";
+import Button from "./form/button";
 
 const Header = () => {
 	return(
 		<header>
-			<Link to={"/"} exact><h1 id="logo">Book<br/>Garden</h1></Link>
+			<Link to="/" exact><h1 id="logo">Book<br/>Garden</h1></Link>
 				
 			<div className="search-box">
 				<form name="search">
@@ -36,6 +36,12 @@ const Header = () => {
 							<li><Link to="/login">로그인</Link></li>
 							<li><Link to="/join">회원가입</Link></li>
 						</ul>
+
+						{/* <ul>
+							<li><Link to="/cart">장바구니</Link></li>
+							<li><Link to="/mypage" exact>마이페이지</Link></li>
+							<li><Link to="/logout">로그아웃</Link></li>
+						</ul> */}
 					</div>
 				</div>
 

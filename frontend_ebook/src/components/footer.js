@@ -1,7 +1,9 @@
 const Footer = () => {
 	return(
 		<footer>
-			footer
+			<div className="fix-layout">
+				footer
+			</div>
 		</footer>
 	)
 }
