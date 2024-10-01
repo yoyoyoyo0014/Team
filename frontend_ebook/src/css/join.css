@@ -5,17 +5,40 @@
 	margin: 0 auto;
 }
 
-.input-item.postal {
+.address-input .inputs {
 	display: flex;
 	flex-direction: column;
 	gap: 1em;
 }
+.address-input .inputs div:first-of-type input {width: 40%;}
+.address-input .inputs div:first-of-type button {margin-left: 1em; padding: 1em .8em;}
 
-.join-form button[type="submit"] {
+.join-form .btn.submit {
 	font-weight: 900;
 	margin: 0 auto;
 	display: block;
 	padding-left: 5em;
 	padding-right: 5em;
 	margin-top: 1.5em;
+}
+
+.error {
+	position: absolute;
+	font-size: var(--small-font-size);
+	top: calc(100% + .4em);
+	margin-left: .4em;
+	color: var(--color-caution);
+}
+
+#wrap {
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0,0,0,.3);
+	z-index: 99;
 }

@@ -1,7 +1,8 @@
+import "../css/login.css";
+
 import { InputItem } from "../components/form/input";
 import Button from "../components/form/button";
-
-import "../css/login.css";
+import Check from "../components/form/check";
 
 const Login = () => {
 	return(
@@ -23,6 +24,7 @@ const Login = () => {
 					}
 				]} label="비번"/>
 
+				<Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"}/>
 				<Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"}></Button>
 
 				<div className="sns-login">
