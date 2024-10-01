@@ -12,14 +12,14 @@ const Login = () => {
 					{
 						id: "me_id",
 						name: "me_id",
-						type: "password"
+						type: "text"
 					}
 				]} label="아이디" />
 				<InputItem inputs={[
 					{
 						id: "me_pw",
 						name: "me_pw",
-						type: "text"
+						type: "password"
 					}
 				]} label="비번"/>
 
