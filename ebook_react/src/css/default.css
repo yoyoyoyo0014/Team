@@ -2,7 +2,7 @@
 
 * {margin: 0; padding: 0; box-sizing: border-box;}
 
-a {text-decoration: none;}
+a {text-decoration: none; color: inherit;}
 ul, ol, li {list-style: none;}
 input, select, textarea, button {font: inherit; color: inherit; border: 0;}
 input:focus, select:focus, textarea:focus, button:focus {outline: none;}
