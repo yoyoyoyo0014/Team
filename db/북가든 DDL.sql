@@ -97,7 +97,7 @@ CREATE TABLE `post` (
 	`po_date`	datetime	NOT NULL,
 	`po_co_num`	int	NOT NULL,
 	`po_view`	int	NULL,
-	`po_recommend`	int	NULL
+	`po_like`	int	NULL
 );
 
 CREATE TABLE `community` (
