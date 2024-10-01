@@ -1,23 +1,19 @@
 package kr.kh.ebook.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import kr.kh.ebook.dao.BookDAO;
-
-@Controller
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(originPatterns = "*")
 public class HomeController {
 
-	@Autowired
-	BookDAO bookDao;
-	
-	@GetMapping("/")
+	@GetMapping("/ex")
 	public String main() {
 		
-		System.out.println(bookDao.count());
-		
-		return "index";
+		return "Hello from Spring Boot!";
 	}
 	
 }

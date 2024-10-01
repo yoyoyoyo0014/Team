@@ -28,6 +28,7 @@
 		<url/>
 	</scm>
 	<properties>
+	 	 <spring-data-bom-scope>import</spring-data-bom-scope>
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
