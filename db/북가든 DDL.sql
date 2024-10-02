@@ -5,12 +5,16 @@ CREATE DATABASE BookGarden;
 USE BookGarden;
 
 CREATE TABLE `member` (
-	`me_id`	varchar(15) primary key	NOT NULL,
+	`me_id`	varchar(255) primary key	NOT NULL,
 	`me_nickname`	varchar(8) unique	NOT NULL,
-	`me_pw`	varchar(15)	NOT NULL,
+	`me_pw`	varchar(15)	NULL,
 	`me_email`	varchar(50) unique	NOT NULL,
-	`me_adult`	varchar(5)	NOT NULL,
-	`me_authority`	varchar(10)	NOT NULL,
+	`me_phone`	varchar(11)	NULL,
+	`me_address`	text	NULL,
+    `me_postalCode` varchar(5) NULL,
+	`me_birth`	date	NOT NULL,
+	`me_adult`	int	NOT NULL default '0',
+	`me_authority`	varchar(10)	NOT NULL default 'user',
 	`me_fail`	int	NULL,
 	`me_cookie`	varchar(255)	NULL,
 	`me_report`	int	NULL,
@@ -25,7 +29,7 @@ CREATE TABLE `review` (
 	`re_num`	int primary key auto_increment	NOT NULL,
 	`re_content`	text	NOT NULL,
 	`re_bk_num`	int	NOT NULL,
-	`re_star`	int	NOT NULL,
+	`re_star`	double	NOT NULL,
 	`re_date`	datetime	NOT NULL,
 	`re_me_id`	varchar(15)	NOT NULL
 );
@@ -33,9 +37,9 @@ CREATE TABLE `review` (
 CREATE TABLE `book` (
 	`bk_num`	int primary key auto_increment	NOT NULL,
 	`bk_name`	varchar(50)	NOT NULL,
-	`bk_state`	int	NOT NULL,
+	`bk_state`	varchar(4)	NOT NULL,
 	`bk_date`	datetime	NOT NULL,
-	`bk_bg_num`	int	NOT NULL,
+	`bk_sg_num`	int	NOT NULL,
 	`bk_plot`	longtext	NOT NULL,
 	`bk_price`	int	NOT NULL,
 	`bk_amount`	int	NOT NULL,
@@ -43,7 +47,8 @@ CREATE TABLE `book` (
 	`bk_isbn`	varchar(13)	NOT NULL,
 	`bk_score`	double	NULL,
 	`bk_reviewCount`	int	NULL,
-	`bk_totalPage`	int	NOT NULL
+	`bk_totalPage`	int	NOT NULL,
+	`bk_agelimit`	int	NOT NULL
 );
 
 CREATE TABLE `member_state` (
@@ -64,9 +69,9 @@ CREATE TABLE `report_type` (
 	`rt_category`	varchar(20)	NULL
 );
 
-CREATE TABLE `bk_genre` (
-	`bg_num`	int primary key auto_increment	NOT NULL,
-	`bg_name`	varchar(10)	NOT NULL
+CREATE TABLE `genre` (
+	`ge_num`	int primary key auto_increment	NOT NULL,
+	`ge_name`	varchar(10)	NULL
 );
 
 CREATE TABLE `cart` (
@@ -93,7 +98,7 @@ CREATE TABLE `post` (
 	`po_date`	datetime	NOT NULL,
 	`po_co_num`	int	NOT NULL,
 	`po_view`	int	NULL,
-	`po_recommend`	int	NULL
+	`po_like`	int	NULL
 );
 
 CREATE TABLE `community` (
@@ -164,6 +169,12 @@ CREATE TABLE `point_History` (
 	`ph_point`	int	NOT NULL
 );
 
+CREATE TABLE `secondgenre` (
+	`sg_num`	int primary key auto_increment	NOT NULL,
+	`sg_name`	varchar(10)	NULL,
+	`sg_parent`	int	NOT NULL
+);
+
 ALTER TABLE `member` ADD CONSTRAINT `FK_member_state_TO_member_1` FOREIGN KEY (
 	`me_ms_name`
 )
@@ -185,11 +196,11 @@ REFERENCES `member` (
 	`me_id`
 );
 
-ALTER TABLE `book` ADD CONSTRAINT `FK_bk_genre_TO_book_1` FOREIGN KEY (
-	`bk_bg_num`
+ALTER TABLE `book` ADD CONSTRAINT `FK_secondgenre_TO_book_1` FOREIGN KEY (
+	`bk_sg_num`
 )
-REFERENCES `bk_genre` (
-	`bg_num`
+REFERENCES `secondgenre` (
+	`sg_num`
 );
 
 ALTER TABLE `report` ADD CONSTRAINT `FK_member_TO_report_1` FOREIGN KEY (
@@ -330,5 +341,12 @@ ALTER TABLE `point_History` ADD CONSTRAINT `FK_buy_TO_point_History_1` FOREIGN K
 )
 REFERENCES `buy` (
 	`bu_num`
+);
+
+ALTER TABLE `secondgenre` ADD CONSTRAINT `FK_genre_TO_secondgenre_1` FOREIGN KEY (
+	`sg_parent`
+)
+REFERENCES `genre` (
+	`ge_num`
 );
 
