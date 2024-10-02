@@ -19,3 +19,8 @@
 	padding-right: 5em;
 	margin-top: 1.5em;
 }
+
+.error-message {
+	color: red;          /* 빨간색 텍스트 색상 */
+	margin-top: 8px;    /* 위쪽 여백 추가 */
+}

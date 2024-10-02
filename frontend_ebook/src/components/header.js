@@ -5,7 +5,7 @@ import Button from "./form/button";
 const Header = () => {
 	return(
 		<header>
-			<Link to="/" exact><h1 id="logo">Book<br/>Garden</h1></Link>
+			<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
 				
 			<div className="search-box">
 				<form name="search">
@@ -39,7 +39,7 @@ const Header = () => {
 
 						{/* <ul>
 							<li><Link to="/cart">장바구니</Link></li>
-							<li><Link to="/mypage" exact>마이페이지</Link></li>
+							<li><Link to="/mypage">마이페이지</Link></li>
 							<li><Link to="/logout">로그아웃</Link></li>
 						</ul> */}
 					</div>
