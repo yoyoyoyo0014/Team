@@ -79,6 +79,39 @@ input[type="email"]
 }
 .input-item input {width: 100%;}
 
+.check {position: relative;}
+.check input {display: none;}
+.check input + label {
+    position: relative;
+    padding-left: 2em;
+}
+.check input + label::before {
+    content: '';
+    position: absolute;
+    width: 1.5em;
+    height: 1.5em;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    border: 1px solid var(--color-grey);
+    box-sizing: border-box;
+}
+.check input:checked + label::before {
+    background: var(--color-brand);
+    box-shadow: var(--box-inner-shadow);
+    border: 0;
+}
+.check input + label::after {
+    content: '\f00c';
+    position: absolute;
+    font-family: var(--icon-font-family);
+    top: 0;
+    left: .25em;
+    color: var(--color-grey);
+}
+.check input:checked + label::after {color: var(--color-bak);}
+
+/* basic element */
 .btn {cursor: pointer; line-height: 1; padding: .8em; border-radius: 2em; box-shadow: var(--box-shadow);}
 .btn.small {font-size: var(--small-font-size);}
 .btn.big {font-size: var(--big-font-size);}
