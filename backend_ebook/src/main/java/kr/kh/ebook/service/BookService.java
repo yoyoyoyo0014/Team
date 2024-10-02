@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import kr.kh.ebook.dao.BookDAO;
 import kr.kh.ebook.model.vo.BookVO;
+import kr.kh.ebook.model.vo.ReviewVO;
+import kr.kh.ebook.pagination.BookCriteria;
 import kr.kh.ebook.pagination.PageMaker;
 import lombok.AllArgsConstructor;
 
@@ -15,13 +17,34 @@ import lombok.AllArgsConstructor;
 public class BookService {
 	private BookDAO bookDao;
 	
-	private int count() {
+	public int count() {
 		return bookDao.count();
 	}
 	
-	private List<BookVO> searchBookList(PageMaker pm){
+	public int searchBookCount(BookCriteria bookCri) {
+		return bookDao.searchBookCount(bookCri);
+	}//검색할 책 개수
+	
+	public List<BookVO> searchBookList(PageMaker pm){
 		return bookDao.searchBookList(pm);
+	}//검색 책
+	
+	public ReviewVO selectMyReview(String userId, int bookNum) {
+		
+		ReviewVO res = bookDao.selectMyReview(userId,bookNum);
+		
+		return res;
 	}
-	
-	
+
+	public int reviewCount(int bookNum) {
+		return bookDao.reviewCount(bookNum);
+	}
+
+	public List<ReviewVO> selectReviewList(PageMaker pm,int bookNum) {
+		return bookDao.selectReviewList(pm,bookNum);
+	}
+
+	public boolean insertReview(ReviewVO review) {
+		return bookDao.insertReview(review);
+	}
 }

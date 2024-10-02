@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class BookVO {
 	private int bk_num;
 	private String bk_name;
-	private int bk_state;
+	private String bk_state;
 	private Date bk_date;
 	private int bk_bg_num;
 	private String bk_plot;
