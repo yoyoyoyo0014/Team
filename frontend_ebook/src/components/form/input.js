@@ -17,7 +17,7 @@ const Input = ({id, type, placeholder, name, cls, change, value, readOnly}) => {
 }
 
 const InputItem = ({id, type, placeholder, name, cls, change, value, readOnly, label, notice, registerProps, error, style}) => {
-	
+
 	return(
 		<div className="input-item" style={style}>
 			<input

@@ -1,8 +1,8 @@
 const Main = () => {
 	return(
-		<main id="main">
+		<div>
 			this is main
-		</main>
+		</div>
 	)
 }
 

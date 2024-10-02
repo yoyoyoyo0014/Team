@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
 import { Input } from "./form/input";
 import Button from "./form/button";
+import { useState } from "react";
 
 const Header = () => {
+	let [keyword, setKeyword] = useState('');
 	return(
 		<header>
 			<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
 				
 			<div className="search-box">
 				<form name="search">
-					<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} />
+					<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={setKeyword}/>
 					<Button text={"검색"} cls={"ico btn search"}/>
 				</form>
 			</div>

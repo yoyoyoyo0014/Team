@@ -41,9 +41,6 @@ const Join = () => {
 	let inps = document.querySelectorAll('.input-item');
 	inps.forEach((inp, i) => inp.appendChild(span));
 
-	console.log('id: ' + id);
-	console.log('addr2: ' + addr2);
-
 	const submit = () => {
 		setMember((member) => {
 			return{
@@ -63,10 +60,7 @@ const Join = () => {
 	return(
 		<div className="join-form">
 			<h2 className="txt-center page-title">회원가입</h2>
-			<form name="join" onSubmit={(e) => {
-				e.preventDefault();
-				handleSubmit(submit);
-			}}>
+			<form name="join" onSubmit={handleSubmit(submit)}>
 				<fieldset className="form-wrapper">
 				<InputItem
 						id="me_id"
@@ -77,7 +71,7 @@ const Join = () => {
 							register("me_id", {
 								required: "아이디를 입력해주세요",
 								pattern: {
-									value: /^[0-9a-zA-Z_]{6,15}$/,
+									value: /^[0-9a-zA-Z_]{8,15}$/,
 									message: "아이디는 8~15자이며, 영문 혹은 숫자를 포함해야 합니다",
 								},
 							})
@@ -138,7 +132,7 @@ const Join = () => {
 					<InputItem
 						id="me_email"
 						name="me_email"
-						type="text"
+						type="email"
 						cls="frm-input"
 						registerProps={
 							register("me_email", {
@@ -183,7 +177,7 @@ const Join = () => {
 						label={"생년월일(8자리)"}/>
 				</fieldset>
 
-				<Button type={"button"} text={"가입하기"} cls={"btn btn-point big submit"} click={submit}></Button>
+				<Button type={"submit"} text={"가입하기"} cls={"btn btn-point big submit"}></Button>
 			</form>
 		</div>
 	);

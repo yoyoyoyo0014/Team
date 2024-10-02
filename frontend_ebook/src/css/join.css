@@ -11,7 +11,7 @@
 	gap: 1em;
 }
 .inputs div:first-of-type input {width: 40%;}
-.inputs div:first-of-type button {margin-left: 1em; padding: 1em .8em;}
+.inputs div:first-of-type button {margin-left: 1em;}
 
 .join-form .btn.submit {
 	font-weight: 900;

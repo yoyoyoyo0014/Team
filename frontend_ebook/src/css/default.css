@@ -12,7 +12,8 @@ fieldset {border: 0;}
 
 .hidden {display: none;}
 
-.fix-layout {width: 95vw; max-width: 1040px; margin: 0 auto; padding: 1em;}
+.fix-layout {margin: 0 auto; padding: 1em;}
+#root > .fix-layout {max-width: 1040px; padding-top: 0; padding-bottom: 0;}
 
-#root {min-height: calc(var(--vh) * 100);}
-main {padding: 7em 0;}
+#body {min-height: calc(var(--vh) * 100);}
+main {padding: 7em 0; clear: both;}
