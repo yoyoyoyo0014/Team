@@ -7,6 +7,12 @@
 		from book;
 	</select>
 	
+	<select id="selectBook">
+		select *
+		from book
+		where bk_num = #{bookNum}
+	</select>
+	
 	<select id="searchBookCount">
 		select count(*)
 		from book
@@ -60,8 +66,17 @@
     				 bk_state = '해외도서' and
     			</when>
     		</choose>
+    		
+    		<if  test ="pm.cri.category == 'popularity'">
+    			bk_date >=date_sub(now(),interval 1 year); and
+    		</if>
+    		
+    		
     		<if test ="pm.cri.genre != '0'">
     			 bk_sg_num = #{pm.cri.genre}
+  			</if>
+  			<if test = "pm.cri.search !=''">
+  				bk_name like concat('%',#{pm.cri.search}, '%')
   			</if>
   		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
 	    	
@@ -102,5 +117,17 @@
 		insert into review(re_content,re_bk_num,re_star,re_me_id)
 		value(#{review.re_content},#{review.re_bk_num},#{review.re_star},#{review.re_me_id})
 	</insert>
+	
+	<select id="selectReadBook">
+		select *
+		from book_list
+		where bl_bk_num = #{bookNum} and bl_me_id = #{userId}
+	</select>
+	
+	<update id="updateReadBook">
+		update book_list
+		set bl_nowPage = #{readBook.bl_nowPage}
+		where bl_me_id = #{readBook.bl_me_id} and bl_bk_num = #{readBook.bl_bk_num}
+	</update>
 
 </mapper>

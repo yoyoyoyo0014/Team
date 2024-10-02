@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import kr.kh.ebook.dao.BookDAO;
+import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.pagination.BookCriteria;
@@ -46,5 +47,17 @@ public class BookService {
 
 	public boolean insertReview(ReviewVO review) {
 		return bookDao.insertReview(review);
+	}
+
+	public BookListVO selectReadBook(int bookNum, String userId) {
+		return bookDao.selectReadBook(bookNum,userId);
+	}
+
+	public boolean updateReadBook(BookListVO readBook) {
+		return bookDao.updateReadBook(readBook);
+	}
+
+	public BookVO selectBook(int bookNum) {
+		return bookDao.selectBook(bookNum);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterVO;
@@ -30,4 +31,10 @@ public interface BookDAO {
 	List<ReviewVO> selectReviewList(@Param("pm")PageMaker pm,@Param("bookNum") int bookNum);
 
 	boolean insertReview(ReviewVO review);
+
+	BookListVO selectReadBook(@Param("bookNum")int bookNum, @Param("userId") String userId);
+
+	boolean updateReadBook(BookListVO readBook);
+
+	BookVO selectBook(int bookNum);
 }

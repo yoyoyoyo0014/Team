@@ -15,6 +15,7 @@ public class BookCriteria extends Criteria  {
 	
 	private int genre; //장르
 	
+	
 
 	public BookCriteria(int page, String category, String country, int genre) {
 		super(page);
