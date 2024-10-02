@@ -153,7 +153,9 @@ const Join = () => {
 						change={setEmail}
 						label={"이메일"}/>
 				</fieldset>
+
 				<hr/>
+
 				<fieldset className="form-wrapper">
 					<InputItem
 						id="me_phone"
