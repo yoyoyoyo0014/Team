@@ -46,6 +46,10 @@ body {
 	gap: 2.2em;
 }
 
+@media all and (max-width: 1280px) {
+	.form-wrapper {padding-left: 0; padding-right: 0;}
+}
+
 .frm-input,
 input[type="text"],
 input[type="password"] {
@@ -57,10 +61,10 @@ input[type="password"] {
 }
 .frm-input {width: 100%;}
 
-.input-item {position: relative; padding-left: 9em;}
+.input-item {position: relative; padding-left: 8rem;}
 .input-item label {
 	position: absolute;
-	width: 9em;
+	width: 8rem;
 	left: 0;
 	top: 50%;
 	transform: translateY(-50%);
@@ -69,6 +73,7 @@ input[type="password"] {
 	display: block;
 	color: var(--color-grey);
 	font-size: var(--small-font-size);
+	line-height: 1.2;
 }
 .input-item input {width: 100%;}
 

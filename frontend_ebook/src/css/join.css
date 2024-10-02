@@ -5,13 +5,13 @@
 	margin: 0 auto;
 }
 
-.address-input .inputs {
+.inputs {
 	display: flex;
 	flex-direction: column;
 	gap: 1em;
 }
-.address-input .inputs div:first-of-type input {width: 40%;}
-.address-input .inputs div:first-of-type button {margin-left: 1em; padding: 1em .8em;}
+.inputs div:first-of-type input {width: 40%;}
+.inputs div:first-of-type button {margin-left: 1em; padding: 1em .8em;}
 
 .join-form .btn.submit {
 	font-weight: 900;
@@ -26,7 +26,7 @@
 	position: absolute;
 	font-size: var(--small-font-size);
 	top: calc(100% + .4em);
-	margin-left: .4em;
+	left: 8.4rem;
 	color: var(--color-caution);
 }
 

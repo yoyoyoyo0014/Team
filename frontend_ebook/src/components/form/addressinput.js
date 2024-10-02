@@ -4,38 +4,48 @@ import DaumPostcode from 'react-daum-postcode';
 import Button from './button';
 import {Input, InputItem} from "./input";
 
-const AddressInput = (props) => {
+const AddressInput = ({change, item}) => {
 	let [code, setCode] = useState('');
 	let [addr1, setAddr1] = useState('');
 	let [addr2, setAddr2] = useState('');
-	
+	let [isOpen, setIsOpen] = useState(false);
 	const style = {
 		width: '400px',
 		height: '600px'
 	}
-	
-	function updateAddr() {
-		props.updateAddr(addr1 + ' ' + addr2);
-	}
-
-	const themeObj = {
-		bgColor: "", 			// 바탕 배경색
-		searchBgColor: "", 		// 검색창 배경색
-		contentBgColor: "", 		// 본문 배경색(검색결과,결과없음,첫화면,검색서제스트)
-		pageBgColor: "", 		// 페이지 배경색
-		textColor: "", 			// 기본 글자색
-		queryTextColor: "", 		// 검색창 글자색
-		postcodeTextColor: "", 	// 우편번호 글자색
-		emphTextColor: "", 		// 강조 글자색
-		outlineColor: "" 		// 테두리
-	}
 
 	const completeHandler = (data) => {
     const { address, zonecode } = data;
-    setCode(zonecode);
+		setCode(zonecode);
     setAddr1(address);
-		props.updateAddr(addr1 + ' ' + addr2);
+		let addr1 = address;
+		let me_postalCode = zonecode;
+		change({...item, me_postalCode, addr1});
   };
+
+	const closeHandler = (state) => {
+    if (state === 'FORCE_CLOSE') {
+      setIsOpen(false);
+    } else if (state === 'COMPLETE_CLOSE') {
+      setIsOpen(false);
+    }
+  };
+
+  const toggleHandler = () => {
+    setIsOpen((prevOpenState) => !prevOpenState);
+  };
+
+	const themeObj = {
+		bgColor: "#fafaf9", 			// 바탕 배경색
+		searchBgColor: "#f5f5f4", 		// 검색창 배경색
+		contentBgColor: "#fafaf9", 		// 본문 배경색(검색결과,결과없음,첫화면,검색서제스트)
+		pageBgColor: "#fafaf9", 		// 페이지 배경색
+		textColor: "#292524", 			// 기본 글자색
+		queryTextColor: "#292524", 		// 검색창 글자색
+		// postcodeTextColor: "#df5b5b", 	// 우편번호 글자색
+		// emphTextColor: "#84cb70", 		// 강조 글자색
+		outlineColor: "#c4bfbd" 		// 테두리
+	}
 
 	return(
 		<div className="address-input">
@@ -46,42 +56,32 @@ const AddressInput = (props) => {
 							type="text"
 							cls="frm-input"
 							change={setCode}
-							value={code}/>
-					<Button type="button" cls="btn btn-point" text="우편번호 찾기" click={() => {document.querySelector('#wrap').style.display = 'flex'}}/>
+							value={code}
+							readOnly={true}/>
+					<Button type="button" cls="btn btn-point" text="우편번호 찾기" click={toggleHandler}/>
 				</div>
-				<InputItem input={
-					{
-						id: "me_addr1",
-						name: "me_addr1",
-						type: "text",
-						cls: "frm-input",
-						change: setAddr1,
-						value: addr1
-					}
-				} label="주소"/>
-				<InputItem input={
-					{
-						id: "me_addr2",
-						name: "me_addr2",
-						type: "text",
-						cls: "frm-input",
-						change: setAddr2
-					}
-				}/>
+				<InputItem
+					id="me_addr1"
+					name="me_addr1"
+					type="text"
+					cls="frm-input"
+					change={setAddr1}
+					value={addr1}
+					readOnly={true}
+					label="주소"
+					notice="추후 경품 제공에 이용될 수 있습니다"/>
 			</div>
-
+			{isOpen && (
 			<div id="wrap">
 				<div className="container">
-					<Button type="button" cls="btn btn-basic" text="닫기" click={() => {document.querySelector('#wrap').style.display = 'none'}}/>
+					<Button type="button" cls="btn btn-basic" text="닫기" click={toggleHandler}/>
 					<DaumPostcode
 						theme={themeObj}
 						style={style}
-						onClose={(state) => {
-								if(state === 'COMPLETE_CLOSE') document.querySelector('#wrap').style.display = 'none';
-							}}
+						onClose={closeHandler}
 						onComplete={completeHandler}/>
 				</div>
-			</div>
+			</div>)}
 		</div>
 	)
 }
