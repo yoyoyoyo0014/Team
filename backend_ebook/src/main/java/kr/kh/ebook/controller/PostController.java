@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import kr.kh.ebook.model.vo.CommunityVO;
 import kr.kh.ebook.model.vo.PostVO;
+import kr.kh.ebook.pagination.PageMaker;
+import kr.kh.ebook.pagination.PostCriteria;
 import kr.kh.ebook.service.PostService;
 import lombok.AllArgsConstructor;
 
@@ -21,12 +23,17 @@ public class PostController {
 	PostService postService;
 	
 	@GetMapping("/post/list")
-	public String getMethodName(Model model, @PathVariable int co_num) {
-		List<PostVO> list = postService.getPostList(co_num);
+	public String postList(Model model, @PathVariable int co_num, PostCriteria cri) {
+		List<PostVO> list = postService.getPostList(cri);
 		model.addAttribute("list", list);
 		
 		List<CommunityVO> communities = postService.getCommunityList();
 		model.addAttribute("communities", communities);
+		
+		cri.setCo_num(co_num);
+		cri.setPerPageNum(10);
+		PageMaker pm = postService.getPageMaker(cri);
+		model.addAttribute("cri", cri);
 		return "post/list";
 	}
 	
