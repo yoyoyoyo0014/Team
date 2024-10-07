@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PostList = ({ communities, list }) => {
+const postList = ({ communities, list }) => {
 	function titleClick(index){
 		let tmp = [...list];
 		tmp[index].view++;
