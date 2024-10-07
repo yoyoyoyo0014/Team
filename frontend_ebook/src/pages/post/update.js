@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PostInsert({list, setList, me_id}){
+function PostUpdate({list, setList, me_id}){
 	let [title, setTitle] = useState(po_title || "");
 	let [content, setContent] = useState(po_content || "");
 
@@ -23,4 +23,4 @@ function PostInsert({list, setList, me_id}){
 		</div>
 	)
 }
-export default PostInsert;
+export default PostUpdate;
