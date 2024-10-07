@@ -26,13 +26,13 @@ function PostDetail({ po_title, po_me_id, po_date, po_view, po_like, po_content,
       </div>
 
       <div className="form-group">
-        <label htmlFor="po_content">내용</label>
-        <textarea id="po_content" className="form-control" value={po_content} readOnly style={{ height: '400px' }}/>
+        <label htmlFor="po_like">추천수</label>
+        <input type="text" id="po_like" className="form-control" value={po_like} readOnly/>
       </div>
 
       <div className="form-group">
-        <label htmlFor="po_like">추천수</label>
-        <input type="text" id="po_like" className="form-control" value={po_like} readOnly/>
+        <label htmlFor="po_content">내용</label>
+        <textarea id="po_content" className="form-control" value={po_content} readOnly style={{ height: '400px' }}/>
       </div>
 
       <div className="prev-next-links">
