@@ -58,7 +58,13 @@ function PostDetail({ po_title, po_me_id, po_date, po_view, po_like, po_content,
         </div>
       </div>
 
-      <button className="btn btn-outline-primary" onClick={() => (window.location.href = '/post/list/${po_co_num}')}>목록으로</button>
+      <button className="btn btn-outline-success" onClick={() => (window.location.href = `/post/list/${po_co_num}`)}>목록으로</button>
+      {me_id === po_me_id && (
+        <div>
+          <button className="btn btn-outline-primary" onClick={() => (window.location.href = `/post/update/${po_num}`)}>수정하기</button>
+          <button className="btn btn-outline-danger" onClick={() => (window.location.href = `/post/delete/${po_num}`)}>삭제하기</button>
+        </div>
+      )}
     </div>
   );
 }
