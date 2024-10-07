@@ -37,28 +37,28 @@ function PostDetail({ po_title, po_me_id, po_date, po_view, po_like, po_content,
 
       <div className="prev-next-links">
         <div>
-          {next_post ? (
-            <p>
-              <strong>다음글: </strong>
-              <a href={`/post/${next_post.id}`}>{next_post.title}</a>
-            </p>
-          ) : (
-            <p>다음글이 없습니다.</p>
-          )}
-        </div>
-        <div>
           {prev_post ? (
             <p>
-              <strong>이전글: </strong>
+              <strong>이전글 ▲</strong>
               <a href={`/post/${prev_post.id}`}>{prev_post.title}</a>
             </p>
           ) : (
             <p>이전글이 없습니다.</p>
           )}
         </div>
+        <div>
+          {next_post ? (
+            <p>
+              <strong>다음글 ▼</strong>
+              <a href={`/post/${next_post.id}`}>{next_post.title}</a>
+            </p>
+          ) : (
+            <p>다음글이 없습니다.</p>
+          )}
+        </div>
       </div>
 
-      <button className="btn btn-primary" onClick={() => (window.location.href = '/post/list/${po_co_num}')}>목록으로</button>
+      <button className="btn btn-outline-primary" onClick={() => (window.location.href = '/post/list/${po_co_num}')}>목록으로</button>
     </div>
   );
 }
