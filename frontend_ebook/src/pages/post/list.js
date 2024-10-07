@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const postList = ({ communities, list }) => {
 	function titleClick(index){
@@ -18,7 +18,7 @@ const postList = ({ communities, list }) => {
               <th>제목</th>
               <th>작성일</th>
             </tr>
-            {communityItem.co_num != 1 && (
+            {communityItem.co_num !== 1 && (
               <tr>
                 <th>조회수</th>
                 <th>추천수</th>
@@ -30,14 +30,14 @@ const postList = ({ communities, list }) => {
               <React.Fragment key={idx}>
                 <tr>
                   <td>{item.length - idx}</td>
-                  <td style={{ textAlign: 'left' }} onClick={()=>titleClick(index)}>
+                  <td style={{ textAlign: 'left' }} onClick={()=>titleClick(idx)}>
 											{item.po_title}
 										</td>
                   <td>{item.po_date}</td>
                 </tr>
-                {item.co_num != 1 && (
+                {item.co_num !== 1 && (
                   <tr>
-                    <td>{item.po_views}</td>
+                    <td>{item.po_view}</td>
                     <td>{item.po_like}</td>
                   </tr>
                 )}

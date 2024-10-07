@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-function PostUpdate({list, setList, me_id}){
-	let [title, setTitle] = useState(po_title || "");
-	let [content, setContent] = useState(po_content || "");
+function PostUpdate({list, setList, me_id, po_title="", po_content=""}){
+	let [title, setTitle] = useState(po_title);
+	let [content, setContent] = useState(po_content);
 
 	function btnClick(){
 		var view = 0;
@@ -10,6 +10,7 @@ function PostUpdate({list, setList, me_id}){
 			title, writer : me_id, content, view
 		}
 		setList([post, ...list])
+    alert('게시글이 수정되었습니다.');
 		setTitle('');
 		setContent('');
 	}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function PostInsert({list, setList, me_id}){
 	let [title, setTitle] = useState("");
@@ -7,7 +7,7 @@ function PostInsert({list, setList, me_id}){
 	function btnClick(){
 		var view = 0;
 		let post = {
-			title, writer, content, view
+			title, writer : me_id, content, view
 		}
 		setList([post, ...list])
 		setTitle('');
