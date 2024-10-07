@@ -13,6 +13,14 @@ public interface PostDAO {
 	List<CommunityVO> selectCommuniyList();
 
 	int selectCountPostList(PostCriteria cri);
+
+	boolean insertPost(PostVO post);
+
+	PostVO selectPost(int po_num);
+	
+	boolean updatePost(PostVO post);
+
+	boolean deletePost(int po_num);
 	
 	
 }

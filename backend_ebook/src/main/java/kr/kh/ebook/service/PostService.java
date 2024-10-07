@@ -30,5 +30,37 @@ public class PostService {
 		return new PageMaker(3, cri, count);
 	}
 	
+	public PostVO getPost(int po_num) {
+		return postDao.selectPost(po_num);
+	}
+
+	public boolean addPost(PostVO post) {
+		if(post == null) {
+			return false;
+		}
+		try {			
+			return postDao.insertPost(post);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean updatePost(PostVO post) {
+		if(post == null) {
+			return false;
+		}
+		try {			
+			return postDao.updatePost(post);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean deletePost(int po_num) {
+		return postDao.deletePost(po_num);
+	}
+	
 	
 }
