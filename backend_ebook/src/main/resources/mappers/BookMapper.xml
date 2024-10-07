@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.kh.ebook.dao.BookDAO">
-
-	<select id="count">
-		select count(*)
-		from book;
-	</select>
     
     <select id="searchBookList">
     	
     </select>
-   
+    
+    <select id="selectAllGenre" resultType="BookGenreVO">
+    	select * from genre
+    </select>
+    
+    <select id="selectAllSecondGenre" resultType="BookGenreVO">
+    	select sg_num as ge_num, sg_name as ge_name, sg_parent as ge_parent
+    	from secondgenre
+    	where sg_parent = #{ge_num}
+    </select>
 </mapper>

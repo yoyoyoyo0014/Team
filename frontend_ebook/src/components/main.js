@@ -1,8 +1,14 @@
-const Main = () => {
+import '../css/main.css';
+import GenreNavBar from './genrenavbar';
+
+const Main = ({section}) => {
 	return(
-		<div>
-			this is main
-		</div>
+		<section className="top-section">
+			<GenreNavBar/>
+			<div id="books" className="theme-box">
+				section: {section}
+			</div>
+		</section>
 	)
 }
 

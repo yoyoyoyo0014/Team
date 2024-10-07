@@ -8,31 +8,25 @@ import * as Common from './js/common.js';
 import './css/default.css';
 import './css/style.css';
 
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 function App() {
 	// let ele = document.querySelector('#body');
   // window.addEventListener('resize', Common.setVh(ele));
   // Common.setVh(ele);
 
-  const [str, setStr] = useState('');
+  let [section, setSection] = useState('');
 
-  useEffect(() => {
-      fetch('/api/test')
-          .then((res) => res.text())
-          .then(res=>{
-            setStr(res);
-          })
-  }, []);
+  const selectSection = (section) => {
+    setSection(section);
+  }
 
 	return(
 		<div className="fix-layout">
-      <Header />
+      <Header selectSection={selectSection}/>
       <main id="body">
         <Home />
-        <div className="App">
-            백엔드 데이터 : {str}
-        </div>
+        <div></div>
       </main>
       <Footer />
     </div>

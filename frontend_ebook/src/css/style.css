@@ -127,6 +127,13 @@ input[type="email"] {
 }
 .btn.ico.search::before {content: '\f002';}
 
+.theme-box {
+	background: var(--color-light-grey);
+	padding: 2em;
+	border-radius: 1em;
+	box-shadow: var(--box-inner-shadow);
+}
+
 hr {
 	height: 0;
 	border: 0;

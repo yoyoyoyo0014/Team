@@ -2,6 +2,7 @@ package kr.kh.ebook.dao;
 
 import java.util.List;
 
+import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.pagination.PageMaker;
 
@@ -11,5 +12,9 @@ public interface BookDAO {
 	int count();
 	
 	List<BookVO> searchBookList(PageMaker pm);
+
+	List<BookGenreVO> selectAllGenre();
+
+	List<BookGenreVO> selectAllSecondGenre(int ge_num);
 	
 }

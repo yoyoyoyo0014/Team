@@ -1,9 +1,7 @@
 const BestSellers = () => {
 	return (
-		<div>
-			BestSellers
-		</div>
-	);
+		<div>best sellers</div>
+	)
 }
 
 export default BestSellers;
