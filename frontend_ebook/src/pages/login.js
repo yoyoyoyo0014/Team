@@ -33,26 +33,49 @@ const Login = () => {
       success: (authObj) => {
         console.log("로그인 성공", authObj);
 
-        // 로그인 성공 후 토큰을 localStorage에 저장
-        localStorage.setItem("loginToken", authObj.access_token);
-
-        // 로그인 상태를 true로 설정
-        setIsLoggedIn(true);
-
-				// 로그인 성공 후 사용자 정보 요청
-        window.Kakao.API.request({
-          url: '/v2/user/me',
-          success: (res) => {
-            console.log("사용자 정보", res);
-						navigate("/");
+         // 카카오 로그인 성공 후 백엔드로 토큰 전송
+         fetch("/api/kakao/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
           },
-          fail: (err) => {
-            console.error("사용자 정보 요청 실패", err);
-          },
+          body: JSON.stringify({ token: authObj.access_token })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // 로그인 성공 후 토큰을 localStorage에 저장
+            localStorage.setItem("loginToken", authObj.access_token);
+
+            // 로그인 상태를 true로 설정
+            setIsLoggedIn(true);
+
+            // 사용자 정보 가져오기
+            window.Kakao.API.request({
+              url: '/v2/user/me',
+              success: (res) => {
+                console.log("사용자 정보", res);
+                // 메인 페이지로 이동
+                navigate("/");
+              },
+              fail: (err) => {
+                console.error("사용자 정보 요청 실패", err);
+              },
+            });
+          } else {
+            // 사용자 정보가 없는 경우 처리
+            alert(data.message || "사용자가 존재하지 않습니다.");
+            setIsLoggedIn(false);
+          }
+        })
+        .catch(error => {
+          console.error("백엔드 로그인 처리 오류", error);
+          alert("로그인 처리 중 오류가 발생했습니다.");
         });
       },
       fail: (err) => {
         console.error("로그인 실패", err);
+        alert("카카오 로그인에 실패했습니다.");
       },
     });
   };
