@@ -1,34 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-const GenreNavBar = () => {
-	const [genreList, setGenreList] = useState([]);
-
-	useEffect(() => {
-		fetch('/main')
-			.then((res) => res.json())
-			.then(res=>{
-				setGenreList(res.genreList);
-				console.log(genreList)
-			})
-  }, []);
-
+const GenreNavBar = ({genreList}) => {
 	return(
 		<nav id="category-navbar" className="theme-box">
-				{
-					genreList.map(genre => {
-							return(
-								<ul>
-									{
-										genre.map(secondGenre => {
-											return(<li>{secondGenre.ge_name}</li>)
-										})
-									}
-								</ul>
-							)
-						}
-					)
-				}
-			</nav>
+			<div className="category-navbar-wrapper">
+			{
+				genreList && genreList.map(genre => {
+						return(
+							<ul>
+								{
+									genre.length !== undefined && genre.map(secondGenre => {
+										return(<li>{secondGenre.ge_name}</li>)
+									})
+								}
+							</ul>
+						)
+					}
+				)
+			}
+			</div>
+		</nav>
 	)
 }
 

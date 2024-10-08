@@ -1,12 +1,20 @@
 @charset 'utf-8';
 
-.top-section {
+#main-section {position: relative;}
+#top-section {height: 100%;}
+.top-section-content {
+	position: relative;
 	display: flex;
+	height: 400px;
 	gap: 2em;
 }
 
-#category-navbar {
-	width: 20%;
+.section-title {padding-bottom: 2em;}
+
+#category-navbar {width: 20%;}
+#category-navbar .category-navbar-wrapper {
+	height: 100%;
+	overflow: auto;
 	display: flex;
 	flex-direction: column;
 	gap: 2em;
@@ -22,16 +30,60 @@
 	 border-top: 1px solid var(--color-grey);
 	 display: block;
 }
-#book-wrapper {width: 80%;}
+
+#books {width: 80%;}
+
+#request-books {padding: 4em 0;}
+#request-books ul li {padding: 1em 0; display: flex; justify-content: space-between;}
+#request-books ul li:not(:last-of-type) {border-bottom: 1px solid var(--color-grey);}
+#request-books ul li .article-info .writer {padding-right: 2em;}
+
+#today-book .theme-box > h2 {font-size: 1.2em; padding-bottom: 1em;}
+
+#today-book .book-info {
+	display: flex;
+	justify-content: space-between;
+	gap: 3em;
+	align-items: center;
+}
+#today-book .book-img {display: flex; justify-content: center; align-items: center; flex-wrap: wrap; box-shadow: var(--box-shadow); max-height: 100%;}
+
+#today-book .book-title h3 {font-size: var(--page-title-font-size);}
+#today-book .book-title .writer {line-height: 3;}
+
+#today-book .book-content {position: relative; height: 200px; overflow: hidden;}
+#today-book .book-content::before {
+	content: '';
+	margin-top: 1em;
+	width: 1.5em;
+	height: 2px;
+	background: var(--color-default);
+	display: block;
+}
+#today-book .book-content > p {
+	padding-top: 1em;
+}
+
+.blind {
+	position: absolute;
+	width: 100%;
+	height: calc(100% - 3em);
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(to top, var(--color-light-grey) 60%, transparent);
+}
+.blind button {margin-bottom: -2em; padding-left: 4em; padding-right: 4em; font-weight: 900;}
 
 @media all and (max-width: 1024px) {
 	.top-section {flex-direction: column;}
-	#category-navbar {
-		flex-direction: row;
-		width: 100%;
-		justify-content: space-between;
-	}
-	#category-navbar ul {width: calc(100% / 3);}
+	.top-section-content {flex-direction: column;}
+
+	#category-navbar {width: 100%;}
+	#category-navbar .category-navbar-wrapper {flex-direction: row;}
+	#category-navbar ul {width: calc(100% / 3); height: 200px; overflow: auto;}
 	#category-navbar ul:not(:first-of-type):before {
 		width: 0;
 		height: 100%;
@@ -41,5 +93,5 @@
 		left: -1em;
 	}
 
-	#book-wrapper {width: 100%;}
+	#books {width: 100%;}
 }

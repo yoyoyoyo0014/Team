@@ -84,7 +84,7 @@
 	    	
     </select>
 
-		<select id="selectAllGenre" resultType="BookGenreVO">
+	<select id="selectAllGenre" resultType="BookGenreVO">
     	select * from genre
     </select>
     

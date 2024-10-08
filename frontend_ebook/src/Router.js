@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import Main from "./components/main.js";
 import MyBooks from "./pages/mypage/mybooks.js";
@@ -11,10 +12,10 @@ import Meeting from "./pages/meeting.js";
 import Login from "./pages/login.js";
 import Join from "./pages/join.js";
 
-function Router(){
+function Router({genreList}){
 	return(
 		<Routes>
-			<Route path="/" element={<Main/>} />
+			<Route path="/" element={<Main genreList={genreList}/>} />
 			<Route path="/mypage/mybooks" element={<MyBooks/>}/>
 			<Route path="/main/bestsellers" element={<BestSellers/>}/>
 			<Route path="/main/newbooks" element={<NewBooks/>}/>

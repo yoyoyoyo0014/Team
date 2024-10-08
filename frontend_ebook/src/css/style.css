@@ -31,12 +31,24 @@
 
 	--box-shadow: 1px 1px 3px rgba(0,0,0,.16);
 	--box-inner-shadow: inset 1px 1px 3px rgba(0,0,0,.16);
+
+	--transition: .2s ease;
 }
 
 body {
 	font: var(--font-size)/var(--line-height) var(--font-family);
 	color: var(--color-default);
 }
+
+*::-webkit-scrollbar {width: 12px;}
+*::-webkit-scrollbar-thumb {
+	width: 4px;
+	border: 5px solid transparent;
+	background: var(--color-default);
+	border-radius: 1em;
+	background-clip: padding-box;
+}
+
 
 /* form element */
 .form-wrapper {
@@ -164,6 +176,7 @@ header {
 	position: sticky;
 	width: 100%;
 	padding-top: 30px;
+	z-index: 99;
 }
 
 #logo {float: left;}
@@ -175,6 +188,21 @@ header {
 .gnb .site-menu ul li {float: left; padding-right: 1.5em;}
 .gnb .user-menu ul {float: right;}
 .gnb .user-menu ul li {float: left; padding-left: 1.5em;}
+
+.gnb-genre-wrapper {
+	position: absolute;
+	left: 0;
+	top: 4em;
+	box-shadow: var(--box-shadow);
+	z-index: 99;
+	line-height: 1.8;
+	gap: 5em;
+	display: flex;
+	opacity: 0;
+	visibility: hidden;
+	transition: var(--transition);
+}
+.gnb-genre-wrapper.show {opacity: 1; visibility: visible;}
 
 #my-books {
 	position: absolute;

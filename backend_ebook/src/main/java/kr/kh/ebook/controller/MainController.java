@@ -36,6 +36,7 @@ public class MainController {
 		}
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("majorGenreList", dbList);
 		map.put("genreList", list);
 		return map;
 	}

@@ -1,6 +1,10 @@
 import ReactDOM from 'react-dom/client';
-import BookDetail from './bookDetail';
+import App from './App';
+import { BrowserRouter } from 'react-router-dom';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BookDetail />
+  <BrowserRouter>
+    <App/>
+  </BrowserRouter>
 );

@@ -2,7 +2,10 @@ package kr.kh.ebook.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import kr.kh.ebook.model.vo.BookGenreVO;
+import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterVO;
