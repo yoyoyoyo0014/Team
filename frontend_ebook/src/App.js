@@ -11,30 +11,31 @@ import './css/style.css';
 import {useEffect, useState} from "react";
 
 function App() {
-	let root = document.querySelector('#root');
-  window.addEventListener('resize', Common.setVh(root));
-  Common.setVh(root);
+  let [section, setSection] = useState('');
+  let [genreList, setGenreList] = useState([{}]);
+  let [majorGenreList, setMajorGenreList] = useState([{}]);
 
-  const [str, setStr] = useState('');
+  useEffect(() => {
+    window.addEventListener('resize', ()=> Common.setVh());
+    Common.setVh();
 
-    useEffect(() => {
-        fetch('/api/api/test')
-            .then((res) => res.text())
-            .then(res=>{
-              setStr(res);
-            })
-    }, []);
+    fetch('/main')
+			.then((res) => res.json())
+			.then(res=>{
+				setGenreList(res.genreList);
+        setMajorGenreList(res.majorGenreList);
+			})
+  }, [])
+
+  const selectSection = (section) => {
+    setSection(section);
+  }
 
 	return(
-		<div className="fix-layout">
-      <Header />
-      <main id="body">
-        <Home />
-
-        <div className="App">
-            백엔드 데이터 : {str}
-        </div>
-
+		<div>
+      <Header selectSection={selectSection} genreList={genreList} majorGenreList={majorGenreList}/>
+      <main id="body" className="fix-layout">
+        <Home genreList={genreList}/>
       </main>
       <Footer />
     </div>
