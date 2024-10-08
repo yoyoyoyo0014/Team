@@ -39,6 +39,12 @@
 
 .sns-login .btn {margin-top: 1em;}
 
+.transparent-btn {
+  background-color: transparent;
+	border: none;
+  cursor: pointer;
+}
+
 .btn-naver {background: #17B75E; color: #fff;}
 .btn-google {background: #fff; color: #333; border: 1px solid #ccc;}
 

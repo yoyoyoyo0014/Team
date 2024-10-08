@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { InputItem } from "../components/form/input";
 import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
+import { LoginContext } from "../context/LoginContext";  // LoginContext import
 import "../css/login.css";
 
 const Login = () => {
 
+  const { setIsLoggedIn } = useContext(LoginContext);  // 로그인 상태 업데이트 함수 가져오기
 	const navigate = useNavigate(); // useNavigate 훅 사용
 
   useEffect(() => {
@@ -30,12 +32,19 @@ const Login = () => {
     window.Kakao.Auth.login({
       success: (authObj) => {
         console.log("로그인 성공", authObj);
+
+        // 로그인 성공 후 토큰을 localStorage에 저장
+        localStorage.setItem("loginToken", authObj.access_token);
+
+        // 로그인 상태를 true로 설정
+        setIsLoggedIn(true);
+
 				// 로그인 성공 후 사용자 정보 요청
         window.Kakao.API.request({
           url: '/v2/user/me',
           success: (res) => {
             console.log("사용자 정보", res);
-						navigate("/main");
+						navigate("/");
           },
           fail: (err) => {
             console.error("사용자 정보 요청 실패", err);

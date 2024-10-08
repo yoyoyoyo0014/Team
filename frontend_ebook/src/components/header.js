@@ -1,8 +1,19 @@
+import { useContext } from "react";
+import { LoginContext } from "../context/LoginContext";
 import { Link } from "react-router-dom";
 import { Input } from "./form/input";
 import Button from "./form/button";
 
 const Header = () => {
+
+	const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
+
+	 // 로그아웃 핸들러
+	 const handleLogout = () => {
+    setIsLoggedIn(false);  // 로그인 상태를 false로 업데이트
+    localStorage.removeItem('loginToken');  // localStorage에서 토큰 삭제
+  };
+
 	return(
 		<header>
 			<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
@@ -32,17 +43,18 @@ const Header = () => {
 					</div>
 
 					<div className="user-menu">
-						<ul>
-							<li><Link to="/login">로그인</Link></li>
-							<li><Link to="/join">회원가입</Link></li>
-						</ul>
-
-						{/* <ul>
-							<li><Link to="/cart">장바구니</Link></li>
-							<li><Link to="/mypage">마이페이지</Link></li>
-							<li><Link to="/logout">로그아웃</Link></li>
-						</ul> */}
-					</div>
+            {isLoggedIn ? (
+              <ul>
+                <li><Link to="/mypage">마이페이지</Link></li>
+                <li><button onClick={handleLogout} className="btn transparent-btn">로그아웃</button></li>
+              </ul>
+            ) : (
+              <ul>
+                <li><Link to="/login">로그인</Link></li>
+                <li><Link to="/join">회원가입</Link></li>
+              </ul>
+            )}
+          </div>
 				</div>
 
 				<Link to="/mypage/mybooks" id="my-books" className="btn btn-point">
