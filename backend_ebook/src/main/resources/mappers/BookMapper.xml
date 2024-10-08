@@ -36,52 +36,49 @@
     	select *
     	from book
     	order by
-    		<choose>
-	    			<when test ="pm.cri.category == 'popularity'">
-	    				bk_totalPurchase desc
-	    			</when>
-	    			<when test ="pm.cri.category == 'latest'">
-	    				bk_date desc
-	    			</when>
-	    			<when test ="pm.cri.category == 'orderPurchase'">
-	    				bk_totalPurchase desc
-	    			</when>
-	    			<when test ="pm.cri.category == 'highPrice'">
-	    				bk_price desc
-	    			</when>
-	    			<when test ="pm.cri.category == 'lowPrice'">
-	    				bk_price asc
-	    			</when>
-	    			<when test ="pm.cri.category == 'rating'">
-	    				bk_score desc
-	    			</when>
-	    			<when test ="pm.cri.category == 'review'">
-	    				bk_reviewCount desc
-	    			</when>
-	    	</choose>
+   		<choose>
+   			<when test ="pm.cri.category == 'popularity'">
+   				bk_totalPurchase desc
+   			</when>
+   			<when test ="pm.cri.category == 'latest'">
+   				bk_date desc
+   			</when>
+   			<when test ="pm.cri.category == 'orderPurchase'">
+   				bk_totalPurchase desc
+   			</when>
+   			<when test ="pm.cri.category == 'highPrice'">
+   				bk_price desc
+   			</when>
+   			<when test ="pm.cri.category == 'lowPrice'">
+   				bk_price asc
+   			</when>
+   			<when test ="pm.cri.category == 'rating'">
+   				bk_score desc
+   			</when>
+   			<when test ="pm.cri.category == 'review'">
+   				bk_reviewCount desc
+   			</when>
+    	</choose>
     	where
-    		<choose>
-    			<when test = "pm.cri.country == 'domestic' ">
-    				 bk_state ='국내도서' and
-    			</when>
-    			<when test = "pm.cri.country == 'foreign' ">
-    				 bk_state = '해외도서' and
-    			</when>
-    		</choose>
-    		
-    		<if  test ="pm.cri.category == 'popularity'">
-    			bk_date >=date_sub(now(),interval 1 year); and
-    		</if>
-    		
-    		
-    		<if test ="pm.cri.genre != '0'">
-    			 bk_sg_num = #{pm.cri.genre}
-  			</if>
-  			<if test = "pm.cri.search !=''">
-  				bk_name like concat('%',#{pm.cri.search}, '%')
-  			</if>
+   		<choose>
+   			<when test = "pm.cri.country == 'domestic' ">
+   				 bk_state ='국내도서' and
+   			</when>
+   			<when test = "pm.cri.country == 'foreign' ">
+   				 bk_state = '해외도서' and
+   			</when>
+   		</choose>
+   		
+   		<if  test ="pm.cri.category == 'popularity'">
+   			bk_date >=date_sub(now(),interval 1 year); and
+   		</if>
+   		<if test ="pm.cri.genre != '0'">
+   			 bk_sg_num = #{pm.cri.genre}
+		</if>
+		<if test = "pm.cri.search !=''">
+			bk_name like concat('%',#{pm.cri.search}, '%')
+		</if>
   		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
-	    	
     </select>
 
 	<select id="selectAllGenre" resultType="BookGenreVO">
@@ -141,5 +138,12 @@
 		set bl_nowPage = #{readBook.bl_nowPage}
 		where bl_me_id = #{readBook.bl_me_id} and bl_bk_num = #{readBook.bl_bk_num}
 	</update>
-
+	
+	<select id="selectBestSellers" resultType="BookVO">
+		select * from book order by bk_totalPurchase desc limit 3
+	</select>
+	
+	<select id="selectNewBooks" resultType="BookVO">
+		select * from book order by bk_date desc limit 3
+	</select>
 </mapper>

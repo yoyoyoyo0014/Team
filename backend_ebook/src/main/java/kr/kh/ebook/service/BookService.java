@@ -71,6 +71,15 @@ public class BookService {
 		List<BookGenreVO> list = bookDao.selectAllSecondGenre(ge_num);
 		return list;
 	}
-	
+
+	public List<BookVO> getBestSellers() {
+		List<BookVO> list = bookDao.selectBestSellers();
+		return list;
+	}
+
+	public List<BookVO> getNewBooks() {
+		List<BookVO> list = bookDao.selectNewBooks();
+		return list;
+	}
 	
 }

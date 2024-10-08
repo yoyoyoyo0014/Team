@@ -27,15 +27,11 @@ function App() {
 			})
   }, [])
 
-  const selectSection = (section) => {
-    setSection(section);
-  }
-
 	return(
 		<div>
-      <Header selectSection={selectSection} genreList={genreList} majorGenreList={majorGenreList}/>
+      <Header setSection={setSection} genreList={genreList} majorGenreList={majorGenreList}/>
       <main id="body" className="fix-layout">
-        <Home genreList={genreList}/>
+        <Home section={section} genreList={genreList}/>
       </main>
       <Footer />
     </div>

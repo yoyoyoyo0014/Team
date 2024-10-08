@@ -42,4 +42,8 @@ public interface BookDAO {
 	boolean updateReadBook(BookListVO readBook);
 
 	BookVO selectBook(int bookNum);
+
+	List<BookVO> selectBestSellers();
+
+	List<BookVO> selectNewBooks();
 }

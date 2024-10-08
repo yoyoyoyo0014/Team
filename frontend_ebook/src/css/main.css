@@ -10,6 +10,7 @@
 }
 
 .section-title {padding-bottom: 2em;}
+.section-title p{padding-top: .5em;}
 
 #category-navbar {width: 20%;}
 #category-navbar .category-navbar-wrapper {
@@ -31,7 +32,41 @@
 	 display: block;
 }
 
-#books {width: 80%;}
+.books {
+	width: 80%;
+	display: flex;
+	justify-content: center;
+	gap: 1em;
+}
+.books .book {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.books .book .book-img {box-shadow: var(--box-shadow);}
+
+#best-sellers .book:nth-of-type(1) {order: 1;}
+#best-sellers .book:nth-of-type(3) {order: 2;}
+#best-sellers .book .rank {
+	position: absolute;
+	width: 2.5em;
+	height: 2.5em;
+	display: flex;
+	transform: translate(-50%, -50%);
+	justify-content: center;
+	align-items: center;
+	font-weight: 900;
+	box-shadow: var(--box-shadow);
+	background: var(--color-bak);
+	border-radius: 50%;
+	color: var(--color-brand);
+}
+#best-sellers .book:nth-of-type(1) .rank {
+	color: var(--color-bak);
+	background: var(--color-brand);
+}
 
 #request-books {padding: 4em 0;}
 #request-books ul li {padding: 1em 0; display: flex; justify-content: space-between;}
@@ -46,7 +81,7 @@
 	gap: 3em;
 	align-items: center;
 }
-#today-book .book-img {display: flex; justify-content: center; align-items: center; flex-wrap: wrap; box-shadow: var(--box-shadow); max-height: 100%;}
+#today-book .book-img {display: flex; justify-content: center; align-items: center; flex-wrap: wrap; box-shadow: var(--box-shadow); max-height: 100%; width: 600px;}
 
 #today-book .book-title h3 {font-size: var(--page-title-font-size);}
 #today-book .book-title .writer {line-height: 3;}
@@ -67,13 +102,13 @@
 .blind {
 	position: absolute;
 	width: 100%;
-	height: calc(100% - 3em);
+	height: 100%;
 	bottom: 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	background: linear-gradient(to top, var(--color-light-grey) 60%, transparent);
+	background: linear-gradient(to top, var(--color-light-grey) 50%, transparent 150%);
 }
 .blind button {margin-bottom: -2em; padding-left: 4em; padding-right: 4em; font-weight: 900;}
 
@@ -93,5 +128,10 @@
 		left: -1em;
 	}
 
-	#books {width: 100%;}
+	.books {width: 100%;}
+}
+
+@media all and (max-width: 768px) {
+	#today-book .book-info {flex-direction: column;}
+	#today-book .book-img {width: 200px;}
 }
