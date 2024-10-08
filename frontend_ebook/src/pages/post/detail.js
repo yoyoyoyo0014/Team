@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PostDetail({ po_title, po_me_id, po_date, po_view, po_like, po_content, prev_post, next_post }) {
+function Detail({ po_title, po_me_id, po_date, po_view, po_like, po_content, prev_post, next_post }) {
   return (
     <div className="container">
       <h2>게시글 상세 페이지</h2>
@@ -69,4 +69,4 @@ function PostDetail({ po_title, po_me_id, po_date, po_view, po_like, po_content,
   );
 }
 
-export default PostDetail;
+export default Detail;
