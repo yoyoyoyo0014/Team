@@ -3,12 +3,88 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.kh.ebook.dao.BookDAO">
+
+	<select id="count">
+		select count(*)
+		from book;
+	</select>
+	
+	<select id="selectBook">
+		select *
+		from book
+		where bk_num = #{bookNum}
+	</select>
+	
+	<select id="searchBookCount">
+		select count(*)
+		from book
+		where 
+			<choose>
+    			<when test = "bookCri.country == 'domestic' ">
+    				 bk_state ='국내도서' and
+    			</when>
+    			<when test = "bookCri.country == 'foreign' ">
+    				 bk_state = '해외도서' and
+    			</when>
+    		</choose>
+    		<if test ="bookCri.genre != '0'">
+    			 bk_sg_num = #{pm.cri.genre}
+  			</if>
+	</select>
     
     <select id="searchBookList">
-    	
+    	select *
+    	from book
+    	order by
+    		<choose>
+	    			<when test ="pm.cri.category == 'popularity'">
+	    				bk_totalPurchase desc
+	    			</when>
+	    			<when test ="pm.cri.category == 'latest'">
+	    				bk_date desc
+	    			</when>
+	    			<when test ="pm.cri.category == 'orderPurchase'">
+	    				bk_totalPurchase desc
+	    			</when>
+	    			<when test ="pm.cri.category == 'highPrice'">
+	    				bk_price desc
+	    			</when>
+	    			<when test ="pm.cri.category == 'lowPrice'">
+	    				bk_price asc
+	    			</when>
+	    			<when test ="pm.cri.category == 'rating'">
+	    				bk_score desc
+	    			</when>
+	    			<when test ="pm.cri.category == 'review'">
+	    				bk_reviewCount desc
+	    			</when>
+	    	</choose>
+    	where
+    		<choose>
+    			<when test = "pm.cri.country == 'domestic' ">
+    				 bk_state ='국내도서' and
+    			</when>
+    			<when test = "pm.cri.country == 'foreign' ">
+    				 bk_state = '해외도서' and
+    			</when>
+    		</choose>
+    		
+    		<if  test ="pm.cri.category == 'popularity'">
+    			bk_date >=date_sub(now(),interval 1 year); and
+    		</if>
+    		
+    		
+    		<if test ="pm.cri.genre != '0'">
+    			 bk_sg_num = #{pm.cri.genre}
+  			</if>
+  			<if test = "pm.cri.search !=''">
+  				bk_name like concat('%',#{pm.cri.search}, '%')
+  			</if>
+  		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
+	    	
     </select>
-    
-    <select id="selectAllGenre" resultType="BookGenreVO">
+
+		<select id="selectAllGenre" resultType="BookGenreVO">
     	select * from genre
     </select>
     
@@ -17,4 +93,53 @@
     	from secondgenre
     	where sg_parent = #{ge_num}
     </select>
+   
+	<select id="detailSelectBook">
+		select *
+		from book
+		where bk_num = #{num}
+	</select>
+	
+	<select id="reviewCount">
+		select count(*)
+		from review
+		where re_bk_num = #{bookNum}
+	</select>
+	
+	<select id="detailBookSelectWriter">
+		select *
+		from writer_list
+		where wl_bk_num = #{num}
+	</select>
+	
+	<select id="selectMyReview">
+		select *
+		from review
+		where re_me_id = #{userId} and re_bk_num = #{bookNum}
+	</select>
+	
+	<select id="selectReviewList">
+		select *
+		from review
+		where re_bk_num = #{bookNum}
+		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
+	</select>
+	
+	<insert id="insertReview">
+		insert into review(re_content,re_bk_num,re_star,re_me_id)
+		value(#{review.re_content},#{review.re_bk_num},#{review.re_star},#{review.re_me_id})
+	</insert>
+	
+	<select id="selectReadBook">
+		select *
+		from book_list
+		where bl_bk_num = #{bookNum} and bl_me_id = #{userId}
+	</select>
+	
+	<update id="updateReadBook">
+		update book_list
+		set bl_nowPage = #{readBook.bl_nowPage}
+		where bl_me_id = #{readBook.bl_me_id} and bl_bk_num = #{readBook.bl_bk_num}
+	</update>
+
 </mapper>

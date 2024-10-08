@@ -39,5 +39,4 @@ public class MainController {
 		map.put("genreList", list);
 		return map;
 	}
-	
 }
