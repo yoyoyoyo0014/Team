@@ -27,14 +27,19 @@ public interface BookDAO {
 	int searchBookCount(BookCriteria bookCri);
 
 	int reviewCount(int bookNum);
+	
 
-	List<ReviewVO> selectReviewList(@Param("pm")PageMaker pm,@Param("bookNum") int bookNum);
+	List<ReviewVO> selectReviewList(@Param("bookNum")int bookNum,@Param("pageNum") int pageNum);
 
-	boolean insertReview(ReviewVO review);
+	boolean insertReview(@Param("review")ReviewVO review);
 
 	BookListVO selectReadBook(@Param("bookNum")int bookNum, @Param("userId") String userId);
 
 	boolean updateReadBook(BookListVO readBook);
 
 	BookVO selectBook(int bookNum);
+
+	boolean updateReview(@Param("re")ReviewVO writeUserReview);  //리뷰 업데이트
+
+	boolean deleteReview(@Param("bookNum")int bookNum, @Param("id")String id);
 }

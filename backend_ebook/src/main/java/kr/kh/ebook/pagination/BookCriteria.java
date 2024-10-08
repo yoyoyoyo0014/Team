@@ -6,16 +6,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class BookCriteria extends Criteria  {
-	
-	//type : 책 제목, 작가
-
-	private String category;// 0 : 최신 ▲, 1 : 최신 ▼, 2 : 구매순 ▲, 3 : 구매순 ▼
+	private String category;
 	
 	private String country;
 	
-	private int genre; //장르
-	
-	
+	private int genre;
 
 	public BookCriteria(int page, String category, String country, int genre) {
 		super(page);
@@ -23,6 +18,4 @@ public class BookCriteria extends Criteria  {
 		this.country = country;
 		this.genre = genre;
 	}
-
-	
 }

@@ -22,27 +22,30 @@ public class BookService {
 		return bookDao.count();
 	}
 	
+	//검색할 책 개수
 	public int searchBookCount(BookCriteria bookCri) {
 		return bookDao.searchBookCount(bookCri);
-	}//검색할 책 개수
+	}
 	
+	//검색 책
 	public List<BookVO> searchBookList(PageMaker pm){
 		return bookDao.searchBookList(pm);
-	}//검색 책
+	}
 	
+	//내 리뷰 찾기
 	public ReviewVO selectMyReview(String userId, int bookNum) {
-		
 		ReviewVO res = bookDao.selectMyReview(userId,bookNum);
 		
 		return res;
 	}
 
+	//해당 책 리뷰 숫자 구하기
 	public int reviewCount(int bookNum) {
 		return bookDao.reviewCount(bookNum);
 	}
-
-	public List<ReviewVO> selectReviewList(PageMaker pm,int bookNum) {
-		return bookDao.selectReviewList(pm,bookNum);
+	
+	public List<ReviewVO> selectReviewList(int bookNum,int pageNum) {
+		return bookDao.selectReviewList(bookNum,pageNum);
 	}
 
 	public boolean insertReview(ReviewVO review) {
@@ -59,5 +62,13 @@ public class BookService {
 
 	public BookVO selectBook(int bookNum) {
 		return bookDao.selectBook(bookNum);
+	}
+	//책 디테일
+	public boolean updateReview(ReviewVO writeUserReview) {
+		return bookDao.updateReview(writeUserReview);
+	}
+
+	public boolean deleteReview(int bookNum, String id) {
+		return bookDao.deleteReview(bookNum,id);
 	}
 }

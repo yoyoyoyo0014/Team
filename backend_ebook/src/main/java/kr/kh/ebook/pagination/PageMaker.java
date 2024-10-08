@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PageMaker {
 	private int totalCount; //전체 컨텐츠 개수 => 마지막 페이지네이션의 마지막 페이지를 계산하기 위해
-	private int startPage;//페이지네이션 시작 페이지번호
+	private int startPage;//페이지네이션 시작 페이지번호W
 	private int endPage;//페이지네이션 마지막 페이지번호
 	private boolean prev;//이전버튼 활성화
 	private boolean next;//다음버튼 활성화
