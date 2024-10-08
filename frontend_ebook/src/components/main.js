@@ -25,8 +25,8 @@ const Main = ({section, genreList}) => {
 
 			<div id="request-books">
 				<div className="section-title">
-					<a href={`/post/list/2`} style={{float: 'right', textDecoration: hover ? 'underline' : 'none'}}onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>더보기 +</a>
-					<h2>도서 요청</h2>
+					<a href={`/post/list/1`} style={{float: 'right', textDecoration: hover ? 'underline' : 'none'}}onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}><strong>더보기 +</strong></a>
+					<h2>공지사항</h2>
 				</div>
 				
 				<ul>
