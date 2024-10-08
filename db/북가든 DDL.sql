@@ -12,6 +12,7 @@ CREATE TABLE `member` (
 	`me_phone`	varchar(11)	NULL,
 	`me_address`	text	NULL,
     `me_postalCode` varchar(5) NULL,
+	`me_gender` varchar(6) NOT NULL default 'male',
 	`me_birth`	date	NOT NULL,
 	`me_adult`	int	NOT NULL default '0',
 	`me_authority`	varchar(10)	NOT NULL default 'user',
@@ -30,7 +31,7 @@ CREATE TABLE `review` (
 	`re_content`	text	NOT NULL,
 	`re_bk_num`	int	NOT NULL,
 	`re_star`	double	NOT NULL,
-	`re_date`	datetime	NOT NULL,
+	`re_date`	datetime	NOT NULL  default CURRENT_TIMESTAMP,
 	`re_me_id`	varchar(15)	NOT NULL
 );
 
@@ -48,7 +49,20 @@ CREATE TABLE `book` (
 	`bk_score`	double	NULL,
 	`bk_reviewCount`	int	NULL,
 	`bk_totalPage`	int	NOT NULL,
-	`bk_agelimit`	int	NOT NULL
+	`bk_agelimit`	int	NOT NULL,
+	`bk_totalPurchase` int NOT NULL default 0,
+    `bk_age_60_male` int NOT NULL default 0,
+    `bk_age_60_female` int NOT NULL default 0,
+    `bk_age_50_male` int NOT NULL default 0,
+    `bk_age_50_female` int NOT NULL default 0,
+    `bk_age_40_male` int NOT NULL default 0,
+    `bk_age_40_female` int NOT NULL default 0,
+    `bk_age_30_male` int NOT NULL default 0,
+    `bk_age_30_female` int NOT NULL default 0,
+    `bk_age_20_male` int NOT NULL default 0,
+    `bk_age_20_female` int NOT NULL default 0,
+    `bk_age_10_male` int NOT NULL default 0,
+    `bk_age_10_female` int NOT NULL default 0
 );
 
 CREATE TABLE `member_state` (
