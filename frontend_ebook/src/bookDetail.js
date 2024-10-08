@@ -1,6 +1,7 @@
 import {useState} from 'react';
 
 function BookDetail({Getuser,bookNum}) {
+  
   let [book,setBook] = useState({
     bk_num : 0, //도서 번호
     bk_name : '', //도서 이름
@@ -90,7 +91,7 @@ function BookDetail({Getuser,bookNum}) {
         }
       })
       .catch(e=>console.error(e));
-  }
+  }//책 데이터 가져오기
 
   return (
     <div>
