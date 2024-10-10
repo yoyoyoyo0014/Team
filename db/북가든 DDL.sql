@@ -23,7 +23,8 @@ CREATE TABLE `member` (
 	`me_stop`	datetime	NULL,
 	`me_cm`	varchar(20) unique	NULL,
 	`me_entercount`	int	NULL,
-	`me_last`	datetime	NULL
+	`me_last`	datetime	NULL,
+	`me_naverId`	varchar(255)	NULL
 );
 
 CREATE TABLE `review` (
