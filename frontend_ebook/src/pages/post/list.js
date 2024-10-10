@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const PostList = ({ communities, list }) => {
+const List = ({ communities, list }) => {
 	function titleClick(index){
 		let tmp = [...list];
 		tmp[index].view++;
@@ -50,4 +50,4 @@ const PostList = ({ communities, list }) => {
   );
 };
 
-export default PostList;
+export default List;

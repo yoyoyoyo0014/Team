@@ -23,7 +23,7 @@ const Main = ({section, genreList}) => {
 				</div>
 			</div>
 
-			<div id="request-books">
+			<div id="notice">
 				<div className="section-title">
 					<a href={`/post/list/1`} style={{float: 'right', textDecoration: hover ? 'underline' : 'none'}}onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}><strong>더보기 +</strong></a>
 					<h2>공지사항</h2>

@@ -23,7 +23,7 @@ public class PostController {
 	@Autowired
 	PostService postService;
 	
-	@GetMapping("/post/list")
+	@GetMapping("/post/list/{co_num}")
 	public String postList(Model model, @PathVariable int co_num, PostCriteria cri) {
 		List<PostVO> list = postService.getPostList(cri);
 		model.addAttribute("list", list);
