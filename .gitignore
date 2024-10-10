@@ -68,4 +68,4 @@ target/
 config.properties
 
 # Ignore application.properties
-/application.properties
+application.properties
