@@ -1,6 +1,8 @@
 package kr.kh.ebook.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.kh.ebook.model.vo.CommunityVO;
 import kr.kh.ebook.model.vo.PostVO;
@@ -22,6 +25,22 @@ public class PostController {
 	
 	@Autowired
 	PostService postService;
+
+	@GetMapping("/")
+	@ResponseBody
+	public String getMainData(Model model, int co_num, PostCriteria cri) {
+		List<PostVO> list = postService.getPostList(cri);
+		model.addAttribute("list", list);
+		
+		List<CommunityVO> communities = postService.getCommunityList();
+		model.addAttribute("communities", communities);
+		
+		cri.setCo_num(co_num);
+		cri.setPerPageNum(5);
+		PageMaker pm = postService.getPageMaker(cri);
+		model.addAttribute("pm", pm);
+	    return "/";
+	}
 	
 	@GetMapping("/post/list/{co_num}")
 	public String postList(Model model, @PathVariable int co_num, PostCriteria cri) {
@@ -34,7 +53,7 @@ public class PostController {
 		cri.setCo_num(co_num);
 		cri.setPerPageNum(10);
 		PageMaker pm = postService.getPageMaker(cri);
-		model.addAttribute("cri", cri);
+		model.addAttribute("pm", pm);
 		return "post/list";
 	}
 	
@@ -42,7 +61,7 @@ public class PostController {
 	public String postInsert(@PathVariable int co_num) {
 		return "post/insert";
 	}
-	@PostMapping("/post/insert")
+	@PostMapping("/post/insert/{co_num}")
 	public String postInsertPost(PostVO post) {
 		boolean res = postService.addPost(post);
 		if(res) {
@@ -76,5 +95,7 @@ public class PostController {
 		}
 		return "redirect:/post/detail"+po_num;
 	}
+	
+	
 	
 }

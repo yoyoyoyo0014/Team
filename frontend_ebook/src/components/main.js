@@ -2,10 +2,29 @@ import '../css/main.css';
 import Button from './form/button';
 import GenreNavBar from './genrenavbar';
 import { useState, useEffect } from 'react';
+import { Link, useParams  } from 'react-router-dom';
 
 const Main = ({section, genreList}) => {
 	let [books, setBooks] = useState([{}]);
 	const [hover, setHover] = useState(false);
+	let [list, setList] = useState([]);
+	let [pm, setPm] = useState({});
+	const {co_num} = useParams();
+	console.log(pm)
+	useEffect(() => {
+    fetch('/main')
+      .then((res) => res.json())
+      .then(res=>{
+				// var tmp = res.list.map(item=>{
+				// 	var date = (new Date(item.po_date )).toLocaleDateString();
+				// 	item = {...item, date};
+				// 	return item;
+				// })
+        // setList(res.list);
+				// setPm(res.pm);
+				console.log(res)
+      }).catch(e=>console.log(e))
+  }, [])
 
 	return(
 		<section id="main-section">
@@ -22,51 +41,26 @@ const Main = ({section, genreList}) => {
 					</div>
 				</div>
 			</div>
-
-			<div id="notice">
-				<div className="section-title">
-					<a href={`/post/list/1`} style={{float: 'right', textDecoration: hover ? 'underline' : 'none'}}onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}><strong>더보기 +</strong></a>
-					<h2>공지사항</h2>
-				</div>
-				
-				<ul>
-					<li>
-						이거 추가해주세요
-						<div className="article-info">
-							<span className="writer">글쓴이</span>
-							<span className="date">0000.00.00</span>
+      {list.map(item=>{
+				return (
+						<div id="notice">
+						<div className="section-title">
+							<input type="hidden" name="co_num" value={co_num} />
+							<Link to={"/post/list/"+item.co_num} style={{float: 'right', textDecoration: hover ? 'underline' : 'none'}}onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}><strong>더보기 +</strong></Link>
+							<h2>공지사항</h2>
 						</div>
-					</li>
-					<li>
-						이거 추가해주세요
-						<div className="article-info">
-							<span className="writer">글쓴이</span>
-							<span className="date">0000.00.00</span>
-						</div>
-					</li>
-					<li>
-						이거 추가해주세요
-						<div className="article-info">
-							<span className="writer">글쓴이</span>
-							<span className="date">0000.00.00</span>
-						</div>
-					</li>
-					<li>
-						이거 추가해주세요
-						<div className="article-info">
-							<span className="writer">글쓴이</span>
-							<span className="date">0000.00.00</span>
-						</div>
-					</li>
-					<li>
-						이거 추가해주세요
-						<div className="article-info">
-							<span className="writer">글쓴이</span>
-							<span className="date">0000.00.00</span>
-						</div>
-					</li>
-				</ul>
-			</div>
+						
+						<ul>
+							<li>{item.po_name}
+								<div className="article-info">
+									<span className="writer">{item.po_me_id}</span>
+									<span className="date">{item.po_date}</span>
+								</div>
+							</li>
+						</ul>
+					</div>
+        )})}
+			
 
 			<div id="today-book">
 				
