@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.kh.ebook.model.vo.BookGenreVO;
+import kr.kh.ebook.model.vo.CommunityVO;
+import kr.kh.ebook.model.vo.PostVO;
+import kr.kh.ebook.pagination.PageMaker;
+import kr.kh.ebook.pagination.PostCriteria;
 import kr.kh.ebook.service.BookService;
+import kr.kh.ebook.service.PostService;
 
 @RequestMapping("/")
 @RestController
@@ -20,8 +25,11 @@ public class MainController {
 	@Autowired
 	BookService bookService;
 	
+	@Autowired
+	PostService postService;
+
 	@GetMapping("/main")
-	public HashMap<String, Object> main(Model model) {
+	public HashMap<String, Object> main(Model model, int co_num, PostCriteria cri) {
 		List<BookGenreVO> dbList = bookService.getAllGenre();
 		
 		List<List<BookGenreVO>> list = new ArrayList<>();
@@ -35,9 +43,21 @@ public class MainController {
 			list.add(tmpList);
 		}
 		
+		List<PostVO> postList = postService.getPostList(cri);
+		model.addAttribute("postList", postList);
+		
+		List<CommunityVO> communities = postService.getCommunityList();
+		model.addAttribute("communities", communities);
+		
+		cri.setCo_num(co_num);
+		cri.setPerPageNum(5);
+		PageMaker pm = postService.getPageMaker(cri);
+		model.addAttribute("pm", pm);
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("majorGenreList", dbList);
 		map.put("genreList", list);
+		map.put("pm", pm);
 		return map;
 	}
 }
