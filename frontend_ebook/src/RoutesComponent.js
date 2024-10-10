@@ -11,6 +11,7 @@ import Meeting from "./pages/meeting.js";
 
 import Login from "./pages/login.js";
 import Join from "./pages/join.js";
+import NaverCallback from "./components/auth/NaverCallback"; // NaverCallback 컴포넌트 import
 
 function RoutesComponent() {
 
@@ -30,6 +31,10 @@ function RoutesComponent() {
       <Route path="/meeting" element={<Meeting />} />
       <Route path="/login" element={<Login />} />
       <Route path="/join" element={<Join />} />
+
+      {/* 네이버 로그인 콜백 경로 */}
+      <Route path="/auth/naver/callback" element={<NaverCallback />} />
+
     </Routes>
   );
 }

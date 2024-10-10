@@ -17,4 +17,8 @@ public class MemberService {
 		return memberDao.findMemberById(me_id);
 	}
 	
+	public MemberVO getMemberByNaverId(String naverId) {
+		return memberDao.selectMemberByNaverId(naverId);
+	}
+	
 }

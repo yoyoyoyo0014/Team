@@ -74,6 +74,7 @@ input[type="email"]
 .input-item input {width: 100%;}
 
 .btn {cursor: pointer; line-height: 1; padding: .8em; border-radius: 12px; box-shadow: var(--box-shadow);}
+
 .btn.small {font-size: var(--small-font-size);}
 .btn.big {font-size: var(--big-font-size);}
 .btn.full {width: 100%;}

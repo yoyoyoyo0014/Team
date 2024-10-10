@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class MemberVO {
 	
-	private String me_id;            // 아이디
+    private String me_id;            // 애플리케이션 내에서의 사용자 ID
     private String me_nickname;      // 닉네임
     private String me_pw;            // 비밀번호
     private String me_email;         // 이메일
@@ -24,5 +24,6 @@ public class MemberVO {
     private String me_name;          // 이름
     private String me_on;            // 가입일
     private String me_last;          // 마지막 접속일
-	
+    private String me_naverId;       // 네이버 사용자 고유 ID (네이버 로그인 시 사용)
+    
 }

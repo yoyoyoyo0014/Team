@@ -26,6 +26,7 @@ const Login = () => {
     return () => {
       document.body.removeChild(script);
     };
+
   }, []);
 
   const handleKakaoLogin = () => {
@@ -80,6 +81,17 @@ const Login = () => {
     });
   };
 
+   // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
+   const handleNaverLogin = () => {
+    const clientId = process.env.REACT_APP_NAVER_CLIENT_ID; // 네이버 클라이언트 ID
+    const redirectUri = "http://localhost:3000/auth/naver/callback"; // 네이버 로그인 콜백 URL
+    const state = Math.random().toString(36).substring(2, 15); // CSRF 방지를 위한 상태값
+
+    const naverLoginUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+
+    window.location.href = naverLoginUrl;  // 네이버 로그인 URL로 리디렉션
+  };
+
   return (
     <div className="login-form">
       <h2 className="txt-center page-title">Book<br />Garden</h2>
@@ -99,7 +111,13 @@ const Login = () => {
             cls={"btn btn-kakao full"}
             onClick={handleKakaoLogin}
           />
-          <Button type={"button"} text={"네이버 로그인"} cls={"btn btn-naver full"} />
+
+          <Button
+            type={"button"}
+            cls={"btn btn-naver full"}
+            onClick={handleNaverLogin}
+          />
+
           <Button type={"button"} text={"구글 로그인"} cls={"btn btn-google full"} />
         </div>
       </form>

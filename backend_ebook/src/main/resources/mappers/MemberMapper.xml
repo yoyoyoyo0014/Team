@@ -10,4 +10,10 @@
 		
 	</select>
    
+   <select id="selectMemberByNaverId" parameterType="String" resultType="MemberVO">
+   		select * from member
+   			where me_naverId = #{naverId}
+   </select>
+   
+   
 </mapper>
