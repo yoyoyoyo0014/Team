@@ -10,19 +10,20 @@ const Main = ({section, genreList}) => {
 	let [list, setList] = useState([]);
 	let [pm, setPm] = useState({});
 	const {co_num} = useParams();
-	console.log(pm)
 	useEffect(() => {
     fetch('/main')
       .then((res) => res.json())
       .then(res=>{
-				// var tmp = res.list.map(item=>{
-				// 	var date = (new Date(item.po_date )).toLocaleDateString();
-				// 	item = {...item, date};
-				// 	return item;
-				// })
-        // setList(res.list);
-				// setPm(res.pm);
 				console.log(res)
+				if (res.postList) {
+					var tmp = res.postList.map((item) => {
+							var date = new Date(item.po_date).toLocaleDateString();
+							item = { ...item, date };
+							return item;
+					});
+					setList(tmp);
+			}
+			setPm(res.pm || {});
       }).catch(e=>console.log(e))
   }, [])
 
@@ -41,30 +42,44 @@ const Main = ({section, genreList}) => {
 					</div>
 				</div>
 			</div>
-      {list.map(item=>{
-				return (
-						<div id="notice">
-						<div className="section-title">
-							<input type="hidden" name="co_num" value={co_num} />
-							<Link to={"/post/list/"+item.co_num} style={{float: 'right', textDecoration: hover ? 'underline' : 'none'}}onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}><strong>더보기 +</strong></Link>
-							<h2>공지사항</h2>
-						</div>
-						
-						<ul>
-							<li>{item.po_name}
-								<div className="article-info">
-									<span className="writer">{item.po_me_id}</span>
-									<span className="date">{item.po_date}</span>
-								</div>
-							</li>
-						</ul>
-					</div>
-        )})}
+			<div id="notice" style={{ marginTop: '35px'}}>
+				<div className="section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '10px' }}>
+					<h2>공지사항</h2>
+					<Link to={`/post/list/${co_num || 1}`} className="notice-link" style={{ float: 'right', textDecoration: hover ? 'underline' : 'none' }}onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+						<strong>더보기 +</strong>
+					</Link>
+				</div>
+
+				{list && list.length > 0 ? (
+					<table className="article-table" style={{textAlign: 'center', width: '100%', borderCollapse: 'collapse'}}>
+							<thead style={{color: 'gray', borderBottom: '1px solid gray'}}>
+									<tr>
+											<th>NO</th>
+											<th>제목</th>
+											<th>작성자</th>
+											<th>날짜</th>
+									</tr>
+							</thead>
+							<tbody>
+									{list.slice(0,5).map((item, index) => (
+											<tr key={item.po_num || index} style={{height: '50px'}}>
+													<td>{item.po_num}</td>
+													<td style={{textAlign: 'left'}}>{item.po_title}</td>
+													<td>{item.po_me_id}</td>
+													<td>{item.date}</td>
+											</tr>
+									))}
+							</tbody>
+					</table>
+				) : (
+					<p>공지사항이 없습니다.</p>
+				)}
+			</div>
 			
 
 			<div id="today-book">
 				
-				<div className="theme-box">
+				<div className="theme-box" style={{marginTop: '30px'}}>
 					<h2>오늘의 책</h2>
 					
 					<div className="book-info">

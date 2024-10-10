@@ -12,6 +12,8 @@ import Meeting from "./pages/meeting.js";
 import Login from "./pages/login.js";
 import Join from "./pages/join.js";
 
+import List from './pages/post/list';
+
 function Router({genreList}){
 	return(
 		<Routes>
@@ -25,6 +27,8 @@ function Router({genreList}){
 
 			<Route path="/login" element={<Login/>}/>
 			<Route path="/join" element={<Join/>}/>
+
+			<Route path="/post/list/:co_num" element={<List />} />
 		</Routes>
 	)
 }

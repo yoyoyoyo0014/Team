@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.kh.ebook.model.vo.CommunityVO;
 import kr.kh.ebook.model.vo.PostVO;
@@ -25,22 +26,6 @@ public class PostController {
 	
 	@Autowired
 	PostService postService;
-
-	@GetMapping("/")
-	@ResponseBody
-	public String getMainData(Model model, int co_num, PostCriteria cri) {
-		List<PostVO> list = postService.getPostList(cri);
-		model.addAttribute("list", list);
-		
-		List<CommunityVO> communities = postService.getCommunityList();
-		model.addAttribute("communities", communities);
-		
-		cri.setCo_num(co_num);
-		cri.setPerPageNum(5);
-		PageMaker pm = postService.getPageMaker(cri);
-		model.addAttribute("pm", pm);
-	    return "/";
-	}
 	
 	@GetMapping("/post/list/{co_num}")
 	public String postList(Model model, @PathVariable int co_num, PostCriteria cri) {
