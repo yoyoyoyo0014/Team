@@ -1,6 +1,8 @@
 @charset 'utf-8';
 
 #main-section {position: relative;}
+#main-section section:not(:last-of-type) {margin-bottom: 2em;}
+
 #top-section {height: 100%;}
 .top-section-content {
 	position: relative;
@@ -9,7 +11,7 @@
 	gap: 2em;
 }
 
-.section-title {padding-bottom: 2em;}
+.section-title {margin-bottom: 2em; position: relative;}
 .section-title p{padding-top: .5em;}
 
 #category-navbar {width: 20%;}
@@ -36,19 +38,29 @@
 	width: 80%;
 	display: flex;
 	justify-content: center;
-	gap: 1em;
+	gap: 2em;
 }
 .books .book {
 	text-align: center;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	align-content: flex-start;
 	flex-wrap: wrap;
+	width: calc(100% / 3);
+	max-width: 200px;
 }
-.books .book .book-img {box-shadow: var(--box-shadow);}
+.books .book .book-wrapper {display: flex; min-height: 200px;}
+.books .book .book-wrapper .book-img {box-shadow: var(--box-shadow); margin: auto; width: 70%;}
+.books .book .book-wrapper .book-img img {float: left;}
+
+.books .book .book-info {padding-top: 2em;}
 
 #best-sellers .book:nth-of-type(1) {order: 1;}
 #best-sellers .book:nth-of-type(3) {order: 2;}
+#best-sellers .book:nth-of-type(2) .book-img {width: 60%;}
+#best-sellers .book:nth-of-type(3) .book-img {width: 50%;}
+
 #best-sellers .book .rank {
 	position: absolute;
 	width: 2.5em;
@@ -68,12 +80,16 @@
 	background: var(--color-brand);
 }
 
-#request-books {padding: 4em 0;}
-#request-books ul li {padding: 1em 0; display: flex; justify-content: space-between;}
-#request-books ul li:not(:last-of-type) {border-bottom: 1px solid var(--color-grey);}
-#request-books ul li .article-info .writer {padding-right: 2em;}
-
 #today-book .theme-box > h2 {font-size: 1.2em; padding-bottom: 1em;}
+
+#event .section-title a {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	color: var(--color-grey);
+}
+
+#event {}
 
 #today-book .book-info {
 	display: flex;
@@ -113,8 +129,7 @@
 .blind button {margin-bottom: -2em; padding-left: 4em; padding-right: 4em; font-weight: 900;}
 
 @media all and (max-width: 1024px) {
-	.top-section {flex-direction: column;}
-	.top-section-content {flex-direction: column;}
+	.top-section-content {flex-direction: column; height: unset;}
 
 	#category-navbar {width: 100%;}
 	#category-navbar .category-navbar-wrapper {flex-direction: row;}

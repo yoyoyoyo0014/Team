@@ -2,7 +2,7 @@ import Button from '../form/button';
 
 const TodayBook = () => {
 	return(
-		<div id="today-book">
+		<section id="today-book">
 			<div className="theme-box">
 				<h2>오늘의 책</h2>
 				
@@ -30,7 +30,7 @@ const TodayBook = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</section>
 	)
 }
 

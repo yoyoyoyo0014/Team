@@ -140,10 +140,24 @@
 	</update>
 	
 	<select id="selectBestSellers" resultType="BookVO">
-		select * from book order by bk_totalPurchase desc limit 3
+		select book.*, group_concat(wr_name separator ' | ') as bk_writer
+		from book
+		join writer_list
+		on bk_num = wl_bk_num
+		join writer
+		on wr_num = wl_wr_num
+		group by bk_num
+		order by bk_totalPurchase desc limit 3
 	</select>
 	
 	<select id="selectNewBooks" resultType="BookVO">
-		select * from book order by bk_date desc limit 3
+		select book.*, group_concat(wr_name separator ' | ') as bk_writer
+		from book
+		join writer_list
+		on bk_num = wl_bk_num
+		join writer
+		on wr_num = wl_wr_num
+		group by bk_num
+		order by bk_date desc limit 3
 	</select>
 </mapper>

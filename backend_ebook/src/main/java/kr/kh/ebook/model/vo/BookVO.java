@@ -22,6 +22,7 @@ public class BookVO {
 	private int bk_reviewCount;
 	private int bk_totalPage;
 	private int bk_agelimit;
+	private String bk_writer;
 	
 	private int bk_totalPurchase;
 	private int bk_age_60_male; 

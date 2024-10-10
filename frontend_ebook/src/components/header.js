@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Input } from "./form/input";
 import Button from "./form/button";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 const Header = ({setSection, genreList}) => {
+	const navigate = useNavigate();
 	let [keyword, setKeyword] = useState('');
 
 	const showBooks = (sectionName) => {
@@ -37,8 +38,14 @@ const Header = ({setSection, genreList}) => {
 					<div className="gnb">
 						<div className="site-menu">
 							<ul>
-								<li onClick={()=>showBooks('bestsellers')}>베스트셀러</li>
-								<li onClick={()=>showBooks('newbooks')}>신상 도서</li>
+								<li onClick={()=>{
+									navigate('/');
+									showBooks('bestSellers');
+								}}>베스트셀러</li>
+								<li onClick={()=>{
+									navigate('/');
+									showBooks('newBooks');
+								}}>신상 도서</li>
 								<li><Link to="/forsales">할인 중인 도서</Link></li>
 								<li><Link to="/event">이벤트</Link></li>
 								<li><Link to="/request">도서 요청</Link></li>
