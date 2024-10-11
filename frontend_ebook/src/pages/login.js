@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { InputItem } from "../components/form/input";
 import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
@@ -10,24 +10,75 @@ const Login = () => {
   const { setIsLoggedIn } = useContext(LoginContext);  // 로그인 상태 업데이트 함수 가져오기
 	const navigate = useNavigate(); // useNavigate 훅 사용
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://developers.kakao.com/sdk/js/kakao.js";
-    script.async = true;
-    document.body.appendChild(script);
+  const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
 
-		script.onload = () => {
+  useEffect(() => {
+    const kakaoScript = document.createElement("script");
+    kakaoScript.src = "https://developers.kakao.com/sdk/js/kakao.js";
+    kakaoScript.async = true;
+    document.body.appendChild(kakaoScript);
+
+    const googleScript = document.createElement("script");
+    googleScript.src = "https://accounts.google.com/gsi/client";
+    googleScript.async = true;
+    document.body.appendChild(googleScript);
+
+		kakaoScript.onload = () => {
       if (window.Kakao && !window.Kakao.isInitialized()) {
 				// 카카오 JavaScript 키
         window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY); 
       }
     };
 
-    return () => {
-      document.body.removeChild(script);
+    googleScript.onload = () => {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.initialize({
+          client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,  
+          callback: handleGoogleLoginSuccess,
+        });
+        setGoogleInitialized(true); // 구글 초기화 완료
+        console.log("Google SDK loaded and initialized");
+      } else {
+        console.error("Google API failed to load");
+      }
     };
 
-  }, []);
+    const handleGoogleLoginSuccess = (response) => {
+      const idToken = response.credential;  // 구글에서 받은 ID 토큰
+      console.log("Google ID Token:", idToken);
+      
+      // ID 토큰을 백엔드로 전송
+      fetch("/api/google/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),  // ID 토큰을 백엔드로 전송
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          // 로그인 성공 시 토큰을 localStorage에 저장
+          localStorage.setItem("googleLoginToken", idToken);
+          setIsLoggedIn(true);
+          navigate("/");  // 메인 페이지로 이동
+        } else {
+          alert(data.message || "로그인 실패");
+          setIsLoggedIn(false);
+        }
+      })
+      .catch((error) => {
+        console.error("백엔드 로그인 처리 오류", error);
+        alert("로그인 처리 중 오류가 발생했습니다.");
+      });
+    };
+
+    return () => {
+      document.body.removeChild(kakaoScript);
+      document.body.removeChild(googleScript);
+    };
+
+  }, [setIsLoggedIn, navigate]);  // setIsLoggedIn과 navigate를 의존성 배열에 추가
 
   const handleKakaoLogin = () => {
     window.Kakao.Auth.login({
@@ -118,7 +169,18 @@ const Login = () => {
             onClick={handleNaverLogin}
           />
 
-          <Button type={"button"} text={"구글 로그인"} cls={"btn btn-google full"} />
+          <Button
+            type={"button"}
+            cls={"btn btn-google full"}
+            onClick={() => {
+              if (googleInitialized) {
+                window.google.accounts.id.prompt();  // 구글 로그인 팝업 호출
+              } else {
+                console.error("Google API is not loaded yet.");
+              }
+            }}
+          />
+
         </div>
       </form>
     </div>

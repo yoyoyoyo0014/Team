@@ -15,5 +15,21 @@
    			where me_naverId = #{naverId}
    </select>
    
+   <select id="findMemberByEmail" resultType="MemberVO">
+   	select * from member where me_email = #{email}
+   </select>
+   
+   <insert id="saveMember">
+    insert into member (
+        me_id, me_nickname, me_pw, me_email, me_address,
+        me_phone, me_birth,
+        
+    ) values (
+        #{me_id}, #{me_nickname}, #{me_pw}, null, #{me_address},
+        #{me_phone}, #{me_birth},
+        
+    )
+    
+</insert>
    
 </mapper>
