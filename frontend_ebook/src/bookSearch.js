@@ -69,6 +69,21 @@ function BookSearch() {
 			.catch(e=>console.error(e));
 	}//데이터 보내기
 
+  /*
+     <br/>
+          {
+            genreList.map((item,index)=>{
+              return(
+                <label>
+                  <input onClick={e=>checkedGenre(e)} type="radio" id={item.sg_num} name = 'genre' value = {item.sg_num}>{item.sg_name}</input>
+                </label>
+              )
+            })
+          }
+          
+        <br/>
+  */
+
   return (
     <div >
       <input onChange={e=>getSearch(e)} placeholder="검색칸"></input>
@@ -113,18 +128,7 @@ function BookSearch() {
           <input onClick={e=>getCategory(e)} type="radio" id="review" name="category" value="review"/>리뷰 순
           </label>
 
-        <br/>
-          {
-            genreList.map((item,index)=>{
-              return(
-                <label>
-                  <input onClick={e=>checkedGenre(e)} type="radio" id={item.sg_num} name = 'genre' value = {item.sg_num}>{item.sg_name}</input>
-                </label>
-              )
-            })
-          }
-          
-        <br/>
+       
 
         <input onClick={dataSubmit}type="submit" value="제출"></input>
 

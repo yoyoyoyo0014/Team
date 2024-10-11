@@ -59,6 +59,10 @@ function BookReview({bookNum,userId,userIsBuy}) {
   })//신고객체
 
   function insertReview(){
+    if(userId == null){
+      alert('로그인을 해주세요.')
+      return;
+    }
     if(writerIsReview){
       alert('이미 리뷰를 작성하였습니다.')
       return;
@@ -67,10 +71,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
       alert('책을 구매하지 않았습니다.')
       return;
     }
-    if(userId == null){
-      alert('유저의 정보를 찾지 못하였습니다.')
-      return;
-    }
+    
 
     writeUserReview.re_me_id =  userId;
     writeUserReview.re_bk_num = bookNum; //리뷰 책 번호 세팅
@@ -188,6 +189,9 @@ function BookReview({bookNum,userId,userIsBuy}) {
   }//별점이 0점이하 5점 초과 시 false
 
   function checkReview(){
+    if(userId ==null)
+      return;
+
     fetch('/ebook/selectMyReview/'+userId+'/'+bookNum,{
       method : "post",
       //body : JSON.stringify(writeUserReview),
@@ -342,7 +346,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
       <button onClick={()=>changePage(page.currentPage-1)} disabled= {!page.prev}>이전</button>
 
       {page.pageList.map((item,index)=>{
-          return(<button onClick={()=>changePage({index})} disabled={page.currentPage==(index+1)} key={index}>{item}</button>)
+          return(<button  onClick={()=>changePage({index})} disabled={page.currentPage==(index+1)} key={index}>{item}</button>)
       })}
 
       <button onClick={()=>changePage(page.currentPage+1)} disabled = {!page.next}>다음</button>
