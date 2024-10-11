@@ -19,19 +19,17 @@ function MakePage(contentsCount,currentPage) {
   page.endPage <= maxPage ? (page.endPage  = page.endPage) : page.next = false;page.endPage = maxPage;
   
   
-  if(currentPage-1>page.startPage)
+  if(currentPage-1>=page.startPage)
     page.prev = true
   else 
     page.prev = false;
 
-  //console.log("prev : " + page.prev)
 
   if(currentPage+1<=page.endPage)
     page.next = true
   else
     page.next = false;
 
-  //console.log("next : " + page.next)
   let pageList = [];
   for(var i = page.startPage;i<=page.endPage;i++)
     pageList.push(i);
