@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 const List = ({ communities = [] }) => {
   const { co_num } = useParams();
+  const navigate = useNavigate();
   const [list, setList] = useState([]);
-  
+  const [pageMaker, setPageMaker] = useState(null);
+
+  // 스크롤을 맨 위로 이동
   useEffect(() => {
-    window.scrollTo(0, 0); // 스크롤을 맨 위로 이동
+    window.scrollTo(0, 0);
   }, []);
 
   function formatDate(isoString) {
     const date = new Date(isoString);
     const today = new Date();
-  
-    // 오늘 날짜인지 확인
+
     const isToday =
       date.getFullYear() === today.getFullYear() &&
       date.getMonth() === today.getMonth() &&
       date.getDate() === today.getDate();
-  
+
     if (isToday) {
-      // 오늘인 경우, 시간 (HH:mm) 형식으로 반환
       return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
     } else {
-      // 오늘이 아닌 경우, 날짜 (YYYY-MM-DD) 형식으로 반환
       return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
     }
   }
@@ -38,27 +39,53 @@ const List = ({ communities = [] }) => {
           return response.json();
         })
         .then((data) => {
-          if (data && data.list) {
-            const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
-            setList(sortedList);
+          if (data) {
+            if (data.list) {
+              const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
+              setList(sortedList);
+            }
+            if (data.pm) {
+              setPageMaker(data.pm);
+            }
           } else {
-            console.error("No 'list' field in response data:", data);
+            console.error("No data received");
           }
         })
         .catch((error) => console.error('Error fetching posts:', error));
     }
   }, [co_num]);
 
+  const handlePageClick = (page) => {
+    // 페이지 번호 클릭 시 해당 페이지의 데이터를 가져옴
+    fetch(`/post/list/${co_num}?page=${page}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.list) {
+          const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
+          setList(sortedList);
+        }
+        if (data.pm) {
+          setPageMaker(data.pm);
+        }
+      })
+      .catch((error) => console.error('Error fetching posts:', error));
+  };
+
   return (
     <div className="container">
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <input type="text" placeholder="검색어를 입력하세요" style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }}/>
+        <input type="text" placeholder="검색어를 입력하세요" style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }} />
         <button style={{ padding: '10px 20px', marginLeft: '10px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
           검색
         </button>
       </div>
       <table className="table" style={{ textAlign: 'center', width: '100%', borderCollapse: 'collapse' }}>
-        <thead style={{color: 'gray', borderBottom: '1px solid gray'}}>
+        <thead style={{ color: 'gray', borderBottom: '1px solid gray' }}>
           <tr>
             <th style={{ width: co_num === '1' ? '10%' : 'auto' }}>NO</th>
             <th style={{ width: co_num === '1' ? '80%' : 'auto' }}>제목</th>
@@ -74,8 +101,8 @@ const List = ({ communities = [] }) => {
         <tbody>
           {list && list.length > 0 ? (
             list.map((item, idx) => (
-              <tr key={idx} style={{height: '75px', borderBottom: '1px solid lightgray'}}>
-                <td>{list.length - idx}</td> 
+              <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
+                <td>{list.length - idx}</td>
                 <td style={{ textAlign: 'left' }} onClick={() => console.log(`클릭한 항목 인덱스: ${idx}`)}>
                   {item.po_title}
                 </td>
@@ -93,8 +120,30 @@ const List = ({ communities = [] }) => {
               <td colSpan={co_num !== '1' ? '5' : '3'}>글 목록이 없습니다.</td>
             </tr>
           )}
-        </tbody>
+      </tbody>
       </table>
+
+      {/* 페이지네이션 */}
+      {pageMaker && (
+        <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
+          {pageMaker.prev && (
+            <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
+              이전
+            </button>
+          )}
+          {Array.from({ length: pageMaker.endPage - pageMaker.startPage + 1 }, (_, i) => pageMaker.startPage + i).map((page) => (
+            <button key={page} onClick={() => handlePageClick(page)} style={{margin: '0 5px', padding: '10px', cursor: 'pointer', backgroundColor: pageMaker.curPage === page ? '#007BFF' : '#FFFFFF',
+                color: pageMaker.curPage === page ? '#FFFFFF' : '#007BFF', border: '1px solid #007BFF', borderRadius: '5px'}}>
+              {page}
+            </button>
+          ))}
+          {pageMaker.next && (
+            <button onClick={() => handlePageClick(pageMaker.endPage + 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
+              다음
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -2,7 +2,7 @@ import '../css/main.css';
 import Button from './form/button';
 import GenreNavBar from './genrenavbar';
 import { useState, useEffect } from 'react';
-import { Link, useParams, useLocation  } from 'react-router-dom';
+import { Link, useParams, useLocation, useNavigate  } from 'react-router-dom';
 
 const Main = ({section, genreList, addPost}) => {
 	let [books, setBooks] = useState([{}]);
@@ -10,6 +10,7 @@ const Main = ({section, genreList, addPost}) => {
 	let [list, setList] = useState([]);
 	let [pm, setPm] = useState({});
 	const {co_num} = useParams();
+	const navigate = useNavigate();
 
 	const location = useLocation();
 	let post = location.state;
@@ -73,7 +74,9 @@ const Main = ({section, genreList, addPost}) => {
 									{list.slice(0,3).map((item, index) => (
 											<tr key={item.po_num || index} style={{height: '75px', borderBottom: '1px solid lightgray'}}>
 													<td>{item.po_num}</td>
-													<td style={{textAlign: 'left'}}>{item.po_title}</td>
+														<td style={{ textAlign: 'left' }} onClick={() => navigate(`/post/detail/${item.po_num}`)}>
+															<u style={{cursor: 'pointer'}}>{item.po_title}</u>
+														</td>
 													<td>{item.po_me_id}</td>
 													<td>{item.date}</td>
 											</tr>
