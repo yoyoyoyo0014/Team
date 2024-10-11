@@ -10,8 +10,12 @@
 	</select>
 	
 	<select id="selectBook">
-		select *
+		select book.*, group_concat(wr_name separator ' | ') as bk_writer
 		from book
+		join writer_list
+		on bk_num = wl_bk_num
+		join writer
+		on wr_num = wl_wr_num
 		where bk_num = #{bookNum}
 	</select>
 	
@@ -159,5 +163,9 @@
 		on wr_num = wl_wr_num
 		group by bk_num
 		order by bk_date desc limit 3
+	</select>
+	
+	<select id="selectMaxBookNum" resultType="int">
+		select max(bk_num) from book
 	</select>
 </mapper>

@@ -26,6 +26,7 @@ public class MainController {
 	@GetMapping("/main")
 	public HashMap<String, Object> main() {
 		List<BookGenreVO> dbList = bookService.getAllGenre();
+		BookVO book = bookService.getRandomBook();
 		
 		List<List<BookGenreVO>> list = new ArrayList<>();
 		
@@ -41,6 +42,8 @@ public class MainController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("majorGenreList", dbList);
 		map.put("genreList", list);
+		map.put("book", book);
+		System.out.println(book);
 		return map;
 	}
 	

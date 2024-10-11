@@ -5,7 +5,7 @@ import BestSellers from './main/bestsellers';
 import NewBooks from './main/newbooks';
 import EventSection from './main/eventsection';
 
-const Main = ({section, genreList}) => {
+const Main = ({section, genreList, book}) => {
 	const SectionTitle = (section) => {
 		if(section.section === 'newBooks') {
 			return(
@@ -37,7 +37,7 @@ const Main = ({section, genreList}) => {
 			
 			<EventSection/>
 
-			<TodayBook/>
+			<TodayBook book={book}/>
 		</div>
 	)
 }

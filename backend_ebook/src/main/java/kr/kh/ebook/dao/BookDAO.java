@@ -46,4 +46,6 @@ public interface BookDAO {
 	List<BookVO> selectBestSellers();
 
 	List<BookVO> selectNewBooks();
+
+	int selectMaxBookNum();
 }

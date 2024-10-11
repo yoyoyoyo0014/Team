@@ -1,5 +1,6 @@
 package kr.kh.ebook.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,12 @@ public class BookContoller {
 	
 	@PostMapping("/selectBook/{bookNum}")
 	@ResponseBody
-	public BookVO selectBook(@PathVariable("bookNum") int bookNum) {
-		return bookService.selectBook(bookNum);
+	public HashMap<String, Object> selectBook(@PathVariable("bookNum") int bookNum) {
+		BookVO book= bookService.selectBook(bookNum);
+		System.out.println(book);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("book", book);
+		return map;
 	}//책 번호를 통해 책 정보 가져오기
 	
 	

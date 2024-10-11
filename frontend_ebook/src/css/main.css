@@ -51,8 +51,7 @@
 	max-width: 200px;
 }
 .books .book .book-wrapper {display: flex; min-height: 200px;}
-.books .book .book-wrapper .book-img {box-shadow: var(--box-shadow); margin: auto; width: 70%;}
-.books .book .book-wrapper .book-img img {float: left;}
+.books .book .book-wrapper .book-img {margin: auto; width: 70%;}
 
 .books .book .book-info {padding-top: 2em;}
 
@@ -97,11 +96,12 @@
 	gap: 3em;
 	align-items: center;
 }
-#today-book .book-img {display: flex; justify-content: center; align-items: center; flex-wrap: wrap; box-shadow: var(--box-shadow); max-height: 100%; width: 600px;}
+#today-book .book-img {display: flex; justify-content: center; align-items: center; flex-wrap: wrap; max-height: 100%;}
 
 #today-book .book-title h3 {font-size: var(--page-title-font-size);}
 #today-book .book-title .writer {line-height: 3;}
 
+#today-book .book-desc {width: 100%;}
 #today-book .book-content {position: relative; height: 200px; overflow: hidden;}
 #today-book .book-content::before {
 	content: '';
@@ -126,7 +126,7 @@
 	justify-content: center;
 	background: linear-gradient(to top, var(--color-light-grey) 50%, transparent 150%);
 }
-.blind button {margin-bottom: -2em; padding-left: 4em; padding-right: 4em; font-weight: 900;}
+.blind .btn-point {margin-bottom: -2em; padding-left: 4em; padding-right: 4em; font-weight: 900;}
 
 @media all and (max-width: 1024px) {
 	.top-section-content {flex-direction: column; height: unset;}

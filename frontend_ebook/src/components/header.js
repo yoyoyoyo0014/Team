@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "./form/input";
 import Button from "./form/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const Header = ({setSection, genreList}) => {

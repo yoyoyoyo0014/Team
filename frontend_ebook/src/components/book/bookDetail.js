@@ -1,6 +1,9 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import axios from 'axios';
 
-function BookDetail({Getuser,bookNum}) {
+import '../../css/detail.css';
+
+const BookDetail = ({Getuser, bookNum}) => {
   let [book,setBook] = useState({
     bk_num : 0, //도서 번호
     bk_name : '', //도서 이름
@@ -74,40 +77,60 @@ function BookDetail({Getuser,bookNum}) {
   });//인기분포도 %
 
   function getBookData(){
-    fetch('/ebook/selectBook/'+bookNum,{
-      method : "post",
-			//body : JSON.stringify(book),
-			headers : {
-				"Content-type" : "application/json"
-			}
-    })
-      .then(res=>res.text())
-      .then(bookData=>{
-        if(bookData){
-          book = JSON.parse(bookData); 
-          setBook(book);
-          popularityDistributionChart = PopularityDistributionChart(book);//인기분포율 세팅
-        }
-      })
-      .catch(e=>console.error(e));
+    popularityDistributionChart = PopularityDistributionChart(book);//인기분포율 세팅
   }
 
+  const options = {
+		url: '/ebook/selectBook/' + bookNum,
+		method:'POST',
+		header: {
+			'Accept':'application/json',
+			'Content-Type': "'application/json';charset=UTP-8'"
+			//연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
+		},
+		data: {
+			bookNum: bookNum
+		}
+	}
+
+  useEffect(() => {
+    axios(options)
+		.then(res => {
+			setBook(res.data.book);
+		})
+		.catch((error) => {
+			if (error.response) {
+				// 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
+				console.log(error.response.status);
+			} else if (error.request) {
+				// 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
+				// 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+				// node.js에서는 http.ClientRequest 인스턴스입니다.
+				console.log(error.request);
+			} else {
+				// 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+				console.log('Error', error.message);
+			}
+			console.log(error.config);
+		})
+  }, [])
+  
   return (
     <div>
-      <button onClick={getBookData}>클릭해봐!</button>
+      <div className="book-info">
+        <div className="book-img">
+          <img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt={book.bk_name}/>
+        </div>
+        <div className="info">
+          <h2>{book.bk_name}</h2>
+          <p>{book.bk_writer}</p>
+          <strong>￦{book.bk_price}</strong>
+        </div>
+      </div>
 
-      <label>리뷰할 책 번호
-      <input type='number'/>
-      </label>
-
-      <label>리뷰내용
-      <input type='text' maxLength="255" placeholder="최대 255자 입력 가능"/>
-      </label>
-
-      <label>평점
-      <input type='number'/>
-      </label>
-      
+      <div className="book-desc">
+        <p>{book.bk_plot}</p>
+      </div>
     </div>
   )
 }

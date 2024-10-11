@@ -157,6 +157,9 @@ hr {
 .txt-right {text-align: right;}
 .txt-center {text-align: center;}
 
+.book-img {box-shadow: var(--box-shadow);}
+.book-img img {float: left;}
+
 /* search form */
 .search-box {position: relative; width: 70%; float: right;}
 .search-box .btn {

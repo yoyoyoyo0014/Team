@@ -1,6 +1,7 @@
 package kr.kh.ebook.service;
 
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -80,6 +81,17 @@ public class BookService {
 	public List<BookVO> getNewBooks() {
 		List<BookVO> list = bookDao.selectNewBooks();
 		return list;
+	}
+
+	public BookVO getRandomBook() {
+		int max = bookDao.selectMaxBookNum();
+		Random random = new Random();
+		int rand = random.nextInt(max);
+		BookVO book = new BookVO();
+		do {
+			book = bookDao.selectBook(rand);
+		} while(book == null);
+		return book;
 	}
 	
 }

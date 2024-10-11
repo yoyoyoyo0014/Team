@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 import Main from "./components/main.js";
 import MyBooks from "./pages/mypage/mybooks.js";
@@ -11,11 +10,12 @@ import Request from "./pages/request.js";
 
 import Login from "./pages/login.js";
 import Join from "./pages/join.js";
+import BookDetail from "./components/book/bookDetail.js";
 
-function Router({section, genreList}){
+function Router({section, genreList, book}){
 	return(
 		<Routes>
-			<Route path="/" element={<Main section={section} genreList={genreList}/>} />
+			<Route path="/" element={<Main section={section} genreList={genreList} book={book}/>} />
 			<Route path="/mypage/mybooks" element={<MyBooks/>}/>
 			<Route path="/main/bestsellers" element={<BestSellers/>}/>
 			<Route path="/main/newbooks" element={<NewBooks/>}/>
@@ -25,6 +25,8 @@ function Router({section, genreList}){
 
 			<Route path="/login" element={<Login/>}/>
 			<Route path="/join" element={<Join/>}/>
+
+			<Route path="/ebook/selectBook/:bk_num" element={<BookDetail bookNum={book.bk_num}/>}/>
 		</Routes>
 	)
 }
