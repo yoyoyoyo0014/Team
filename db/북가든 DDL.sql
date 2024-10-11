@@ -77,7 +77,8 @@ CREATE TABLE `report` (
 	`rp_target`	varchar(50)	NOT NULL,
 	`rp_content`	text	NULL,
 	`rp_rt_num`	int	NOT NULL,
-    `rp_date` datetime NOT NULL  default CURRENT_TIMESTAMP
+    `rp_date` datetime NOT NULL  default CURRENT_TIMESTAMP,
+    `rp_id` varchar(15) NOT NULL
 );
 
 CREATE TABLE `report_type` (
