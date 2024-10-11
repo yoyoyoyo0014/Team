@@ -1,14 +1,20 @@
 import {useState} from 'react';
 import React, { useEffect } from 'react';
 import MakePage from './pageButton';
+import Modal from 'react-modal';
+import Report, { bookReviewReport } from './report';
+import ReportType from './reportType';
+
+Modal.setAppElement('#root'); // 접근성 관련 설정 (필수)
+
 function BookReview({bookNum,userId,userIsBuy}) {
   //bookNum = 받을 책 번호
   //userIsBuy = 유저가 이미 책을 샀는가
   //review =  유저가 리뷰를 작성 하면 받는 값
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const reviewPageCount = 5;//한 페이지에 존재하는 리뷰 수
 
-  //let [reviewCurrentPage,setReviewCurrentPage] = useState(0);//리뷰 리스트 페이지번호
   let [reviewList,setReviewList] = useState([]); //리뷰 리스트
   
   let [writeUserReview,setWriteUserReview] = useState({
@@ -29,7 +35,6 @@ function BookReview({bookNum,userId,userIsBuy}) {
     re_me_id : ''
   })//기존 리뷰  수정되지 않으면 변경되지 않기 위함
 
-  //let[useIsBuy, setUserIsBuy] = useState(false); //유저가 책을 샀는가
   let[writerIsReview, setWriterIsReview] = useState(false);  //유저가 리뷰를 작성했는가
 
   let [page,setPage] = useState({
@@ -42,8 +47,17 @@ function BookReview({bookNum,userId,userIsBuy}) {
     pageList : []
   })//페이지 이동버튼
 
-  let [pageEvent,setPageEvent] = useState([])  //클릭 이벤트
- 
+  let [reportType,setReportType] = useState([]);
+
+  let [report,setReport] = useState({
+    rp_num : 0,
+    rp_me_id : userId,
+    rp_target : '',
+    rp_content : '',
+    rp_rt_num : 0,
+    rp_id : ''
+  })//신고객체
+
   function insertReview(){
     if(writerIsReview){
       alert('이미 리뷰를 작성하였습니다.')
@@ -195,9 +209,9 @@ function BookReview({bookNum,userId,userIsBuy}) {
     .catch(e=>console.error(e));
   }//해당 유저가 리뷰를 썼는지
 
-  function selectReviewList(currentPageNum){
+  function selectReviewList(currentPageNum ,successSelectReviewList = null){
     var pageNum = (currentPageNum-1) * reviewPageCount;
-
+    
     fetch("/ebook/reviewList/"+bookNum+"/"+pageNum,{
       method : "post",
       //body : JSON.stringify(writeUserReview),
@@ -211,9 +225,11 @@ function BookReview({bookNum,userId,userIsBuy}) {
       var objs = [];
       objs = [...reviewListData];
       setReviewList(objs);
+      if(successSelectReviewList)
+        successSelectReviewList()// 리뷰목록을 성공적으로 가져오면 실행하기
     })
     .catch(e=>console.error(e));
-  }//리뷰 목록
+  }//리뷰 목록(현제 페이지 번호, 성공할 시 실행할 메소드)
 
   function selectReviewCount (){
     fetch('/ebook/reviewCount/'+bookNum,{
@@ -233,22 +249,53 @@ function BookReview({bookNum,userId,userIsBuy}) {
   }//리뷰 개수
 
   function changePage(index){
-    var i ={index : 0}
-    i = index
+    var i;
+    if(typeof index === 'number'){//index가 정수값일 때
+      
+      i = index;
 
-    page.currentPage = page.pageList[i.index];
+      const successSelectPage =  function(){
+        page.currentPage = i;
+  
+        page = MakePage(page.contentsCount,page.currentPage);
+  
+        setPage({...page});
+      }
+  
+      selectReviewList(i,successSelectPage);//리뷰 목록 바꾸기
 
-    page = MakePage(page.contentsCount,page.currentPage);
-    selectReviewList(page.currentPage);
-    setPage({...page})
+      return;
+    }else{
+      i ={index : 0}
+      i = index
+    }//index가 객체값일 때
+    const successSelectPage =  function(){
+      page.currentPage = page.pageList[i.index];
+
+      page = MakePage(page.contentsCount,page.currentPage);
+
+      setPage({...page});
+    }
+
+    selectReviewList(page.pageList[i.index],successSelectPage);//리뷰 목록 바꾸기
+    //페이지 바꾸기
   }//페이지가 바뀔 때
 
   function changePageOri(){
     selectReviewCount();
     page = MakePage(page.contentsCount,page.currentPage);
     setPage({...page})
-  }
+  }// page.currentPage로 페이지 변경
 
+  function userReport(id,content,reviewNum){
+    report.rp_target = id;
+    report.rp_id = bookReviewReport(reviewNum);
+    report.rp_content = '신고 위치 : 책 리뷰에서 신고, '+ '신고 내용 : ' +content;
+    setReport({...report});
+  }//유저 리폿할 때
+
+  
+  
   //console.log(렌더링 횟수);
   useEffect(() => {
       selectReviewCount();//리뷰 개수
@@ -275,6 +322,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
               <th>이름</th>
               <th>내용</th>
               <th>별점</th>
+              <th>신고</th>
             </tr>
           </thead>
         
@@ -284,6 +332,8 @@ function BookReview({bookNum,userId,userIsBuy}) {
               <td>{item.re_me_id}</td>
               <td>{item.re_content}</td>
               <td>{item.re_star}</td>
+              <td><button onClick={() => {userReport(item.re_me_id,item.re_content,item.re_num);
+                 setModalIsOpen(true)}}>신고하기</button></td>
             </tr>
           ))}
         </tbody>
@@ -295,7 +345,20 @@ function BookReview({bookNum,userId,userIsBuy}) {
           return(<button onClick={()=>changePage({index})} disabled={page.currentPage==(index+1)} key={index}>{item}</button>)
       })}
 
-      <button onClick={()=>changePage(page.currentPage+1)} disabled = {!page.next}>다음</button>  
+      <button onClick={()=>changePage(page.currentPage+1)} disabled = {!page.next}>다음</button>
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        style={{
+          overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+          content: { color: 'black', padding: '20px', borderRadius: '8px' },
+        }}
+      >
+        <Report reportTypeList={reportType} getReport={report} exit={()=>setModalIsOpen(false)}/>
+       
+      </Modal>
+     
     </div>
   );
 }
