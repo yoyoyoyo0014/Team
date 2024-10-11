@@ -1,0 +1,44 @@
+@charset 'utf-8';
+
+.login-form form {
+	max-width: 400px;
+	margin: 0 auto;
+}
+
+.login-form form .input-item {padding: 0;}
+.login-form form .input-item input {padding-left: 3em;}
+.login-form form .input-item label {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 3rem;
+	height: 3rem;
+	font-size: 0;
+	transform: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.login-form form .input-item input + label::before {
+	font-size: var(--font-size);
+	font-family: var(--icon-font-family);
+}
+.login-form form .input-item input[name="me_id"] + label::before {content: '\f007';}
+.login-form form .input-item input[name="me_pw"] + label::before {content: '\f023';}
+
+.login-form form .input-item:nth-of-type(2) {top: 1em;}
+
+.login-form button[type="submit"] {
+	font-weight: 900;
+	margin: 0 auto;
+	display: block;
+	padding-left: 5em;
+	padding-right: 5em;
+	margin-top: 3em;
+}
+
+.sns-login .btn {margin-top: 1em;}
+
+.btn-naver {background: #17B75E; color: #fff;}
+.btn-kakao {background: #ffda23; color: #3c1e1e;}
+.btn-google {background: #fff; color: #333; border: 1px solid #ccc;}

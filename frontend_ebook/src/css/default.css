@@ -1,0 +1,18 @@
+@charset 'utf-8';
+
+* {margin: 0; padding: 0; box-sizing: border-box;}
+
+a {text-decoration: none; color: inherit;}
+ul, ol, li {list-style: none;}
+input, select, textarea, button {font: inherit; color: inherit; border: 0;}
+input:focus, select:focus, textarea:focus, button:focus {outline: none;}
+textarea {resize: vertical;}
+
+fieldset {border: 0;}
+
+.hidden {display: none;}
+
+.fix-layout {width: 95vw; max-width: 1040px; margin: 0 auto; padding: 1em;}
+
+#root {min-height: calc(var(--vh) * 100);}
+#body {padding: 7em 0;}
