@@ -16,11 +16,10 @@ public class MemberContorller {
 	@Autowired
 	private MemberService memberService;
 	
-	// 회원 아이디로 사용자 정보 조회
+	// 회원 아이디로 사용자 정보 조회 ( 카카오 )
 	@GetMapping("/{me_id}")
 	public MemberVO getMember(@PathVariable String me_id) {
 		return memberService.getMemberById(me_id);
 	}
-	
 	
 }

@@ -11,6 +11,45 @@ const Login = () => {
 	const navigate = useNavigate(); // useNavigate 훅 사용
 
   const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
+  const [credentials, setCredentials] = useState({ me_id: "", me_pw: "" });  // 사용자 입력 상태
+  const [errorMessage, setErrorMessage] = useState("");  // 에러 메시지 상태
+
+   // 입력 값 변경 핸들러
+   const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials({ ...credentials, [name]: value });
+  };
+
+    // 일반 로그인 처리
+    const handleLoginSubmit = (e) => {
+      e.preventDefault();
+  
+      fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+
+          console.log("서버 응답:", data);  // 서버로부터 받은 응답 로그 출력
+
+          if (data.success) {
+            // 로그인 성공 시 토큰을 localStorage에 저장
+            localStorage.setItem("loginToken", data.token);
+            setIsLoggedIn(true);
+            navigate("/");  // 메인 페이지로 이동
+          } else {
+            setErrorMessage(data.message || "로그인 실패");
+          }
+        })
+        .catch((error) => {
+          console.error("로그인 처리 중 오류:", error);
+          setErrorMessage("서버 오류가 발생했습니다.");
+        });
+    };
 
   useEffect(() => {
     const kakaoScript = document.createElement("script");
@@ -146,16 +185,21 @@ const Login = () => {
   return (
     <div className="login-form">
       <h2 className="txt-center page-title">Book<br />Garden</h2>
-      <form>
+      <form onSubmit={handleLoginSubmit}>
         <InputItem
-          inputs={[{ id: "me_id", name: "me_id", type: "text" }]}
+          inputs={[{ id: "me_id", name: "me_id", type: "text", 
+                    value: credentials.me_id, onChange: handleInputChange },]}
           label="아이디"
         />
         <InputItem
-          inputs={[{ id: "me_pw", name: "me_pw", type: "password" }]}
+          inputs={[{ id: "me_pw", name: "me_pw", type: "password", 
+                  value: credentials.me_pw, onChange: handleInputChange },]}
           label="비밀번호"
         />
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
+
         <div className="sns-login">
           <Button
             type={"button"}
