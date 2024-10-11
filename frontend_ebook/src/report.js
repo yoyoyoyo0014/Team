@@ -19,7 +19,7 @@ export function Report({getReport,exit}) {
   let reportContent = getReport.rp_content//신고 사유
   let reportTypeNum = 1;  //신고 유형 번호
 
-  function reportSubmit(){
+  function clickReportButton(){
     if(getReport.rp_me_id == getReport.rp_target){
       alert("신고할 수 없는 대상입니다.");
       exit();
@@ -34,19 +34,20 @@ export function Report({getReport,exit}) {
       report.rp_content = getReport.rp_content +  '신고 사유 : ' + reportContent;
       report.rp_rt_num = reportTypeNum;
       report.rp_id = getReport.rp_me_id;
-      test();
-    }
-  }//신고 보내기
 
-  async function test() {
-    var exist = await CheckReport(report);
+      (async ()=>{
+        var exist = await CheckReport(report);
         if(exist){
           alert('이미 접수된 신고입니다.')
           exit();
         }
           
         else{submitReport(report,exit())}
-  }
+      })();
+    }
+  }//신고 보내기
+
+  
   function submitReport(report,successSubmitReport){
     fetch("/ebook/report/insertReport",{
       method : "post",
@@ -112,7 +113,7 @@ export function Report({getReport,exit}) {
 
       <textarea onChange={e=>reportContent=e.target.value}
         maxLength="255"  placeholder="신고사유"></textarea>
-      <button onClick={reportSubmit}>보내기</button>
+      <button onClick={clickReportButton}>보내기</button>
       <button onClick={exit}>닫기</button>
     </div>
   )
