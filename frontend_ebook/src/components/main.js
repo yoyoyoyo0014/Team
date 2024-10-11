@@ -62,7 +62,7 @@ const Main = ({section, genreList}) => {
 							</thead>
 							<tbody>
 									{list.slice(0,3).map((item, index) => (
-											<tr key={item.po_num || index} style={{height: '75px'}}>
+											<tr key={item.po_num || index} style={{height: '75px', borderBottom: '1px solid lightgray'}}>
 													<td>{item.po_num}</td>
 													<td style={{textAlign: 'left'}}>{item.po_title}</td>
 													<td>{item.po_me_id}</td>
