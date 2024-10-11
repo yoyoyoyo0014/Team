@@ -39,7 +39,8 @@ const List = ({ communities = [] }) => {
         })
         .then((data) => {
           if (data && data.list) {
-            setList(data.list);
+            const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
+            setList(sortedList);
           } else {
             console.error("No 'list' field in response data:", data);
           }
@@ -74,7 +75,7 @@ const List = ({ communities = [] }) => {
           {list && list.length > 0 ? (
             list.map((item, idx) => (
               <tr key={idx} style={{height: '75px', borderBottom: '1px solid lightgray'}}>
-                <td>{list.length - idx}</td>
+                <td>{list.length - idx}</td> 
                 <td style={{ textAlign: 'left' }} onClick={() => console.log(`클릭한 항목 인덱스: ${idx}`)}>
                   {item.po_title}
                 </td>
