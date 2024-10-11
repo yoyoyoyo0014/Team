@@ -72,6 +72,13 @@ public class PostController {
 		return "/post/update"+po_num;
 	}
 	
+	@GetMapping("/post/detail/{po_num}")
+	public String PostDetail(Model model, @PathVariable int po_num) {
+		PostVO post = postService.getPost(po_num);
+		model.addAttribute("post", post);
+		return "post/detail";
+	}
+	
 	@GetMapping("/post/delete/{co_num}/{po_num}")
 	public String postDeletePost(Model model, @PathVariable int co_num, @PathVariable int po_num) {
 		boolean res= postService.deletePost(po_num);
