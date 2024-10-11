@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const List = ({ communities = [] }) => { // communities에 기본값 빈 배열 설정
+const List = ({ communities = [] }) => {
   const { co_num } = useParams();
   const [list, setList] = useState([]);
   function titleClick(index){
@@ -13,14 +13,14 @@ const List = ({ communities = [] }) => { // communities에 기본값 빈 배열 
 
   useEffect(() => {
     if (co_num) {
-      fetch(`/post/list/${co_num}`)  // co_num을 경로 파라미터로 전달
+      fetch(`/post/list/${co_num}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           return response.json();
         })
-        .then((data) => setList(data))
+        .then((data) => console.log(data))
         .catch((error) => console.error('Error fetching posts:', error));
     }
   }, [co_num]);

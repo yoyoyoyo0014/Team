@@ -2,14 +2,23 @@ import '../css/main.css';
 import Button from './form/button';
 import GenreNavBar from './genrenavbar';
 import { useState, useEffect } from 'react';
-import { Link, useParams  } from 'react-router-dom';
+import { Link, useParams, useLocation  } from 'react-router-dom';
 
-const Main = ({section, genreList}) => {
+const Main = ({section, genreList, addPost}) => {
 	let [books, setBooks] = useState([{}]);
 	const [hover, setHover] = useState(false);
 	let [list, setList] = useState([]);
 	let [pm, setPm] = useState({});
 	const {co_num} = useParams();
+
+	const location = useLocation();
+	let post = location.state;
+	if(post != null){
+		addPost(post);
+		location.state = null;
+	}
+
+
 	useEffect(() => {
     fetch('/main')
       .then((res) => res.json())
