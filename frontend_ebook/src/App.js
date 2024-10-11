@@ -23,35 +23,42 @@ function App() {
 		header: {
 			'Accept': 'application/json',
 			'Content-Type': "'application/json';charset=UTP-8'"
-			//연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
 		}
   }
 
+	console.log('genrelist: ' + genreList);
+
   useEffect(() => {
+		console.log('useEffect called');
+
     window.addEventListener('resize', ()=> Common.setVh());
     Common.setVh();
 
-    axios(options)
-		.then(res => {
-			setGenreList(res.data.genreList);
-      setMajorGenreList(res.data.majorGenreList);
-      setBook(res.data.book);
-		})
-		.catch((error) => {
-			if (error.response) {
-				// 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
-				console.log(error.response.status);
-			} else if (error.request) {
-				// 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
-				// 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
-				// node.js에서는 http.ClientRequest 인스턴스입니다.
-				console.log(error.request);
-			} else {
-				// 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
-				console.log('Error', error.message);
-			}
-		})
-  }, [])
+		(async () => {
+			console.log('axios called before');
+			await axios(options)
+			.then(res => {
+				setGenreList(res.data.genreList);
+				setMajorGenreList(res.data.majorGenreList);
+				setBook(res.data.book);
+				console.log('axios called');
+			})
+			.catch((error) => {
+				if (error.response) {
+					// 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
+					console.log(error.response.status);
+				} else if (error.request) {
+					// 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
+					// 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+					// node.js에서는 http.ClientRequest 인스턴스입니다.
+					console.log(error.request);
+				} else {
+					// 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+					console.log('Error', error.message);
+				}
+			})
+		})();
+  }, []);
 
 	return(
 		<div>

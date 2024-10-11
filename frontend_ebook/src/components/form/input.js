@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Input = ({id, type, placeholder, name, cls, change, value, readOnly}) => {
+const Input = ({id, type, placeholder, name, cls, change, value, readOnly, checked}) => {
 	return(
 		<input
 			type={type}
@@ -12,11 +12,14 @@ const Input = ({id, type, placeholder, name, cls, change, value, readOnly}) => {
 			value={value}
 			readOnly={
 				readOnly ? 'readonly' : ''
+			}
+			checked={
+				checked ? 'checked' : ''
 			}/>
 	)
 }
 
-const InputItem = ({id, type, placeholder, name, cls, change, value, readOnly, label, notice, registerProps, error, style}) => {
+const InputItem = ({id, type, placeholder, name, cls, change, value, readOnly, label, notice, registerProps, error, style, checked}) => {
 
 	return(
 		<div className="input-item" style={style}>
@@ -31,6 +34,9 @@ const InputItem = ({id, type, placeholder, name, cls, change, value, readOnly, l
 				{...registerProps} // register 함수의 속성을 전달
 				readOnly={
 					readOnly ? 'readonly' : ''
+				}
+				checked={
+					checked ? 'checked' : ''
 				}/>
 			{label && label !== "" ? <label>{label} {notice && notice ? <span>{notice}</span> : ''}</label> : ""}
 			{error && <span className="error">{error.message}</span>} {/* 에러 메시지 */}

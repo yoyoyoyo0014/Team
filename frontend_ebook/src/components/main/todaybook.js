@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 
 const TodayBook = ({book}) => {
-	console.log(book);
 	return(
 		<section id="today-book">
 			<div className="theme-box">
@@ -14,7 +13,7 @@ const TodayBook = ({book}) => {
 
 					<div className="book-desc">
 						<div className="book-title">
-							<p className="publisher"><strong>북스그라운드</strong></p>
+							<p className="publisher"><strong>{book.bk_publisher}</strong></p>
 							<h3>{book.bk_name}</h3>
 							<p className="writer">{book.bk_writer}</p>
 						</div>

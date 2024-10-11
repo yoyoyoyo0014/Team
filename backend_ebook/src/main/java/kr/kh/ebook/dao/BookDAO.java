@@ -53,4 +53,6 @@ public interface BookDAO {
 	boolean updateReview(@Param("re")ReviewVO writeUserReview);  //리뷰 업데이트
 
 	boolean deleteReview(@Param("bookNum")int bookNum, @Param("id")String id);
+
+	List<WriterVO> selectWriter(int bookNum);
 }

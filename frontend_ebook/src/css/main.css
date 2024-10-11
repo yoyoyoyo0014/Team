@@ -53,8 +53,9 @@
 .books .book .book-wrapper {display: flex; min-height: 200px;}
 .books .book .book-wrapper .book-img {margin: auto; width: 70%;}
 
-.books .book .book-info {padding-top: 2em;}
+.books .book .book-info {padding-top: 2em; display: block;}
 
+#best-sellers {padding-top: 3em !important;}
 #best-sellers .book:nth-of-type(1) {order: 1;}
 #best-sellers .book:nth-of-type(3) {order: 2;}
 #best-sellers .book:nth-of-type(2) .book-img {width: 60%;}
@@ -85,7 +86,6 @@
 	position: absolute;
 	right: 0;
 	bottom: 0;
-	color: var(--color-grey);
 }
 
 #event {}

@@ -15,8 +15,19 @@
 		join writer_list
 		on bk_num = wl_bk_num
 		join writer
+		on wr_num = wl_wr_num	
+	where bk_num = #{bookNum}
+	</select>
+	
+	<select id="selectWriter">
+		select wr_name, wt_name
+		from writer_list
+		join writer
 		on wr_num = wl_wr_num
-		where bk_num = #{bookNum}
+		join writer_type
+		on wt_num = wl_wt_num
+		where wl_bk_num = #{bookNum}
+		order by wt_num;
 	</select>
 	
 	<select id="searchBookCount">

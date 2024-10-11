@@ -10,6 +10,7 @@ import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
+import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookCriteria;
 import kr.kh.ebook.pagination.PageMaker;
 import lombok.AllArgsConstructor;
@@ -104,5 +105,9 @@ public class BookService {
 
 	public boolean deleteReview(int bookNum, String id) {
 		return bookDao.deleteReview(bookNum,id);
+	}
+
+	public List<WriterVO> selectWriter(int bookNum) {
+		return bookDao.selectWriter(bookNum);
 	}
 }

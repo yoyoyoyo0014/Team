@@ -43,7 +43,6 @@ public class MainController {
 		map.put("majorGenreList", dbList);
 		map.put("genreList", list);
 		map.put("book", book);
-		System.out.println(book);
 		return map;
 	}
 	

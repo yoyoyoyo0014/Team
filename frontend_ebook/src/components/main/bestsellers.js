@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const BestSellers = () => {
@@ -43,7 +44,7 @@ const BestSellers = () => {
 			{
 				books && books.map((book, i) => {
 					return(
-						<div className="book">
+						<Link to={"/ebook/selectBook/" + book.bk_num} className="book">
 							<div className="book-wrapper">
 								<div className="book-img">
 									<span className="rank">{i + 1}</span>
@@ -54,7 +55,7 @@ const BestSellers = () => {
 								<strong>{book.bk_name}</strong>
 								<p>{book.bk_writer}</p>
 							</div>
-						</div>
+						</Link>
 					)
 				})
 			}

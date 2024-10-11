@@ -160,6 +160,15 @@ hr {
 .book-img {box-shadow: var(--box-shadow);}
 .book-img img {float: left;}
 
+.star-rating {display: flex;gap: 1em;}
+.star-rating input {display: none;}
+.star-rating input + label {font-size: 0;}
+.star-rating input + label::before {
+	content: '\f005';
+	font-size: var(--font-size);
+	font-family: var(--icon-font-family);
+}
+
 /* search form */
 .search-box {position: relative; width: 70%; float: right;}
 .search-box .btn {

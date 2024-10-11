@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 
 import '../../css/detail.css';
+import StarRating from '../starRating';
 
 const BookDetail = ({Getuser, bookNum}) => {
   let [book,setBook] = useState({
@@ -35,6 +36,7 @@ const BookDetail = ({Getuser, bookNum}) => {
 	  bk_age_10_male: 0,  //10대 남자
 	  bk_age_10_female: 0  //10대 여자
   })//책 데이터
+  let [writer, setWriter] = useState([]);
 
   let[user,setUser] = useState({
     me_id : '', //아이디
@@ -80,9 +82,11 @@ const BookDetail = ({Getuser, bookNum}) => {
     popularityDistributionChart = PopularityDistributionChart(book);//인기분포율 세팅
   }
 
+  let score = (book.bk_score / book.bk_reviewCount).toFixed(1);
+
   const options = {
 		url: '/ebook/selectBook/' + bookNum,
-		method:'POST',
+		method:'GET',
 		header: {
 			'Accept':'application/json',
 			'Content-Type': "'application/json';charset=UTP-8'"
@@ -95,24 +99,25 @@ const BookDetail = ({Getuser, bookNum}) => {
 
   useEffect(() => {
     axios(options)
-		.then(res => {
-			setBook(res.data.book);
-		})
-		.catch((error) => {
-			if (error.response) {
-				// 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
-				console.log(error.response.status);
-			} else if (error.request) {
-				// 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
-				// 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
-				// node.js에서는 http.ClientRequest 인스턴스입니다.
-				console.log(error.request);
-			} else {
-				// 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
-				console.log('Error', error.message);
-			}
-			console.log(error.config);
-		})
+      .then(res => {
+        setBook(res.data.book);
+        setWriter(res.data.writer);
+      })
+      .catch((error) => {
+        if (error.response) {
+          // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
+          console.log(error.response.status);
+        } else if (error.request) {
+          // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
+          // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+          // node.js에서는 http.ClientRequest 인스턴스입니다.
+          console.log(error.request);
+        } else {
+          // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+      })
   }, [])
   
   return (
@@ -122,9 +127,26 @@ const BookDetail = ({Getuser, bookNum}) => {
           <img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt={book.bk_name}/>
         </div>
         <div className="info">
+          <p className="publisher">{book.bk_publisher}</p>
           <h2>{book.bk_name}</h2>
-          <p>{book.bk_writer}</p>
-          <strong>￦{book.bk_price}</strong>
+          <dl>
+            <dt>판매가</dt>
+            <dd>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(book.bk_price)}</dd>
+          </dl>
+          {writer.map(item => {
+            console.log(item);
+            return (
+              <dl>
+                <dt>{item.wt_name}</dt>
+                <dd>{item.wr_name}</dd>
+              </dl>
+            )
+          })}
+
+          <div className="rating">
+            <StarRating score={Math.floor(score)}/>
+            <strong>{score}</strong>({book.bk_reviewCount})
+          </div>
         </div>
       </div>
 

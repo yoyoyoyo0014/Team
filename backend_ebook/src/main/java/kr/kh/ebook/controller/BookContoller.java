@@ -5,23 +5,25 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
+import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookCriteria;
-import kr.kh.ebook.pagination.Criteria;
 import kr.kh.ebook.pagination.PageMaker;
 import kr.kh.ebook.service.BookService;
 
-@Controller
 @RequestMapping("/ebook")
+@RestController
 public class BookContoller {
 	
 	@Autowired
@@ -29,16 +31,16 @@ public class BookContoller {
 	
 	
 	//책 번호를 통해 책 정보 가져오기
-	@PostMapping("/selectBook/{bookNum}")
+	@GetMapping("/selectBook/{bookNum}")
 	@ResponseBody
-	public HashMap<String, Object> selectBook(@PathVariable("bookNum") int bookNum) {
-		BookVO book= bookService.selectBook(bookNum);
-		System.out.println(book);
+	public HashMap<String, Object> selectBookPost(@PathVariable("bookNum") int bookNum) {
+		BookVO book = bookService.selectBook(bookNum);
+		List<WriterVO> writer = bookService.selectWriter(bookNum);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("book", book);
+		map.put("writer", writer);
 		return map;
 	}//책 번호를 통해 책 정보 가져오기
-	
 	
 	//책 검색
 	@PostMapping("/search")
