@@ -1,10 +1,15 @@
 import {useEffect, useState} from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+import Button from '../form/button';
 import '../../css/detail.css';
 import StarRating from '../starRating';
 
-const BookDetail = ({Getuser, bookNum}) => {
+const BookDetail = ({Getuser}) => {
+  const bookNum = useParams().bk_num;
+
+  let [reviewList, setReviewList] = useState([]);
   let [book,setBook] = useState({
     bk_num : 0, //도서 번호
     bk_name : '', //도서 이름
@@ -85,7 +90,7 @@ const BookDetail = ({Getuser, bookNum}) => {
   let score = (book.bk_score / book.bk_reviewCount).toFixed(1);
 
   const options = {
-		url: '/ebook/selectBook/' + bookNum,
+		url: '/api/selectBook/' + bookNum,
 		method:'GET',
 		header: {
 			'Accept':'application/json',
@@ -102,6 +107,7 @@ const BookDetail = ({Getuser, bookNum}) => {
       .then(res => {
         setBook(res.data.book);
         setWriter(res.data.writer);
+        console.log("data load 성공")
       })
       .catch((error) => {
         if (error.response) {
@@ -119,7 +125,6 @@ const BookDetail = ({Getuser, bookNum}) => {
         console.log(error.config);
       })
   }, [])
-  
   return (
     <div>
       <div className="book-info">
@@ -134,7 +139,6 @@ const BookDetail = ({Getuser, bookNum}) => {
             <dd>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(book.bk_price)}</dd>
           </dl>
           {writer.map(item => {
-            console.log(item);
             return (
               <dl>
                 <dt>{item.wt_name}</dt>
@@ -145,13 +149,33 @@ const BookDetail = ({Getuser, bookNum}) => {
 
           <div className="rating">
             <StarRating score={Math.floor(score)}/>
-            <strong>{score}</strong>({book.bk_reviewCount})
+            <span><strong>{score === "NaN" ? 0 : score}</strong>({book.bk_reviewCount})</span>
+          </div>
+
+          <div className="btns">
+            <Button type="button" text="장바구니" cls="btn"/>
+            <Button type="button" text="구매하기" cls="btn btn-point"/>
           </div>
         </div>
       </div>
 
-      <div className="book-desc">
+      <div className="book-desc section">
+        <h3>책 소개</h3>
         <p>{book.bk_plot}</p>
+      </div>
+
+      <hr/>
+      <div className="review-container section">
+        <h3>리뷰</h3>
+
+        <ul>
+          {reviewList ? <li className="no-data">작성된 리뷰가 없습니다</li> :
+          [...Array(parseInt(5))].map((item, i) => {
+            <li>
+              리뷰1
+            </li>
+          })}
+        </ul>
       </div>
     </div>
   )

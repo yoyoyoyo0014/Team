@@ -26,7 +26,7 @@ function Router({section, genreList, book}){
 			<Route path="/login" element={<Login/>}/>
 			<Route path="/join" element={<Join/>}/>
 
-			<Route path="/ebook/selectBook/:bk_num" element={<BookDetail bookNum={book.bk_num}/>}/>
+			<Route path="/ebook/selectBook/:bk_num" element={<BookDetail/>}/>
 		</Routes>
 	)
 }

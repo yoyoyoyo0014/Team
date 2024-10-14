@@ -29,7 +29,6 @@ public class BookContoller {
 	@Autowired
 	BookService bookService;
 	
-	
 	//책 번호를 통해 책 정보 가져오기
 	@GetMapping("/selectBook/{bookNum}")
 	@ResponseBody
