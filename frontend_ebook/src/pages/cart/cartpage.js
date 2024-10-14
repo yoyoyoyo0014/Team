@@ -97,7 +97,50 @@ const CartPage = () => {
     document.head.appendChild(jquery);
     document.head.appendChild(iamport); 
   }, []);
+    const saveBuyInfo = async (merchant_uid, totalAmount) => {
+      try {
+        
+        const response = await fetch('/buy/save', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            bu_uid: merchant_uid,
+            bu_me_id: me_id,
+            bu_state: '구매 완료',
+            bu_payment: 'CARD',
+            bu_total: totalAmount,
+            bu_ori_total: totalAmount,
+            bu_date: new Date().toISOString(),
+          }),
+        });
 
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // buy_list에 저장 (선택한 책 목록)
+        const selectedBooks = cart.filter(item => selectedItems[item.cart.ca_num]);
+        await Promise.all(selectedBooks.map(item => {
+          return fetch('/buy/list/save', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              bl_bk_num: item.book.bk_num,
+              bl_me_id: me_id,
+            }),
+          });
+        }));
+
+        alert('구매 정보가 저장되었습니다.');
+      } catch (error) {
+        console.error("구매 정보 저장 중 오류 발생:", error);
+        alert("구매 정보를 저장하는 중 오류가 발생했습니다.");
+      }
+    };
   const requestPay = () => {
     if (!IMP) {
       alert('IAMPORT 스크립트가 로드되지 않았습니다.');
@@ -114,7 +157,7 @@ const CartPage = () => {
       .join(", ");
 
     if (selectedPrices === 0) {
-      alert("구매할 아이템을 선택해 주세요.");
+      alert("구매할 책을 선택해 주세요.");
       return;
     }
 
@@ -129,7 +172,7 @@ const CartPage = () => {
     }, async (rsp) => {
       if (rsp.success) {
         try {
-          const response = await fetch('/payment/verify', {
+          const response = await fetch('/buy/verify', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
@@ -142,7 +185,7 @@ const CartPage = () => {
 
           if (response.ok) {
             alert('결제 검증 성공');
-
+            await saveBuyInfo(rsp.merchant_uid, selectedPrices); // bu_uid와 totalAmount 전달
           } else {
             const errorMessage = await response.text();
             alert(`결제 검증 실패: ${errorMessage}`);
@@ -155,16 +198,6 @@ const CartPage = () => {
       }
     });
   };
-  //결제 검증 성공시 실행시킬 함수를 추가
-  //CREATE TABLE `buy` (
-	// `bu_num`	varchar(255) primary key	NOT NULL,
-	// `bu_me_id`	varchar(15)	NOT NULL, 현재 카트의 ME_ID
-	// `bu_state`	varchar(5)	NOT NULL, '구매 완료', '구매 취소' 상태로 나뉘어짐 
-	// `bu_payment`	varchar(15)	NOT NULL, 'CARD', 'CASH' 로 나누어짐
-	// `bu_total`	int	NOT NULL, '추후 추가 예정인 포인트를 사용한 금액
-	// `bu_ori_total`	int	NOT NULL, 선택한 책값을 더한 값
-	// `bu_date`	datetime	NOT NULL 결제 완료된 날짜 및 시간정보
-  //위 테이블에 결제 진행 정보를 입력하는 함수
 
   const handleCheckboxChange = (ca_num) => {
     setSelectedItems(prev => {
@@ -213,7 +246,7 @@ const CartPage = () => {
               onChange={() => handleCheckboxChange(item.cart.ca_num)}
             />
             <span>
-              책 번호: {item.book.bk_num} - 제목: {item.book.bk_name} - 가격: {item.book.bk_price}
+              책 번호: {item.book.bk_num} - 제목: {item.book.bk_name} - 가격: {item.book.bk_price}원
             </span>
             <button onClick={() => removeFromCart(item.cart.ca_num)}>삭제</button>
           </li>
@@ -229,7 +262,7 @@ const CartPage = () => {
           required
         />
         <button type="submit">카트에 추가</button>
-        <br />
+        <br/>
         <button type="button" onClick={requestPay}>구매하기</button>
       </form>
     </div>
