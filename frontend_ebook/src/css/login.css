@@ -48,6 +48,46 @@
 
 .sns-login .btn {margin-top: 1em;}
 
-.btn-naver {background: #17B75E; color: #fff;}
-.btn-kakao {background: #ffda23; color: #3c1e1e;}
-.btn-google {background: #fff; color: #333; border: 1px solid #ccc;}
+.transparent-btn {
+  background-color: transparent;
+	border: none;
+  cursor: pointer;
+}
+
+.btn-google {
+	background-image: url('../images/구글 로그인 버튼(1011).jpg'); /* 원하는 이미지 URL로 변경 */
+	background-size: cover; /* 이미지 크기를 버튼 크기에 맞게 조정 */
+	background-repeat: no-repeat; /* 이미지를 반복하지 않도록 설정 */
+	background-position: center; /* 이미지 중앙에 위치하도록 설정 */
+	border: none; /* 버튼의 기본 테두리 제거 */
+	height: 50px; /* 버튼 높이 설정 */
+	display: flex; /* 텍스트와 아이콘 정렬을 위해 flex 사용 */
+	align-items: center; /* 수직 중앙 정렬 */
+	justify-content: center; /* 수평 중앙 정렬 */
+}
+
+/* 네이버 로그인 이미지 스타일 */
+.btn-naver {
+	background-image: url('../images/네이버 로그인 버튼(1011).jpg'); /* 원하는 이미지 URL로 변경 */
+	background-size: cover; /* 이미지 크기를 버튼 크기에 맞게 조정 */
+	background-repeat: no-repeat; /* 이미지를 반복하지 않도록 설정 */
+	background-position: center; /* 이미지 중앙에 위치하도록 설정 */
+	background-color: #03C75A;
+	border: none; /* 버튼의 기본 테두리 제거 */
+	height: 50px; /* 버튼 높이 설정 */
+	display: flex; /* 텍스트와 아이콘 정렬을 위해 flex 사용 */
+	align-items: center; /* 수직 중앙 정렬 */
+	justify-content: center; /* 수평 중앙 정렬 */
+}
+
+.btn-kakao {
+	background-image: url('../images/kakao_login_medium_wide.png'); /* 원하는 이미지 URL로 변경 */
+	background-size: cover; /* 이미지 크기를 버튼 크기에 맞게 조정 */
+	background-repeat: no-repeat; /* 이미지를 반복하지 않도록 설정 */
+	background-position: center; /* 이미지 중앙에 위치하도록 설정 */
+	border: none; /* 버튼의 기본 테두리 제거 */
+	height: 50px; /* 버튼 높이 설정 */
+	display: flex; /* 텍스트와 아이콘 정렬을 위해 flex 사용 */
+	align-items: center; /* 수직 중앙 정렬 */
+	justify-content: center; /* 수평 중앙 정렬 */
+}

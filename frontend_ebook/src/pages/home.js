@@ -1,8 +1,8 @@
-import Router from "../Router.js";
+import RoutesComponent from "../RoutesComponent.js";
 
 const Home = ({section, genreList, book}) => {
 	return(
-    <Router genreList={genreList} section={section} book={book}/>
+    <RoutesComponent genreList={genreList} section={section} book={book}/>
 	);
 }
 

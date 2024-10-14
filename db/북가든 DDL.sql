@@ -374,4 +374,3 @@ ALTER TABLE `secondgenre` ADD CONSTRAINT `FK_genre_TO_secondgenre_1` FOREIGN KEY
 REFERENCES `genre` (
 	`ge_num`
 );
-

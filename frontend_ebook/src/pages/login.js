@@ -1,3 +1,8 @@
+import React, { useEffect, useContext, useState } from "react";
+import { InputItem } from "../components/form/input";
+import { useNavigate } from "react-router-dom"; // useNavigate 임포트
+import Button from "../components/form/button";
+import { LoginContext } from "../context/LoginContext";  // LoginContext import
 import "../css/login.css";
 
 import { InputItem } from "../components/form/input";
@@ -7,46 +12,229 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const Login = () => {
-	let [id, setId] = useState('');
-	let [pw, setPw] = useState('');
 
-	return(
-		<div className="login-form">
-			<h2 className="txt-center page-title">Book<br/>Garden</h2>
-			<form>
-				<InputItem
-					id="me_id"
-					name="me_id"
-					type="text"
-					label="아이디"
-					change={setId}/>
-				<InputItem
-					id="me_pw"
-					name="me_pw"
-					type="password"
-					label="비번"
-					change={setPw}/>
+  const { setIsLoggedIn } = useContext(LoginContext);  // 로그인 상태 업데이트 함수 가져오기
+	const navigate = useNavigate(); // useNavigate 훅 사용
 
-				<Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em'}}/>
-				<Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"}></Button>
+  const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
+  const [credentials, setCredentials] = useState({ me_id: "", me_pw: "" });  // 사용자 입력 상태
+  const [errorMessage, setErrorMessage] = useState("");  // 에러 메시지 상태
 
-				<div className="login-menu">
-					<Link to="/findid">비밀번호 찾기</Link>
-					<span>|</span>
-					<Link to="/findpw">아이디 찾기</Link>
-					<span>|</span>
-					<Link to="/join">회원가입</Link>
-				</div>
+   // 입력 값 변경 핸들러
+   const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials({ ...credentials, [name]: value });
+  };
 
-				<div className="sns-login">
-					{/* sns 로그인 구현 후 Link 태그로 변경하는 게 좋을듯함 */}
-					<Button type={"button"} text={"카카오 로그인"} cls={"btn btn-kakao full"}></Button>
-					<Button type={"button"} text={"네이버 로그인"} cls={"btn btn-naver full"}></Button>
-					<Button type={"button"} text={"구글 로그인"} cls={"btn btn-google full"}></Button>
-				</div>
-			</form>
-		</div>
-	);
+    // 일반 로그인 처리
+    const handleLoginSubmit = (e) => {
+      e.preventDefault();
+  
+      fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+
+          console.log("서버 응답:", data);  // 서버로부터 받은 응답 로그 출력
+
+          if (data.success) {
+            // 로그인 성공 시 토큰을 localStorage에 저장
+            localStorage.setItem("loginToken", data.token);
+            setIsLoggedIn(true);
+            navigate("/");  // 메인 페이지로 이동
+          } else {
+            setErrorMessage(data.message || "로그인 실패");
+          }
+        })
+        .catch((error) => {
+          console.error("로그인 처리 중 오류:", error);
+          setErrorMessage("서버 오류가 발생했습니다.");
+        });
+    };
+
+  useEffect(() => {
+    const kakaoScript = document.createElement("script");
+    kakaoScript.src = "https://developers.kakao.com/sdk/js/kakao.js";
+    kakaoScript.async = true;
+    document.body.appendChild(kakaoScript);
+
+    const googleScript = document.createElement("script");
+    googleScript.src = "https://accounts.google.com/gsi/client";
+    googleScript.async = true;
+    document.body.appendChild(googleScript);
+
+		kakaoScript.onload = () => {
+      if (window.Kakao && !window.Kakao.isInitialized()) {
+				// 카카오 JavaScript 키
+        window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY); 
+      }
+    };
+
+    googleScript.onload = () => {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.initialize({
+          client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,  
+          callback: handleGoogleLoginSuccess,
+        });
+        setGoogleInitialized(true); // 구글 초기화 완료
+        console.log("Google SDK loaded and initialized");
+      } else {
+        console.error("Google API failed to load");
+      }
+    };
+
+    const handleGoogleLoginSuccess = (response) => {
+      const idToken = response.credential;  // 구글에서 받은 ID 토큰
+      console.log("Google ID Token:", idToken);
+      
+      // ID 토큰을 백엔드로 전송
+      fetch("/api/google/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),  // ID 토큰을 백엔드로 전송
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          // 로그인 성공 시 토큰을 localStorage에 저장
+          localStorage.setItem("googleLoginToken", idToken);
+          setIsLoggedIn(true);
+          navigate("/");  // 메인 페이지로 이동
+        } else {
+          alert(data.message || "로그인 실패");
+          setIsLoggedIn(false);
+        }
+      })
+      .catch((error) => {
+        console.error("백엔드 로그인 처리 오류", error);
+        alert("로그인 처리 중 오류가 발생했습니다.");
+      });
+    };
+
+    return () => {
+      document.body.removeChild(kakaoScript);
+      document.body.removeChild(googleScript);
+    };
+
+  }, [setIsLoggedIn, navigate]);  // setIsLoggedIn과 navigate를 의존성 배열에 추가
+
+  const handleKakaoLogin = () => {
+    window.Kakao.Auth.login({
+      success: (authObj) => {
+        console.log("로그인 성공", authObj);
+
+         // 카카오 로그인 성공 후 백엔드로 토큰 전송
+         fetch("/api/kakao/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ token: authObj.access_token })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // 로그인 성공 후 토큰을 localStorage에 저장
+            localStorage.setItem("loginToken", authObj.access_token);
+
+            // 로그인 상태를 true로 설정
+            setIsLoggedIn(true);
+
+            // 사용자 정보 가져오기
+            window.Kakao.API.request({
+              url: '/v2/user/me',
+              success: (res) => {
+                console.log("사용자 정보", res);
+                // 메인 페이지로 이동
+                navigate("/");
+              },
+              fail: (err) => {
+                console.error("사용자 정보 요청 실패", err);
+              },
+            });
+          } else {
+            // 사용자 정보가 없는 경우 처리
+            alert(data.message || "사용자가 존재하지 않습니다.");
+            setIsLoggedIn(false);
+          }
+        })
+        .catch(error => {
+          console.error("백엔드 로그인 처리 오류", error);
+          alert("로그인 처리 중 오류가 발생했습니다.");
+        });
+      },
+      fail: (err) => {
+        console.error("로그인 실패", err);
+        alert("카카오 로그인에 실패했습니다.");
+      },
+    });
+  };
+
+   // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
+   const handleNaverLogin = () => {
+    const clientId = process.env.REACT_APP_NAVER_CLIENT_ID; // 네이버 클라이언트 ID
+    const redirectUri = "http://localhost:3000/auth/naver/callback"; // 네이버 로그인 콜백 URL
+    const state = Math.random().toString(36).substring(2, 15); // CSRF 방지를 위한 상태값
+
+    const naverLoginUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+
+    window.location.href = naverLoginUrl;  // 네이버 로그인 URL로 리디렉션
+  };
+
+  return (
+    <div className="login-form">
+      <h2 className="txt-center page-title">Book<br />Garden</h2>
+      <form onSubmit={handleLoginSubmit}>
+        <InputItem
+          inputs={[{ id: "me_id", name: "me_id", type: "text", 
+                    value: credentials.me_id, onChange: handleInputChange },]}
+          label="아이디"
+        />
+        <InputItem
+          inputs={[{ id: "me_pw", name: "me_pw", type: "password", 
+                  value: credentials.me_pw, onChange: handleInputChange },]}
+          label="비밀번호"
+        />
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
+
+        <div className="sns-login">
+          <Button
+            type={"button"}
+            cls={"btn btn-kakao full"}
+            onClick={handleKakaoLogin}
+          />
+
+          <Button
+            type={"button"}
+            cls={"btn btn-naver full"}
+            onClick={handleNaverLogin}
+          />
+
+          <Button
+            type={"button"}
+            cls={"btn btn-google full"}
+            onClick={() => {
+              if (googleInitialized) {
+                window.google.accounts.id.prompt();  // 구글 로그인 팝업 호출
+              } else {
+                console.error("Google API is not loaded yet.");
+              }
+            }}
+          />
+
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export default Login;
