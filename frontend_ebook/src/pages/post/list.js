@@ -7,6 +7,7 @@ const List = ({ communities = [] }) => {
   const [list, setList] = useState([]);
   const [pageMaker, setPageMaker] = useState(null);
   const [hoverIndex, setHoverIndex] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // 스크롤을 맨 위로 이동
   useEffect(() => {
@@ -76,14 +77,53 @@ const List = ({ communities = [] }) => {
       .catch((error) => console.error('Error fetching posts:', error));
   };
 
+  const handleSearch = () => {
+    if (searchTerm.trim() === '') {
+      // 빈 문자열일 경우 전체 리스트 출력
+      fetch(`/post/list/${co_num}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data && data.list) {
+            const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
+            setList(sortedList);
+          }
+        })
+        .catch((error) => console.error('Error fetching posts:', error));
+    } else {
+      const filteredList = list.filter((item) => item.po_title.includes(searchTerm));
+      setList(filteredList);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   const communityName = communities.find((community) => community.co_num === parseInt(co_num))?.co_name;
 
   return (
     <div className="container">
-      <h2>{communityName}</h2>
+      <h2>{communityName || "커뮤니티 이름"}</h2>
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <input type="text" placeholder="검색어를 입력하세요" style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }} />
-        <button style={{ padding: '10px 20px', marginLeft: '10px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
+        <input
+          type="text"
+          placeholder="검색어를 입력하세요"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyPress={handleKeyPress}
+          style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }}
+        />
+        <button
+          onClick={handleSearch}
+          style={{ padding: '10px 20px', marginLeft: '10px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}
+        >
           검색
         </button>
       </div>
@@ -105,7 +145,7 @@ const List = ({ communities = [] }) => {
           {list && list.length > 0 ? (
             list.map((item, idx) => (
               <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
-                <td>{list.length - idx}</td>
+                <td>{pageMaker.totalCount - (pageMaker.cri.page-1)  * pageMaker.cri.perPageNum -  idx }</td>
                 <td style={{ textAlign: 'left'}}>
                   <span style={{cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)}onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${item.po_num}`)}>
                     {item.po_title}
@@ -129,7 +169,7 @@ const List = ({ communities = [] }) => {
       </table>
 
       {/* 페이지네이션 */}
-      {pageMaker && (
+      {pageMaker && list.length > 10 && (
         <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
           {pageMaker.prev && (
             <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
