@@ -15,7 +15,7 @@ function BookSearch({initSearch,initGenre,initCountry,initCategory,initPage}) {
   let [bookList,setBookList] = useState([])
   //let [bookCount,setBookCount] = useState(0); //책 숫자
   
-  let [search,setSearch] = useState('do not exist');
+  let [search,setSearch] = useState('doNotExist');
   let [country,setCountry] = useState("all");
   let [genre,setGenre] = useState(0);
   let [category,setCategory] = useState('popularity');
@@ -31,7 +31,7 @@ function BookSearch({initSearch,initGenre,initCountry,initCategory,initPage}) {
   let[genreList,setGenreList] = useState([{
   }])//장르 리스트
 
-  
+  let bannedSearchTerms =["#","%",";"]
 
   function checkedCountry(e){
     setCountry(e.target.value);
@@ -69,6 +69,12 @@ function BookSearch({initSearch,initGenre,initCountry,initCategory,initPage}) {
   }//장르리스트 가져오는 함수
 
   async function getSearchCount(){
+    for(var i = 0;i<bannedSearchTerms.length;i++){
+      if(search.indexOf(bannedSearchTerms[i]) !==-1){
+        alert('금지된 검색이 포함되어있습니다.')
+        return false;
+      }
+    }
     try {
       // fetch 요청이 완료될 때까지 대기
       const response = await fetch('/ebook/searchBookCount/'+country+"/"+genre+"/"+search,{
@@ -89,6 +95,12 @@ function BookSearch({initSearch,initGenre,initCountry,initCategory,initPage}) {
   }//검색개수 가져오기
 
   async function selectSearch(){
+    for(var i = 0;i<bannedSearchTerms.length;i++){
+      if(search.indexOf(bannedSearchTerms[i]) !==-1){
+        alert('금지된 검색이 포함되어있습니다.')
+        return false;
+      }
+    }
     try {
       // fetch 요청이 완료될 때까지 대기
       const response = await fetch('/ebook/searchBook/'+category+"/"+country+'/'+
@@ -126,9 +138,12 @@ function BookSearch({initSearch,initGenre,initCountry,initCategory,initPage}) {
 
   async function submitSearch(){
     var searchCount = await getSearchCount();
+    if(!searchCount)
+      return;
     page.contentsCount = searchCount;
     page = MakePage(page.contentsCount,page.currentPage);
     var searchDataList = await selectSearch();
+    console.log(searchDataList)
     setBookList(searchDataList);
     setPage({...page});
   }//책 검색

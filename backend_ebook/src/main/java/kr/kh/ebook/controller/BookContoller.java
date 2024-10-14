@@ -48,9 +48,13 @@ public class BookContoller {
 			@PathVariable int count) {
 		//https://github.com/st8324/java_240528/blob/main/spring%20projects/spring3/src/main/java/kr/kh/spring3/controller/ReactController.java
 		
+		if(search.equals("doNotExist")) {
+			search = "";
+			
+		}
 		BookCriteria bookCri = new BookCriteria(count,category,country,genre,search);
 		
-		
+			
 		
 		System.out.println("country : "+country + " genre : " + genre + "search : " + search  + " categori : " + category);
 
@@ -58,7 +62,8 @@ public class BookContoller {
 		System.out.println((pm));
 		
 		List<BookVO> res = bookService.searchBookList(pm);
-		System.out.println(res);
+		
+		System.out.println(pm.getCri().getSearch());
 		return res;
 	}
 	
@@ -71,7 +76,7 @@ public class BookContoller {
 		
 		System.out.println("country : "+country + " genre : " + genre + "search : " + search );
 		
-		if(search.equals("do not exist"))
+		if(search.equals("doNotExist"))
 			search = "";
 		int searchBookCount = bookService.searchBookCount(country,genre,search);
 		return searchBookCount;

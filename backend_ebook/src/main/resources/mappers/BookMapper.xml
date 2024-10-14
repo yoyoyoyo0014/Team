@@ -17,6 +17,7 @@
 		select count(*)
 		from book
 		where 
+			bk_name LIKE CONCAT('%', #{search}, '%') and
 			<choose>
     			<when test = " country == 'domestic' ">
     				bk_state = '국내도서'
@@ -31,9 +32,8 @@
     		<if test ="genre != 0">
     			and bk_sg_num = #{genre}
   			</if>
-  			<if test = "search !=''">
-  				and locate(#{search},bk_name);
-  			</if>
+  			
+  				
 	</select>
     
     <select id="searchBookList">
@@ -41,6 +41,9 @@
     	from book
     	
     	where
+    		
+    		 bk_name LIKE CONCAT('%', #{pm.cri.search}, '%') and
+    	
     		<choose>
     			<when test = "pm.cri.country == 'domestic' ">
     				 bk_state ='국내도서'
@@ -56,9 +59,7 @@
     		<if test ="pm.cri.genre != '0'">
     			and bk_sg_num = #{pm.cri.genre}
   			</if>
-  			<if test = "pm.cri.search !=''">
-  				and locate(#{pm.cri.search},bk_name)
-  			</if>
+  			
   			
   		order by
     		<choose>
