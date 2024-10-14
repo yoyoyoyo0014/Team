@@ -1,15 +1,10 @@
 import React, { useEffect, useContext, useState } from "react";
 import { InputItem } from "../components/form/input";
-import { useNavigate } from "react-router-dom"; // useNavigate 임포트
+import { Link, useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
 import "../css/login.css";
-
-import { InputItem } from "../components/form/input";
-import Button from "../components/form/button";
 import Check from "../components/form/check";
-import { Link } from "react-router-dom";
-import { useState } from "react";
 
 const Login = () => {
 
@@ -193,44 +188,36 @@ const Login = () => {
       <h2 className="txt-center page-title">Book<br />Garden</h2>
       <form onSubmit={handleLoginSubmit}>
         <InputItem
-          inputs={[{ id: "me_id", name: "me_id", type: "text", 
-                    value: credentials.me_id, onChange: handleInputChange },]}
+          id="me_id"
+          name="me_id"
+          type="text"
+          onChange={handleInputChange}
+          value={credentials.me_id}
           label="아이디"
         />
         <InputItem
-          inputs={[{ id: "me_pw", name: "me_pw", type: "password", 
-                  value: credentials.me_pw, onChange: handleInputChange },]}
-          label="비밀번호"
+          id="me_pw"
+          name="me_pw"
+          type="password"
+          onChange={handleInputChange}
+          value={credentials.me_pw}
+          label="아이디"
         />
+        <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em'}}/>
 
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
 
         <div className="sns-login">
-          <Button
-            type={"button"}
-            cls={"btn btn-kakao full"}
-            onClick={handleKakaoLogin}
-          />
-
-          <Button
-            type={"button"}
-            cls={"btn btn-naver full"}
-            onClick={handleNaverLogin}
-          />
-
-          <Button
-            type={"button"}
-            cls={"btn btn-google full"}
-            onClick={() => {
+          <Button type={"button"} text={"카카오 로그인"} cls={"btn btn-kakao full"} onClick={handleKakaoLogin}/>
+					<Button type={"button"} text={"네이버 로그인"} cls={"btn btn-naver full"} onClick={handleNaverLogin}/>
+					<Button type={"button"} text={"구글 로그인"} cls={"btn btn-google full"} onClick={() => {
               if (googleInitialized) {
                 window.google.accounts.id.prompt();  // 구글 로그인 팝업 호출
               } else {
                 console.error("Google API is not loaded yet.");
               }
-            }}
-          />
-
+            }}/>
         </div>
       </form>
     </div>

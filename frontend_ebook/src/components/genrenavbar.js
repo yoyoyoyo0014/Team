@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 const GenreNavBar = ({genreList}) => {
+	console.log(genreList);
 	return(
 		<nav id="category-navbar" className="theme-box">
 			<div className="category-navbar-wrapper scrollbar-no-padding">

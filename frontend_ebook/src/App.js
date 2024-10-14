@@ -25,22 +25,16 @@ function App() {
 		}
   }
 
-	console.log('genrelist: ' + genreList);
-
   useEffect(() => {
-		console.log('useEffect called');
-
     window.addEventListener('resize', ()=> Common.setVh());
     Common.setVh();
 
 		(async () => {
-			console.log('axios called before');
 			await axios(options)
 			.then(res => {
 				setGenreList(res.data.genreList);
 				setMajorGenreList(res.data.majorGenreList);
 				setBook(res.data.book);
-				console.log('axios called');
 			})
 			.catch((error) => {
 				if (error.response) {
@@ -78,10 +72,10 @@ function App() {
 					<div className="fix-layout">
 						<Header />
 						<main id="body">
-							<RoutesComponent /> {/* RoutesComponent만 호출 */}
+							<RoutesComponent section={section} genreList={genreList} book={book}/> {/* RoutesComponent만 호출 */}
 						</main>
-						<Footer />
 					</div>
+					<Footer />
         </LoginProvider>
     );
 }
