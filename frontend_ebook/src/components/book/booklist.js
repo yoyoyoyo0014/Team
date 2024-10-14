@@ -1,10 +1,8 @@
 import {useState} from 'react';
 import { Link, useLocation } from "react-router-dom";
-function BookList({readLastPage,LastPage}) {
+function BookList({readLastPage, LastPage}) {
   let[useIsBuy, setUserIsBuy] = useState(false); //유저가 책을 샀는가
   let [currentPage,setCurrentPage] = useState(0); //현재 페이지
-  let readLastPage;//마지막으로 읽은 페이지
-  let LastPage;//마지막 페이지
 
   function exit(){
     if(readLastPage>currentPage){
@@ -17,7 +15,7 @@ function BookList({readLastPage,LastPage}) {
   }
   return (
     <div >
-     
+      
 
     </div>
   );

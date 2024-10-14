@@ -39,4 +39,10 @@ public class BookPageMaker {
 		this.totalCount = totalCount;
 		calculate();
 	}
+	
+	public BookPageMaker(int displayPageNum, BookCriteria cri) {
+		this.displayPageNum = displayPageNum;
+		this.cri = cri;
+		calculate();
+	}
 }

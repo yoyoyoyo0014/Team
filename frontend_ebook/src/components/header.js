@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Input } from "./form/input";
 import Button from "./form/button";
 import { useState } from "react";
@@ -6,7 +6,8 @@ import axios from "axios";
 
 const Header = ({setSection, genreList}) => {
 	const navigate = useNavigate();
-	let [keyword, setKeyword] = useState('');
+	let [query, setQuery] = useSearchParams();
+	const search = query.get('search');
 
 	const showBooks = (sectionName) => {
 		setSection(sectionName);
@@ -23,8 +24,8 @@ const Header = ({setSection, genreList}) => {
 				<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
 					
 				<div className="search-box">
-					<form name="search" >
-						<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={setKeyword}/>
+					<form name="search" action="/ebook/searchBook">
+						<Input type="text" name="search" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={setQuery} value={search}/>
 						<Button text={"검색"} cls={"ico btn search"}/>
 					</form>
 				</div>

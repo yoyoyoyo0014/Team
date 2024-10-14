@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,15 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.GenreVO;
-import kr.kh.ebook.model.vo.ReportTypeVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookCriteria;
 import kr.kh.ebook.pagination.BookPageMaker;
-import kr.kh.ebook.pagination.Criteria;
-import kr.kh.ebook.pagination.PageMaker;
 import kr.kh.ebook.service.BookService;
-import kr.kh.ebook.service.ReportService;
 
 @RequestMapping("/ebook")
 @RestController
@@ -47,22 +42,23 @@ public class BookContoller {
 	}//책 번호를 통해 책 정보 가져오기
 	
 	//책 검색
-	@PostMapping("/searchBook/{category}/{country}/{genre}/{page}/{count}/{search}")
+	@GetMapping("/searchBook")
 	@ResponseBody
-	public List<BookVO> searchBookList(@PathVariable String category,
-			@PathVariable String country,@PathVariable int genre,
-			@PathVariable String search,@PathVariable int page,
-			@PathVariable int count) {
+	public HashMap<String, Object> searchBookList(@PathVariable String category,
+			@PathVariable String country, @PathVariable int genre,
+			@PathVariable String search, @PathVariable int page) {
 		//https://github.com/st8324/java_240528/blob/main/spring%20projects/spring3/src/main/java/kr/kh/spring3/controller/ReactController.java
-		
-		BookCriteria bookCri = new BookCriteria(page,category,country,genre,search);
-		
-		
+		System.out.println(search);
+		BookCriteria bookCri = new BookCriteria(page, category, country, genre, search);
 		
 		System.out.println(country + genre +"search" + search);
 
-		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
-		return bookService.searchBookList(pm);
+		BookPageMaker pm = new BookPageMaker(5, bookCri);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<BookVO> list = bookService.searchBookList(pm);
+		map.put("bookList", list);
+		System.out.println(list);
+		return map;
 	}
 	
 	//책 검색 개수만
@@ -78,8 +74,6 @@ public class BookContoller {
 		return searchBookCount;
 	}
 	
-	
-	
 	//리뷰 개수
 	@PostMapping("/reviewCount/{bookNum}")
 	@ResponseBody
@@ -91,17 +85,19 @@ public class BookContoller {
 	//리뷰 리스트
 	@PostMapping("/reviewList/{bookNum}/{pageNum}")
 	@ResponseBody
-	public List<ReviewVO> reviewList(@PathVariable("bookNum")int bookNum, @PathVariable("pageNum") int pageNum){
-		List<ReviewVO> res = bookService.selectReviewList(bookNum,pageNum);
-		return res;
+	public HashMap<String, Object> reviewList(@PathVariable("bookNum")int bookNum, @PathVariable("pageNum") int pageNum){
+		List<ReviewVO> list = bookService.selectReviewList(bookNum,pageNum);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("reviewList", list);
+		return map;
 	}//리뷰 보기
 	
 	//해당 책 리뷰에 내 리뷰가 있는지 확인
 	@PostMapping("/selectMyReview/{userId}/{bookNum}")
 	@ResponseBody
-	public ReviewVO selectMyReview(@PathVariable("userId") String userId,@PathVariable("bookNum") int bookNum) {
+	public ReviewVO selectMyReview(@PathVariable("userId") String userId, @PathVariable("bookNum") int bookNum) {
 		return bookService.selectMyReview(userId, bookNum);
-	}// 내 리뷰 보기   -없음 null
+	}// 내 리뷰 보기 - 없음 null
 	
 	//리뷰 작성
 	@PostMapping("/insertReview")
@@ -141,7 +137,6 @@ public class BookContoller {
 		}catch(Exception e) {
 			return 1;
 		}//혹시 여러개 있음을 방지
-		
 	}
 	
 	//읽고 있는 책 완독률 저장

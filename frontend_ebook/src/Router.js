@@ -11,6 +11,7 @@ import Request from "./pages/request.js";
 import Login from "./pages/login.js";
 import Join from "./pages/join.js";
 import BookDetail from "./components/book/bookDetail.js";
+import BookSearch from "./components/book/bookSearch.js";
 
 function Router({section, genreList, book}){
 	return(
@@ -27,6 +28,7 @@ function Router({section, genreList, book}){
 			<Route path="/join" element={<Join/>}/>
 
 			<Route path="/ebook/selectBook/:bk_num" element={<BookDetail/>}/>
+			<Route path="/ebook/searchBook" element={<BookSearch genreList={genreList}/>}/>
 		</Routes>
 	)
 }
