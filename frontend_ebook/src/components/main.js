@@ -72,10 +72,10 @@ const Main = ({section, genreList, addPost}) => {
 					<table className="article-table" style={{textAlign: 'center', width: '100%', borderCollapse: 'collapse'}}>
 							<thead style={{color: 'gray', borderBottom: '1px solid gray'}}>
 								<tr>
-										<th>NO</th>
-										<th>제목</th>
-										<th>작성자</th>
-										<th>날짜</th>
+										<th style={{ width: '10%' }}>NO</th>
+										<th style={{ width: '60%' }}>제목</th>
+										<th style={{ width: '15%' }}>작성자</th>
+										<th style={{ width: '15%' }}>작성일</th>
 								</tr>
 							</thead>
 							<tbody>
