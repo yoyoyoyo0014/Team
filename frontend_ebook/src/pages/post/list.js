@@ -169,7 +169,7 @@ const List = ({ communities = [] }) => {
       </table>
 
       {/* 페이지네이션 */}
-      {pageMaker && list.length > 10 && (
+      {pageMaker && pageMaker.totalCount > pageMaker.cri.perPageNum && (
         <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
           {pageMaker.prev && (
             <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
@@ -194,3 +194,4 @@ const List = ({ communities = [] }) => {
 };
 
 export default List;
+
