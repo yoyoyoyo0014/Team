@@ -40,7 +40,7 @@ CREATE TABLE `book` (
 	`bk_num`	int primary key auto_increment	NOT NULL,
 	`bk_name`	varchar(50)	NOT NULL,
 	`bk_state`	varchar(4)	NOT NULL,
-    `bk_publisher`		varchar(50)	NOT NULL,
+	`bk_publisher`	varchar(50)	NOT NULL,
 	`bk_date`	datetime	NOT NULL,
 	`bk_sg_num`	int	NOT NULL,
 	`bk_plot`	longtext	NOT NULL,
@@ -219,6 +219,13 @@ ALTER TABLE `book` ADD CONSTRAINT `FK_secondgenre_TO_book_1` FOREIGN KEY (
 )
 REFERENCES `secondgenre` (
 	`sg_num`
+);
+
+ALTER TABLE `book` ADD CONSTRAINT `FK_member_TO_book_1` FOREIGN KEY (
+	`bk_me_id`
+)
+REFERENCES `member` (
+	`me_id`
 );
 
 ALTER TABLE `report` ADD CONSTRAINT `FK_member_TO_report_1` FOREIGN KEY (
