@@ -40,7 +40,7 @@ CREATE TABLE `book` (
 	`bk_num`	int primary key auto_increment	NOT NULL,
 	`bk_name`	varchar(50)	NOT NULL,
 	`bk_state`	varchar(4)	NOT NULL,
-	`bk_me_id`	varchar(255)	NOT NULL,
+	`bk_publisher`	varchar(50)	NOT NULL,
 	`bk_date`	datetime	NOT NULL,
 	`bk_sg_num`	int	NOT NULL,
 	`bk_plot`	longtext	NOT NULL,
@@ -115,8 +115,8 @@ CREATE TABLE `post` (
 	`po_me_id`	varchar(15)	NOT NULL,
 	`po_date`	datetime	NOT NULL,
 	`po_co_num`	int	NOT NULL,
-	`po_view`	int	NULL,
-	`po_like`	int	NULL
+	`po_view`	int	NOT NULL default 0,
+	`po_like`	int	NOT NULL default 0
 );
 
 CREATE TABLE `community` (
