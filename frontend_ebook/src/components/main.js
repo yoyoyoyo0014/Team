@@ -6,7 +6,7 @@ import { Link, useParams, useLocation, useNavigate  } from 'react-router-dom';
 
 const Main = ({section, genreList, addPost}) => {
 	let [books, setBooks] = useState([{}]);
-	const [hover, setHover] = useState(false);
+	const [hover, setHover] = useState(null);
 	let [list, setList] = useState([]);
 	let [pm, setPm] = useState({});
 	const {co_num} = useParams();
@@ -37,6 +37,14 @@ const Main = ({section, genreList, addPost}) => {
       }).catch(e=>console.log(e))
   }, [])
 
+	const handleMouseEnter = (index) => {
+		setHover(index);
+	};
+
+	const handleMouseLeave = () => {
+		setHover(null);
+	};
+
 	return(
 		<section id="main-section">
 			<div id="top-section" className="section">
@@ -55,7 +63,7 @@ const Main = ({section, genreList, addPost}) => {
 			<div id="notice" style={{ marginTop: '35px'}}>
 				<div className="section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '10px' }}>
 					<h2>공지사항</h2>
-					<Link to={`/post/list/${co_num || 1}`} className="notice-link" style={{ float: 'right', textDecoration: hover ? 'underline' : 'none' }}onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+					<Link to={`/post/list/${co_num || 1}`} className="notice-link" style={{ float: 'right', textDecoration: hover !== null ? 'underline' : 'none' }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
 						<strong>더보기 +</strong>
 					</Link>
 				</div>
@@ -63,24 +71,25 @@ const Main = ({section, genreList, addPost}) => {
 				{list && list.length > 0 ? (
 					<table className="article-table" style={{textAlign: 'center', width: '100%', borderCollapse: 'collapse'}}>
 							<thead style={{color: 'gray', borderBottom: '1px solid gray'}}>
-									<tr>
-											<th>NO</th>
-											<th>제목</th>
-											<th>작성자</th>
-											<th>날짜</th>
-									</tr>
+								<tr>
+										<th>NO</th>
+										<th>제목</th>
+										<th>작성자</th>
+										<th>날짜</th>
+								</tr>
 							</thead>
 							<tbody>
-									{list.slice(0,3).map((item, index) => (
-											<tr key={item.po_num || index} style={{height: '75px', borderBottom: '1px solid lightgray'}}>
-													<td>{item.po_num}</td>
-														<td style={{ textAlign: 'left' }} onClick={() => navigate(`/post/detail/${item.po_num}`)}>
-															<u style={{cursor: 'pointer'}}>{item.po_title}</u>
-														</td>
-													<td>{item.po_me_id}</td>
-													<td>{item.date}</td>
-											</tr>
-									))}
+								{list.slice(0,3).map((item, index) => (
+										<tr key={item.po_num || index} style={{height: '75px', borderBottom: '1px solid lightgray'}}>
+												<td>{item.po_num}</td>
+												<td style={{ textAlign: 'left', cursor: 'pointer', textDecoration: hover === index ? 'underline' : 'none' }} onClick={() => navigate(`/post/detail/${item.po_num}`)}
+												onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>
+													{item.po_title}
+												</td>
+												<td>{item.po_me_id}</td>
+												<td>{item.date}</td>
+										</tr>
+								))}
 							</tbody>
 					</table>
 				) : (
