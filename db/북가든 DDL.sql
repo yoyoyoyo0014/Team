@@ -221,13 +221,6 @@ REFERENCES `secondgenre` (
 	`sg_num`
 );
 
-ALTER TABLE `book` ADD CONSTRAINT `FK_member_TO_book_1` FOREIGN KEY (
-	`bk_me_id`
-)
-REFERENCES `member` (
-	`me_id`
-);
-
 ALTER TABLE `report` ADD CONSTRAINT `FK_member_TO_report_1` FOREIGN KEY (
 	`rp_me_id`
 )
