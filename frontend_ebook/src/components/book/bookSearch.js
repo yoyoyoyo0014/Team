@@ -1,16 +1,7 @@
 import {useEffect, useState} from 'react';
-import MakePage from './pageButton';
-import { useParams } from 'react-router-dom';
 
 function BookSearch() {
-
-  //initCountry/:initGenre/:initSearch/:initCategory/:initPage
-
-  const {initCountry}= useParams();
-  const {initGenre}= useParams();
-  const {initSearch}= useParams();
-  const {initCategory}= useParams();
-  const {initPage}= useParams();
+  //https://github.com/st8324/java_240528/blob/main/react/react3/src/Signup.js
 
   let [data, setData] = useState({
     search : '',
@@ -19,11 +10,12 @@ function BookSearch() {
     category : '',
     page : 0
   })//검색 시 필요한 목록
-//Route path={"/searchBook/:initCountry/:initGenre/:initCategory/:initPage/SearchWord=:initSearch"}element ={<BookSearch/>}/>
+
+
   let [bookList,setBookList] = useState([])
-  //let [bookCount,setBookCount] = useState(0); //책 숫자
+  let [bookCount,setBookCount] = useState(0); //책 숫자
   
-  let [search,setSearch] = useState('');
+  let [search,setSearch] = useState('do not exist');
   let [country,setCountry] = useState("all");
   let [genre,setGenre] = useState(0);
   let [category,setCategory] = useState('popularity');
@@ -36,10 +28,11 @@ function BookSearch() {
     next : false,
     pageList : []
   })//페이지 이동버튼
-  let[genreList,setGenreList] = useState([{
-  }])//장르 리스트
 
-  let bannedSearchTerms =["#","%",";"]
+  let[genreList,setGenreList] = useState([{
+    ge_num : 0,
+    ge_name : ''
+  }])//장르 리스트
 
   function checkedCountry(e){
     setCountry(e.target.value);
@@ -58,7 +51,7 @@ function BookSearch() {
   }//검색 설정
 
   function getGenreList(){
-    fetch('api/selectGenreList',{
+    fetch('/ebook/selectGenreList',{
       method : "post",
       //body : JSON.stringify(writeUserReview),
       headers: {
@@ -76,105 +69,47 @@ function BookSearch() {
     .catch(e=>console.error(e));
   }//장르리스트 가져오는 함수
 
-  async function getSearchCount(){
-    for(var i = 0;i<bannedSearchTerms.length;i++){
-      if(search.indexOf(bannedSearchTerms[i]) !==-1){
-        alert('금지된 검색이 포함되어있습니다.')
-        return false;
-      }
-    }
-   
-
-    try {
-      // fetch 요청이 완료될 때까지 대기
-      const response = await fetch('api/searchBookCount/'+country+"/"+genre+"/SearchWord="+search,{
-        method : "post",
-        //body : JSON.stringify(writeUserReview),
-        headers: {
-          'Content-Type': 'application/json',  // Content-Type 헤더 설정
-        },
-      })
-      const searchCount = await response.text();
-      return searchCount;
-    } catch (e) {
-      console.error(e);
-      return false;;
-    }
-
-
-  }//검색개수 가져오기
-
-  async function selectSearch(){
-    for(var i = 0;i<bannedSearchTerms.length;i++){
-      if(search.indexOf(bannedSearchTerms[i]) !==-1){
-        alert('금지된 검색이 포함되어있습니다.')
-        return false;
-      }
-    }
-
-
-    try {
-      // fetch 요청이 완료될 때까지 대기
-      const response = await fetch('api/searchBook/'+category+"/"+country+'/'+
-        genre+'/'+page.currentPage+'/SearchWord='+search,{
-        method : "post",
-        //body : JSON.stringify(writeUserReview),
-        headers: {
-          'Content-Type': 'application/json',  // Content-Type 헤더 설정
-        },
-      })
-      const bookListData = await response.json();
-      return bookListData;
-    } catch (e) {
-      console.error(e);
-      return false;;
-    }
-
-  }//검색하기
-
-  async function changePage(index){
-    if(typeof index ==='number'){
-      page.currentPage = index;
-    }else{
+  function submitSearch(){
+    fetch('/ebook/searchBook/'+category+"/"+country+'/'+
+      genre+'/'+page.currentPage+'/'+search,{
+      method : "post",
+      //body : JSON.stringify(writeUserReview),
+      headers: {
+        'Content-Type': 'application/json',  // Content-Type 헤더 설정
+      },
+    })
+    .then(res=>res.json())
+    .then(bookListData=>{
       
-      var i ={
-        index : 0
-      }
-      i = index;
-      page.currentPage = i.index+1;
-    }
-    page = MakePage(page.contentsCount,page.currentPage);
-    await submitSearch();
-    
-  }//페이지 바꾸기
+      setBookList([...bookListData])
+      console.log(bookListData)
+    })
+    .catch(e=>console.error(e));
+  }
 
-  async function submitSearch(){
-    var searchCount = await getSearchCount();
-    if(!searchCount)
-      return;
-    page.contentsCount = searchCount;
-    page = MakePage(page.contentsCount,page.currentPage);
-    var searchDataList = await selectSearch();
-    console.log(searchDataList)
-    setBookList(searchDataList);
-    setPage({...page});
-  }//책 검색
+  function changePage(index){
+    console.log(index)
+  }
 
+  function selectBookCount(){
+    fetch("/ebook/searchBookCount/"+country+"/"+genre+"/"+search,{
+      method : "post",
+      //body : JSON.stringify(writeUserReview),
+      headers: {
+        'Content-Type': 'application/json',  // Content-Type 헤더 설정
+      },
+    })
+    .then(res=>res.json())
+    .then(reviewListData=>{
+     
+    })
+    .catch(e=>console.error(e));
+  }
+  
   useEffect(()=>{
-
-    console.log(initCountry,initCategory,initGenre,initSearch,initPage)
-    setCountry(initCountry);
-    setGenre(initGenre);
-    setSearch(initSearch);
-
-    page.currentPage = initPage;
-    setPage({...page});
-    setCategory(initCategory);
-    
-    getGenreList();//장르 리스트 가져오기
-    submitSearch(); //그냥 검색
+    getGenreList();
   },[]);
-  //console.log('렌더링 횟수')
+
   return (
     <div >
       <input onChange={e=>getSearch(e)} placeholder="검색칸"></input>
@@ -230,7 +165,7 @@ function BookSearch() {
              </label> 
             ))
           }
-        <input onClick={()=>changePage(1)} type="submit" value="제출"></input>
+        <input onClick={submitSearch} type="submit" value="제출"></input>
         {
           bookList.map((item,index)=>{
             return (<div key={index}>{item.bk_name} : {item.bk_price}</div>)

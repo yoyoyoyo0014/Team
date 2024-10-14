@@ -80,7 +80,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
     if(!TestStar(writeUserReview.re_star))
       return;//제대로 된 별점 X
 
-    fetch('api//insertReview',{
+    fetch('/ebook/insertReview',{
       method : "post",
       body : JSON.stringify(writeUserReview),
       headers: {
@@ -116,7 +116,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
     if(!TestStar(writeUserReview.re_star))
       return;//제대로 된 별점 X
 
-    fetch('api/updateReview',{
+    fetch('/ebook/updateReview',{
       method : "post",
       body : JSON.stringify(writeUserReview),
       headers: {
@@ -143,7 +143,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
     if(!writerIsReview)
       return;
 
-    fetch('api/deleteReview/'+bookNum+'/'+userId,{
+    fetch('/ebook/deleteReview/'+bookNum+'/'+userId,{
       method : "post",
       //body : JSON.stringify(writeUserReview),
       headers: {
@@ -192,7 +192,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
     if(userId ==null)
       return;
 
-    fetch('api//selectMyReview/'+userId+'/'+bookNum,{
+    fetch('/ebook/selectMyReview/'+userId+'/'+bookNum,{
       method : "post",
       //body : JSON.stringify(writeUserReview),
       headers: {
@@ -216,7 +216,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
   function selectReviewList(currentPageNum ,successSelectReviewList = null){
     var pageNum = (currentPageNum-1) * reviewPageCount;
     
-    fetch("api/reviewList/"+bookNum+"/"+pageNum,{
+    fetch("/ebook/reviewList/"+bookNum+"/"+pageNum,{
       method : "post",
       //body : JSON.stringify(writeUserReview),
       headers: {
@@ -236,7 +236,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
   }//리뷰 목록(현제 페이지 번호, 성공할 시 실행할 메소드)
 
   function selectReviewCount (){
-    fetch('api/reviewCount/'+bookNum,{
+    fetch('/ebook/reviewCount/'+bookNum,{
       method : "post",
       //body : JSON.stringify(writeUserReview),
       headers: {
@@ -298,6 +298,8 @@ function BookReview({bookNum,userId,userIsBuy}) {
     setReport({...report});
   }//유저 리폿할 때
 
+  
+  
   //console.log(렌더링 횟수);
   useEffect(() => {
       selectReviewCount();//리뷰 개수

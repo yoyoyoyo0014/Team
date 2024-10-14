@@ -54,7 +54,7 @@ export function Report({getReport,exit}) {
       return;
     }
 
-    fetch("/ebook/report/insertReport",{
+    fetch("api/report/insertReport",{
       method : "post",
       body : JSON.stringify(report),
       headers: {
@@ -82,7 +82,7 @@ export function Report({getReport,exit}) {
 
     try {
       // fetch 요청이 완료될 때까지 대기
-      const response = await fetch("/ebook/report/existReport/"+report.rp_id+"/"+
+      const response = await fetch("api/report/existReport/"+report.rp_id+"/"+
         report.rp_target+"/"+report.rp_id,{
           method: "post",
           headers: {
