@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import moment from 'moment';
 
 const List = ({ communities = [] }) => {
   const { co_num } = useParams();

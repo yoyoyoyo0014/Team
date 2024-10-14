@@ -13,6 +13,7 @@ import Login from "./pages/login.js";
 import Join from "./pages/join.js";
 
 import List from './pages/post/list';
+import Detail from "./pages/post/detail.js";
 
 function Router({genreList}){
 	return(
@@ -29,6 +30,7 @@ function Router({genreList}){
 			<Route path="/join" element={<Join/>}/>
 
 			<Route path="/post/list/:co_num" element={<List />} />
+			<Route path="/post/detail/:po_num" element={<Detail />} />
 		</Routes>
 	)
 }
