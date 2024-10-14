@@ -110,20 +110,10 @@ const List = ({ communities = [] }) => {
 
   return (
     <div className="container">
-      <h2>{communityName || "커뮤니티 이름"}</h2>
+      <h2 style={{padding: '30px 0 60px'}}>{communityName || "커뮤니티 이름"}</h2>
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <input
-          type="text"
-          placeholder="검색어를 입력하세요"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={handleKeyPress}
-          style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }}
-        />
-        <button
-          onClick={handleSearch}
-          style={{ padding: '10px 20px', marginLeft: '10px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}
-        >
+        <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleKeyPress} style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }}/>
+        <button onClick={handleSearch} style={{ padding: '10px 20px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
           검색
         </button>
       </div>
@@ -145,7 +135,7 @@ const List = ({ communities = [] }) => {
           {list && list.length > 0 ? (
             list.map((item, idx) => (
               <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
-                <td>{pageMaker.totalCount - (pageMaker.cri.page-1)  * pageMaker.cri.perPageNum -  idx }</td>
+                <td>{pageMaker ? pageMaker.totalCount - (pageMaker.cri.page - 1) * pageMaker.cri.perPageNum - idx : list.length - idx}</td>
                 <td style={{ textAlign: 'left'}}>
                   <span style={{cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)}onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${item.po_num}`)}>
                     {item.po_title}
@@ -194,4 +184,3 @@ const List = ({ communities = [] }) => {
 };
 
 export default List;
-
