@@ -23,7 +23,8 @@ CREATE TABLE `member` (
 	`me_stop`	datetime	NULL,
 	`me_cm`	varchar(20) unique	NULL,
 	`me_entercount`	int	NULL,
-	`me_last`	datetime	NULL
+	`me_last`	datetime	NULL,
+	`me_naverId`	varchar(255)	NULL
 );
 
 CREATE TABLE `review` (
@@ -31,7 +32,7 @@ CREATE TABLE `review` (
 	`re_content`	text	NOT NULL,
 	`re_bk_num`	int	NOT NULL,
 	`re_star`	double	NOT NULL,
-	`re_date`	datetime	NOT NULL  default CURRENT_TIMESTAMP,
+	`re_date`	datetime NOT NULL  default CURRENT_TIMESTAMP,
 	`re_me_id`	varchar(15)	NOT NULL
 );
 
@@ -39,6 +40,7 @@ CREATE TABLE `book` (
 	`bk_num`	int primary key auto_increment	NOT NULL,
 	`bk_name`	varchar(50)	NOT NULL,
 	`bk_state`	varchar(4)	NOT NULL,
+	`bk_me_id`	varchar(255)	NOT NULL,
 	`bk_date`	datetime	NOT NULL,
 	`bk_sg_num`	int	NOT NULL,
 	`bk_plot`	longtext	NOT NULL,
@@ -74,7 +76,9 @@ CREATE TABLE `report` (
 	`rp_me_id`	varchar(15)	NOT NULL,
 	`rp_target`	varchar(50)	NOT NULL,
 	`rp_content`	text	NULL,
-	`rp_rt_num`	int	NOT NULL
+	`rp_rt_num`	int	NOT NULL,
+    `rp_date` datetime NOT NULL  default CURRENT_TIMESTAMP,
+    `rp_id` varchar(15) NOT NULL
 );
 
 CREATE TABLE `report_type` (
@@ -215,6 +219,13 @@ ALTER TABLE `book` ADD CONSTRAINT `FK_secondgenre_TO_book_1` FOREIGN KEY (
 )
 REFERENCES `secondgenre` (
 	`sg_num`
+);
+
+ALTER TABLE `book` ADD CONSTRAINT `FK_member_TO_book_1` FOREIGN KEY (
+	`bk_me_id`
+)
+REFERENCES `member` (
+	`me_id`
 );
 
 ALTER TABLE `report` ADD CONSTRAINT `FK_member_TO_report_1` FOREIGN KEY (
