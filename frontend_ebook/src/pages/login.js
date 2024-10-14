@@ -24,7 +24,7 @@ const Login = () => {
     const handleLoginSubmit = (e) => {
       e.preventDefault();
   
-      fetch("/api/login", {
+      fetch("/ebook/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ const Login = () => {
       console.log("Google ID Token:", idToken);
       
       // ID 토큰을 백엔드로 전송
-      fetch("/api/google/login", {
+      fetch("/ebook/google/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -125,7 +125,7 @@ const Login = () => {
         console.log("로그인 성공", authObj);
 
          // 카카오 로그인 성공 후 백엔드로 토큰 전송
-         fetch("/api/kakao/login", {
+         fetch("/ebook/kakao/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

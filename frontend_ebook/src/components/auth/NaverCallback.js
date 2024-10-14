@@ -14,7 +14,7 @@ const NaverCallback = () => {
     console.log("네이버에서 받은 state:", state);
 
     if (code) {
-      fetch("/api/naver/login", {
+      fetch("/ebook/naver/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

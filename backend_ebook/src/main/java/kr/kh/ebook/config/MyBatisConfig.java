@@ -8,11 +8,12 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 @Configuration
-@MapperScan ("kr.kh.ebook.dao")
+@MapperScan("kr.kh.ebook.dao")  // Mapper 인터페이스가 위치한 경로
 public class MyBatisConfig {
 
 	@ConfigurationProperties(prefix = "spring.datasource")
@@ -26,7 +27,7 @@ public class MyBatisConfig {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setMapperLocations(
-            new PathMatchingResourcePatternResolver().getResources("classpath:mappers/*.xml")
+            new PathMatchingResourcePatternResolver().getResources("classpath:/mappers/*.xml")
         );
          // TypeAlias 적용
         sessionFactory.setTypeAliasesPackage("kr.kh.ebook.model.vo");  // 여기에 패키지 경로 지정

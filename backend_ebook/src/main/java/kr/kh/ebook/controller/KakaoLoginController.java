@@ -15,7 +15,7 @@ import kr.kh.ebook.service.KakaoService;
 import kr.kh.ebook.service.MemberService;
 
 @RestController
-@RequestMapping("/api/kakao")
+@RequestMapping("/ebook/kakao")
 public class KakaoLoginController {
 
     @Autowired

@@ -14,7 +14,7 @@ import kr.kh.ebook.model.vo.MemberVO;
 import kr.kh.ebook.service.MemberService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/ebook")
 @CrossOrigin(origins = "http://localhost:3000")
 public class LoginController {
 

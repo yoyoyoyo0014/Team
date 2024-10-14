@@ -9,9 +9,4 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/api")
 public class ApiController {
 	
-	@GetMapping("/test")
-	@ResponseBody
-	public String test() {
-		return "test";
-	}
 }
