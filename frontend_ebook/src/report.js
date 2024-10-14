@@ -49,6 +49,11 @@ export function Report({getReport,exit}) {
 
   
   function submitReport(report,successSubmitReport){
+    if(report.rp_me_id == null){
+      alert('로그인을 해주세요.');
+      return;
+    }
+
     fetch("/ebook/report/insertReport",{
       method : "post",
       body : JSON.stringify(report),
@@ -71,6 +76,10 @@ export function Report({getReport,exit}) {
     .catch(e=>console.error(e));
   }//신고 하기
   async function CheckReport(report){
+    if(report.rp_me_id == null){
+      return;
+    }
+
     try {
       // fetch 요청이 완료될 때까지 대기
       const response = await fetch("/ebook/report/existReport/"+report.rp_id+"/"+

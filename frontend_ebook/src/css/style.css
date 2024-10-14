@@ -157,7 +157,7 @@ hr {
 .txt-right {text-align: right;}
 .txt-center {text-align: center;}
 
-.book-img {display: flex; justify-content: center; align-items: center;}
+.book-img {position: relative; display: flex; justify-content: center; align-items: center;}
 .book-img img {box-shadow: var(--box-shadow);}
 
 .rating {display: flex; gap: 1em;}

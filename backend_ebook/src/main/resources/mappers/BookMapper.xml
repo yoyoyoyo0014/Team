@@ -35,15 +35,21 @@
 		from book
 		where 
 			<choose>
-    			<when test = "bookCri.country == 'domestic' ">
-    				 bk_state ='국내도서' and
+    			<when test = " country == 'domestic' ">
+    				bk_state = '국내도서'
     			</when>
-    			<when test = "bookCri.country == 'foreign' ">
-    				 bk_state = '해외도서' and
+    			<when test = "country == 'foreign' ">
+    				 bk_state = '해외도서' 
     			</when>
+    			<otherwise>
+    				(bk_state ='국내도서' or  bk_state = '해외도서') 
+    			</otherwise>
     		</choose>
-    		<if test ="bookCri.genre != '0'">
-    			 bk_sg_num = #{pm.cri.genre}
+    		<if test ="genre != 0">
+    			and bk_sg_num = #{genre}
+  			</if>
+  			<if test = "search !=''">
+  				and locate(#{search},bk_name);
   			</if>
 	</select>
     
@@ -96,7 +102,7 @@
   		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
     </select>
 
-	<select id="selectAllGenre" resultType="BookGenreVO">
+		<select id="selectAllGenre" resultType="BookGenreVO">
     	select * from genre
     </select>
     
@@ -131,10 +137,12 @@
 	</select>
 	
 	<select id="selectReviewList">
-		select *
+		select re_num,re_content,re_star,re_me_id,re_date
 		from review
+		join member on me_id = re_me_id
 		where re_bk_num = #{bookNum}
-		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
+		order by re_date asc
+		limit #{pageNum}, 5;
 	</select>
 	
 	<insert id="insertReview">
@@ -179,4 +187,20 @@
 	<select id="selectMaxBookNum" resultType="int">
 		select max(bk_num) from book
 	</select>
+	<update id="updateReview">
+		update review
+		set re_content = #{re.re_content},re_star = #{re.re_star}, re_date = now()
+		where re_me_id = #{re.re_me_id} and re_bk_num = #{re.re_bk_num}
+	</update>
+	
+	<delete id="deleteReview">
+		delete from review
+		where re_bk_num = #{bookNum} and re_me_id = #{id}
+	</delete>
+	
+	<select id="selectGenreList">
+		select *
+		from genre
+	</select>
+
 </mapper>

@@ -65,6 +65,8 @@
 	position: absolute;
 	width: 2.5em;
 	height: 2.5em;
+	top: 0;
+	left: 0;
 	display: flex;
 	transform: translate(-50%, -50%);
 	justify-content: center;

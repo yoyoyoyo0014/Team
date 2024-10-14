@@ -16,11 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
+import kr.kh.ebook.model.vo.GenreVO;
+import kr.kh.ebook.model.vo.ReportTypeVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookCriteria;
+import kr.kh.ebook.pagination.BookPageMaker;
+import kr.kh.ebook.pagination.Criteria;
 import kr.kh.ebook.pagination.PageMaker;
 import kr.kh.ebook.service.BookService;
+import kr.kh.ebook.service.ReportService;
 
 @RequestMapping("/ebook")
 @RestController
@@ -42,17 +47,38 @@ public class BookContoller {
 	}//책 번호를 통해 책 정보 가져오기
 	
 	//책 검색
-	@PostMapping("/search")
-	public List<BookVO> searchBookList(@RequestParam String category,@RequestParam String country,@RequestParam int genre,@RequestParam String search,@RequestParam int page) {
+	@PostMapping("/searchBook/{category}/{country}/{genre}/{page}/{count}/{search}")
+	@ResponseBody
+	public List<BookVO> searchBookList(@PathVariable String category,
+			@PathVariable String country,@PathVariable int genre,
+			@PathVariable String search,@PathVariable int page,
+			@PathVariable int count) {
 		//https://github.com/st8324/java_240528/blob/main/spring%20projects/spring3/src/main/java/kr/kh/spring3/controller/ReactController.java
-		BookCriteria bookCri = new BookCriteria(page,category,country,genre);
 		
-		int searchBookCount = bookService.searchBookCount(bookCri);
+		BookCriteria bookCri = new BookCriteria(page,category,country,genre,search);
 		
-		PageMaker pm = new PageMaker(5, bookCri, searchBookCount);
 		
+		
+		System.out.println(country + genre +"search" + search);
+
+		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
 		return bookService.searchBookList(pm);
 	}
+	
+	//책 검색 개수만
+	@PostMapping("/searchBookCount/{country}/{genre}/{search}")
+	@ResponseBody
+	public int selectBookCount(@PathVariable String country,
+			@PathVariable int genre,
+			@PathVariable String search) {
+		
+		if(search.equals("do not exist"))
+			search = "";
+		int searchBookCount = bookService.searchBookCount(country,genre,search);
+		return searchBookCount;
+	}
+	
+	
 	
 	//리뷰 개수
 	@PostMapping("/reviewCount/{bookNum}")
@@ -61,7 +87,7 @@ public class BookContoller {
 		int res = bookService.reviewCount(bookNum);
 		return res;
 	}//리뷰 보기
-	
+		
 	//리뷰 리스트
 	@PostMapping("/reviewList/{bookNum}/{pageNum}")
 	@ResponseBody
@@ -123,6 +149,11 @@ public class BookContoller {
 	public boolean updateBookPage(@RequestParam BookListVO readBook) {
 		return bookService.updateReadBook(readBook);
 	}
-	
 
+	//장르 리스트 가져오기
+	@PostMapping("/selectGenreList")
+	@ResponseBody
+	public List<GenreVO> selectGenreList(){
+		return bookService.selectGenreList();
+	}//리뷰 보기
 }

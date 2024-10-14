@@ -23,7 +23,7 @@ const Header = ({setSection, genreList}) => {
 				<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
 					
 				<div className="search-box">
-					<form name="search">
+					<form name="search" >
 						<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={setKeyword}/>
 						<Button text={"검색"} cls={"ico btn search"}/>
 					</form>

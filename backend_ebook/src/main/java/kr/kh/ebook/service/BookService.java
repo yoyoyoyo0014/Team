@@ -9,9 +9,11 @@ import kr.kh.ebook.dao.BookDAO;
 import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
+import kr.kh.ebook.model.vo.GenreVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookCriteria;
+import kr.kh.ebook.pagination.BookPageMaker;
 import kr.kh.ebook.pagination.PageMaker;
 import lombok.AllArgsConstructor;
 
@@ -26,12 +28,12 @@ public class BookService {
 	}
 	
 	//검색할 책 개수
-	public int searchBookCount(BookCriteria bookCri) {
-		return bookDao.searchBookCount(bookCri);
+	public int searchBookCount(String country,int genre,String search) {
+		return bookDao.searchBookCount(country,genre,search);
 	}
 	
 	//검색 책
-	public List<BookVO> searchBookList(PageMaker pm){
+	public List<BookVO> searchBookList(BookPageMaker pm){
 		return bookDao.searchBookList(pm);
 	}
 	
@@ -109,5 +111,8 @@ public class BookService {
 
 	public List<WriterVO> selectWriter(int bookNum) {
 		return bookDao.selectWriter(bookNum);
+	}
+	public List<GenreVO> selectGenreList() {
+		return bookDao.selectGenreList();
 	}
 }
