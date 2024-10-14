@@ -115,8 +115,8 @@ CREATE TABLE `post` (
 	`po_me_id`	varchar(15)	NOT NULL,
 	`po_date`	datetime	NOT NULL,
 	`po_co_num`	int	NOT NULL,
-	`po_view`	int	NULL,
-	`po_like`	int	NULL
+	`po_view`	int	NOT NULL default 0,
+	`po_like`	int	NOT NULL default 0
 );
 
 CREATE TABLE `community` (
