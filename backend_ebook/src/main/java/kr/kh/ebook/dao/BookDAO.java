@@ -15,8 +15,8 @@ import kr.kh.ebook.pagination.PageMaker;
 
 //https://github.com/st8324/java_240528/blob/main/servlet/servlet2/src/main/java/kr/kh/app/dao/PostMapper.xml
 public interface BookDAO {
-
-	int count();  //테스트용 
+	//테스트용 
+	int count();  
 	
 	List<BookVO> searchBookList(@Param("pm") BookPageMaker pm); //검색시 사용되는
 	

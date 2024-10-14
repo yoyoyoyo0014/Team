@@ -40,22 +40,26 @@ public class BookContoller {
 	}
 	
 	//책 검색
-	@PostMapping("/searchBook/{category}/{country}/{genre}/{page}/{count}/{search}")
+	@PostMapping("/searchBook/{category}/{country}/{genre}/{count}/{search}")
 	@ResponseBody
 	public List<BookVO> searchBookList(@PathVariable String category,
 			@PathVariable String country,@PathVariable int genre,
-			@PathVariable String search,@PathVariable int page,
+			@PathVariable String search,
 			@PathVariable int count) {
 		//https://github.com/st8324/java_240528/blob/main/spring%20projects/spring3/src/main/java/kr/kh/spring3/controller/ReactController.java
 		
-		BookCriteria bookCri = new BookCriteria(page,category,country,genre,search);
+		BookCriteria bookCri = new BookCriteria(count,category,country,genre,search);
 		
 		
 		
-		System.out.println(country + genre +"search" + search);
+		System.out.println("country : "+country + " genre : " + genre + "search : " + search  + " categori : " + category);
 
 		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
-		return bookService.searchBookList(pm);
+		System.out.println((pm));
+		
+		List<BookVO> res = bookService.searchBookList(pm);
+		System.out.println(res);
+		return res;
 	}
 	
 	//책 검색 개수만
@@ -64,6 +68,8 @@ public class BookContoller {
 	public int selectBookCount(@PathVariable String country,
 			@PathVariable int genre,
 			@PathVariable String search) {
+		
+		System.out.println("country : "+country + " genre : " + genre + "search : " + search );
 		
 		if(search.equals("do not exist"))
 			search = "";

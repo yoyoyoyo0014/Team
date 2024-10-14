@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
+import MakePage from './pageButton';
 
-function BookSearch() {
-  //https://github.com/st8324/java_240528/blob/main/react/react3/src/Signup.js
+function BookSearch({initSearch,initGenre,initCountry,initCategory,initPage}) {
 
   let [data, setData] = useState({
     search : '',
@@ -13,7 +13,7 @@ function BookSearch() {
 
 
   let [bookList,setBookList] = useState([])
-  let [bookCount,setBookCount] = useState(0); //책 숫자
+  //let [bookCount,setBookCount] = useState(0); //책 숫자
   
   let [search,setSearch] = useState('do not exist');
   let [country,setCountry] = useState("all");
@@ -28,11 +28,10 @@ function BookSearch() {
     next : false,
     pageList : []
   })//페이지 이동버튼
-
   let[genreList,setGenreList] = useState([{
-    ge_num : 0,
-    ge_name : ''
   }])//장르 리스트
+
+  
 
   function checkedCountry(e){
     setCountry(e.target.value);
@@ -69,47 +68,78 @@ function BookSearch() {
     .catch(e=>console.error(e));
   }//장르리스트 가져오는 함수
 
-  function submitSearch(){
-    fetch('/ebook/searchBook/'+category+"/"+country+'/'+
-      genre+'/'+page.currentPage+'/'+search,{
-      method : "post",
-      //body : JSON.stringify(writeUserReview),
-      headers: {
-        'Content-Type': 'application/json',  // Content-Type 헤더 설정
-      },
-    })
-    .then(res=>res.json())
-    .then(bookListData=>{
+  async function getSearchCount(){
+    try {
+      // fetch 요청이 완료될 때까지 대기
+      const response = await fetch('/ebook/searchBookCount/'+country+"/"+genre+"/"+search,{
+        method : "post",
+        //body : JSON.stringify(writeUserReview),
+        headers: {
+          'Content-Type': 'application/json',  // Content-Type 헤더 설정
+        },
+      })
+      const searchCount = await response.text();
+      return searchCount;
+    } catch (e) {
+      console.error(e);
+      return false;;
+    }
+
+
+  }//검색개수 가져오기
+
+  async function selectSearch(){
+    try {
+      // fetch 요청이 완료될 때까지 대기
+      const response = await fetch('/ebook/searchBook/'+category+"/"+country+'/'+
+        genre+'/'+page.currentPage+'/'+search,{
+        method : "post",
+        //body : JSON.stringify(writeUserReview),
+        headers: {
+          'Content-Type': 'application/json',  // Content-Type 헤더 설정
+        },
+      })
+      const bookListData = await response.json();
+      return bookListData;
+    } catch (e) {
+      console.error(e);
+      return false;;
+    }
+
+  }//검색하기
+
+  async function changePage(index){
+    if(typeof index ==='number'){
+      page.currentPage = index;
+    }else{
       
-      setBookList([...bookListData])
-      console.log(bookListData)
-    })
-    .catch(e=>console.error(e));
-  }
+      var i ={
+        index : 0
+      }
+      i = index;
+      page.currentPage = i.index+1;
+    }
+    page = MakePage(page.contentsCount,page.currentPage);
+    await submitSearch();
+    
+  }//페이지 바꾸기
 
-  function changePage(index){
-    console.log(index)
-  }
+  async function submitSearch(){
+    var searchCount = await getSearchCount();
+    page.contentsCount = searchCount;
+    page = MakePage(page.contentsCount,page.currentPage);
+    var searchDataList = await selectSearch();
+    setBookList(searchDataList);
+    setPage({...page});
+  }//책 검색
 
-  function selectBookCount(){
-    fetch("/ebook/searchBookCount/"+country+"/"+genre+"/"+search,{
-      method : "post",
-      //body : JSON.stringify(writeUserReview),
-      headers: {
-        'Content-Type': 'application/json',  // Content-Type 헤더 설정
-      },
-    })
-    .then(res=>res.json())
-    .then(reviewListData=>{
-     
-    })
-    .catch(e=>console.error(e));
-  }
+  
   
   useEffect(()=>{
-    getGenreList();
+    getGenreList();//장르 리스트 가져오기
+    submitSearch(); //그냥 검색
   },[]);
-
+  console.log('렌더링 횟수')
   return (
     <div >
       <input onChange={e=>getSearch(e)} placeholder="검색칸"></input>
@@ -165,7 +195,7 @@ function BookSearch() {
              </label> 
             ))
           }
-        <input onClick={submitSearch} type="submit" value="제출"></input>
+        <input onClick={()=>changePage(1)} type="submit" value="제출"></input>
         {
           bookList.map((item,index)=>{
             return (<div key={index}>{item.bk_name} : {item.bk_price}</div>)

@@ -52,15 +52,12 @@
     				bk_state = '해외도서' or bk_state ='국내도서'
     			</otherwise>
     		</choose>
-    		
-    		
-    		
-    		
+    	
     		<if test ="pm.cri.genre != '0'">
     			and bk_sg_num = #{pm.cri.genre}
   			</if>
   			<if test = "pm.cri.search !=''">
-  				and title like '%#{pm.cri.search}%'
+  				and locate(#{pm.cri.search},bk_name)
   			</if>
   			
   		order by
