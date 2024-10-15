@@ -114,6 +114,9 @@ const List = ({ communities = [] }) => {
           검색
         </button>
       </div>
+      <div className="insert">
+        <button style={{marginBottom: '20px', float: 'right'}} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
+      </div>
       <table className="table" style={{ textAlign: 'center', width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ color: 'gray', borderBottom: '1px solid gray' }}>
           <tr>
