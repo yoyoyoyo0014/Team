@@ -114,7 +114,6 @@ const List = ({ communities = [] }) => {
       <h2 style={{padding: '30px 0 60px'}}>{communityName}</h2>
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
         <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleKeyPress} style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }}/>
-        <span>x</span>
         <button onClick={handleSearch} style={{ padding: '10px 20px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
           검색
         </button>
