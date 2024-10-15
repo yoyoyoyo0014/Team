@@ -6,9 +6,5 @@
 		select count(*)
 		from book;
 	</select>
-    
-    <select id="searchBookList">
-    	
-    </select>
-   
+
 </mapper>
