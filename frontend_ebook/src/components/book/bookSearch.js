@@ -1,21 +1,21 @@
 import {useEffect, useState} from 'react';
 
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import MakePage from '../pageButton';
+
 function BookSearch() {
-  //https://github.com/st8324/java_240528/blob/main/react/react3/src/Signup.js
-
-  let [data, setData] = useState({
-    search : '',
-    country : 'all',
-    genre : 0,
-    category : '',
-    page : 0
-  })//검색 시 필요한 목록
-
+  const navigate = useNavigate();
+  
+  const { bo_country } = useParams();
+  const { bo_genre } = useParams();
+  const { bo_categori } = useParams();
+  const { bo_page } = useParams();
+  const { bo_search } = useParams();
 
   let [bookList,setBookList] = useState([])
-  let [bookCount,setBookCount] = useState(0); //책 숫자
   
-  let [search,setSearch] = useState('do not exist');
+  let [search,setSearch] = useState('');
   let [country,setCountry] = useState("all");
   let [genre,setGenre] = useState(0);
   let [category,setCategory] = useState('popularity');
@@ -28,11 +28,10 @@ function BookSearch() {
     next : false,
     pageList : []
   })//페이지 이동버튼
-
   let[genreList,setGenreList] = useState([{
-    ge_num : 0,
-    ge_name : ''
   }])//장르 리스트
+
+  let bannedSearchTerms =["#","%",";"]
 
   function checkedCountry(e){
     setCountry(e.target.value);
@@ -50,9 +49,9 @@ function BookSearch() {
     setSearch(e.target.value);
   }//검색 설정
 
+
   function getGenreList(){
-    fetch('/ebook/selectGenreList',{
-      method : "post",
+    fetch('/selectGenreList',{
       //body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
@@ -61,55 +60,141 @@ function BookSearch() {
     .then(res=>res.json())
     .then(genreListData=>{
       // genreListData = 장르 리스트
-      if(genreListData){
+      if(genreListData)
         setGenreList([...genreListData]);
-      }
-      
     })
     .catch(e=>console.error(e));
   }//장르리스트 가져오는 함수
 
-  function submitSearch(){
-    fetch('/ebook/searchBook/'+category+"/"+country+'/'+
-      genre+'/'+page.currentPage+'/'+search,{
-      method : "post",
-      //body : JSON.stringify(writeUserReview),
-      headers: {
-        'Content-Type': 'application/json',  // Content-Type 헤더 설정
-      },
-    })
-    .then(res=>res.json())
-    .then(bookListData=>{
+  async function getSearchCount(inputSerch = ''){
+    inputSerch = inputSerch.slice(11);
+    if(inputSerch=='')
+      inputSerch = search
+
+    for(var i = 0;i<bannedSearchTerms.length;i++){
+      if(search.indexOf(bannedSearchTerms[i]) !==-1){
+        alert('금지된 검색이 포함되어있습니다.')
+        return false;
+      }
+    }
+    try {
+      // fetch 요청이 완료될 때까지 대기
+      const response = await fetch('/searchBookCount/'+country+"/"+genre+"/SearchWord="+inputSerch,{
+        //body : JSON.stringify(writeUserReview),
+        headers: {
+          'Content-Type': 'application/json',  // Content-Type 헤더 설정
+        },
+      })
+      const searchCount = await response.text();
+      return searchCount;
+    } catch (e) {
+      console.error(e);
+      return false;;
+    }
+  }//검색개수 가져오기
+
+  async function selectSearch(inputSerch = ''){
+    inputSerch = inputSerch.slice(11);
+    if(inputSerch=='')
+      inputSerch = search
+
+    for(var i = 0;i<bannedSearchTerms.length;i++){
+      if(search.indexOf(bannedSearchTerms[i]) !==-1){
+        alert('금지된 검색이 포함되어있습니다.')
+        return false;
+      }
+    }
+
+    try {
+      const response = await fetch('/searchBook/'+category+"/"+country+'/'+
+        genre+'/'+page.currentPage+'/SearchWord='+inputSerch,{
+        //body : JSON.stringify(writeUserReview),
+        headers: {
+          'Content-Type': 'application/json',  // Content-Type 헤더 설정
+        },
+      })
+      const bookListData = await response.json();
+      if(bookListData ==null)
+        return false;
       
-      setBookList([...bookListData])
-      console.log(bookListData)
-    })
-    .catch(e=>console.error(e));
-  }
+      if(bookListData.length ==0){
+        page.currentPage = 1;
+        setPage({...page});
+      }
+      return bookListData;
+    } catch (e) {
+      //console.error(e);
+      return false;
+    }
 
-  function changePage(index){
-    console.log(index)
-  }
+  }//검색하기
 
-  function selectBookCount(){
-    fetch("/ebook/searchBookCount/"+country+"/"+genre+"/"+search,{
-      method : "post",
-      //body : JSON.stringify(writeUserReview),
-      headers: {
-        'Content-Type': 'application/json',  // Content-Type 헤더 설정
-      },
-    })
-    .then(res=>res.json())
-    .then(reviewListData=>{
+  async function changePage(index){
+    if(typeof index ==='number'){
+      page.currentPage = index;
+    }else{
+      var i ={
+        index : 0
+      }
+      i = index;
+      page.currentPage = i.index+1;
+    }
+    page = MakePage(page.contentsCount,page.currentPage);
+
+    if(page.currentPage>page.endPage){
+      page.currentPage = page.endPage;
+      page = MakePage(page.contentsCount,page.currentPage);
+    }
      
-    })
-    .catch(e=>console.error(e));
-  }
-  
-  useEffect(()=>{
-    getGenreList();
-  },[]);
+   if(page.currentPage<=0)
+      page.currentPage = 1;
+    navigate("/searchBook/"+country+"/"+genre+"/"+category+"/"+page.currentPage+"/bookSearch="+search);
+    await submitSearch();
+    
+  }//페이지 바꾸기
 
+  async function submitSearch(inputSerch = ''){
+    if(inputSerch=='')
+      inputSerch = search
+
+    var searchCount = await getSearchCount(inputSerch);
+    if(!searchCount)
+      return;
+    page.contentsCount = searchCount;
+    page = MakePage(page.contentsCount,page.currentPage);
+    
+    if(page.currentPage>page.endPage){
+      page.currentPage = page.endPage;
+      page = MakePage(page.contentsCount,page.currentPage);
+    }
+    var searchDataList = await selectSearch(inputSerch);
+
+    setBookList(searchDataList);
+    setPage({...page});
+  }//책 검색
+
+  function urlSetting(){
+    setCountry(bo_country)
+    setGenre(bo_genre)
+    setCategory(bo_categori)
+    page.currentPage = bo_page
+    if(page.currentPage<=0)
+      page.currentPage = 1;
+    setPage({...page})
+  }//url 세팅에 맞게 세팅
+  function clickBookDetail(bookNum){
+    console.log(bookNum)
+    navigate('/selectBook/'+bookNum)
+  }
+
+
+  useEffect(()=>{
+    urlSetting();//url 세팅
+    
+    getGenreList();//장르 리스트 가져오기
+    submitSearch(bo_search); //그냥 검색
+    },[]);
+  //console.log('렌더링 횟수')
   return (
     <div >
       <input onChange={e=>getSearch(e)} placeholder="검색칸"></input>
@@ -158,6 +243,9 @@ function BookSearch() {
           </label> 
         </div>
           <br/>
+          <label>
+               <input defaultChecked onClick={()=>{checkedGenre(0)}} type="radio" id={0} name="genre" value="전체"/>전체
+          </label>
           {
             genreList.map((item,index)=>(
               <label key={index} >
@@ -165,14 +253,17 @@ function BookSearch() {
              </label> 
             ))
           }
-        <input onClick={submitSearch} type="submit" value="제출"></input>
-        {
-          bookList.map((item,index)=>{
-            return (<div key={index}>{item.bk_name} : {item.bk_price}</div>)
+            <input onClick={()=>changePage(1)} type="submit" value="제출"></input>
+            {bookList && bookList.length > 0 &&   bookList.map((item, index) => {
+            return (
+              <div onClick={()=>clickBookDetail(item.bk_num)} key={index}>
+                {item.bk_name} : {item.bk_price}
+                </div>
+            );
           })
         }
         
-        <button onClick={()=>changePage(page.currentPage-1)} disabled= {!page.prev}>이전</button>
+      <button onClick={()=>changePage(page.currentPage-1)} disabled= {!page.prev}>이전</button>
 
       {page.pageList.map((item,index)=>{
           return(<button  onClick={()=>changePage({index})} disabled={page.currentPage==(index+1)} key={index}>{item}</button>)

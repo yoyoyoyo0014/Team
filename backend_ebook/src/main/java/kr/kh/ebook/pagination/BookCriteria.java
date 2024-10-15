@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class BookCriteria extends Criteria  {
-	private String category;
+	 String category;
 	
-	private String country;
+	 String country;
 	
-	private int genre;
+	 int genre;
 
 	public BookCriteria(int page, String category, String country, int genre,String search) {
 		super(page);

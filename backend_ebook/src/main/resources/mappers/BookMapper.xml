@@ -39,24 +39,22 @@
     <select id="searchBookList">
     	select *
     	from book
-    	
     	where
-    		
-    		 bk_name LIKE CONCAT('%', #{pm.cri.search}, '%') and
+    		 bk_name LIKE CONCAT('%', #{pm.cri.search}, '%') 
     	
     		<choose>
     			<when test = "pm.cri.country == 'domestic' ">
-    				 bk_state ='국내도서'
+    				 and bk_state ='국내도서'
     			</when>
     			<when test = "pm.cri.country == 'foreign' ">
-    				 bk_state = '해외도서'
+    				and bk_state = '해외도서'
     			</when>
     			<otherwise>
-    				bk_state = '해외도서' or bk_state ='국내도서'
+    				and (bk_state = '해외도서' or bk_state ='국내도서')
     			</otherwise>
     		</choose>
     	
-    		<if test ="pm.cri.genre != '0'">
+    		<if test ="pm.cri.genre != 0">
     			and bk_sg_num = #{pm.cri.genre}
   			</if>
   			
@@ -153,5 +151,16 @@
 		select *
 		from genre
 	</select>
+	
+	
+	<select id="selectAllGenre" resultType="BookGenreVO">
+    	select * from genre
+    </select>
+    
+    <select id="selectAllSecondGenre" resultType="BookGenreVO">
+    	select sg_num as ge_num, sg_name as ge_name, sg_parent as ge_parent
+    	from secondgenre
+    	where sg_parent = #{ge_num}
+    </select>
 
 </mapper>

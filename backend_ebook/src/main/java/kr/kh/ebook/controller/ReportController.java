@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,13 +19,12 @@ import kr.kh.ebook.service.ReportService;
 
 //@RestController
 @Controller
-@RequestMapping("/report")
 public class ReportController {
 	@Autowired
 	ReportService reportService;
 	
 	//리폿타입 가져오기
-	@PostMapping("/selectReportType")
+	@GetMapping("/selectBook/selectReportType")
 	@ResponseBody
 	public List<ReportTypeVO> selectReportTypeList() {
 		List<ReportTypeVO> reportTypeList =  reportService.selectReportType();
@@ -32,13 +32,13 @@ public class ReportController {
 	}
 	
 	//신고 추가하기
-	@PostMapping("/insertReport")
+	@PostMapping("/selectBook/report/insertReport")
 	@ResponseBody
 	public boolean insertReport(@RequestBody ReportVO report) {
 		return reportService.insertReport(report);
 	}
 	//신고 추가하기
-	@PostMapping("/existReport/{userId}/{targetId}/{reportId}")
+	@GetMapping("/selectBook/report/existReport/{userId}/{targetId}/{reportId}")
 	@ResponseBody
 	public boolean selectReportid(@PathVariable("userId") String userId,
 			@PathVariable("targetId") String targetId,

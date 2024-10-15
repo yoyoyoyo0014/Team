@@ -1,20 +1,40 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Input } from "./form/input";
 import Button from "./form/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
-const Header = ({setSection, genreList}) => {
-	const navigate = useNavigate();
+const Header = ({selectSection, genreList}) => {
 	let [keyword, setKeyword] = useState('');
+	let [section, setSection] = useState('');
+
+	const navigate = useNavigate();
+  let [country,setCountry] = useState("all");
+  let [genre,setGenre] = useState(0);
+  let [category,setCategory] = useState('popularity');
 
 	const showBooks = (sectionName) => {
-		setSection(sectionName);
+		selectSection(sectionName);
+		//header => app로 sectionname 전달(callback function app에서 생성) 완
+		//callback function을 자식 컴포넌트에 props로 전달 완
+		//자식 컴포넌트에서 해당 callback function을 사용
+		axios.get(`./compontents/main/${sectionName}`)
+		.then((data) => {
+			console.log('success');
+		})
+		.catch(() => {
+			console.log('fail3');
+		})
 	}
 
 	const showGenre = () =>{
 		const wrapper = document.querySelector('.gnb-genre-wrapper');
+
 		wrapper.classList.toggle('show');
+	}
+	function clickSearchBtn(){
+	 navigate("/searchBook/"+country+"/"+genre+"/"+category+"/"+0+"/bookSearch="+keyword);
 	}
 
 	return(
@@ -23,9 +43,9 @@ const Header = ({setSection, genreList}) => {
 				<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
 					
 				<div className="search-box">
-					<form name="search" >
-						<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={setKeyword}/>
-						<Button text={"검색"} cls={"ico btn search"}/>
+					<form name="search">
+						<Input  type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={e=>setKeyword(e)} value={keyword}/>
+						<Button click={e=>clickSearchBtn()} text={"검색"} cls={"ico btn search"}/>
 					</form>
 				</div>
 
@@ -38,17 +58,11 @@ const Header = ({setSection, genreList}) => {
 					<div className="gnb">
 						<div className="site-menu">
 							<ul>
-								<li onClick={()=>{
-									navigate('/');
-									showBooks('bestSellers');
-								}}>베스트셀러</li>
-								<li onClick={()=>{
-									navigate('/');
-									showBooks('newBooks');
-								}}>신상 도서</li>
+								<li onClick={()=>showBooks('bestsellers')}>베스트셀러</li>
+								<li onClick={()=>showBooks('newbooks')}>신상 도서</li>
 								<li><Link to="/forsales">할인 중인 도서</Link></li>
 								<li><Link to="/event">이벤트</Link></li>
-								<li><Link to="/request">도서 요청</Link></li>
+								<li><Link to="/meeting">작가와의 만남</Link></li>
 							</ul>
 						</div>
 

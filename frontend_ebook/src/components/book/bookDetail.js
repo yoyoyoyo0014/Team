@@ -1,15 +1,10 @@
 import {useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-
-import Button from '../form/button';
-import '../../css/detail.css';
-import StarRating from '../starRating';
-
-const BookDetail = ({Getuser}) => {
-  const bookNum = useParams().bk_num;
-
-  let [reviewList, setReviewList] = useState([]);
+import { useParams } from 'react-router-dom'
+import Header from '../header';
+import BookReview from './bookReview';
+function BookDetail() {
+  
+  const {bo_num} = useParams();
   let [book,setBook] = useState({
     bk_num : 0, //도서 번호
     bk_name : '', //도서 이름
@@ -41,11 +36,10 @@ const BookDetail = ({Getuser}) => {
 	  bk_age_10_male: 0,  //10대 남자
 	  bk_age_10_female: 0  //10대 여자
   })//책 데이터
-  let [writer, setWriter] = useState([]);
 
   let[user,setUser] = useState({
-    me_id : '', //아이디
-    me_nickname : '', //닉네임
+    me_id : 'admin123', //아이디
+    me_nickname : '꼬꼬마', //닉네임
     me_pw : '', //비밀번호
     me_email : '',  //이메일
     me_address : '',  //주소
@@ -83,100 +77,35 @@ const BookDetail = ({Getuser}) => {
 	  bk_age_10_femalePer: 0
   });//인기분포도 %
 
-  function getBookData(){
-    popularityDistributionChart = PopularityDistributionChart(book);//인기분포율 세팅
-  }
-
-  let score = (book.bk_score / book.bk_reviewCount).toFixed(1);
-
-  const options = {
-		url: '/api/selectBook/' + bookNum,
-		method:'GET',
-		header: {
-			'Accept':'application/json',
-			'Content-Type': "'application/json';charset=UTP-8'"
-			//연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
-		},
-		data: {
-			bookNum: bookNum
-		}
-	}
+  function getBookData(success){
+    fetch('/selectBook/'+bo_num,{
+			//body : JSON.stringify(book),
+			headers : {
+				"Content-type" : "application/json"
+			}
+    })
+      .then(res=>res.text())
+      .then(bookData=>{
+        if(bookData){
+          book = JSON.parse(bookData); 
+          setBook(book);
+          popularityDistributionChart = PopularityDistributionChart(book);//인기분포율 세팅
+          if(success!=null)success();
+        }
+      })
+      .catch(e=>console.error(e));
+  }//책 데이터 가져오기
 
   useEffect(() => {
-    axios(options)
-      .then(res => {
-        setBook(res.data.book);
-        setWriter(res.data.writer);
-        console.log("data load 성공")
-      })
-      .catch((error) => {
-        if (error.response) {
-          // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
-          console.log(error.response.status);
-        } else if (error.request) {
-          // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
-          // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
-          // node.js에서는 http.ClientRequest 인스턴스입니다.
-          console.log(error.request);
-        } else {
-          // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
-          console.log('Error', error.message);
-        }
-        console.log(error.config);
-      })
-  }, [])
+    getBookData();
+}, []); //처음 시작할 때
+
   return (
     <div>
-      <div className="book-info">
-        <div className="book-img">
-          <img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt={book.bk_name}/>
-        </div>
-        <div className="info">
-          <p className="publisher">{book.bk_publisher}</p>
-          <h2>{book.bk_name}</h2>
-          <dl>
-            <dt>판매가</dt>
-            <dd>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(book.bk_price)}</dd>
-          </dl>
-          {writer.map(item => {
-            return (
-              <dl>
-                <dt>{item.wt_name}</dt>
-                <dd>{item.wr_name}</dd>
-              </dl>
-            )
-          })}
-
-          <div className="rating">
-            <StarRating score={Math.floor(score)}/>
-            <span><strong>{score === "NaN" ? 0 : score}</strong>({book.bk_reviewCount})</span>
-          </div>
-
-          <div className="btns">
-            <Button type="button" text="장바구니" cls="btn"/>
-            <Button type="button" text="구매하기" cls="btn btn-point"/>
-          </div>
-        </div>
-      </div>
-
-      <div className="book-desc section">
-        <h3>책 소개</h3>
-        <p>{book.bk_plot}</p>
-      </div>
-
-      <hr/>
-      <div className="review-container section">
-        <h3>리뷰</h3>
-
-        <ul>
-          {reviewList ? <li className="no-data">작성된 리뷰가 없습니다</li> :
-          [...Array(parseInt(5))].map((item, i) => {
-            <li>
-              리뷰1
-            </li>
-          })}
-        </ul>
-      </div>
+      <div>책 제목 : {book.bk_name}</div>
+      <br/>
+      <BookReview bookNum={bo_num} userId={user.me_id}></BookReview>
+      
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { useState } from 'react';
 const GenreNavBar = ({genreList}) => {
 	return(
 		<nav id="category-navbar" className="theme-box">
-			<div className="category-navbar-wrapper scrollbar-no-padding">
+			<div className="category-navbar-wrapper">
 			{
 				genreList && genreList.map(genre => {
 						return(

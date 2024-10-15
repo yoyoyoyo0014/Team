@@ -3,7 +3,6 @@
 * {margin: 0; padding: 0; box-sizing: border-box;}
 
 a {text-decoration: none; color: inherit;}
-img {max-width: 100%;}
 ul, ol, li {list-style: none;}
 input, select, textarea, button {font: inherit; color: inherit; border: 0;}
 input:focus, select:focus, textarea:focus, button:focus {outline: none;}

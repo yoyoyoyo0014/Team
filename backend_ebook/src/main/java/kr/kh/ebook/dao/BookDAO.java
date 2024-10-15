@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
-import kr.kh.ebook.model.vo.GenreVO;
+import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookCriteria;
@@ -45,5 +46,9 @@ public interface BookDAO {
 
 	boolean deleteReview(@Param("bookNum")int bookNum, @Param("id")String id);
 
-	List<GenreVO> selectGenreList();
+	List<BookGenreVO> selectGenreList();
+	
+	List<BookGenreVO> selectAllGenre();
+
+	List<BookGenreVO> selectAllSecondGenre(int ge_num);
 }
