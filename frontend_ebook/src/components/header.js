@@ -24,8 +24,11 @@ const Header = ({setSection}) => {
 
 	 // 로그아웃 핸들러
 	 const handleLogout = () => {
+		navigate('/logout');
+		alert('로그아웃 되었습니다');
     setIsLoggedIn(false);  // 로그인 상태를 false로 업데이트
     localStorage.removeItem('loginToken');  // localStorage에서 토큰 삭제
+		navigate('/');
   };
 
 	const UserMenu = ({isLoggedIn}) => {
@@ -38,7 +41,7 @@ const Header = ({setSection}) => {
 			return(<ul>
 				<li><Link to="/cart">장바구니</Link></li>
 				<li><Link to="/mypage">마이페이지</Link></li>
-				<li><Link to="/logout" onClick={handleLogout}>로그아웃</Link></li>
+				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
 			</ul>)
 		}
 	}

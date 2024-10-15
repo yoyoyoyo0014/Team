@@ -30,7 +30,6 @@ public class LoginController {
             String token = memberService.generateToken(memberVO.getMe_id());
             response.put("success", true);
             response.put("token", token);
-            
             // 로그인 성공 로그
             System.out.println("로그인 성공: 사용자 ID = " + memberVO.getMe_id());
         } else {
