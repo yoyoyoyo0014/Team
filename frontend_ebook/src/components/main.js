@@ -19,17 +19,17 @@ const Main = ({section, genreList, addPost}) => {
 		location.state = null;
 	}
 
-
 	useEffect(() => {
     fetch('/main')
       .then((res) => res.json())
       .then(res=>{
 				console.log(res)
 				if (res.postList) {
-					var tmp = res.postList.map((item) => {
-							var date = new Date(item.po_date).toLocaleDateString();
-							item = { ...item, date };
-							return item;
+					var tmp = res.postList.map((item, index) => {
+						var date = new Date(item.po_date).toLocaleDateString();
+						const no = res.pm ? res.pm.totalCount - (res.pm.cri.page - 1) * res.pm.cri.perPageNum - index : res.postList.length - index;
+						item = { ...item, date, no };
+						return item;
 					});
 					setList(tmp);
 			}
@@ -81,13 +81,13 @@ const Main = ({section, genreList, addPost}) => {
 							<tbody>
 								{list.slice(0,3).map((item, index) => (
 										<tr key={item.po_num || index} style={{height: '75px', borderBottom: '1px solid lightgray'}}>
-												<td>{item.po_num}</td>
-												<td style={{ textAlign: 'left', cursor: 'pointer', textDecoration: hover === index ? 'underline' : 'none' }} onClick={() => navigate(`/post/detail/${item.po_num}`)}
-												onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>
-													{item.po_title}
-												</td>
-												<td>{item.po_me_id}</td>
-												<td>{item.date}</td>
+											<td>{item.no}</td>
+											<td style={{ textAlign: 'left', cursor: 'pointer', textDecoration: hover === index ? 'underline' : 'none' }} onClick={() => navigate(`/post/detail/${item.po_num}`)}
+											onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>
+												{item.po_title}
+											</td>
+											<td>{item.po_me_id}</td>
+											<td>{item.date}</td>
 										</tr>
 								))}
 							</tbody>
