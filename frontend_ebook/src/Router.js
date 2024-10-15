@@ -1,33 +1,44 @@
-import { Routes, Route } from "react-router-dom";
-
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react";
+import { LoginContext } from "./context/LoginContext.js"; // LoginContext 사용
 import Main from "./components/main.js";
 import MyBooks from "./pages/mypage/mybooks.js";
-import BestSellers from "./pages/bestsellers.js";
-import NewBooks from "./pages/newbooks.js";
+import BestSellers from "./components/main/bestsellers.js";
+import NewBooks from "./components/main/newbooks.js";
 import Event from "./pages/event.js";
 import ForSales from "./pages/forsales.js";
-import Meeting from "./pages/meeting.js";
 
 import Login from "./pages/login.js";
 import Join from "./pages/join.js";
-import CartPage from "./pages/cart/cartpage.js";
+import BookDetail from "./components/book/bookDetail.js";
+import BookSearch from "./components/book/bookSearch.js";
 
-function Router(){
-	return(
-		<Routes>
-			<Route path="/" element={<Main/>} />
-			<Route path="/mypage/mybooks" element={<MyBooks/>}/>
-			<Route path="/bestsellers" element={<BestSellers/>}/>
-			<Route path="/newbooks" element={<NewBooks/>}/>
-			<Route path="/forsales" element={<ForSales/>}/>
-			<Route path="/event" element={<Event/>}/>
-			<Route path="/meeting" element={<Meeting/>}/>
+import NaverCallback from "./components/auth/NaverCallback.js"; // NaverCallback 컴포넌트 import
 
-			<Route path="/login" element={<Login/>}/>
-			<Route path="/join" element={<Join/>}/>
-			<Route path="/cart/:me_id" element={<CartPage />} />
-		</Routes>
-	)
+function Router({section, genreList, book}) {
+	const { isLoggedIn } = useContext(LoginContext);
+
+  return (
+    <Routes>
+      <Route path="/" element={<Main section={section} genreList={genreList} book={book}/>} />
+      <Route
+        path="/mypage/mybooks"
+        element={isLoggedIn ? <MyBooks /> : <Navigate to="/login" />}
+      />
+      <Route path="/bestsellers" element={<BestSellers />} />
+      <Route path="/newbooks" element={<NewBooks />} />
+      <Route path="/forsales" element={<ForSales />} />
+      <Route path="/event" element={<Event />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/join" element={<Join />} />
+
+      {/* 네이버 로그인 콜백 경로 */}
+      <Route path="/auth/naver/callback" element={<NaverCallback />} />
+
+      <Route path="/ebook/selectBook/:bk_num" element={<BookDetail/>}/>
+      <Route path="/ebook/searchBook" element={<BookSearch genreList={genreList}/>}/>
+    </Routes>
+  );
 }
 
 export default Router;

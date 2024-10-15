@@ -32,7 +32,7 @@ public class CartController {
     	List<BookInCartDTO> bookInCart = new ArrayList<>();
 
 	     for (CartVO item : cart) {
-	         BookVO book = bookService.getBookByNum(item.getCa_bk_num());
+	         BookVO book = bookService.selectBook(item.getCa_bk_num());
 	         bookInCart.add(new BookInCartDTO(item, book)); 
 	     }
 	

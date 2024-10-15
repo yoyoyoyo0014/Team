@@ -202,9 +202,5 @@
 		select *
 		from genre
 	</select>
-
-	<select id="findByNum" resultType="BookVO">
-		select * from book where bk_num = #{bk_num}
-	</select>
    
 </mapper>

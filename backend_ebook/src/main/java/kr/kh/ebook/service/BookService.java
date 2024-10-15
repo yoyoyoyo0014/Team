@@ -114,8 +114,5 @@ public class BookService {
 	public List<GenreVO> selectGenreList() {
 		return bookDao.selectGenreList();
 	}
-
-	public BookVO getBookByNum(int bk_num) {
-		return bookDao.findByNum(bk_num); // findById 메서드는 데이터베이스에서 책 정보를 가져오는 메서드입니다.
-	}
+	
 }

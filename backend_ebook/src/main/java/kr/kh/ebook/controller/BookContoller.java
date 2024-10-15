@@ -44,12 +44,13 @@ public class BookContoller {
 	//책 검색
 	@GetMapping("/searchBook")
 	@ResponseBody
-	public HashMap<String, Object> searchBookList(@PathVariable String category,
+	public HashMap<String, Object> searchBookList(@PathVariable int category,
 			@PathVariable String country, @PathVariable int genre,
 			@PathVariable String search, @PathVariable int page) {
 		//https://github.com/st8324/java_240528/blob/main/spring%20projects/spring3/src/main/java/kr/kh/spring3/controller/ReactController.java
 		System.out.println(search);
-		BookCriteria bookCri = new BookCriteria(page, category, country, genre, search);
+		
+		BookCriteria bookCri = new BookCriteria(page, category, country, genre);
 		
 		System.out.println(country + genre +"search" + search);
 

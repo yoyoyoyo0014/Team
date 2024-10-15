@@ -58,7 +58,7 @@ const AddressInput = ({change, item}) => {
 							change={setCode}
 							value={code}
 							readOnly={true}/>
-					<Button type="button" cls="btn btn-point" text="우편번호 찾기" onClick={toggleHandler}/>
+					<Button type="button" cls="btn btn-point" text="우편번호 찾기" click={toggleHandler}/>
 				</div>
 				<InputItem
 					id="me_addr1"
@@ -74,7 +74,7 @@ const AddressInput = ({change, item}) => {
 			{isOpen && (
 			<div id="wrap">
 				<div className="container">
-					<Button type="button" cls="btn btn-basic" text="닫기" onClick={toggleHandler}/>
+					<Button type="button" cls="btn btn-basic" text="닫기" click={toggleHandler}/>
 					<DaumPostcode
 						theme={themeObj}
 						style={style}

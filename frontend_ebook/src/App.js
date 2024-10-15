@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LoginProvider } from "./context/LoginContext"; // LoginContext 제공
-import RoutesComponent from "./RoutesComponent"; // Router.js 불러오기
+import Router from "./Router"; // Router.js 불러오기
 import axios from "axios";
 
 import Header from "./components/header.js";
