@@ -5,13 +5,15 @@
 	margin: 0 auto;
 }
 
-.input-item.postal {
+.inputs {
 	display: flex;
 	flex-direction: column;
 	gap: 1em;
 }
+.inputs div:first-of-type input {width: 40%;}
+.inputs div:first-of-type button {margin-left: 1em;}
 
-.join-form button[type="submit"] {
+.join-form .btn.submit {
 	font-weight: 900;
 	margin: 0 auto;
 	display: block;
@@ -20,7 +22,23 @@
 	margin-top: 1.5em;
 }
 
-.error-message {
-	color: red;          /* 빨간색 텍스트 색상 */
-	margin-top: 8px;    /* 위쪽 여백 추가 */
+.error {
+	position: absolute;
+	font-size: var(--small-font-size);
+	top: calc(100% + .4em);
+	left: 8.4rem;
+	color: var(--color-caution);
+}
+
+#wrap {
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0,0,0,.3);
+	z-index: 99;
 }

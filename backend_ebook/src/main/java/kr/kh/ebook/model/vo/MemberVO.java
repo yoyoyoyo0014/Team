@@ -1,5 +1,7 @@
 package kr.kh.ebook.model.vo;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,7 @@ public class MemberVO {
     private String me_address;       // 주소
     private String me_postalCode;    // 우편번호
     private String me_phone;         // 전화번호
-    private String me_birth;         // 생년월일
+    private Date me_birth;         // 생년월일
     private boolean me_adult;        // 성인 여부
     private String me_authority;     // 권한
     private String me_fail;          // 로그인 실패 횟수

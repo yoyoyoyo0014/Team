@@ -1,0 +1,15 @@
+@charset 'utf-8';
+
+.book-info {display: flex; padding-bottom: 2em;}
+
+.info {padding-left: 2em;}
+.info h2 {padding: 0.4em 0 1em;}
+.info dl dt {display: inline-block; width: 4em; font-weight: 900;}
+.info dl dd {display: inline-block;}
+
+.btns {margin-top: 2em;}
+.btns .btn {margin-right: 1em; padding-left: 2em; padding-right: 2em;}
+.btns .btn.btn-point {font-weight: 900;}
+
+.section {padding: 4em 0;}
+.section h3 {padding-bottom: .6em;}

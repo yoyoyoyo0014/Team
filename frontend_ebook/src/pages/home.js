@@ -1,8 +1,8 @@
-import RoutesComponent from "../RoutesComponent.js";
+import Router from "../Router.js";
 
 const Home = () => {
 	return(
-    <RoutesComponent />
+    <Router />
 	);
 }
 

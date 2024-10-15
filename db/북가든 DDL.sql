@@ -32,7 +32,7 @@ CREATE TABLE `review` (
 	`re_content`	text	NOT NULL,
 	`re_bk_num`	int	NOT NULL,
 	`re_star`	double	NOT NULL,
-	`re_date`	datetime	NOT NULL  default CURRENT_TIMESTAMP,
+	`re_date`	datetime NOT NULL  default CURRENT_TIMESTAMP,
 	`re_me_id`	varchar(15)	NOT NULL
 );
 
@@ -76,7 +76,9 @@ CREATE TABLE `report` (
 	`rp_me_id`	varchar(15)	NOT NULL,
 	`rp_target`	varchar(50)	NOT NULL,
 	`rp_content`	text	NULL,
-	`rp_rt_num`	int	NOT NULL
+	`rp_rt_num`	int	NOT NULL,
+    `rp_date` datetime NOT NULL  default CURRENT_TIMESTAMP,
+    `rp_id` varchar(15) NOT NULL
 );
 
 CREATE TABLE `report_type` (

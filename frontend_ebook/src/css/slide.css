@@ -1,0 +1,24 @@
+@charset 'utf-8';
+
+.slide {position: relative; display: flex; justify-content: center; align-items: center; gap: 1em; padding-bottom: 4em;}
+.slide-wrapper {
+	clear: both;
+	overflow: hidden;
+}
+.slide-ul {
+	display: flex;
+	flex-wrap: wrap;
+	transition: 1s ease;
+}
+.slide-ul li img {float: left;}
+.slide-btn {cursor: pointer;}
+
+.slide .indicator {
+	position: absolute;
+	bottom: 1em;
+	display: flex;
+	justify-content: center;
+	gap: 1em;
+}
+.slide .indicator li {width: 10px; height: 10px; border-radius: 50%; background: var(--color-grey); cursor: pointer;}
+.slide .indicator li.now {background: var(--color-brand);}

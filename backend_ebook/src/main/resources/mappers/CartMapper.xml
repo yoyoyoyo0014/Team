@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.kh.ebook.dao.CartDAO">
+
+	<insert id="addCart">
+		insert into cart (ca_bk_num, ca_me_id) values (#{bk_num}, #{me_id})
+	</insert>
+	<select id="selectCartList" resultType="CartVO">
+		SELECT * FROM cart WHERE ca_me_id = #{me_id}
+	</select>
+	<delete id="removeCart">
+		DELETE FROM cart WHERE ca_num = #{ca_num}
+	</delete>
+   <select id="existsInCart" resultType="boolean">
+		SELECT COUNT(*) > 0 FROM cart WHERE ca_bk_num = #{bk_num} AND ca_me_id = #{me_id}
+	</select>
+</mapper>

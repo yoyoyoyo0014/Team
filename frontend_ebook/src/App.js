@@ -1,40 +1,45 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { LoginProvider } from "./context/LoginContext"; // LoginContext 제공
+import Router from "./Router"; // Router.js 불러오기
 
 import Header from "./components/header.js";
 import Footer from "./components/footer.js";
 import * as Common from './js/common.js';
 import './css/default.css';
 import './css/style.css';
-
-import { LoginProvider } from "./context/LoginContext"; // LoginContext 제공
-import RoutesComponent from "./RoutesComponent"; // Router.js 불러오기
+import { GenreProvider } from "./context/GenreContext.js";
 
 function App() {
-    // 화면 크기에 맞게 vh 설정 및 resize 이벤트 리스너 추가
-    useEffect(() => {
-      const root = document.querySelector('#root');
-      const handleResize = () => Common.setVh(root);
-      // 처음 로드 시 한 번 실행
-      Common.setVh(root);
-      // 리사이즈 이벤트 추가
-      window.addEventListener('resize', handleResize);
-      // 컴포넌트 언마운트 시 이벤트 제거
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }, []);
+	let [section, setSection] = useState('');
 
-    return (
-        <LoginProvider>
-                <div className="fix-layout">
-                    <Header />
-                    <main id="body">
-                        <RoutesComponent /> {/* RoutesComponent만 호출 */}
-                    </main>
-                    <Footer />
-                </div>
-        </LoginProvider>
-    );
+	const AppProvider = ({ contexts, children }) => contexts.reduce(
+		(prev, context) => React.createElement(context, {
+			children: prev
+		}),
+		children
+	)
+
+  useEffect(() => {
+    window.addEventListener('resize', ()=> Common.setVh());
+    Common.setVh();
+  }, []);
+
+	return (
+		<Fragment>
+			<AppProvider contexts={[
+				LoginProvider,
+				GenreProvider
+			]}>
+				<div className="fix-layout">
+					<Header setSection={setSection}/>
+					<main id="body">
+						<Router section={section}/>
+					</main>
+				</div>
+				<Footer />
+			</AppProvider>
+		</Fragment>
+	);
 }
 
 export default App;

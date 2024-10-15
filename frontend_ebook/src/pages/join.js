@@ -1,209 +1,183 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
+import "../css/join.css";
 
 import {InputItem} from "../components/form/input";
 import Button from "../components/form/button";
-import "../css/join.css";
-
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import AddressInput from "../components/form/addressinput";
 
 const Join = () => {
-
 	const {
     register,
     handleSubmit,
 		watch,
-    formState: { errors },
+    formState: { errors }
   } = useForm();
 
-  const [birthDate, setBirthDate] = useState(""); // 생년월일 상태 추가
+	let [member, setMember] = useState({
+		me_id: '',
+		me_pw: '',
+		me_nickname: '',
+		me_email: '',
+		me_phone: '',
+		me_postalCode: '',
+		me_address: '',
+		me_birth: ''
+	});
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+	let [id, setId] = useState('');
+	let [nickname, setNickname] = useState('');
+	let [pw, setPw] = useState('');
+	let [pw2, setPw2] = useState('');
+	let [email, setEmail] = useState('');
+	let [phone, setPhone] = useState('');
+	let [addr2, setAddr2] = useState('');
+	let [birth, setBirth] = useState('');
+	
+	let span = document.createElement('span');
+	span.classList.add('error');
 
-  const handleBirthDateChange = (e) => {
-    const input = e.target.value.replace(/\D/g, ""); // 숫자만 허용
-    if (input.length <= 8) {
-      // 최대 8자리 입력 가능
-      const year = input.substring(0, 4);
-      const month = input.substring(4, 6);
-      const day = input.substring(6, 8);
-      
-      let formattedDate = year;
-      if (month) {
-        formattedDate += `.${month}`;
-      }
-      if (day) {
-        formattedDate += `.${day}`;
-      }
+	let inps = document.querySelectorAll('.input-item');
+	inps.forEach((inp, i) => inp.appendChild(span));
 
-      setBirthDate(formattedDate); // 상태 업데이트
-    }
-  };
+	const submit = () => {
+		setMember((member) => {
+			return{
+				...member,
+				me_id: id,
+				me_pw: pw,
+				me_nickname: nickname,
+				me_email: email,
+				me_phone: phone,
+				me_address: member.addr1 + ' ' + addr2,
+				me_birth: birth
+			}
+		});
+		console.log(member);
+	}
 
 	return(
 		<div className="join-form">
 			<h2 className="txt-center page-title">회원가입</h2>
-			<form name="join" onSubmit={handleSubmit(onSubmit)}>
+			<form name="join" onSubmit={handleSubmit(submit)}>
 				<fieldset className="form-wrapper">
-					{/* 아이디 */}
+				<InputItem
+						id="me_id"
+						name="me_id"
+						type="text"
+						cls="frm-input"
+						registerProps={
+							register("me_id", {
+								required: "아이디를 입력해주세요",
+								pattern: {
+									value: /^[0-9a-zA-Z_]{8,15}$/,
+									message: "아이디는 8~15자이며, 영문 혹은 숫자를 포함해야 합니다",
+								},
+							})
+						}
+						error={errors.me_id}
+						change={setId}
+						label={"아이디"}/>
 					<InputItem
-            inputs={[
-              {
-                id: "me_id",
-                name: "me_id",
-                type: "text",
-                placeholder: "",
-                cls: "frm-input",
-                registerProps: register("me_id", {
-                  required: "아이디를 입력해주세요.",
-                  pattern: {
-                    value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/,
-                    message: "아이디는 8~15자이며, 하나의 글자와 숫자를 포함해야 합니다.",
-                  },
-                }),
-                error: errors.me_id,
-              },
-            ]}
-            label={"아이디"}
-          />
-
-					{/* 닉네임 */}
-          <InputItem
-            inputs={[
-              {
-                id: "me_nickname",
-                name: "me_nickname",
-                type: "text",
-                placeholder: "",
-                cls: "frm-input",
-                registerProps: register("me_nickname", {
-                  required: "닉네임을 입력해주세요.", pattern: {
-                    value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,8}$/,
-                    message: "닉네임은 5~8자이며, 하나의 글자와 숫자를 포함해야 합니다.",
-                  }
-                }),
-                error: errors.me_nickname,
-              },
-            ]}
-            label={"닉네임"}
-          />
-
-					   {/* 비밀번호 */}
-          <InputItem
-            inputs={[
-              {
-                id: "me_pw",
-                name: "me_pw",
-                type: "password",
-                placeholder: "",
-                cls: "frm-input",
-                registerProps: register("me_pw", {
-                  required: "비밀번호를 입력해주세요.",
-                  pattern: {
-                    value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/,
-                    message:
-                      "비밀번호는 8~15자이며, 최소 하나의 글자, 숫자, 특수문자를 포함해야 합니다.",
-                  },
-                }),
-                error: errors.me_pw,
-              },
-            ]}
-            label={"비밀번호"}
-          />
-
-					 {/* 비밀번호 확인 */}
-					 <InputItem
-            inputs={[
-              {
-                id: "me_pw2",
-                name: "me_pw2",
-                type: "password",
-                placeholder: "",
-                cls: "frm-input",
-                registerProps: register("me_pw2", {
-                  required: "비밀번호 확인을 입력해주세요.",
-                  validate: (value) => value === watch("me_pw") || "비밀번호가 일치하지 않습니다.",
-                }),
-                error: errors.me_pw2,
-              },
-            ]}
-            label={"비밀번호 확인"}
-          />
-
-					 {/* 이메일 */}
-					 <InputItem
-            inputs={[
-              {
-                id: "me_email",
-                name: "me_email",
-                type: "email",
-                placeholder: "",
-                cls: "frm-input",
-                registerProps: register("me_email", {
-                  required: "이메일을 입력해주세요.",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "올바른 이메일 형식을 입력해주세요.",
-                  },
-                }),
-                error: errors.me_email,
-              },
-            ]}
-            label={"이메일"}
-          />
-
+						id="me_nickname"
+						name="me_nickname"
+						type="text"
+						cls="frm-input"
+						registerProps={
+							register("me_nickname", {
+								required: "닉네임을 입력해주세요",
+								pattern: {
+									value: /^[0-9a-zA-Z가-힣]{1,8}$/,
+									message: "닉네임은 최대 8자이며, 하나의 글자 혹은 숫자를 포함해야 합니다",
+								}
+							})
+						}
+						error={errors.me_nickname}
+						change={setNickname}
+						label={"닉네임"}/>
+					<InputItem
+						id="me_pw"
+						name="me_pw"
+						type="text"
+						cls="frm-input"
+						registerProps={
+							register("me_pw", {
+								required: "비밀번호를 입력해주세요",
+								pattern: {
+									value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/,
+									message: "비밀번호는 8~15자이며, 최소 하나의 영문, 숫자, 기호를 포함해야 합니다"
+								}
+							})
+						}
+						error={errors.me_pw}
+						change={setPw}
+						label={"비밀번호"}/>
+					<InputItem
+						id="me_pw2"
+						name="me_pw2"
+						type="text"
+						cls="frm-input"
+						registerProps={
+							register("me_pw2", {
+								required: "비밀번호를 입력해주세요",
+								pattern: {
+									validate: (value) => value === watch("me_pw") || "비밀번호가 일치하지 않습니다"
+								}
+							})
+						}
+						error={errors.me_pw2}
+						change={setPw2}
+						label={"비밀번호 확인"}/>
+					<InputItem
+						id="me_email"
+						name="me_email"
+						type="email"
+						cls="frm-input"
+						registerProps={
+							register("me_email", {
+								required: "이메일을 입력해주세요",
+								pattern: {
+									value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+									message: "올바른 이메일 형식을 입력해주세요",
+								},
+							})
+						}
+						error={errors.me_email}
+						change={setEmail}
+						label={"이메일"}/>
 				</fieldset>
 
 				<hr/>
 
 				<fieldset className="form-wrapper">
-        <InputItem inputs={[
-						{
-							id: "me_phone",
-							name: "me_phone",
-							type: "text",
-							placeholder: "",
-							cls: "frm-input"
-						}
-					]} label={"연락처 (숫자만 입력해주세요.)"}/>
-					<InputItem inputs={[
-						{
-							id: "me_postalCode",
-							name: "me_postalCode",
-							type: "text",
-							placeholder: "",
-							cls: "frm-input"
-						},
-						{
-							id: "me_address1",
-							name: "me_address1",
-							type: "text",
-							placeholder: "",
-							cls: "frm-input"
-						},
-						{
-							id: "me_address2",
-							name: "me_address2",
-							type: "text",
-							placeholder: "",
-							cls: "frm-input"
-						}
-					]} label={"주소 (추후 경품 제공에 이용될 수 있습니다.)"} cls={"postal"} />
-					<InputItem inputs={[
-						{
-							id: "me_birth",
-							name: "me_birth",
-							type: "text",
-							placeholder: "",
-							cls: "frm-input",
-              value: birthDate, // 상태로 설정된 값
-                onChange: handleBirthDateChange, // 변경 이벤트 처리기 추가
-						}
-					]} label={"생년월일(8자리)"}/>
+					<InputItem
+						id="me_phone"
+						name="me_phone"
+						type="text"
+						cls="frm-input"
+						change={setPhone}
+						label={"연락처"}
+						notice={"숫자만 입력해주세요"}/>
+					<AddressInput change={setMember} item={member}/>
+					<InputItem
+						id="me_addr2"
+						name="me_addr2"
+						type="text"
+						cls="frm-input"
+						change={setAddr2}
+						style={{marginTop: '-1.2rem'}}
+					/>
+					<InputItem
+						id="me_birth"
+						name="me_birth"
+						type="text"
+						cls="frm-input"
+						change={setBirth}
+						label={"생년월일(8자리)"}/>
 				</fieldset>
 
-				<Button type={"submit"} text={"가입하기"} cls={"btn btn-point big"}></Button>
+				<Button type={"submit"} text={"가입하기"} cls={"btn btn-point big submit"}></Button>
 			</form>
 		</div>
 	);

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class BookGenreVO {
-	private int bg_num;
-	private String bg_name;
+	private int ge_num;
+	private String ge_name;
+	private int ge_parent;
 }

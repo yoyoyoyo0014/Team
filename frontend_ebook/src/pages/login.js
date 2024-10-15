@@ -1,13 +1,12 @@
 import React, { useEffect, useContext, useState } from "react";
-import { InputItem } from "../components/form/input";
-import { useNavigate } from "react-router-dom"; // useNavigate 임포트
+import { Link, useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
 import "../css/login.css";
+import Check from "../components/form/check";
 
 const Login = () => {
-
-  const { setIsLoggedIn } = useContext(LoginContext);  // 로그인 상태 업데이트 함수 가져오기
+  const { setIsLoggedIn } = useContext(LoginContext); // 로그인 상태 업데이트 함수 가져오기
 	const navigate = useNavigate(); // useNavigate 훅 사용
 
   const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
@@ -39,7 +38,7 @@ const Login = () => {
           callback: handleGoogleLoginSuccess,
         });
         setGoogleInitialized(true); // 구글 초기화 완료
-        console.log("Google SDK loaded and initialized");
+        //console.log("Google SDK loaded and initialized");
       } else {
         console.error("Google API failed to load");
       }
@@ -167,8 +166,8 @@ const Login = () => {
     });
   };
 
-   // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
-   const handleNaverLogin = () => {
+    // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
+    const handleNaverLogin = () => {
     const clientId = process.env.REACT_APP_NAVER_CLIENT_ID; // 네이버 클라이언트 ID
     const redirectUri = "http://localhost:3000/auth/naver/callback"; // 네이버 로그인 콜백 URL
     const state = Math.random().toString(36).substring(2, 15); // CSRF 방지를 위한 상태값
@@ -192,33 +191,40 @@ const Login = () => {
           label="비밀번호"
         />
 
+        <div className="input-item">
+          <input
+            id="me_id"
+            name="me_id"
+            type="text"
+            onChange={handleInputChange}
+            value={credentials.me_id}/>
+          <label htmlFor="me_id">아이디</label>
+        </div>
+
+        <div className="input-item">
+          <input
+            id="me_pw"
+            name="me_pw"
+            type="password"
+            onChange={handleInputChange}
+            value={credentials.me_pw}/>
+          <label htmlFor="me_pw">비밀번호</label>
+        </div>
+
+        <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em'}}/>
+
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
 
         <div className="sns-login">
-          <Button
-            type={"button"}
-            cls={"btn btn-kakao full"}
-            onClick={handleKakaoLogin}
-          />
-
-          <Button
-            type={"button"}
-            cls={"btn btn-naver full"}
-            onClick={handleNaverLogin}
-          />
-
-          <Button
-            type={"button"}
-            cls={"btn btn-google full"}
-            onClick={() => {
+          <Button type={"button"} text={"카카오 로그인"} cls={"btn btn-kakao full"} click={handleKakaoLogin}/>
+					<Button type={"button"} text={"네이버 로그인"} cls={"btn btn-naver full"} click={handleNaverLogin}/>
+					<Button type={"button"} text={"구글 로그인"} cls={"btn btn-google full"} click={() => {
               if (googleInitialized) {
                 window.google.accounts.id.prompt();  // 구글 로그인 팝업 호출
               } else {
                 console.error("Google API is not loaded yet.");
               }
-            }}
-          />
-
+            }}/>
         </div>
       </form>
     </div>
