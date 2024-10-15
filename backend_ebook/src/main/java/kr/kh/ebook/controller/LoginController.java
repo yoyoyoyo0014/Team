@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.kh.ebook.model.dto.LoginDTO;
 import kr.kh.ebook.model.vo.MemberVO;
 import kr.kh.ebook.service.MemberService;
 
@@ -28,8 +29,9 @@ public class LoginController {
         if (member != null) {
             // 로그인 성공 시 JWT 토큰 생성 및 반환
             String token = memberService.generateToken(memberVO.getMe_id());
+            LoginDTO dto = new LoginDTO(token, member);
             response.put("success", true);
-            response.put("token", token);
+            response.put("loginDTO", dto);
             // 로그인 성공 로그
             System.out.println("로그인 성공: 사용자 ID = " + memberVO.getMe_id());
         } else {

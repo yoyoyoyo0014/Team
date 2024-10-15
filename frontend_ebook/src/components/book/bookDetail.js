@@ -102,6 +102,41 @@ const BookDetail = ({Getuser}) => {
 		}
 	}
 
+  const addCart = (bk_num) => {
+    const options = {
+      url: '/cart/add',
+      method:'POST',
+      header: {
+        'Accept':'application/json',
+        'Content-Type': "'text/plain';charset=UTP-8'"
+        //연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
+      },
+      data: {
+        bl_bk_num: bk_num,
+        bl_me_id: 'admin123',
+      }
+    }
+
+    axios(options)
+    .then(res => {
+			alert('장바구니에 추가했습니다');
+		})
+		.catch((error) => {
+			if (error.response) {
+				// 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
+				console.log(error.response.status);
+			} else if (error.request) {
+				// 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
+				// 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+				// node.js에서는 http.ClientRequest 인스턴스입니다.
+				console.log(error.request);
+			} else {
+				// 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+				console.log('Error', error.message);
+			}
+		})
+  }
+
   useEffect(() => {
     axios(options)
       .then(res => {
@@ -125,6 +160,7 @@ const BookDetail = ({Getuser}) => {
         console.log(error.config);
       })
   }, [])
+  
   return (
     <div>
       <div className="book-info">
@@ -153,7 +189,7 @@ const BookDetail = ({Getuser}) => {
           </div>
 
           <div className="btns">
-            <Button type="button" text="장바구니" cls="btn"/>
+            <Button type="button" text="장바구니" cls="btn" click={() => {addCart(book.bk_num)}}/>
             <Button type="button" text="구매하기" cls="btn btn-point"/>
           </div>
         </div>

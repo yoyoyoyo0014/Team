@@ -28,15 +28,15 @@ public class CartController {
     
     @GetMapping("/{ca_me_id}")
     public List<BookInCartDTO> getCart(@PathVariable String ca_me_id) {
-    	List<CartVO> cart = cartService.getCartByUser(ca_me_id); 
-    	List<BookInCartDTO> bookInCart = new ArrayList<>();
+		List<CartVO> cart = cartService.getCartByUser(ca_me_id); 
+		List<BookInCartDTO> bookInCart = new ArrayList<>();
 
-	     for (CartVO item : cart) {
-	         BookVO book = bookService.selectBook(item.getCa_bk_num());
-	         bookInCart.add(new BookInCartDTO(item, book)); 
-	     }
+		for (CartVO item : cart) {
+			BookVO book = bookService.selectBook(item.getCa_bk_num());
+		    bookInCart.add(new BookInCartDTO(item, book)); 
+		}
 	
-	     return bookInCart;
+	    return bookInCart;
     }
 
     @PostMapping("/add")
