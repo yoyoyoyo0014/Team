@@ -12,15 +12,16 @@ import Login from "./pages/login.js";
 import Join from "./pages/join.js";
 import BookDetail from "./components/book/bookDetail.js";
 import BookSearch from "./components/book/bookSearch.js";
+import CartPage from "./pages/cart/cartpage.js";
 
 import NaverCallback from "./components/auth/NaverCallback.js"; // NaverCallback 컴포넌트 import
 
-function Router({section, genreList, book}) {
+function Router({section}) {
 	const { isLoggedIn } = useContext(LoginContext);
 
   return (
     <Routes>
-      <Route path="/" element={<Main section={section} genreList={genreList} book={book}/>} />
+      <Route path="/" element={<Main section={section}/>} />
       <Route
         path="/mypage/mybooks"
         element={isLoggedIn ? <MyBooks /> : <Navigate to="/login" />}
@@ -36,7 +37,9 @@ function Router({section, genreList, book}) {
       <Route path="/auth/naver/callback" element={<NaverCallback />} />
 
       <Route path="/ebook/selectBook/:bk_num" element={<BookDetail/>}/>
-      <Route path="/ebook/searchBook" element={<BookSearch genreList={genreList}/>}/>
+      <Route path="/ebook/searchBook" element={<BookSearch/>}/>
+
+      <Route path="/cart" element={<CartPage/>}/>
     </Routes>
   );
 }

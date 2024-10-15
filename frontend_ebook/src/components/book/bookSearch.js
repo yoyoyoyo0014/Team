@@ -1,10 +1,12 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useContext} from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { GenreContext } from '../../context/GenreContext';
 import axios from 'axios';
 
-function BookSearch({genreList}) {
+function BookSearch() {
   //https://github.com/st8324/java_240528/blob/main/react/react3/src/Signup.js
   //let {country, genre, search, category, page} = useParams();
+  const {genreList} = useContext(GenreContext);
   let [query, setQuery] = useSearchParams();
 
   let [data, setData] = useState({
@@ -85,7 +87,7 @@ function BookSearch({genreList}) {
 			})
   }
 
-  useEffect(() => submitSearch);
+  useEffect(() => submitSearch, []);
 
   function changePage(index){
     console.log(index)

@@ -4,8 +4,12 @@ import TodayBook from './main/todaybook';
 import BestSellers from './main/bestsellers';
 import NewBooks from './main/newbooks';
 import EventSection from './main/eventsection';
+import { GenreContext } from '../context/GenreContext';
+import { useContext } from 'react';
 
-const Main = ({section, genreList, book}) => {
+const Main = ({section}) => {
+	const {book} = useContext(GenreContext);
+
 	const SectionTitle = (section) => {
 		if(section.section === 'newBooks') {
 			return(
@@ -30,7 +34,7 @@ const Main = ({section, genreList, book}) => {
 				<SectionTitle section={section}/>
 				
 				<div className="top-section-content">
-					<GenreNavBar genreList={genreList}/>
+					<GenreNavBar/>
 					{section === 'newBooks' ? <NewBooks/> : <BestSellers/>}
 				</div>
 			</section>

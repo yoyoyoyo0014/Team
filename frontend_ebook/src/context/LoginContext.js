@@ -20,3 +20,5 @@ export const LoginProvider = ({ children }) => {
     </LoginContext.Provider>
   );
 };
+
+export default LoginProvider;

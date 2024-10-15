@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { GenreContext } from '../context/GenreContext';
 
-const GenreNavBar = ({genreList}) => {
-	console.log(genreList);
+const GenreNavBar = () => {
+	const {genreList} = useContext(GenreContext);
 	return(
 		<nav id="category-navbar" className="theme-box">
 			<div className="category-navbar-wrapper scrollbar-no-padding">

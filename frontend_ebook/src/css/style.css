@@ -210,7 +210,6 @@ header {
 	left: 0;
 	top: 4em;
 	box-shadow: var(--box-shadow);
-	z-index: 99;
 	line-height: 1.8;
 	gap: 5em;
 	display: flex;

@@ -1,12 +1,14 @@
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
+import { GenreContext } from "../context/GenreContext";
 import { Input } from "./form/input";
 import Button from "./form/button";
 
-const Header = ({setSection, genreList}) => {
+const Header = ({setSection}) => {
 	const navigate = useNavigate();
 	const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
+	const { genreList } = useContext(GenreContext);
 
 	let [query, setQuery] = useSearchParams();
 	const search = query.get('search');
@@ -36,7 +38,7 @@ const Header = ({setSection, genreList}) => {
 			return(<ul>
 				<li><Link to="/cart">장바구니</Link></li>
 				<li><Link to="/mypage">마이페이지</Link></li>
-				<li><Link to="/logout">로그아웃</Link></li>
+				<li><Link to="/logout" onClick={handleLogout}>로그아웃</Link></li>
 			</ul>)
 		}
 	}
