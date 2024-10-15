@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
+import { InputItem } from "../components/form/input";
 import { Link, useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
@@ -190,26 +191,6 @@ const Login = () => {
           inputs={[{ id: "me_pw", name: "me_pw", type: "password", value: password, onChange: (e) => setPassword(e.target.value) }]} // 비밀번호 상태와 변경 핸들러 추가
           label="비밀번호"
         />
-
-        <div className="input-item">
-          <input
-            id="me_id"
-            name="me_id"
-            type="text"
-            onChange={handleInputChange}
-            value={credentials.me_id}/>
-          <label htmlFor="me_id">아이디</label>
-        </div>
-
-        <div className="input-item">
-          <input
-            id="me_pw"
-            name="me_pw"
-            type="password"
-            onChange={handleInputChange}
-            value={credentials.me_pw}/>
-          <label htmlFor="me_pw">비밀번호</label>
-        </div>
 
         <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em'}}/>
 
