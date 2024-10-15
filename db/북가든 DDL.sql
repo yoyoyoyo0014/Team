@@ -128,8 +128,7 @@ CREATE TABLE `community` (
 CREATE TABLE `book_file` (
 	`bf_num`	int primary key auto_increment	NOT NULL,
 	`bf_name`	varchar(255)	NOT NULL,
-	`bf_bk_num`	int	NOT NULL,
-	`bf_type`	varchar(255)	NOT NULL
+	`bf_bk_num`	int	NOT NULL
 );
 
 CREATE TABLE `writer` (
