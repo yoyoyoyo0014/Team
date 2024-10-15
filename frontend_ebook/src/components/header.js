@@ -3,10 +3,11 @@ import { useContext, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
 import { Input } from "./form/input";
 import Button from "./form/button";
-import axios from "axios";
 
 const Header = ({setSection, genreList}) => {
 	const navigate = useNavigate();
+	const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
+
 	let [query, setQuery] = useSearchParams();
 	const search = query.get('search');
 
@@ -18,8 +19,6 @@ const Header = ({setSection, genreList}) => {
 		const wrapper = document.querySelector('.gnb-genre-wrapper');
 		wrapper.classList.toggle('show');
 	}
-	
-	const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
 
 	 // 로그아웃 핸들러
 	 const handleLogout = () => {
@@ -27,13 +26,28 @@ const Header = ({setSection, genreList}) => {
     localStorage.removeItem('loginToken');  // localStorage에서 토큰 삭제
   };
 
+	const UserMenu = ({isLoggedIn}) => {
+		if(isLoggedIn !== true){
+			return(<ul>
+				<li><Link to="/login">로그인</Link></li>
+				<li><Link to="/join">회원가입</Link></li>
+			</ul>)
+		} else {
+			return(<ul>
+				<li><Link to="/cart">장바구니</Link></li>
+				<li><Link to="/mypage">마이페이지</Link></li>
+				<li><Link to="/logout">로그아웃</Link></li>
+			</ul>)
+		}
+	}
+
 	return(
 		<header>
 			<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
 				
 			<div className="search-box">
 				<form name="search">
-					<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} />
+					<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={setQuery}/>
 					<Button text={"검색"} cls={"ico btn search"}/>
 				</form>
 			</div>
@@ -62,16 +76,7 @@ const Header = ({setSection, genreList}) => {
 					</div>
 
 					<div className="user-menu">
-						<ul>
-							<li><Link to="/login">로그인</Link></li>
-							<li><Link to="/join">회원가입</Link></li>
-						</ul>
-
-						{/* <ul>
-							<li><Link to="/cart">장바구니</Link></li>
-							<li><Link to="/mypage">마이페이지</Link></li>
-							<li><Link to="/logout">로그아웃</Link></li>
-						</ul> */}
+						<UserMenu isLoggedIn={isLoggedIn}/>
 					</div>
 
 					<div className="theme-box gnb-genre-wrapper">

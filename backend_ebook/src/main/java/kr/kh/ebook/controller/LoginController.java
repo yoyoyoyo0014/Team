@@ -14,7 +14,7 @@ import kr.kh.ebook.model.vo.MemberVO;
 import kr.kh.ebook.service.MemberService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/ebook")
 @CrossOrigin(origins = "http://localhost:3000")
 public class LoginController {
 
@@ -31,11 +31,9 @@ public class LoginController {
             response.put("success", true);
             response.put("token", token);
             
-         // 로그인 성공 로그
+            // 로그인 성공 로그
             System.out.println("로그인 성공: 사용자 ID = " + memberVO.getMe_id());
-            
         } else {
-        	
         	 // 로그인 실패 로그
             System.out.println("로그인 실패: 사용자 ID = " + memberVO.getMe_id());
         	

@@ -38,7 +38,7 @@ const InputItem = ({id, type, placeholder, name, cls, change, value, readOnly, l
 				checked={
 					checked ? 'checked' : ''
 				}/>
-			{label && label !== "" ? <label>{label} {notice && notice ? <span>{notice}</span> : ''}</label> : ""}
+			{label && label !== "" ? <label htmlFor={id}>{label} {notice && notice ? <span>{notice}</span> : ''}</label> : ""}
 			{error && <span className="error">{error.message}</span>} {/* 에러 메시지 */}
 		</div>
 	)

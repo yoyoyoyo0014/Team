@@ -10,7 +10,7 @@ import kr.kh.ebook.model.vo.MemberVO;
 import kr.kh.ebook.service.MemberService;
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/ebook/member")
 public class MemberContorller {
 
 	@Autowired

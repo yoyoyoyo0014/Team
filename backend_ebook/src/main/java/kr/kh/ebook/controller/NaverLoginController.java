@@ -16,7 +16,7 @@ import kr.kh.ebook.service.MemberService;
 import kr.kh.ebook.util.JwtUtil;
 
 @RestController
-@RequestMapping("/api/naver")
+@RequestMapping("/ebook/naver")
 public class NaverLoginController {
 
     @Autowired

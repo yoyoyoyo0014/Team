@@ -68,15 +68,15 @@ function App() {
     }, []);
 
     return (
-        <LoginProvider>
-					<div className="fix-layout">
-						<Header />
-						<main id="body">
-							<RoutesComponent section={section} genreList={genreList} book={book}/> {/* RoutesComponent만 호출 */}
-						</main>
-					</div>
-					<Footer />
-        </LoginProvider>
+			<LoginProvider>
+				<div className="fix-layout">
+					<Header setSection={setSection}/>
+					<main id="body">
+						<RoutesComponent section={section} genreList={genreList} book={book}/> {/* RoutesComponent만 호출 */}
+					</main>
+				</div>
+				<Footer />
+			</LoginProvider>
     );
 }
 

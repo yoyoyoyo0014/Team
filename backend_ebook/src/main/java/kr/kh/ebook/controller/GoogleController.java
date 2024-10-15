@@ -10,7 +10,7 @@ import kr.kh.ebook.model.vo.MemberVO;
 import kr.kh.ebook.service.GoogleService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/ebook/auth")
 public class GoogleController {
 
     @Autowired

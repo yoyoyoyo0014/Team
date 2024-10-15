@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from "react";
-import { InputItem } from "../components/form/input";
 import { Link, useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
@@ -7,13 +6,12 @@ import "../css/login.css";
 import Check from "../components/form/check";
 
 const Login = () => {
-
-  const { setIsLoggedIn } = useContext(LoginContext);  // 로그인 상태 업데이트 함수 가져오기
+  const { setIsLoggedIn } = useContext(LoginContext); // 로그인 상태 업데이트 함수 가져오기
 	const navigate = useNavigate(); // useNavigate 훅 사용
 
   const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
-  const [credentials, setCredentials] = useState({ me_id: "", me_pw: "" });  // 사용자 입력 상태
-  const [errorMessage, setErrorMessage] = useState("");  // 에러 메시지 상태
+  const [credentials, setCredentials] = useState({ me_id: "", me_pw: "" }); // 사용자 입력 상태
+  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태
 
    // 입력 값 변경 핸들러
    const handleInputChange = (e) => {
@@ -25,7 +23,7 @@ const Login = () => {
     const handleLoginSubmit = (e) => {
       e.preventDefault();
   
-      fetch("/api/login", {
+      fetch("/ebook/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,21 +33,21 @@ const Login = () => {
         .then((res) => res.json())
         .then((data) => {
 
-          console.log("서버 응답:", data);  // 서버로부터 받은 응답 로그 출력
+        console.log("서버 응답:", data);  // 서버로부터 받은 응답 로그 출력
 
-          if (data.success) {
-            // 로그인 성공 시 토큰을 localStorage에 저장
-            localStorage.setItem("loginToken", data.token);
-            setIsLoggedIn(true);
-            navigate("/");  // 메인 페이지로 이동
-          } else {
-            setErrorMessage(data.message || "로그인 실패");
-          }
-        })
-        .catch((error) => {
-          console.error("로그인 처리 중 오류:", error);
-          setErrorMessage("서버 오류가 발생했습니다.");
-        });
+        if (data.success) {
+          // 로그인 성공 시 토큰을 localStorage에 저장
+          localStorage.setItem("loginToken", data.token);
+          setIsLoggedIn(true);
+          navigate("/");  // 메인 페이지로 이동
+        } else {
+          setErrorMessage(data.message || "로그인 실패22");
+        }
+      })
+      .catch((error) => {
+        console.error("로그인 처리 중 오류:", error);
+        setErrorMessage("서버 오류가 발생했습니다.");
+      });
     };
 
   useEffect(() => {
@@ -77,7 +75,7 @@ const Login = () => {
           callback: handleGoogleLoginSuccess,
         });
         setGoogleInitialized(true); // 구글 초기화 완료
-        console.log("Google SDK loaded and initialized");
+        //console.log("Google SDK loaded and initialized");
       } else {
         console.error("Google API failed to load");
       }
@@ -88,7 +86,7 @@ const Login = () => {
       console.log("Google ID Token:", idToken);
       
       // ID 토큰을 백엔드로 전송
-      fetch("/api/google/login", {
+      fetch("/ebook/google/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -126,7 +124,7 @@ const Login = () => {
         console.log("로그인 성공", authObj);
 
          // 카카오 로그인 성공 후 백엔드로 토큰 전송
-         fetch("/api/kakao/login", {
+         fetch("/ebook/kakao/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -172,8 +170,8 @@ const Login = () => {
     });
   };
 
-   // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
-   const handleNaverLogin = () => {
+    // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
+    const handleNaverLogin = () => {
     const clientId = process.env.REACT_APP_NAVER_CLIENT_ID; // 네이버 클라이언트 ID
     const redirectUri = "http://localhost:3000/auth/naver/callback"; // 네이버 로그인 콜백 URL
     const state = Math.random().toString(36).substring(2, 15); // CSRF 방지를 위한 상태값
@@ -187,11 +185,11 @@ const Login = () => {
     <div className="login-form">
       <h2 className="txt-center page-title">Book<br />Garden</h2>
       <form onSubmit={handleLoginSubmit}>
-        <InputItem
+        {/* <InputItem
           id="me_id"
           name="me_id"
           type="text"
-          onChange={handleInputChange}
+          handleInputChange={handleInputChange}
           value={credentials.me_id}
           label="아이디"
         />
@@ -199,10 +197,31 @@ const Login = () => {
           id="me_pw"
           name="me_pw"
           type="password"
-          onChange={handleInputChange}
+          handleInputChange={handleInputChange}
           value={credentials.me_pw}
-          label="아이디"
-        />
+          label="비밀번호"
+        /> */}
+
+        <div className="input-item">
+          <input
+            id="me_id"
+            name="me_id"
+            type="text"
+            onChange={handleInputChange}
+            value={credentials.me_id}/>
+          <label htmlFor="me_id">아이디</label>
+        </div>
+
+        <div className="input-item">
+          <input
+            id="me_pw"
+            name="me_pw"
+            type="password"
+            onChange={handleInputChange}
+            value={credentials.me_pw}/>
+          <label htmlFor="me_pw">비밀번호</label>
+        </div>
+
         <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em'}}/>
 
         {errorMessage && <p className="error-message">{errorMessage}</p>}
