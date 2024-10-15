@@ -9,6 +9,7 @@ const List = ({ communities = [] }) => {
   const [pageMaker, setPageMaker] = useState(null);
   const [hoverIndex, setHoverIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [originalList, setOriginalList] = useState([]);
 
   // 스크롤을 맨 위로 이동
   useEffect(() => {
@@ -43,8 +44,12 @@ const List = ({ communities = [] }) => {
         .then((data) => {
           if (data) {
             if (data.list) {
-              const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
+              const sortedList = data.list.map((item, index) => {
+                const no = data.pm ? data.pm.totalCount - (data.pm.cri.page - 1) * data.pm.cri.perPageNum - index : data.list.length - index;
+                return { ...item, no };
+              });
               setList(sortedList);
+              setOriginalList(sortedList);
             }
             if (data.pm) {
               setPageMaker(data.pm);
@@ -68,8 +73,12 @@ const List = ({ communities = [] }) => {
       })
       .then((data) => {
         if (data.list) {
-          const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
+          const sortedList = data.list.map((item, index) => {
+            const no = data.pm ? data.pm.totalCount - (data.pm.cri.page - 1) * data.pm.cri.perPageNum - index : data.list.length - index;
+            return { ...item, no };
+          });
           setList(sortedList);
+          setOriginalList(sortedList);
         }
         if (data.pm) {
           setPageMaker(data.pm);
@@ -81,22 +90,9 @@ const List = ({ communities = [] }) => {
   const handleSearch = () => {
     if (searchTerm.trim() === '') {
       // 빈 문자열일 경우 전체 리스트 출력
-      fetch(`/post/list/${co_num}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data && data.list) {
-            const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
-            setList(sortedList);
-          }
-        })
-        .catch((error) => console.error('Error fetching posts:', error));
+      setList(originalList);
     } else {
-      const filteredList = list.filter((item) => item.po_title.includes(searchTerm));
+      const filteredList = originalList.filter((item) => item.po_title.includes(searchTerm));
       setList(filteredList);
     }
   };
@@ -136,7 +132,7 @@ const List = ({ communities = [] }) => {
           {list && list.length > 0 ? (
             list.map((item, idx) => (
               <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
-                <td>{pageMaker ? pageMaker.totalCount - (pageMaker.cri.page - 1) * pageMaker.cri.perPageNum - idx : list.length - idx}</td>
+                <td>{item.no}</td>
                 <td style={{ textAlign: 'left'}}>
                   <span style={{cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)}onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${item.po_num}`)}>
                     {item.po_title}
