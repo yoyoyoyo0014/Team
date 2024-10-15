@@ -160,13 +160,13 @@ hr {
 .book-img {position: relative; display: flex; justify-content: center; align-items: center;}
 .book-img img {box-shadow: var(--box-shadow);}
 
-.rating {display: flex; gap: 1em;}
-.star-rating {display: flex; gap: 1em; flex-direction: row-reverse;}
+.rating {display: flex; gap: 1em; margin-top: 1em;}
+.star-rating {display: flex; gap: .3em; flex-direction: row-reverse;}
 .star-rating input {display: none;}
 .star-rating input + label {font-size: 0;}
 .star-rating input + label::before {
 	content: '\f005';
-	font-size: var(--font-size);
+	font-size: var(--big-font-size);
 	font-family: var(--icon-font-family);
 	color: var(--color-grey);
 }
