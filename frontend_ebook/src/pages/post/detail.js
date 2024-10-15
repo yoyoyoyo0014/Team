@@ -63,6 +63,7 @@ function Detail() {
 
   return (
     <div className="container">
+      <h1 style={{marginBottom: '50px'}}>게시글 상세</h1>
       <div className="form-group">
         <label htmlFor="po_title">제목</label>
         <input type="text" id="po_title" className="form-control" value={post.po_title || ''} readOnly/>
