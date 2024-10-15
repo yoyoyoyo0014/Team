@@ -72,7 +72,7 @@ function App() {
 				<div className="fix-layout">
 					<Header setSection={setSection}/>
 					<main id="body">
-						<RoutesComponent section={section} genreList={genreList} book={book}/> {/* RoutesComponent만 호출 */}
+						<Router section={section} genreList={genreList} book={book}/>
 					</main>
 				</div>
 				<Footer />

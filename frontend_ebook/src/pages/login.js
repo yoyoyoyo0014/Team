@@ -228,9 +228,9 @@ const Login = () => {
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
 
         <div className="sns-login">
-          <Button type={"button"} text={"카카오 로그인"} cls={"btn btn-kakao full"} onClick={handleKakaoLogin}/>
-					<Button type={"button"} text={"네이버 로그인"} cls={"btn btn-naver full"} onClick={handleNaverLogin}/>
-					<Button type={"button"} text={"구글 로그인"} cls={"btn btn-google full"} onClick={() => {
+          <Button type={"button"} text={"카카오 로그인"} cls={"btn btn-kakao full"} click={handleKakaoLogin}/>
+					<Button type={"button"} text={"네이버 로그인"} cls={"btn btn-naver full"} click={handleNaverLogin}/>
+					<Button type={"button"} text={"구글 로그인"} cls={"btn btn-google full"} click={() => {
               if (googleInitialized) {
                 window.google.accounts.id.prompt();  // 구글 로그인 팝업 호출
               } else {

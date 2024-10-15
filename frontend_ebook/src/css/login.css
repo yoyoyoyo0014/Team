@@ -48,6 +48,6 @@
 
 .sns-login .btn {margin-top: 1em; height: 50px; display: flex; align-items: center; justify-content: center;}
 
-.btn-google {background: rgb(248, 248, 248); color: #666;}
 .btn-naver {background: #17B75E; color: #fff;}
-.btn-kakao {background: #f5e342; color: #42342c;}
+.btn-kakao {background: #ffda23; color: #3c1e1e;}
+.btn-google {background: #fff; color: #333; border: 1px solid #ccc;}

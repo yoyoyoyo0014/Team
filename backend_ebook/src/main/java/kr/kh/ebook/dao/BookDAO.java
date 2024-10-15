@@ -35,7 +35,6 @@ public interface BookDAO {
 	int searchBookCount(@Param("country")String country,@Param("genre")int genre,@Param("search")String search);
 
 	int reviewCount(int bookNum);
-	
 
 	List<ReviewVO> selectReviewList(@Param("bookNum")int bookNum,@Param("pageNum") int pageNum);
 
@@ -59,4 +58,6 @@ public interface BookDAO {
 
 	List<WriterVO> selectWriter(int bookNum);
 	List<GenreVO> selectGenreList();
+
+	public BookVO findByNum(@Param("bk_num")int bk_num);
 }
