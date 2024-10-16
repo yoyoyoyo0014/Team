@@ -154,7 +154,7 @@ const List = ({ communities = [] }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={co_num !== '1' ? '5' : '3'}>글 목록이 없습니다.</td>
+              <td colSpan={co_num !== '1' ? '6' : '3'}>글 목록이 없습니다.</td>
             </tr>
           )}
         </tbody>
