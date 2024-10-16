@@ -40,7 +40,7 @@ CREATE TABLE `book` (
 	`bk_num`	int primary key auto_increment	NOT NULL,
 	`bk_name`	varchar(50)	NOT NULL,
 	`bk_state`	varchar(4)	NOT NULL,
-	`bk_me_id`	varchar(255)	NOT NULL,
+	`bk_publisher`	varchar(50)	NOT NULL,
 	`bk_date`	datetime	NOT NULL,
 	`bk_sg_num`	int	NOT NULL,
 	`bk_plot`	longtext	NOT NULL,
@@ -100,6 +100,7 @@ CREATE TABLE `cart` (
 
 CREATE TABLE `buy` (
 	`bu_num`	varchar(255) primary key	NOT NULL,
+	`bu_uid`	varchar(45)	NOT NULL,
 	`bu_me_id`	varchar(15)	NOT NULL,
 	`bu_state`	varchar(5)	NOT NULL,
 	`bu_payment`	varchar(15)	NOT NULL,
@@ -115,8 +116,8 @@ CREATE TABLE `post` (
 	`po_me_id`	varchar(15)	NOT NULL,
 	`po_date`	datetime	NOT NULL,
 	`po_co_num`	int	NOT NULL,
-	`po_view`	int	NULL,
-	`po_like`	int	NULL
+	`po_view`	int	NOT NULL default 0,
+	`po_like`	int	NOT NULL default 0
 );
 
 CREATE TABLE `community` (
@@ -127,8 +128,7 @@ CREATE TABLE `community` (
 CREATE TABLE `book_file` (
 	`bf_num`	int primary key auto_increment	NOT NULL,
 	`bf_name`	varchar(255)	NOT NULL,
-	`bf_bk_num`	int	NOT NULL,
-	`bf_type`	varchar(255)	NOT NULL
+	`bf_bk_num`	int	NOT NULL
 );
 
 CREATE TABLE `writer` (
@@ -168,7 +168,7 @@ CREATE TABLE `writer_Type` (
 );
 
 CREATE TABLE `buy_List` (
-	`bl_num`	varchar(255)	NOT NULL,
+	`bl_bu_num`	varchar(255)	NOT NULL,
 	`bl_bk_num`	int	NOT NULL,
 	`bl_me_id`	varchar(15)	NOT NULL
 );
@@ -219,13 +219,6 @@ ALTER TABLE `book` ADD CONSTRAINT `FK_secondgenre_TO_book_1` FOREIGN KEY (
 )
 REFERENCES `secondgenre` (
 	`sg_num`
-);
-
-ALTER TABLE `book` ADD CONSTRAINT `FK_member_TO_book_1` FOREIGN KEY (
-	`bk_me_id`
-)
-REFERENCES `member` (
-	`me_id`
 );
 
 ALTER TABLE `report` ADD CONSTRAINT `FK_member_TO_report_1` FOREIGN KEY (
@@ -334,7 +327,7 @@ REFERENCES `writer_Type` (
 );
 
 ALTER TABLE `buy_List` ADD CONSTRAINT `FK_buy_TO_buy_List_1` FOREIGN KEY (
-	`bl_num`
+	`bl_bu_num`
 )
 REFERENCES `buy` (
 	`bu_num`
