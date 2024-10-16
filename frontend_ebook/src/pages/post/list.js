@@ -138,7 +138,7 @@ const List = ({ communities = [] }) => {
               <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
                 <td>{item.no}</td>
                 <td style={{ textAlign: 'left'}}>
-                  <span style={{cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)}onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${item.po_num}`)}>
+                  <span style={{cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)}onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${co_num}/${item.po_num}`)}>
                     {item.po_title}
                   </span>
                 </td>

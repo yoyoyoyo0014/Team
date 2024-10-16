@@ -32,7 +32,7 @@ function Router({genreList}){
 			<Route path="/join" element={<Join/>}/>
 
 			<Route path="/post/list/:co_num" element={<List />} />
-			<Route path="/post/detail/:po_num" element={<Detail />} />
+			<Route path="/post/detail/:co_num/:po_num" element={<Detail />} />
 			<Route path="/post/update/:po_num" element={<Update />} />
 			<Route path="/post/insert/:co_num" element={<Insert />} />
 		</Routes>

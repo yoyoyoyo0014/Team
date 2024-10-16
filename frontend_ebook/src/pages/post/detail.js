@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function Detail() {
-  const { po_num } = useParams();
+  const { co_num, po_num } = useParams(); // co_num과 po_num을 둘 다 받아오기
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,28 +25,49 @@ function Detail() {
   }
 
   useEffect(() => {
-    // 게시글 정보를 가져오기 위해 fetch 호출 (가정: API 경로는 /post/detail/{po_num})
-    fetch(`/post/detail/${po_num}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
+    // 게시글 정보를 가져오기 위해 fetch 호출 (가정: API 경로는 /post/detail/{co_num}/{po_num})
+    if (co_num && po_num) {
+      fetch(`/post/detail/${co_num}/${po_num}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data && data.post) {
+            setPost(data.post);
+          } else {
+            console.error("No post data received");
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching post:', error);
+          setError(error);
+          setLoading(false);
+        });
+    }
+  }, [co_num, po_num]);
+
+  const handleDelete = () => {
+    if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+      fetch(`/post/delete/${co_num}/${po_num}`, {
+        method: 'DELETE',
       })
-      .then((data) => {
-        if (data && data.post) {
-          setPost(data.post);
-        } else {
-          console.error("No post data received");
-        }
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching post:', error);
-        setError(error);
-        setLoading(false);
-      });
-  }, [po_num]);
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          alert('게시글이 삭제되었습니다.');
+          navigate(`/post/list/${co_num}`); // 삭제 후 해당 커뮤니티 목록으로 이동
+        })
+        .catch((error) => {
+          console.error('Error deleting post:', error);
+          alert('게시글 삭제 중 오류가 발생했습니다.');
+        });
+    }
+  };
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -63,10 +83,10 @@ function Detail() {
 
   return (
     <div className="container">
-      <h1 style={{marginBottom: '50px'}}>게시글 상세</h1>
+      <h1 style={{ marginBottom: '50px' }}>게시글 상세</h1>
       <div className="form-group">
         <label htmlFor="po_title">제목</label>
-        <input type="text" id="po_title" className="form-control" value={post.po_title || ''} readOnly/>
+        <input type="text" id="po_title" className="form-control" value={post.po_title || ''} readOnly />
       </div>
 
       <div className="form-group">
@@ -76,29 +96,29 @@ function Detail() {
 
       <div className="form-group">
         <label htmlFor="po_date">작성일</label>
-        <input type="text" id="po_date" className="form-control" value={formatDate(post.po_date) || ''} readOnly/>
+        <input type="text" id="po_date" className="form-control" value={formatDate(post.po_date) || ''} readOnly />
       </div>
 
       <div className="form-group">
         <label htmlFor="po_view">조회수</label>
-        <input type="text" id="po_view" className="form-control" value={post.po_view || ''} readOnly/>
+        <input type="text" id="po_view" className="form-control" value={post.po_view || ''} readOnly />
       </div>
 
       <div className="form-group">
         <label htmlFor="po_like">추천수</label>
-        <input type="text" id="po_like" className="form-control" value={post.po_like || ''} readOnly/>
+        <input type="text" id="po_like" className="form-control" value={post.po_like || ''} readOnly />
       </div>
 
       <div className="form-group">
         <label htmlFor="po_content">내용</label>
-        <textarea id="po_content" className="form-control" value={post.po_content || ''} readOnly style={{ height: '400px' }}/>
+        <textarea id="po_content" className="form-control" value={post.po_content || ''} readOnly style={{ height: '400px' }} />
       </div>
 
-      <button className="btn btn-outline-success" onClick={() => navigate(`/post/list/${post.po_co_num}`)}>목록으로</button>
+      <button className="btn btn-outline-success" onClick={() => navigate(`/post/list/${co_num}`)}>목록으로</button>
       {post.po_me_id && (
         <div>
-          <button className="btn btn-outline-primary" onClick={() => navigate(`/post/update/${post.po_num}`)}>수정하기</button>
-          <button className="btn btn-outline-danger" onClick={() => navigate(`/post/delete/${post.po_num}`)}>삭제하기</button>
+          <button className="btn btn-outline-primary" onClick={() => navigate(`/post/update/${co_num}/${po_num}`)}>수정하기</button>
+          <button className="btn btn-outline-danger" onClick={handleDelete}>삭제하기</button>
         </div>
       )}
     </div>

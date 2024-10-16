@@ -2,8 +2,12 @@ package kr.kh.ebook.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -89,15 +93,15 @@ public class PostController {
         return map;
     }
 
-    @GetMapping("/post/detail/{po_num}")
-    public HashMap<String, Object> postDetail(@PathVariable int po_num) {
+    @GetMapping("/post/detail/{co_num}/{po_num}")
+    public HashMap<String, Object> postDetail(@PathVariable int po_num, @PathVariable int co_num) {
         HashMap<String, Object> map = new HashMap<>();
         PostVO post = postService.getPost(po_num);
         map.put("post", post);
         return map;
     }
 
-    @GetMapping("/post/delete/{co_num}/{po_num}")
+    @DeleteMapping("/post/delete/{co_num}/{po_num}")
     public HashMap<String, Object> postDeletePost(@PathVariable int co_num, @PathVariable int po_num) {
         HashMap<String, Object> map = new HashMap<>();
         boolean res = postService.deletePost(po_num);
@@ -109,4 +113,5 @@ public class PostController {
         }
         return map;
     }
+
 }

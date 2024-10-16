@@ -82,7 +82,7 @@ const Main = ({section, genreList, addPost}) => {
 								{list.slice(0,3).map((item, index) => (
 										<tr key={item.po_num || index} style={{height: '75px', borderBottom: '1px solid lightgray'}}>
 											<td>{item.no}</td>
-											<td style={{ textAlign: 'left', cursor: 'pointer', textDecoration: hover === index ? 'underline' : 'none' }} onClick={() => navigate(`/post/detail/${item.po_num}`)}
+											<td style={{ textAlign: 'left', cursor: 'pointer', textDecoration: hover === index ? 'underline' : 'none' }} onClick={() => navigate(`/post/detail/${co_num || 1}/${item.po_num}`)}
 											onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>
 												{item.po_title}
 											</td>
