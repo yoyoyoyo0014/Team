@@ -5,6 +5,7 @@ export const LoginContext = createContext();
 
 export const LoginProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
 
   // 애플리케이션이 로드될 때, localStorage에서 로그인 상태를 확인하고 유지
   useEffect(() => {
@@ -15,7 +16,7 @@ export const LoginProvider = ({ children }) => {
   }, []);
 
   return (
-    <LoginContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <LoginContext.Provider value={{ isLoggedIn, setIsLoggedIn, user, setUser }}>
       {children}
     </LoginContext.Provider>
   );

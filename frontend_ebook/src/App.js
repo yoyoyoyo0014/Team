@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LoginProvider } from "./context/LoginContext"; // LoginContext 제공
 import Router from "./Router"; // Router.js 불러오기
 
@@ -25,20 +25,18 @@ function App() {
   }, []);
 
 	return (
-		<Fragment>
-			<AppProvider contexts={[
-				LoginProvider,
-				GenreProvider
-			]}>
-				<div className="fix-layout">
-					<Header setSection={setSection}/>
-					<main id="body">
-						<Router section={section}/>
-					</main>
-				</div>
-				<Footer />
-			</AppProvider>
-		</Fragment>
+		<AppProvider contexts={[
+			LoginProvider,
+			GenreProvider
+		]}>
+			<div className="fix-layout">
+				<Header setSection={setSection}/>
+				<main id="body">
+					<Router section={section}/>
+				</main>
+			</div>
+			<Footer />
+		</AppProvider>
 	);
 }
 

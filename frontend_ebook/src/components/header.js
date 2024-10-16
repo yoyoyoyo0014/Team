@@ -1,5 +1,5 @@
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { LoginContext } from "../context/LoginContext";
 import { GenreContext } from "../context/GenreContext";
 import { Input } from "./form/input";
@@ -7,7 +7,7 @@ import Button from "./form/button";
 
 const Header = ({setSection}) => {
 	const navigate = useNavigate();
-	const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
+	const { isLoggedIn, setIsLoggedIn, setUser } = useContext(LoginContext);
 	const { genreList } = useContext(GenreContext);
 
 	let [query, setQuery] = useSearchParams();
@@ -27,6 +27,7 @@ const Header = ({setSection}) => {
 		navigate('/logout');
 		alert('로그아웃 되었습니다');
     setIsLoggedIn(false);  // 로그인 상태를 false로 업데이트
+		setUser(null);
     localStorage.removeItem('loginToken');  // localStorage에서 토큰 삭제
 		navigate('/');
   };
@@ -48,6 +49,8 @@ const Header = ({setSection}) => {
 
 	return(
 		<header>
+			<pre>
+			</pre>
 			<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
 				
 			<div className="search-box">

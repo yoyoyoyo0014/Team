@@ -1,12 +1,12 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // useNavigate 임포트
+import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
 import "../css/login.css";
 import Check from "../components/form/check";
 
 const Login = () => {
-  const { setIsLoggedIn } = useContext(LoginContext); // 로그인 상태 업데이트 함수 가져오기
+  const { setIsLoggedIn, setUser } = useContext(LoginContext); // 로그인 상태 업데이트 함수 가져오기
 	const navigate = useNavigate(); // useNavigate 훅 사용
 
   const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
@@ -30,15 +30,15 @@ const Login = () => {
         },
         body: JSON.stringify(credentials),
       })
-        .then((res) => res.json())
-        .then((data) => {
-
+      .then((res) => res.json())
+      .then((data) => {
         console.log("서버 응답:", data);  // 서버로부터 받은 응답 로그 출력
 
         if (data.success) {
           // 로그인 성공 시 토큰을 localStorage에 저장
           localStorage.setItem("loginToken", data.token);
           setIsLoggedIn(true);
+          setUser(data.loginDTO);
           navigate("/");  // 메인 페이지로 이동
         } else {
           setErrorMessage(data.message || "로그인 실패22");

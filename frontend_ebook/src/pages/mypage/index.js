@@ -1,9 +1,14 @@
-const Index = () => {
+import { useContext } from "react";
+import { LoginContext } from "../../context/LoginContext";
+
+const MypageIndex = () => {
+	const user = useContext(LoginContext);
+	console.log(user);
 	return(
 		<div>
-			mypage index
+			{user.member}
 		</div>
 	)
 }
 
-export default Index;
+export default MypageIndex;

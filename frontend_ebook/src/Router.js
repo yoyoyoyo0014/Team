@@ -13,6 +13,7 @@ import Join from "./pages/join.js";
 import BookDetail from "./components/book/bookDetail.js";
 import BookSearch from "./components/book/bookSearch.js";
 import CartPage from "./pages/cart/cartpage.js";
+import MypageIndex from "./pages/mypage/index.js";
 
 import NaverCallback from "./components/auth/NaverCallback.js"; // NaverCallback 컴포넌트 import
 
@@ -39,6 +40,7 @@ function Router({section}) {
       <Route path="/ebook/selectBook/:bk_num" element={<BookDetail/>}/>
       <Route path="/ebook/searchBook" element={<BookSearch/>}/>
 
+      <Route path="/mypage" element={<MypageIndex/>}/>
       <Route path="/cart" element={<CartPage/>}/>
     </Routes>
   );
