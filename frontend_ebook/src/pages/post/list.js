@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const List = ({ communities = [] }) => {
+const List = () => {
   
   const { co_num } = useParams();
   const navigate = useNavigate();
@@ -10,6 +10,7 @@ const List = ({ communities = [] }) => {
   const [hoverIndex, setHoverIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [originalList, setOriginalList] = useState([]);
+  const [communityName, setCommunityName] = useState('');
 
   // 스크롤을 맨 위로 이동
   useEffect(() => {
@@ -43,6 +44,7 @@ const List = ({ communities = [] }) => {
         })
         .then((data) => {
           if (data) {
+            // 게시글 목록 설정
             if (data.list) {
               const sortedList = data.list.map((item, index) => {
                 const no = data.pm ? data.pm.totalCount - (data.pm.cri.page - 1) * data.pm.cri.perPageNum - index : data.list.length - index;
@@ -51,8 +53,14 @@ const List = ({ communities = [] }) => {
               setList(sortedList);
               setOriginalList(sortedList);
             }
+            // 페이지 메이커 설정
             if (data.pm) {
               setPageMaker(data.pm);
+            }
+            // 커뮤니티 이름 설정
+            const community = data.communities.find((community) => community.co_num === parseInt(co_num));
+            if (community) {
+              setCommunityName(community.co_name);
             }
           } else {
             console.error("No data received");
@@ -103,11 +111,9 @@ const List = ({ communities = [] }) => {
     }
   };
 
-  const communityName = communities.find((community) => community.co_num === parseInt(co_num))?.co_name;
-
   return (
     <div className="container">
-      <h2 style={{padding: '30px 0 60px'}}>{communityName}</h2>
+      <h2 style={{ padding: '30px 0 60px' }}>{communityName} 게시판</h2>
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
         <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleKeyPress} style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }}/>
         <button onClick={handleSearch} style={{ padding: '10px 20px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
@@ -115,15 +121,15 @@ const List = ({ communities = [] }) => {
         </button>
       </div>
       <div className="insert">
-        <button style={{marginBottom: '20px', float: 'right'}} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
+        <button style={{ marginBottom: '20px', float: 'right' }} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
       </div>
       <table className="table" style={{ textAlign: 'center', width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ color: 'gray', borderBottom: '1px solid gray' }}>
           <tr>
-            <th style={{ width: co_num === '1' ? '10%' : '10%' }}>NO</th>
-            <th style={{ width: co_num === '1' ? '80%' : '50%' }}>제목</th>
-            <th style={{ width: co_num === '1' ? '10%' : '10%' }}>작성일</th>
-            {co_num !== '1' && (
+            <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>NO</th>
+            <th style={{ width: co_num !== '2' ? '80%' : '50%' }}>제목</th>
+            <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>작성일</th>
+            {co_num === '2' && (
               <>
                 <th style={{ width: '10%' }}>작성자</th>
                 <th style={{ width: '10%' }}>조회수</th>
@@ -137,13 +143,13 @@ const List = ({ communities = [] }) => {
             list.map((item, idx) => (
               <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
                 <td>{item.no}</td>
-                <td style={{ textAlign: 'left'}}>
-                  <span style={{cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)}onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${co_num}/${item.po_num}`)}>
+                <td style={{ textAlign: 'left' }}>
+                  <span style={{ cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)} onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${co_num}/${item.po_num}`)}>
                     {item.po_title}
                   </span>
                 </td>
                 <td>{formatDate(item.po_date)}</td>
-                {co_num !== '1' && (
+                {co_num === '2' && (
                   <>
                     <td>{item.po_me_id}</td>
                     <td>{item.po_view}</td>

@@ -23,7 +23,6 @@ const Main = ({section, genreList, addPost}) => {
     fetch('/main')
       .then((res) => res.json())
       .then(res=>{
-				console.log(res)
 				if (res.postList) {
 					var tmp = res.postList.map((item, index) => {
 						var date = new Date(item.po_date).toLocaleDateString();
