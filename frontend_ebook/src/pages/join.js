@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 
 import "../css/join.css";
 
-import {InputItem} from "../components/form/input";
+import {Input, InputItem} from "../components/form/input";
 import Button from "../components/form/button";
 import AddressInput from "../components/form/addressinput";
 
@@ -34,6 +34,9 @@ const Join = () => {
 	let [phone, setPhone] = useState('');
 	let [addr2, setAddr2] = useState('');
 	let [birth, setBirth] = useState('');
+	let [year, setYear] = useState('');
+	let [month, setMonth] = useState('');
+	let [day, setDay] = useState('');
 	
 	let span = document.createElement('span');
 	span.classList.add('error');
@@ -168,13 +171,15 @@ const Join = () => {
 						change={setAddr2}
 						style={{marginTop: '-1.2rem'}}
 					/>
-					<InputItem
-						id="me_birth"
-						name="me_birth"
-						type="text"
-						cls="frm-input"
-						change={setBirth}
-						label={"생년월일(8자리)"}/>
+					<div className="input-item" style={{
+						display: 'flex',
+						gap: '1em'
+					}}>
+						<Input name="year" type="text" max="4dfs" change={setYear} placeholder="YYYY"/>
+						<Input name="month" type="text" max="2" change={setMonth} placeholder="MM"/>
+						<Input name="day" type="text" max="2" change={setDay} placeholder="DD"/>
+						<label>생년월일(8자리)</label>
+					</div>
 				</fieldset>
 
 				<Button type={"submit"} text={"가입하기"} cls={"btn btn-point big submit"}></Button>
