@@ -8,6 +8,11 @@ function Insert() {
   const [writer, setWriter] = useState("");
   const [content, setContent] = useState("");
 
+  // 스크롤을 맨 위로 이동
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     // 로그인한 사용자의 아이디를 설정 (예: 로컬 스토리지나 서버에서 가져오기)
     const loggedInUserId = localStorage.getItem('me_id');
