@@ -8,6 +8,11 @@ function Detail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 스크롤을 맨 위로 이동
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   function formatDate(isoString) {
     const date = new Date(isoString);
     const today = new Date();
@@ -117,7 +122,7 @@ function Detail() {
       <button className="btn btn-outline-success" onClick={() => navigate(`/post/list/${co_num}`)}>목록으로</button>
       {post.po_me_id && (
         <div>
-          <button className="btn btn-outline-primary" onClick={() => navigate(`/post/update/${co_num}/${po_num}`)}>수정하기</button>
+          <button className="btn btn-outline-primary" onClick={() => navigate(`/post/update/${po_num}`)}>수정하기</button>
           <button className="btn btn-outline-danger" onClick={handleDelete}>삭제하기</button>
         </div>
       )}
