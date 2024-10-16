@@ -79,6 +79,7 @@ const Join = () => {
 								},
 							})
 						}
+						placeholder="8~15자의 영문 혹은 숫자"
 						error={errors.me_id}
 						change={setId}
 						label={"아이디"}/>
@@ -91,11 +92,12 @@ const Join = () => {
 							register("me_nickname", {
 								required: "닉네임을 입력해주세요",
 								pattern: {
-									value: /^[0-9a-zA-Z가-힣]{1,8}$/,
-									message: "닉네임은 최대 8자이며, 하나의 글자 혹은 숫자를 포함해야 합니다",
+									value: /^[0-9a-zA-Z가-힣]$/,
+									message: "닉네임은 최대 8자입니다",
 								}
 							})
 						}
+						placeholder="최대 8자 이내의 한글/영문/숫자"
 						error={errors.me_nickname}
 						change={setNickname}
 						label={"닉네임"}/>
@@ -113,6 +115,7 @@ const Join = () => {
 								}
 							})
 						}
+						placeholder="8~15자의 영문/숫자/기호(@$!%*#?&) 1자씩 포함"
 						error={errors.me_pw}
 						change={setPw}
 						label={"비밀번호"}/>
