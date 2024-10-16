@@ -8,6 +8,11 @@ function Update() {
   const [content, setContent] = useState('');
   const [me_id, setMeId] = useState('');
 
+  // 스크롤을 맨 위로 이동
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     // 게시글 정보를 가져오기
     fetch(`/post/detail/${po_num}`)

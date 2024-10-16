@@ -121,10 +121,11 @@ const List = ({ communities = [] }) => {
         <thead style={{ color: 'gray', borderBottom: '1px solid gray' }}>
           <tr>
             <th style={{ width: co_num === '1' ? '10%' : '10%' }}>NO</th>
-            <th style={{ width: co_num === '1' ? '80%' : '60%' }}>제목</th>
+            <th style={{ width: co_num === '1' ? '80%' : '50%' }}>제목</th>
             <th style={{ width: co_num === '1' ? '10%' : '10%' }}>작성일</th>
             {co_num !== '1' && (
               <>
+                <th style={{ width: '10%' }}>작성자</th>
                 <th style={{ width: '10%' }}>조회수</th>
                 <th style={{ width: '10%' }}>추천수</th>
               </>
@@ -144,6 +145,7 @@ const List = ({ communities = [] }) => {
                 <td>{formatDate(item.po_date)}</td>
                 {co_num !== '1' && (
                   <>
+                    <td>{item.po_me_id}</td>
                     <td>{item.po_view}</td>
                     <td>{item.po_like}</td>
                   </>
