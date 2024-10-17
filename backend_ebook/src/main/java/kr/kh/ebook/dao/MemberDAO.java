@@ -21,5 +21,7 @@ public interface MemberDAO {
 
 	@Select("SELECT * FROM member WHERE me_id = #{me_id}")
     MemberVO getMemberById(String me_id);
+
+	void insertMember(MemberVO member);
 	
 }
