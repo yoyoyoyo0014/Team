@@ -1,4 +1,5 @@
 import '../../css/mybooks.css';
+import { Link } from 'react-router-dom';
 
 const MyBooks = () => {
 	return (
@@ -8,13 +9,19 @@ const MyBooks = () => {
 				{[...Array(parseInt(3))].map((n, i) => {
 					return(<div className="row">
 						<div className="book">
-							<div className="book-img"><img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="test" /></div>
+							<Link to={"/mypage/mybooks/book/" + (i + 1)}>
+								<div className="book-img"><img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="test" /></div>
+							</Link>
 						</div>
 						<div className="book">
-							<div className="book-img"><img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="test" /></div>
+							<Link to={"/mypage/mybooks/book/" + (i + 1)}>
+								<div className="book-img"><img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="test" /></div>
+							</Link>
 						</div>
 						<div className="book">
-							<div className="book-img"><img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="test" /></div>
+							<Link to={"/mypage/mybooks/book/" + (i + 1)}>
+								<div className="book-img"><img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="test" /></div>
+							</Link>
 						</div>
 					</div>)
 				})}

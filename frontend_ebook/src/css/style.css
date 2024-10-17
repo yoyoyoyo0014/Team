@@ -155,6 +155,10 @@ input[type="radio"]:checked + label::after {color: var(--color-bak);}
 	font-size: var(--font-size);
 }
 .btn.ico.search::before {content: '\f002';}
+button.btn[disabled] {
+	color: #ccc;
+	box-shadow: var(--box-inner-shadow);
+}
 
 .theme-box {
 	background: var(--color-light-grey);
