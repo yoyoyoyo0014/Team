@@ -240,6 +240,10 @@ header {
 }
 .gnb-genre-wrapper.show {opacity: 1; visibility: visible;}
 
+@media all and (max-width: 1280px) {
+	.gnb-genre-wrapper {gap: 3rem; font-size: var(--small-font-size);}
+}
+
 #my-books {
 	position: absolute;
 	right: 0;
