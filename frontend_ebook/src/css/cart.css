@@ -1,0 +1,27 @@
+@charset 'utf-8';
+
+h2 + .check {padding: 1.5em 0;}
+.cart-item {
+	position: relative;
+	display: flex;
+	gap: 1em;
+	padding-left: 5.5em;
+	margin-bottom: 2em;
+}
+.cart-item .check {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	left: 2em;
+}
+.cart-item .book-img {width: 100px;}
+
+.cart-item .cart-item-controller {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 2em;
+	text-align: center;
+}
+.cart-item .cart-item-controller .price {font-weight: 900; font-size: var(--big-font-size); padding-bottom: .6em;}
+.cart-item .cart-item-controller .btn {padding-left: 3em; padding-right: 3em;}

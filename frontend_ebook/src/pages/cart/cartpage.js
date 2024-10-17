@@ -1,5 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
+import Check from '../../components/form/check';
+import '../../css/cart.css';
+import Button from '../../components/form/button';
 
 const CartPage = () => {
   const { me_id } = useParams();
@@ -224,31 +227,39 @@ const CartPage = () => {
   };
 
   return (
-    <div>
-      <h1>장바구니</h1>
+    <Fragment>
+      <h2>장바구니</h2>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={selectAll}
-            onChange={handleSelectAllChange}
-          />
-          전체 선택
-        </label>
-      </div>
-      <ul>
+
+      <Check name={"allSelect"} id="allSelect" label={"전체 선택"} change={handleSelectAllChange}/>
+
+      <ul className="cart-item-wrapper">
         {cart.map(item => (
-          <li key={item.cart.ca_num}>
-            <input
-              type="checkbox"
-              checked={!!selectedItems[item.cart.ca_num]} // 체크박스 상태
-              onChange={() => handleCheckboxChange(item.cart.ca_num)}
-            />
-            <span>
-              책 번호: {item.book.bk_num} - 제목: {item.book.bk_name} - 가격: {item.book.bk_price}원
-            </span>
-            <button onClick={() => removeFromCart(item.cart.ca_num)}>삭제</button>
+          <li className="theme-box cart-item" key={item.cart.ca_num}>
+            <input type="hidden" value={item.book.bk_num}/>
+            <Check
+              name=""
+              label=""
+              change={() => handleCheckboxChange(item.cart.ca_num)}
+              checked={!!selectedItems[item.cart.ca_num]} 
+              click={(e) => {
+                if(e.target.previousSibling.checked === true)
+                  e.target.previousSibling.checked = false;
+                else
+                e.target.previousSibling.checked = true;
+              }}/>
+            <div className="book-img">
+              <img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="test" />
+            </div>
+            <div className="book-info">
+              <h3>{item.book.bk_name}</h3>
+              <p>작가명</p>
+            </div>
+            
+            <div className="cart-item-controller">
+            <div className="price">{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(item.book.bk_price)}</div>
+              <Button type="button" cls="btn btn-dark" text="삭제" onClick={() => removeFromCart(item.cart.ca_num)}/>
+            </div>
           </li>
         ))}
       </ul>
@@ -265,7 +276,7 @@ const CartPage = () => {
         <br/>
         <button type="button" onClick={requestPay}>구매하기</button>
       </form>
-    </div>
+    </Fragment>
   );
 };
 

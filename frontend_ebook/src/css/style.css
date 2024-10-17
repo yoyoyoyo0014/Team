@@ -148,6 +148,7 @@ input[type="radio"]:checked + label::after {color: var(--color-bak);}
 
 .btn-basic {background: var(--color-light-grey);}
 .btn-point {background: var(--color-brand); color: var(--color-bak);}
+.btn-dark {background: var(--color-default); color: white;}
 
 .btn.ico{font-size: 0;}
 .btn.ico::before {

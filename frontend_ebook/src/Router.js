@@ -47,8 +47,8 @@ function Router({section}) {
         path="/mypage/mybooks/book/:bk_num"
         element={isLoggedIn ? <EpubReader /> : <Navigate to="/login" />}
       />
-
-      <Route path="/cart" element={isLoggedIn ? <CartPage/> : <Navigate to="/login" />}/>
+      
+      <Route path="/cart/:me_id" element={isLoggedIn ? <CartPage/> : <Navigate to="/login" />}/>
     </Routes>
   );
 }

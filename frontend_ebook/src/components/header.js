@@ -40,7 +40,7 @@ const Header = ({setSection}) => {
 			</ul>)
 		} else {
 			return(<ul>
-				<li><Link to="/cart">장바구니</Link></li>
+				<li><Link to={"/cart/admin123"}>장바구니</Link></li>
 				<li><Link to="/mypage">마이페이지</Link></li>
 				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
 			</ul>)
