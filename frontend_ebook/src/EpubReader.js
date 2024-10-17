@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import ePub from 'epubjs';
 
 const EpubReader = () => {
-  const { me_id, bk_num } = useParams(); // me_id와 bk_num 가져오기
+  const { bl_me_id, bk_num } = useParams(); 
   const viewerRef = useRef(null);
   const renditionRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -12,41 +12,47 @@ const EpubReader = () => {
 
   useEffect(() => {
     const book = ePub(`/epub/book${bk_num}.epub`);
-  
+
     const initializeBook = async () => {
       try {
         await book.loaded;
+        console.log("책 로드 완료"); 
+        
         const spine = book.spine;
         const pageCount = spine.length;
+        
+        // totalPages 설정
         setTotalPages(pageCount);
-  
+
         // 로컬 스토리지에서 저장된 현재 페이지를 가져오고, 유효성 체크
-        const savedPage = localStorage.getItem(`currentPage_${me_id}_${bk_num}`);
+        const savedPage = localStorage.getItem(`currentPage_${bl_me_id}_${bk_num}`);
         const pageToDisplay = savedPage ? parseInt(savedPage, 10) : 0;
-  
+
         // 유효한 페이지 범위 체크
         if (pageToDisplay >= 0 && pageToDisplay < pageCount) {
           setCurrentPage(pageToDisplay);
         } else {
           setCurrentPage(0); // 유효하지 않으면 첫 페이지로 설정
         }
-  
+
         if (viewerRef.current) {
           const rendition = book.renderTo(viewerRef.current, {
             width: "100%",
             height: "100%",
           });
-  
-          // 초기 페이지를 불러오기 전에 currentPage가 업데이트되도록 wait
-          rendition.display(currentPage); 
+
+          // 저장된 페이지로 초기 페이지 표시
+          rendition.display(pageToDisplay).then(() => {
+            setCurrentPage(pageToDisplay); // 페이지 설정 후 상태 업데이트
+          });
           renditionRef.current = rendition;
-  
+
           rendition.on("relocated", (location) => {
             const pageList = rendition.pagination;
             if (pageList) {
               const pageNumber = pageList.currentPage || 0;
               setCurrentPage(pageNumber);
-              localStorage.setItem(`currentPage_${me_id}_${bk_num}`, pageNumber);
+              localStorage.setItem(`currentPage_${bl_me_id}_${bk_num}`, pageNumber);
             }
           });
         }
@@ -54,54 +60,54 @@ const EpubReader = () => {
         console.error("EPUB 책 로드 중 오류:", error);
       }
     };
-  
+
     const checkViewerReady = setInterval(() => {
       if (viewerRef.current) {
         initializeBook();
         clearInterval(checkViewerReady);
       }
     }, 100);
-  
+
     return () => {
       clearInterval(checkViewerReady);
       if (renditionRef.current) {
         renditionRef.current.destroy();
       }
     };
-  }, [me_id, bk_num]);
+  }, [bl_me_id, bk_num]);
 
   // 다음 페이지로 이동
   const goToNextPage = () => {
     if (renditionRef.current) {
       renditionRef.current.next().then(() => {
         const newPageNumber = currentPage + 1;
-        setCurrentPage(newPageNumber); // 현재 페이지 업데이트
-        localStorage.setItem(`currentPage_${me_id}_${bk_num}`, newPageNumber); // 회원별로 페이지 저장
+        setCurrentPage(newPageNumber);
+        localStorage.setItem(`currentPage_${bl_me_id}_${bk_num}`, newPageNumber);
       });
     }
   };
-  
+
   // 이전 페이지로 이동
   const goToPrevPage = () => {
     if (renditionRef.current) {
       renditionRef.current.prev().then(() => {
         const newPageNumber = currentPage - 1;
-        setCurrentPage(newPageNumber); // 현재 페이지 업데이트
-        localStorage.setItem(`currentPage_${me_id}_${bk_num}`, newPageNumber); // 회원별로 페이지 저장
+        setCurrentPage(newPageNumber);
+        localStorage.setItem(`currentPage_${bl_me_id}_${bk_num}`, newPageNumber);
       });
     }
   };
+
   // 슬라이더 변경 핸들러
   const handleSliderChange = (event) => {
     const newPageNumber = parseInt(event.target.value, 10);
-    setCurrentPage(newPageNumber); // 현재 페이지 업데이트
+    setCurrentPage(newPageNumber);
     if (renditionRef.current) {
-      renditionRef.current.display(newPageNumber); // 슬라이더에서 선택한 페이지 표시
-      localStorage.setItem('currentPage', newPageNumber);
+      renditionRef.current.display(newPageNumber);
+      localStorage.setItem(`currentPage_${bl_me_id}_${bk_num}`, newPageNumber);
     }
   };
 
-  
   const progress = totalPages > 0 ? ((currentPage + 1) / totalPages) * 100 : 0;
 
   return (
