@@ -16,7 +16,7 @@ function Router(){
 	return(
 		<Routes>
 			<Route path="/" element={<Main/>} />
-			<Route path="/mypage/mybooks" element={<MyBooks/>}/>
+			<Route path="/mypage/mybooks/:bl_me_id" element={<MyBooks/>}/>
 			<Route path="/bestsellers" element={<BestSellers/>}/>
 			<Route path="/newbooks" element={<NewBooks/>}/>
 			<Route path="/forsales" element={<ForSales/>}/>
