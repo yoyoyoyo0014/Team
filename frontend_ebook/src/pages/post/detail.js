@@ -103,17 +103,19 @@ function Detail() {
         <label htmlFor="po_date">작성일</label>
         <input type="text" id="po_date" className="form-control" value={formatDate(post.po_date) || ''} readOnly />
       </div>
+      {co_num === '2' && (
+        <>
+        <div className="form-group">
+          <label htmlFor="po_view">조회수</label>
+          <input type="text" id="po_view" className="form-control" value={post.po_view || ''} readOnly />
+        </div>
 
-      <div className="form-group">
-        <label htmlFor="po_view">조회수</label>
-        <input type="text" id="po_view" className="form-control" value={post.po_view || ''} readOnly />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="po_like">추천수</label>
-        <input type="text" id="po_like" className="form-control" value={post.po_like || ''} readOnly />
-      </div>
-
+        <div className="form-group">
+          <label htmlFor="po_like">추천수</label>
+          <input type="text" id="po_like" className="form-control" value={post.po_like || ''} readOnly />
+        </div>
+        </>
+      )}
       <div className="form-group">
         <label htmlFor="po_content">내용</label>
         <textarea id="po_content" className="form-control" value={post.po_content || ''} readOnly style={{ height: '400px' }} />
