@@ -11,6 +11,7 @@ const Login = () => {
 	const navigate = useNavigate(); // useNavigate 훅 사용
 
   const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
+  
   const [id, setId] = useState(""); // 일반 로그인 ID 상태
   const [password, setPassword] = useState(""); // 일반 로그인 비밀번호 상태
 
@@ -39,7 +40,6 @@ const Login = () => {
           callback: handleGoogleLoginSuccess,
         });
         setGoogleInitialized(true); // 구글 초기화 완료
-        //console.log("Google SDK loaded and initialized");
       } else {
         console.error("Google API failed to load");
       }
@@ -60,8 +60,8 @@ const Login = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          // 로그인 성공 시 토큰을 localStorage에 저장
-          localStorage.setItem("googleLoginToken", idToken);
+          // 로그인 성공 시 JWT 토큰을 localStorage에 저장
+          localStorage.setItem("googleLoginToken", data.token); // 백엔드에서 받은 JWT 토큰 저장
           setIsLoggedIn(true);
           navigate("/");  // 메인 페이지로 이동
         } else {

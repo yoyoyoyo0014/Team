@@ -23,5 +23,7 @@ public interface MemberDAO {
     MemberVO getMemberById(String me_id);
 
 	void insertMember(MemberVO member);
+
+	void insertGoogleMember(MemberVO member);
 	
 }

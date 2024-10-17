@@ -29,6 +29,10 @@
         select * from member where me_email = #{email}
     </select>
 
-
+	<!-- 신규 회원 등록 (구글) -->
+    <insert id="insertGoogleMember" parameterType="kr.kh.ebook.model.vo.MemberVO">
+        INSERT INTO member (me_id, me_email, me_nickname, me_authority, me_name, me_ms_name)
+        VALUES (#{me_id}, #{me_email}, #{me_nickname}, #{me_authority}, #{me_name}, '사용')
+    </insert>
 
 </mapper>
