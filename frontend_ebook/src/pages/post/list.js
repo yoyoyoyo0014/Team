@@ -127,11 +127,11 @@ const List = () => {
         <thead style={{ color: 'gray', borderBottom: '1px solid gray' }}>
           <tr>
             <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>NO</th>
-            <th style={{ width: co_num !== '2' ? '80%' : '50%' }}>제목</th>
+            <th style={{ width: co_num !== '2' ? '70%' : '50%' }}>제목</th>
+            <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>작성자</th>
             <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>작성일</th>
             {co_num === '2' && (
               <>
-                <th style={{ width: '10%' }}>작성자</th>
                 <th style={{ width: '10%' }}>조회수</th>
                 <th style={{ width: '10%' }}>추천수</th>
               </>
@@ -148,10 +148,10 @@ const List = () => {
                     {item.po_title}
                   </span>
                 </td>
+                <td>{item.po_me_id}</td>
                 <td>{formatDate(item.po_date)}</td>
                 {co_num === '2' && (
                   <>
-                    <td>{item.po_me_id}</td>
                     <td>{item.po_view}</td>
                     <td>{item.po_like}</td>
                   </>
