@@ -1,0 +1,15 @@
+@charset 'utf-8';
+
+#my-sub-menu {
+	position: absolute;
+	width: 100px;
+	text-align: right;
+}
+#my-sub-menu div {padding-bottom: 2em;}
+#my-sub-menu h3 {line-height: 1.8; white-space: nowrap;}
+
+section.mypage-content {margin-left: 150px;}
+
+.pf-section {display: flex; gap: 1em;}
+.pf-pic {width: 150px; height: 150px; background-color: #fff; box-shadow: var(--box-inner-shadow); border-radius: 50%;}
+.pf-info {padding-left: 2em;}
