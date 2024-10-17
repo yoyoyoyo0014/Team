@@ -11,6 +11,7 @@ import Meeting from "./pages/meeting.js";
 import Login from "./pages/login.js";
 import Join from "./pages/join.js";
 import CartPage from "./pages/cart/cartpage.js";
+import EpubReader from "./EpubReader.js";
 
 function Router(){
 	return(
@@ -26,6 +27,7 @@ function Router(){
 			<Route path="/login" element={<Login/>}/>
 			<Route path="/join" element={<Join/>}/>
 			<Route path="/cart/:me_id" element={<CartPage />} />
+			<Route path="/epub/:bl_me_id/:bk_num" element={<EpubReader />} /> {/* me_id와 bk_num 포함 */}
 		</Routes>
 	)
 }
