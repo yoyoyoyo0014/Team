@@ -17,9 +17,11 @@ const Join = () => {
 
 	let [member, setMember] = useState({
 		me_id: '',
+		me_name: '',
 		me_pw: '',
 		me_nickname: '',
 		me_email: '',
+		me_gender: '',
 		me_phone: '',
 		me_postalCode: '',
 		me_address: '',
@@ -51,9 +53,11 @@ const Join = () => {
 			return{
 				...member,
 				me_id: id,
+				me_name: name,
 				me_pw: pw,
 				me_nickname: nickname,
 				me_email: email,
+				me_gender: gender,
 				me_phone: phone,
 				me_address: member.addr1 + ' ' + addr2,
 				me_birth: birth
