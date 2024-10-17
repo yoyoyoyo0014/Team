@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import "../css/join.css";
@@ -27,10 +27,12 @@ const Join = () => {
 	});
 
 	let [id, setId] = useState('');
+	let [name, setName] = useState('');
 	let [nickname, setNickname] = useState('');
 	let [pw, setPw] = useState('');
 	let [pw2, setPw2] = useState('');
 	let [email, setEmail] = useState('');
+	let [gender, setGender] = useState('default');
 	let [phone, setPhone] = useState('');
 	let [addr2, setAddr2] = useState('');
 	let [birth, setBirth] = useState('');
@@ -60,6 +62,11 @@ const Join = () => {
 		console.log(member);
 	}
 
+	useEffect(() => {
+		let me_gender = document.getElementById('default');
+		me_gender.checked = true;
+	}, [])
+
 	return(
 		<div className="join-form">
 			<h2 className="txt-center page-title">회원가입</h2>
@@ -83,6 +90,19 @@ const Join = () => {
 						error={errors.me_id}
 						change={setId}
 						label={"아이디"}/>
+					<InputItem
+						id="me_name"
+						name="me_name"
+						type="text"
+						cls="frm-input"
+						registerProps={
+							register("me_name", {
+								required: "이름을 입력해주세요"
+							})
+						}
+						error={errors.me_name}
+						change={setName}
+						label={"이름"}/>
 					<InputItem
 						id="me_nickname"
 						name="me_nickname"
@@ -119,6 +139,7 @@ const Join = () => {
 						error={errors.me_pw}
 						change={setPw}
 						label={"비밀번호"}/>
+					
 					<InputItem
 						id="me_pw2"
 						name="me_pw2"
@@ -152,6 +173,31 @@ const Join = () => {
 						error={errors.me_email}
 						change={setEmail}
 						label={"이메일"}/>
+
+						<div className="input-item">
+							<div className="radio-container">
+								<div><input
+									type="radio"
+									name="me_gender"
+									id="default"
+									value="default"/>
+								<label htmlFor="default">선택 안 함</label></div>
+								<div><input
+									type="radio"
+									name="me_gender"
+									id="male"
+									value="male"/>
+								<label htmlFor="male">남성</label></div>
+								<div><input
+									type="radio"
+									name="me_gender"
+									id="female"
+									value="female"/>
+								<label htmlFor="female">여성</label></div>
+							</div>
+
+							<label htmlFor="">성별</label>
+						</div>
 				</fieldset>
 
 				<hr/>
