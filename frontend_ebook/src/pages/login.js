@@ -185,23 +185,6 @@ const Login = () => {
     <div className="login-form">
       <h2 className="txt-center page-title">Book<br />Garden</h2>
       <form onSubmit={handleLoginSubmit}>
-        {/* <InputItem
-          id="me_id"
-          name="me_id"
-          type="text"
-          handleInputChange={handleInputChange}
-          value={credentials.me_id}
-          label="아이디"
-        />
-        <InputItem
-          id="me_pw"
-          name="me_pw"
-          type="password"
-          handleInputChange={handleInputChange}
-          value={credentials.me_pw}
-          label="비밀번호"
-        /> */}
-
         <div className="input-item">
           <input
             id="me_id"
