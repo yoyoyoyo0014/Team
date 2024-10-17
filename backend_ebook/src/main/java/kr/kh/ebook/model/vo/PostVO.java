@@ -12,8 +12,10 @@ public class PostVO {
 	private String po_title;
 	private String po_content;
 	private String po_me_id;
+	private String po_me_nickname;
 	private Date po_date;
 	private int po_co_num;
 	private int po_view;
 	private int po_like;
+	
 }

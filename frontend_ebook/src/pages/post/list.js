@@ -148,7 +148,7 @@ const List = () => {
                     {item.po_title}
                   </span>
                 </td>
-                <td>{item.po_me_id}</td>
+                <td>{item.po_me_nickname}</td>
                 <td>{formatDate(item.po_date)}</td>
                 {co_num === '2' && (
                   <>

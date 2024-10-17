@@ -21,11 +21,14 @@
     	select count(*) from post where po_co_num = #{co_num} 
     </select>
     <select id="selectPost" resultType="PostVO">
-    	select * from post where po_num = #{po_num}
+    	select post.*,me_nickname as po_me_nickname from post
+    	join member
+    	on post.po_me_id = member.me_id
+    	where po_num = #{po_num}
     </select>
     <insert id="insertPost">
-    	insert into post(po_title, po_me_id, po_co_num, po_content, po_date)
-    	values(#{po_title},#{po_me_id},#{po_co_num},#{po_content},#{po_date})
+    	insert into post(po_title, po_me_id, po_me_nickname, po_co_num, po_content, po_date)
+    	values(#{po_title},#{po_me_id},#{po_me_nickname},#{po_co_num},#{po_content},#{po_date})
     </insert>
 	<update id="updatePost">
 		update post set po_title = #{po_title}, po_content = #{po_content} where po_num = #{po_num}

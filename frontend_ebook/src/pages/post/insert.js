@@ -6,6 +6,7 @@ function Insert() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [writer, setWriter] = useState("");
+  const [nickname, setNickname] = useState("");
   const [content, setContent] = useState("");
 
   // 스크롤을 맨 위로 이동
@@ -16,7 +17,31 @@ function Insert() {
   useEffect(() => {
     // 로그인한 사용자의 아이디를 설정 (예: 로컬 스토리지나 서버에서 가져오기)
     const loggedInUserId = localStorage.getItem('me_id');
-    setWriter(loggedInUserId || "admin123");
+    if (loggedInUserId) {
+      setWriter(loggedInUserId);
+      
+      // 닉네임 가져오기
+      fetch(`/member/nickname/${loggedInUserId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data && data.nickname) {
+            setNickname(data.nickname);
+          } else {
+            console.error("No nickname data received");
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching nickname:', error);
+        });
+    } else {
+      setWriter("admin123");
+      setNickname("관리자");
+    }
   }, []);
 
   const btnClick = (e) => {
@@ -32,6 +57,7 @@ function Insert() {
     let post = {
       po_title: title,
       po_me_id: writer,
+      po_me_nickname: nickname,
       po_content: content,
       po_co_num: parseInt(co_num, 10),
       po_date: new Date().toISOString() // 현재 시간을 ISO 문자열로 변환하여 po_date 설정
@@ -73,10 +99,8 @@ function Insert() {
           <label htmlFor="title">제목:</label>
           <input type="text" id="title" name="title" className="form-control" placeholder="제목을 입력하세요." onChange={(e) => setTitle(e.target.value)} value={title} />
         </div>
-        <div className="form-group">
-          <label htmlFor="writer">작성자:</label>
-          <input type="text" id="writer" name="writer" className="form-control" value={writer} readOnly />
-        </div>
+        <input type="hidden" id="writer" name="writer" value={writer} readOnly />
+        <input type="hidden" id="nickname" name="nickname" value={nickname} readOnly />
         <div className="form-group">
           <label htmlFor="content">내용:</label>
           <textarea id="content" name="content" className="form-control" style={{ minHeight: '400px', height: 'auto' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>

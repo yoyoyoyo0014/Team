@@ -115,6 +115,7 @@ CREATE TABLE `post` (
 	`po_title`	varchar(50)	NOT NULL,
 	`po_content`	text	NOT NULL,
 	`po_me_id`	varchar(15)	NOT NULL,
+    `po_me_nickname`	varchar(8)	NOT NULL,
 	`po_date`	datetime	NOT NULL,
 	`po_co_num`	int	NOT NULL,
 	`po_view`	int	NOT NULL default 0,

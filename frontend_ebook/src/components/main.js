@@ -85,7 +85,7 @@ const Main = ({section, genreList, addPost}) => {
 											onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>
 												{item.po_title}
 											</td>
-											<td>{item.po_me_id}</td>
+											<td>{item.po_me_nickname}</td>
 											<td>{item.date}</td>
 										</tr>
 								))}

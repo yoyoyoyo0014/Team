@@ -6,7 +6,7 @@ function Update() {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [me_id, setMeId] = useState('');
+  const [me_nickname, setMeId] = useState('');
   const [po_co_num, setPoCoNum] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +28,7 @@ function Update() {
         if (data.post) {
           setTitle(data.post.po_title || ''); // undefined가 아니라 빈 문자열로 초기화
           setContent(data.post.po_content || ''); // undefined가 아니라 빈 문자열로 초기화
-          setMeId(data.post.po_me_id || ''); // 작성자 ID 설정
+          setMeId(data.post.po_me_nickname || ''); // 작성자 ID 설정
           setPoCoNum(data.post.po_co_num || ''); // 커뮤니티 번호 설정
         }
         setLoading(false);
@@ -44,7 +44,7 @@ function Update() {
       po_num,
       po_title: title,
       po_content: content,
-      po_me_id: me_id, // 작성자 ID 추가
+      po_me_nickname: me_nickname, // 작성자 ID 추가
     };
 
     fetch(`/post/update/${po_num}`, {
@@ -77,7 +77,7 @@ function Update() {
       </div>
       <div className="form-group">
         <label htmlFor="writer">작성자</label>
-        <input type="text" id="writer" name="writer" value={me_id} readOnly className="form-control"/>
+        <input type="text" id="writer" name="writer" value={me_nickname} readOnly className="form-control"/>
       </div>
       <div className="form-group">
         <label htmlFor="content">내용</label>

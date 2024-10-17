@@ -95,8 +95,8 @@ function Detail() {
       </div>
 
       <div className="form-group">
-        <label htmlFor="po_me_id">작성자</label>
-        <input type="text" id="po_me_id" className="form-control" value={post.po_me_id || ''} readOnly />
+        <label htmlFor="po_me_nickname">작성자</label>
+        <input type="text" id="po_me_nickname" className="form-control" value={post.po_me_nickname || ''} readOnly />
       </div>
 
       <div className="form-group">
