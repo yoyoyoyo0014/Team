@@ -32,16 +32,22 @@ public class BuyService {
         return payment.getAmount().intValue() == expectedAmount;
     }
     
-    public void saveBuyInfo(BuyVO buyVO) {
-        // 데이터베이스에 구매 정보를 저장
+    public int saveBuyInfo(BuyVO buyVO) {
         if (buyVO.getBu_uid() == null || buyVO.getBu_me_id() == null) {
             throw new IllegalArgumentException("구매 정보가 유효하지 않습니다.");
         }
         buyDao.saveBuyInfo(buyVO);
+        
+        // 마지막으로 삽입된 ID 반환
+        return buyDao.getLastInsertId(); // 추가한 메소드 호출
     }
 
 	public void saveBuyList(BuyListVO buyListVO) {
 		buyDao.saveBuyList(buyListVO);
 		
+	}
+
+	public boolean isBookAlreadyBuied(String me_id, int bk_num) {
+		return buyDao.checkBookBuied(me_id, bk_num) > 0;
 	}
 }

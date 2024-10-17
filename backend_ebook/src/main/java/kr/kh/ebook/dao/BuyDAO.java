@@ -12,4 +12,8 @@ public interface BuyDAO {
 
 	void saveBuyList(BuyListVO buyListVO);
 
+	int getLastInsertId();
+
+	int checkBookBuied(String me_id, int bk_num);
+
 }

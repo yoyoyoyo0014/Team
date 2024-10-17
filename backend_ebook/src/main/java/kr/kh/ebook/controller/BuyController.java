@@ -1,5 +1,7 @@
 package kr.kh.ebook.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,16 +36,17 @@ public class BuyController {
         }
     }
     @PostMapping("/save")
-    public ResponseEntity<String> saveBuyInfo(@RequestBody BuyVO buyVO) {
+    public ResponseEntity<Integer> saveBuyInfo(@RequestBody BuyVO buyVO) {
         try {
-            // 구매 정보 저장
-            buyService.saveBuyInfo(buyVO);
-            return ResponseEntity.ok("구매 정보가 저장되었습니다.");
+            // 구매 정보 저장 및 bu_num 반환
+            int bu_num = buyService.saveBuyInfo(buyVO);
+            return ResponseEntity.ok(bu_num); // bu_num을 반환
         } catch (Exception e) {
             e.printStackTrace(); // 로그 출력
-            return ResponseEntity.status(500).body("구매 정보 저장 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.status(500).body(null); // 오류 발생 시 null 반환
         }
     }
+
     @PostMapping("list/save")
     public ResponseEntity<String> saveBuyList(@RequestBody BuyListVO buyListVO) {
         try {
@@ -55,4 +58,13 @@ public class BuyController {
             return ResponseEntity.status(500).body("구매 리스트 저장 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
+    @PostMapping("/checkBuied")
+    public ResponseEntity<Boolean> checkBuied(@RequestBody Map<String, Object> request) {
+        String me_id = (String) request.get("me_id");
+        int bk_num = (int) request.get("bk_num");
+
+        boolean isBuied = buyService.isBookAlreadyBuied(me_id, bk_num);
+        return ResponseEntity.ok(isBuied);
+    }
+
 }

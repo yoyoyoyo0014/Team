@@ -37,32 +37,57 @@ const CartPage = () => {
   const addToCart = async (e) => {
     e.preventDefault();
     const itemExists = cart.some(item => item.cart.ca_bk_num === bk_num);
+    
     if (itemExists) {
       alert("이미 장바구니에 담긴 상품입니다.");
       return;
     }
-
+  
+    // 이미 구매한 책인지 확인
     try {
-      const response = await fetch(`/cart/add`, {
+      const response = await fetch('/buy/checkBuied', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ca_bk_num: bk_num, ca_me_id: me_id }),
+        body: JSON.stringify({
+          me_id: me_id,
+          bk_num: bk_num,
+        }),
       });
-      if (!response.ok) {
-        if (response.status === 409) {
-          alert("이미 장바구니에 담긴 상품입니다.");
-        } else {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-      } else {
-        setBk_num('');
-        await fetchCart();
+  
+      const isBuied = await response.json();
+      if (isBuied) {
+        alert(`이미 구매한 책입니다: ${bk_num}`);
+        return; // 장바구니에 추가 중단
       }
+  
+      try {
+        const response = await fetch(`/cart/add`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ca_bk_num: bk_num, ca_me_id: me_id }),
+        });
+        if (!response.ok) {
+          if (response.status === 409) {
+            alert("이미 장바구니에 담긴 상품입니다.");
+          } else {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+        } else {
+          setBk_num('');
+          await fetchCart();
+        }
+      } catch (error) {
+        console.error("카트에 아이템 추가 중 오류 발생:", error);
+        setErrorMessage("카트에 아이템 추가 중 오류가 발생했습니다.");
+      }
+  
     } catch (error) {
-      console.error("카트에 아이템 추가 중 오류 발생:", error);
-      setErrorMessage("카트에 아이템 추가 중 오류가 발생했습니다.");
+      console.error("구매 확인 중 오류 발생:", error);
+      setErrorMessage("구매 확인 중 오류가 발생했습니다.");
     }
   };
 
@@ -97,60 +122,87 @@ const CartPage = () => {
     document.head.appendChild(jquery);
     document.head.appendChild(iamport); 
   }, []);
-    const saveBuyInfo = async (merchant_uid, totalAmount) => {
-      try {
-        
-        const response = await fetch('/buy/save', {
+
+  const saveBuyInfo = async (merchant_uid, totalAmount) => {
+    try {
+      const response = await fetch('/buy/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          bu_uid: merchant_uid,
+          bu_me_id: me_id,
+          bu_state: '구매 완료',
+          bu_payment: 'CARD',
+          bu_total: totalAmount,
+          bu_ori_total: totalAmount,
+          bu_date: new Date().toISOString(),
+        }),
+      });
+
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+      const bu_num = await response.json();
+      if (bu_num === null) {
+        alert("구매 정보를 저장하는 중 오류가 발생했습니다.");
+        return;
+      }
+
+      const selectedBooks = cart.filter(item => selectedItems[item.cart.ca_num]);
+      await Promise.all(selectedBooks.map(item => {
+        return fetch('/buy/list/save', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            bu_uid: merchant_uid,
-            bu_me_id: me_id,
-            bu_state: '구매 완료',
-            bu_payment: 'CARD',
-            bu_total: totalAmount,
-            bu_ori_total: totalAmount,
-            bu_date: new Date().toISOString(),
+            bl_bk_num: item.book.bk_num,
+            bl_me_id: me_id,
+            bl_bu_num: bu_num,
           }),
         });
+      }));
+      await Promise.all(selectedBooks.map(item => removeFromCart(item.cart.ca_num)));
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+      alert('구매 정보가 저장되었습니다.');
+    } catch (error) {
+      console.error("구매 정보 저장 중 오류 발생:", error);
+      alert("구매 정보를 저장하는 중 오류가 발생했습니다.");
+    }
+  };
 
-        // buy_list에 저장 (선택한 책 목록)
-        const selectedBooks = cart.filter(item => selectedItems[item.cart.ca_num]);
-        await Promise.all(selectedBooks.map(item => {
-          return fetch('/buy/list/save', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              bl_bk_num: item.book.bk_num,
-              bl_me_id: me_id,
-            }),
-          });
-        }));
-
-        alert('구매 정보가 저장되었습니다.');
-      } catch (error) {
-        console.error("구매 정보 저장 중 오류 발생:", error);
-        alert("구매 정보를 저장하는 중 오류가 발생했습니다.");
-      }
-    };
-  const requestPay = () => {
+  const requestPay = async () => {
     if (!IMP) {
       alert('IAMPORT 스크립트가 로드되지 않았습니다.');
       return;
     }
 
+    const selectedBooks = cart.filter(item => selectedItems[item.cart.ca_num]);
+
+    for (const book of selectedBooks) {
+      const response = await fetch('/buy/checkBuied', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          me_id: me_id,
+          bk_num: book.book.bk_num,
+        }),
+      });
+
+      const isBuied = await response.json();
+      if (isBuied) {
+        alert(`이미 구매한 책입니다: ${book.book.bk_name}`);
+        return; // 결제 중단
+      }
+    }
+
     const selectedPrices = cart
-      .filter(item => selectedItems[item.cart.ca_num]) // 선택된 아이템 필터링
+      .filter(item => selectedItems[item.cart.ca_num])
       .reduce((total, item) => total + item.book.bk_price, 0);
-      
+
     const selectedItemNames = cart
       .filter(item => selectedItems[item.cart.ca_num])
       .map(item => item.book.bk_name)
@@ -162,7 +214,7 @@ const CartPage = () => {
     }
 
     IMP.init('imp48350481');
-  
+
     IMP.request_pay({
       pg: 'html5_inicis.INIpayTest',
       pay_method: 'card',
@@ -185,7 +237,7 @@ const CartPage = () => {
 
           if (response.ok) {
             alert('결제 검증 성공');
-            await saveBuyInfo(rsp.merchant_uid, selectedPrices); // bu_uid와 totalAmount 전달
+            await saveBuyInfo(rsp.merchant_uid, selectedPrices);
           } else {
             const errorMessage = await response.text();
             alert(`결제 검증 실패: ${errorMessage}`);
@@ -206,7 +258,6 @@ const CartPage = () => {
         [ca_num]: !prev[ca_num], // 체크 상태 토글
       };
 
-      // 전체 선택 상태 업데이트
       const allSelected = cart.every(item => newSelectedItems[item.cart.ca_num]);
       setSelectAll(allSelected);
 
@@ -220,7 +271,7 @@ const CartPage = () => {
       newSelectedItems[item.cart.ca_num] = !selectAll; // 전체 선택 또는 선택 해제
     });
     setSelectedItems(newSelectedItems);
-    setSelectAll(!selectAll); // 전체 선택 상태 토글
+    setSelectAll(!selectAll);
   };
 
   return (

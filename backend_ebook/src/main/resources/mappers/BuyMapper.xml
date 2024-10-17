@@ -11,7 +11,13 @@
         VALUES (#{bu_uid}, #{bu_me_id}, #{bu_state}, #{bu_payment}, #{bu_total}, #{bu_ori_total}, #{bu_date})
     </insert>
     <insert id="saveBuyList" parameterType="BuyListVO">
-        INSERT INTO buy_list (bl_bk_num, bl_me_id)
-        VALUES (#{bl_bk_num}, #{bl_me_id})
-    </insert>
+	    INSERT INTO buy_list (bl_bk_num, bl_me_id, bl_bu_num)
+	    VALUES (#{bl_bk_num}, #{bl_me_id}, #{bl_bu_num}) <!-- bl_bu_num 추가 -->
+	</insert>
+    <select id="getLastInsertId" resultType="int">
+        SELECT LAST_INSERT_ID();
+    </select>
+    <select id="checkBookBuied" parameterType="Map" resultType="int">
+	    SELECT COUNT(*) FROM buy_list WHERE bl_me_id = #{me_id} AND bl_bk_num = #{bk_num}
+	</select>
 </mapper>
