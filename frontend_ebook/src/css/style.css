@@ -185,10 +185,14 @@ hr {
 .star-rating input {display: none;}
 .star-rating input + label {font-size: 0;}
 .star-rating input + label::before {
+	position: relative;
 	content: '\f005';
 	font-size: var(--big-font-size);
 	font-family: var(--icon-font-family);
 	color: var(--color-grey);
+	background: none !important;
+	border: 0 !important;
+	box-shadow: none !important;
 }
 .star-rating .checked + div label::before {color: var(--color-brand);}
 
