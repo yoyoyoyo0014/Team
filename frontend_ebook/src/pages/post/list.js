@@ -2,17 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const List = () => {
-  
+
   const { co_num } = useParams();
   const navigate = useNavigate();
-  const [list, setList] = useState([]);
-  const [pageMaker, setPageMaker] = useState(null);
+  const [list, setList] = useState([]);  // 현재 페이지에 출력될 게시글 목록
+  const [originalList, setOriginalList] = useState([]);  // 전체 게시글 목록
+  const [pageMaker, setPageMaker] = useState(null);  // 페이지네이션 정보
   const [hoverIndex, setHoverIndex] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [originalList, setOriginalList] = useState([]);
-  const [communityName, setCommunityName] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');  // 검색어
+  const [communityName, setCommunityName] = useState('');  // 커뮤니티 이름
 
-  // 스크롤을 맨 위로 이동
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -33,46 +32,9 @@ const List = () => {
     }
   }
 
-  useEffect(() => {
-    if (co_num) {
-      fetch(`/post/list/${co_num}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data) {
-            // 게시글 목록 설정
-            if (data.list) {
-              const sortedList = data.list.map((item, index) => {
-                const no = data.pm ? data.pm.totalCount - (data.pm.cri.page - 1) * data.pm.cri.perPageNum - index : data.list.length - index;
-                return { ...item, no };
-              });
-              setList(sortedList);
-              setOriginalList(sortedList);
-            }
-            // 페이지 메이커 설정
-            if (data.pm) {
-              setPageMaker(data.pm);
-            }
-            // 커뮤니티 이름 설정
-            const community = data.communities.find((community) => community.co_num === parseInt(co_num));
-            if (community) {
-              setCommunityName(community.co_name);
-            }
-          } else {
-            console.error("No data received");
-          }
-        })
-        .catch((error) => console.error('Error fetching posts:', error));
-    }
-  }, [co_num]);
-
-  const handlePageClick = (page) => {
-    // 페이지 번호 클릭 시 해당 페이지의 데이터를 가져옴
-    fetch(`/post/list/${co_num}?page=${page}`)
+  // 데이터를 가져오는 함수로 분리
+  const fetchPosts = (page = 1, search = '') => {
+    fetch(`/post/list/${co_num}?page=${page}&search=${search}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -80,31 +42,50 @@ const List = () => {
         return response.json();
       })
       .then((data) => {
-        if (data.list) {
-          const sortedList = data.list.map((item, index) => {
-            const no = data.pm ? data.pm.totalCount - (data.pm.cri.page - 1) * data.pm.cri.perPageNum - index : data.list.length - index;
-            return { ...item, no };
-          });
-          setList(sortedList);
-          setOriginalList(sortedList);
-        }
-        if (data.pm) {
-          setPageMaker(data.pm);
+        if (data) {
+          // 게시글 목록 설정
+          if (data.list) {
+            const sortedList = data.list.map((item, index) => {
+              const no = data.pm ? data.pm.totalCount - (data.pm.cri.page - 1) * data.pm.cri.perPageNum - index : data.list.length - index;
+              return { ...item, no };
+            });
+            setList(sortedList);
+            setOriginalList(sortedList);
+          }
+          // 페이지네이션 설정
+          if (data.pm) {
+            setPageMaker(data.pm);
+          }
+          // 커뮤니티 이름 설정
+          const community = data.communities.find((community) => community.co_num === parseInt(co_num));
+          if (community) {
+            setCommunityName(community.co_name);
+          }
+        } else {
+          console.error("No data received");
         }
       })
       .catch((error) => console.error('Error fetching posts:', error));
   };
 
-  const handleSearch = () => {
-    if (searchTerm.trim() === '') {
-      // 빈 문자열일 경우 전체 리스트 출력
-      setList(originalList);
-    } else {
-      const filteredList = originalList.filter((item) => item.po_title.includes(searchTerm));
-      setList(filteredList);
+  // 처음 페이지 로드 시 데이터 가져오기
+  useEffect(() => {
+    if (co_num) {
+      fetchPosts();
     }
+  }, [co_num]);
+
+  // 검색 처리 함수
+  const handleSearch = () => {
+    fetchPosts(1, searchTerm);  // 검색어를 기준으로 게시글을 다시 가져옴
   };
 
+  // 페이지 클릭 시 처리 함수
+  const handlePageClick = (page) => {
+    fetchPosts(page, searchTerm);  // 페이지 번호와 검색어를 기준으로 게시글을 가져옴
+  };
+
+  // 엔터키로 검색 처리
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
@@ -115,7 +96,14 @@ const List = () => {
     <div className="container">
       <h2 style={{ padding: '30px 0 60px' }}>{communityName} 게시판</h2>
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleKeyPress} style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }}/>
+        <input 
+          type="text" 
+          placeholder="검색어를 입력하세요" 
+          value={searchTerm} 
+          onChange={(e) => setSearchTerm(e.target.value)} 
+          onKeyDown={handleKeyPress} 
+          style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }}
+        />
         <button onClick={handleSearch} style={{ padding: '10px 20px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
           검색
         </button>
@@ -144,7 +132,12 @@ const List = () => {
               <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
                 <td>{item.no}</td>
                 <td style={{ textAlign: 'left' }}>
-                  <span style={{ cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)} onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${co_num}/${item.po_num}`)}>
+                  <span 
+                    style={{ cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} 
+                    onMouseEnter={() => setHoverIndex(idx)} 
+                    onMouseLeave={() => setHoverIndex(null)} 
+                    onClick={() => navigate(`/post/detail/${co_num}/${item.po_num}`)}
+                  >
                     {item.po_title}
                   </span>
                 </td>
@@ -175,7 +168,10 @@ const List = () => {
             </button>
           )}
           {Array.from({ length: pageMaker.endPage - pageMaker.startPage + 1 }, (_, i) => pageMaker.startPage + i).map((page) => (
-            <button key={page} onClick={() => handlePageClick(page)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer', backgroundColor: pageMaker.cri.page === page ? '#007BFF' : '#FFFFFF',
+            <button 
+              key={page} 
+              onClick={() => handlePageClick(page)} 
+              style={{ margin: '0 5px', padding: '10px', cursor: 'pointer', backgroundColor: pageMaker.cri.page === page ? '#007BFF' : '#FFFFFF',
                 color: pageMaker.cri.page === page ? '#FFFFFF' : '#007BFF', border: '1px solid #007BFF', borderRadius: '5px' }}>
               {page}
             </button>
