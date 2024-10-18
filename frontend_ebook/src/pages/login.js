@@ -117,6 +117,7 @@ const Login = () => {
 
   const handleKakaoLogin = () => {
     window.Kakao.Auth.login({
+      scope: 'account_email, name, gender, birthday, birthyear, phone_number, shipping_address',
       success: (authObj) => {
         console.log("로그인 성공", authObj);
 
@@ -124,7 +125,8 @@ const Login = () => {
          fetch("/ebook/kakao/login", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json" ,
+            "Authorization": `Bearer ${authObj.access_token}`
           },
           body: JSON.stringify({ token: authObj.access_token })
         })
@@ -149,8 +151,56 @@ const Login = () => {
                 console.error("사용자 정보 요청 실패", err);
               },
             });
+          } else if (data.registerRequired) {
+            // 회원가입이 필요한 경우 처리
+            alert("등록되지 않은 사용자입니다. 회원가입을 진행합니다.");
+
+            // 회원가입 요청
+            window.Kakao.API.request({
+              url: '/v2/user/me',
+              success: (res) => {
+                // 백엔드에 사용자 정보를 포함하여 회원가입 요청
+                fetch("/ebook/kakao/register", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json" ,
+                    "Authorization": `Bearer ${authObj.access_token}`
+                  },
+                  body: JSON.stringify({
+                    token: authObj.access_token,
+                    id: res.id,
+                    email: res.kakao_account.email,
+                    name: res.properties.nickname,
+                    gender: res.kakao_account.gender,
+                    birthyear: res.kakao_account.birthyear,
+                    birthday: res.kakao_account.birthday,
+                    phone_number: res.kakao_account.phone_number,
+                    address: res.kakao_account.shipping_address
+                  })
+                })
+                .then(response => response.json())
+                .then(registerData => {
+                  if (registerData.success) {
+                    // 회원가입 후 로그인 처리
+                    localStorage.setItem("loginToken", authObj.access_token);
+                    setIsLoggedIn(true);
+                    navigate("/"); // 회원가입 후 메인 페이지로 이동
+                  } else {
+                    alert(registerData.message || "회원가입 처리 중 오류가 발생했습니다.");
+                  }
+                })
+                .catch(error => {
+                  console.error("회원가입 처리 오류", error);
+                  alert("회원가입 처리 중 오류가 발생했습니다.");
+                });
+              },
+              fail: (err) => {
+                console.error("사용자 정보 요청 실패", err);
+                alert("카카오 사용자 정보 요청 중 오류가 발생했습니다.");
+              },
+            });
           } else {
-            // 사용자 정보가 없는 경우 처리
+            // 로그인 실패 처리
             alert(data.message || "사용자가 존재하지 않습니다.");
             setIsLoggedIn(false);
           }
@@ -165,7 +215,7 @@ const Login = () => {
         alert("카카오 로그인에 실패했습니다.");
       },
     });
-  };
+};
 
       // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
   const handleNaverLogin = () => {

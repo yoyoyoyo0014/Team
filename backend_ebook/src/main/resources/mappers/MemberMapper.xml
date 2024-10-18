@@ -9,6 +9,12 @@
         where me_id = #{me_id}
     </select>
    
+  <insert id="insertKakaoMember" parameterType="kr.kh.ebook.model.vo.MemberVO">
+	    INSERT INTO member (me_id, me_nickname, me_email, me_name, me_gender, me_birth, me_phone, me_address)
+	    VALUES (#{me_id}, #{me_nickname}, #{me_email}, #{me_name}, #{me_gender}, #{me_birth}, #{me_phone}, #{me_address})
+	</insert>
+
+   
    <!-- 네이버 -->
    
    <!-- 네이버 ID로 회원 조회 -->

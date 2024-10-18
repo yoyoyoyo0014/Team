@@ -19,6 +19,11 @@ public class MemberService {
 		return memberDao.findMemberById(me_id);
 	}
 	
+	// 카카오 회원 등록
+    public void registerKakaoMember(MemberVO member) {
+        memberDao.insertKakaoMember(member);  // 새로운 회원을 DB에 삽입
+    }
+	
 	/* 네이버 로그인 관련 */
 	
 	// 네이버 사용자 ID로 회원 조회
