@@ -234,7 +234,9 @@ const CartPage = () => {
 
   return (
     <Fragment>
-      <h2>장바구니</h2>
+      <div className="section-title">
+        <h2>장바구니</h2>
+      </div>
 
       <form id="cart" onSubmit={requestPay}>
         <Check name={"allSelect"} id="allSelect" label={"전체 선택"} change={handleSelectAllChange}/>
