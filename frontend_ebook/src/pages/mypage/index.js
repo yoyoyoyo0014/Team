@@ -15,7 +15,7 @@ const MypageIndex = () => {
 		<Fragment>
 			<MySubMenu/>
 			
-			<section class="mypage-content">
+			<section className="mypage-content">
 				<div className="theme-box pf-section">
 					<div className="pf-pic"></div>
 					<div className="pf-info">
