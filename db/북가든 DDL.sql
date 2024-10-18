@@ -10,7 +10,7 @@ CREATE TABLE `member` (
     `me_name` varchar(10) NOT NULL,
 	`me_pw`	varchar(15)	NULL,
 	`me_email`	varchar(50) unique	NOT NULL,
-	`me_phone`	varchar(11)	NULL,
+	`me_phone`	varchar(20)	NULL,
 	`me_address`	text	NULL,
     `me_postalCode` varchar(5) NULL,
 	`me_gender` varchar(6) NOT NULL default '선택안함',
