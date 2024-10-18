@@ -108,12 +108,12 @@ const BookDetail = ({Getuser}) => {
       method:'POST',
       header: {
         'Accept':'application/json',
-        'Content-Type': "'text/plain';charset=UTP-8'"
+        'Content-Type':  "'application/json';charset=UTP-8'"
         //연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
       },
       data: {
-        bl_bk_num: bk_num,
-        bl_me_id: 'admin123',
+        bk_num: bk_num,
+        ca_me_id: 'admin123',
       }
     }
 

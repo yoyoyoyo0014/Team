@@ -8,7 +8,16 @@
 		insert into cart (ca_bk_num, ca_me_id) values (#{bk_num}, #{me_id})
 	</insert>
 	<select id="selectCartList" resultType="CartVO">
-		SELECT * FROM cart WHERE ca_me_id = #{me_id}
+		select cart.*, book.*, group_concat(wr_name separator ' | ') as bk_writer
+		from cart
+		join writer_list
+		on ca_bk_num = wl_bk_num
+		join writer
+		on wl_wr_num = wr_num
+		join book
+		on ca_bk_num = bk_num
+		where ca_me_id = #{me_id}
+		group by ca_num
 	</select>
 	<delete id="removeCart">
 		DELETE FROM cart WHERE ca_num = #{ca_num}

@@ -5,8 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CartVO {
+public class CartVO extends BookVO {
 	private int ca_num;
-	private int ca_bk_num;
 	private String ca_me_id;
 }
