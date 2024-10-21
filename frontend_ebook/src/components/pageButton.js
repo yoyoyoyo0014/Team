@@ -46,7 +46,7 @@ function MakePage(contentsCount,currentPage) {
   return page;
 }
 
-export function PageButton({getPage,pageEvent,prevPageEvent,nextPageEvent}){
+export function PageButton({getPage,pageEvent}){
   let page ={
     contentsCount : 0,
     currentPage : 0,
@@ -63,7 +63,7 @@ export function PageButton({getPage,pageEvent,prevPageEvent,nextPageEvent}){
   
   return(
     <div>
-      <button onClick={prevPageEvent} disabled={!page.prev}>이전</button>
+      <button onClick={()=>{if(pageEvent)pageEvent(page.currentPage-1)}} disabled={!page.prev}>이전</button>
       {
             Array.isArray(page.pageList) && page.pageList.length > 0 && page.pageList.map((item, index) => {
             return(
@@ -75,7 +75,7 @@ export function PageButton({getPage,pageEvent,prevPageEvent,nextPageEvent}){
             )
             })
           }
-      <button onClick={nextPageEvent} disabled={!page.next}>다음</button>
+      <button onClick={()=>{if(pageEvent)pageEvent(page.currentPage+1)}} disabled={!page.next}>다음</button>
     </div>
   )
 }

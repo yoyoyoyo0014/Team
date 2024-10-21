@@ -40,7 +40,6 @@ public class FileUploadController {
 			pathStr = "../fronted_ebook/public/";
 			Path directoryPath;
 			String fileExtension = getFileExtension(file.get(i).getOriginalFilename());//파일 유형
-			System.out.println(fileExtension);
 			try {
 				if(fileExtension.equals("epub")) {
 					pathStr+="epub";
@@ -53,7 +52,6 @@ public class FileUploadController {
 					Files.createDirectories(directoryPath);
 				}
 				Path filePath = directoryPath.resolve(fileName);//file.get(i).getOriginalFilename());
-				System.out.println("저장 완료?" + filePath+" 파일 정보"+file.get(i));
 				Files.write(filePath, file.get(i).getBytes());
 			}catch(Exception e) {
 				e.printStackTrace();

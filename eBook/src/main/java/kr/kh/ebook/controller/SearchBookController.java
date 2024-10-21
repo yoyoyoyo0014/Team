@@ -125,10 +125,7 @@ public class SearchBookController {
 	@PostMapping("/insertBook")
 	public boolean InsertBook(@RequestPart("bK_img") MultipartFile imgFile,@RequestPart("bK_epub") MultipartFile epubFile,
 			@RequestPart("bk_data") String bookVo, @RequestPart("writerList") String writerListStr ) throws JSONException {
-		String jsonString = "[{\"wl_num\":0,\"wl_wr_num\":1,\"wl_bk_num\":0,\"wl_wt_num\":1}]";
-		String bookJsonString = "{\"bk_num\":0,\"bk_name\":\"\",\"bk_state\":\"\",\"bk_date\":\"\",\"bk_sg_num\":0,\"bk_plot\":\"\",\"bk_price\":\"0\",\"bk_amount\":\"0\",\"bk_index\":\"\",\"bk_isbn\":\"\",\"bk_score\":0,\"bk_reviewCount\":0,\"bk_totalPage\":0,\"bk_agelimit\":0,\"bk_publisher\":\"\",\"bk_totalPurchase\":0,\"bk_age_60_male\":0,\"bk_age_60_female\":0,\"bk_age_50_male\":0,\"bk_age_50_female\":0,\"bk_age_40_male\":0,\"bk_age_40_female\":0,\"bk_age_30_male\":0,\"bk_age_30_female\":0,\"bk_age_20_male\":0,\"bk_age_20_female\":0,\"bk_age_10_male\":0,\"bk_age_10_female\":0}";
 
-		System.out.println(bookVo);
 		// Jackson ObjectMapper 생성
 		ObjectMapper objectMapper = new ObjectMapper();
 		ObjectMapper bookMapper = new ObjectMapper();
@@ -137,25 +134,23 @@ public class SearchBookController {
 			List<WriterListVO> writerList = objectMapper.readValue(writerListStr, new TypeReference<List<WriterListVO>>() {});
 			BookVO book= bookMapper.readValue(bookVo, new TypeReference<BookVO>() {});
 			// 변환된 객체 출력
-			System.out.println(book);
 			List<MultipartFile> fileList =new ArrayList<MultipartFile>();
 			fileList.add(imgFile);
 			fileList.add(epubFile);
-			int bk_num = bookService.insertBook(book);
-
-
-
+			
+			bookService.insertBook(book);
+			
+			System.out.println("bk NUM : "+ book.getBk_num());
 			for(int i=0;i<writerList.size();i++) {
-				writerList.get(i).setWl_bk_num(bk_num);
+				writerList.get(i).setWl_bk_num(book.getBk_num());
 				if(!bookService.insertWriterList(writerList.get(i))) {
 					return false;
 				}
-
+				
 			}
-			if(FileUploadController.uploadFile(1, fileList))
+			if(FileUploadController.uploadFile(book.getBk_num(), fileList))
 				return true;
-
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

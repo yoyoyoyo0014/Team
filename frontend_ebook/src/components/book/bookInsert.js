@@ -81,7 +81,7 @@ function BookInsert() {
       return false;
     }
   
-    if(book.bk_date){
+    if(!book.bk_date ){
       var elm = document.querySelector('#bk_date')
       elm.focus();
       alert('출판일을 추가해주세요')
@@ -167,12 +167,14 @@ function BookInsert() {
 
   }//파일 보내기
 
-  async function searchWriter(){
+  async function searchWriter(num){
+    currentWriterPage = num;
     var listCount =await SearchWriterListCount(currentWriterSearch);
-
+    console.log(currentWriterSearch)
     writerPage = MakePage(listCount,currentWriterPage);
 
     searchWriterList = await SearchWriterList(currentWriterSearch,currentWriterPage)
+    console.log(searchWriterList);
     setSearchWriterList(searchWriterList);
   }//작가 검색하기
 
@@ -387,9 +389,9 @@ function BookInsert() {
        <br/>
        <br/>
       <label>작가 검색
-        <input onChange={e=>{setCurrentWriterPage(0);
+        <input onChange={e=>{setCurrentWriterPage(1);
            SetCurrentWriterSearch(e.target.value); 
-           searchWriter();}} placeholder='작가 검색'/>
+           searchWriter(1);}} placeholder='작가 검색'/>
       </label>
 
       <br/>

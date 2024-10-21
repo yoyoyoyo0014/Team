@@ -168,10 +168,11 @@
     	from secondgenre
     </select>
     
-    <insert id="insertBook" useGeneratedKeys="true" keyProperty="bk_num">
+    <insert id="insertBook" useGeneratedKeys="true" keyProperty="bk.bk_num">
     	INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_publisher)
     	VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_publisher})
     </insert>
+    
     <insert id="insertWriterList">
     	insert into writer_list (wl_wr_num, wl_bk_num, wl_wt_num )
     	VALUES(#{wr.wl_wr_num}, #{wr.wl_bk_num}, #{wr.wl_wt_num})
