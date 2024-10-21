@@ -32,10 +32,10 @@ function MakePage(contentsCount,currentPage) {
 
   let pageList = [];
   for(var i = page.startPage;i<=page.endPage;i++)
-    pageList.push(i);
+    pageList.push(i);  
 
   page.pageList = pageList;
-
+  console.log(page)
   return page;
 }
 
@@ -49,6 +49,7 @@ export function PageButton({getPage,pageEvent,prevPageEvent,nextPageEvent}){
     next : false,
     pageList : []
   }
+  getPage.pageList=getPage.pageList.slice(0,5);
   page = getPage;
   return(
     <div>
