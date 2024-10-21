@@ -24,9 +24,10 @@ function IsbnSearch({exit, onClose}) {
     setSearchDataList(searchDataList);
 
     page.contentsCount = objs.total;
-    page.currentPage = 1;
+    //page.currentPage = 1;
 
     page = MakePage(page.contentsCount,page.currentPage);
+    
     setPage(page);
   }//검색하기
 
@@ -42,9 +43,12 @@ function IsbnSearch({exit, onClose}) {
   }//책 추가
 
   function changePage(num){
+    
     page.currentPage = num;
-
+    page = MakePage(page.contentsCount,page.currentPage);
     setPage(page);
+
+    // console.log("페이지 넘기기" +page)
 
     submitSearch();
   }
@@ -68,8 +72,8 @@ function IsbnSearch({exit, onClose}) {
       {
         Array.isArray(searchDataList) && searchDataList.length > 0 && searchDataList.map((item, index) => {
           return(<tr key={index}>
-            <td>{item.titleInfo}</td>
-            <td>{item.isbn}</td>
+            <td>{item.titleInfo.length > 25 ? item.titleInfo.slice(0, 25) + '...' : item.titleInfo}</td>
+            <td>{item.isbn.length > 25 ? item.isbn.slice(0, 25) + '...' : item.isbn}</td>
             <td onClick={()=>insertBook(item)}>추가</td>
             </tr>)
         })

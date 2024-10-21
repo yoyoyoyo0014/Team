@@ -32,10 +32,11 @@ function MakePage(contentsCount,currentPage) {
     page.next = false;
 
   let pageList = [];
-  for(var i = page.startPage;i<=page.endPage;i++)
+  for(var i = page.startPage;i<page.endPage;i++)
     pageList.push(i);  
 
   page.pageList = pageList;
+  //console.log("total : "+contentsCount+" endPage" + page.endPage,"next" + page.next+"currentPage"+page.currentPage)
   return page;
 }
 
