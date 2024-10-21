@@ -39,7 +39,7 @@ CREATE TABLE `review` (
 
 CREATE TABLE `book` (
 	`bk_num`	int primary key auto_increment	NOT NULL,
-	`bk_name`	varchar(50)	NOT NULL,
+	`bk_name`	varchar(255)	NOT NULL,
 	`bk_state`	varchar(4)	NOT NULL,
 	`bk_publisher`	varchar(50)	NOT NULL,
 	`bk_date`	datetime	NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `book` (
 	`bk_price`	int	NOT NULL,
 	`bk_amount`	int	NOT NULL,
 	`bk_index`	varchar(255)	NULL,
-	`bk_isbn`	varchar(13)	NOT NULL,
+	`bk_isbn`	varchar(255)	NOT NULL,
 	`bk_score`	double	NULL,
 	`bk_reviewCount`	int	NULL,
 	`bk_totalPage`	int	NOT NULL,
