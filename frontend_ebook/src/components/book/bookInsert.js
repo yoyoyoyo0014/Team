@@ -81,7 +81,7 @@ function BookInsert() {
       return false;
     }
   
-    if(book.bk_date == null){
+    if(book.bk_date){
       var elm = document.querySelector('#bk_date')
       elm.focus();
       alert('출판일을 추가해주세요')

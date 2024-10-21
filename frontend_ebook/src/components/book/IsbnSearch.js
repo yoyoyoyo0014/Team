@@ -44,8 +44,6 @@ function IsbnSearch({exit, onClose}) {
   }//책 추가
 
   function changePage(num){
-    console.log("현쟈 페이지" + page.currentPage)
-    console.log("현쟈 페이지" + num)
     page.currentPage = num;
     
     page = MakePage(page.contentsCount,page.currentPage);
@@ -55,7 +53,7 @@ function IsbnSearch({exit, onClose}) {
 
     submitSearch();
   }
-
+  
   return (
     <div >
       <div>현재 페이지 {page.currentPage}</div>
