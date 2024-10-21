@@ -145,6 +145,8 @@ function BookInsert() {
     var formData = new FormData();
     formData.append('bK_img',bookImgFile);
     formData.append('bK_epub',bookEqubFile);
+
+    console.log(book)
     
     formData.append('bk_data',JSON.stringify(book));
     formData.append('writerList',JSON.stringify(addWriterList));

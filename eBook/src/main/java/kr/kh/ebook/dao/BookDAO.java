@@ -56,7 +56,7 @@ public interface BookDAO {
 
 	List<BookSecondGenreVO> selectSecondGenre();
 
-	boolean insertBook(@Param("bk")BookVO book);
+	int insertBook(@Param("bk")BookVO book);
 
 	boolean insertWriterList(@Param("wr")WriterListVO writerVO);
 }

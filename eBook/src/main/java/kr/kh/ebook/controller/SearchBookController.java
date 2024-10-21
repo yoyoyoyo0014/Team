@@ -33,16 +33,16 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 public class SearchBookController {
-	
+
 	@Autowired
 	BookService bookService;
-	
+
 	//책 번호를 통해 책 정보 가져오기
 	@GetMapping("/selectBook/{bookNum}")
 	public BookVO selectBook(@PathVariable("bookNum") int bookNum) {
 		return bookService.selectBook(bookNum);
 	}
-	
+
 	//책 검색
 	@GetMapping("/searchBook/{category}/{country}/{genre}/{count}/SearchWord={search}")
 	public List<BookVO> searchBookList(@PathVariable String category,
@@ -50,7 +50,7 @@ public class SearchBookController {
 			@PathVariable String search,
 			@PathVariable int count) {
 		//https://github.com/st8324/java_240528/blob/main/spring%20projects/spring3/src/main/java/kr/kh/spring3/controller/ReactController.java
-		
+
 		BookCriteria bookCri = new BookCriteria(count,category,country,genre,search);
 		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
 		try {
@@ -59,47 +59,47 @@ public class SearchBookController {
 		} catch (Exception e) {
 			return null;
 		}
-		
+
 	}
-	
+
 	//책 검색 개수만
 	@GetMapping("/searchBookCount/{country}/{genre}/SearchWord={search}")
 	public int selectBookCount(@PathVariable String country,
 			@PathVariable int genre,
 			@PathVariable String search) {
-		
+
 		int searchBookCount = bookService.searchBookCount(country,genre,search);
 		return searchBookCount;
 	}
-	
+
 	//리뷰 개수
 	@GetMapping("/{anyPath}/reviewCount/{bookNum}")
 	public int reviewCount(@PathVariable("bookNum")int bookNum){
 		int res = bookService.reviewCount(bookNum);
 		return res;
 	}//리뷰 보기
-		
+
 	//리뷰 리스트
 	@GetMapping("/{anyPath}/reviewList/{bookNum}/{pageNum}")
-	
+
 	public List<ReviewVO> reviewList(@PathVariable("bookNum")int bookNum, @PathVariable("pageNum") int pageNum){
 		List<ReviewVO> res = bookService.selectReviewList(bookNum,pageNum);
 		return res;
 	}//리뷰 보기
-	
+
 	//읽고 있는책 현재 페이지    구매하지 않았다면 -1
 	@GetMapping("/currentBookPage")
 	public int selectReadBook(@RequestParam int bookNum,@RequestParam String userId) {
 		try {
-			 BookListVO readBook = bookService.selectReadBook(bookNum,userId);
-			 if(readBook==null)
-				 return -1;//구매하지 않은 책
+			BookListVO readBook = bookService.selectReadBook(bookNum,userId);
+			if(readBook==null)
+				return -1;//구매하지 않은 책
 			return readBook.getBl_nowPage();
 		}catch(Exception e) {
 			return 1;
 		}//혹시 여러개 있음을 방지
 	}
-	
+
 	//읽고 있는 책 완독률 저장
 	@GetMapping("/updateBookPage")
 	public boolean updateBookPage(@RequestParam BookListVO readBook) {
@@ -113,7 +113,7 @@ public class SearchBookController {
 		List<BookGenreVO> res = bookService.selectGenreList();
 		return res;
 	}
-	
+
 	//두번째 장르 가져오기
 	@GetMapping("/selectSecondGenreList")
 	@ResponseBody
@@ -127,36 +127,42 @@ public class SearchBookController {
 			@RequestPart("bk_data") String bookVo, @RequestPart("writerList") String writerListStr ) throws JSONException {
 		String jsonString = "[{\"wl_num\":0,\"wl_wr_num\":1,\"wl_bk_num\":0,\"wl_wt_num\":1}]";
 		String bookJsonString = "{\"bk_num\":0,\"bk_name\":\"\",\"bk_state\":\"\",\"bk_date\":\"\",\"bk_sg_num\":0,\"bk_plot\":\"\",\"bk_price\":\"0\",\"bk_amount\":\"0\",\"bk_index\":\"\",\"bk_isbn\":\"\",\"bk_score\":0,\"bk_reviewCount\":0,\"bk_totalPage\":0,\"bk_agelimit\":0,\"bk_publisher\":\"\",\"bk_totalPurchase\":0,\"bk_age_60_male\":0,\"bk_age_60_female\":0,\"bk_age_50_male\":0,\"bk_age_50_female\":0,\"bk_age_40_male\":0,\"bk_age_40_female\":0,\"bk_age_30_male\":0,\"bk_age_30_female\":0,\"bk_age_20_male\":0,\"bk_age_20_female\":0,\"bk_age_10_male\":0,\"bk_age_10_female\":0}";
-		
-        // Jackson ObjectMapper 생성
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectMapper bookMapper = new ObjectMapper();
-        try {
-            // JSON 문자열을 List<WriterListVO>로 변환
-            List<WriterListVO> writerList = objectMapper.readValue(jsonString, new TypeReference<List<WriterListVO>>() {});
-            BookVO book= bookMapper.readValue(bookJsonString, new TypeReference<BookVO>() {});
-            // 변환된 객체 출력
-            
-            List<MultipartFile> fileList =new ArrayList<MultipartFile>();
-            fileList.add(imgFile);
-            fileList.add(epubFile);
-            if(bookService.insertBook(book)) {
-            	for(int i=0;i<writerList.size();i++) {
-            		if(bookService.insertWriterList(writerList.get(i))) 
-            			return false;
-            		
-            	}
-            	if(FileUploadController.uploadFile(1, fileList))
-            		return true;
-            }
-    		
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-		
-		
+
+		System.out.println(bookVo);
+		// Jackson ObjectMapper 생성
+		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectMapper bookMapper = new ObjectMapper();
+		try {
+			// JSON 문자열을 List<WriterListVO>로 변환
+			List<WriterListVO> writerList = objectMapper.readValue(writerListStr, new TypeReference<List<WriterListVO>>() {});
+			BookVO book= bookMapper.readValue(bookVo, new TypeReference<BookVO>() {});
+			// 변환된 객체 출력
+			System.out.println(book);
+			List<MultipartFile> fileList =new ArrayList<MultipartFile>();
+			fileList.add(imgFile);
+			fileList.add(epubFile);
+			int bk_num = bookService.insertBook(book);
+
+
+
+			for(int i=0;i<writerList.size();i++) {
+				writerList.get(i).setWl_bk_num(bk_num);
+				if(!bookService.insertWriterList(writerList.get(i))) {
+					return false;
+				}
+
+			}
+			if(FileUploadController.uploadFile(1, fileList))
+				return true;
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+
+
 		return true;
 	}
 }

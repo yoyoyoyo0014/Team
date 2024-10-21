@@ -93,7 +93,7 @@ public class BookService {
 		return bookDao.selectSecondGenre();
 	}
 
-	public boolean insertBook(BookVO book) {
+	public int insertBook(BookVO book) {
 		return bookDao.insertBook(book);
 	}
 
