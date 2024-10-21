@@ -71,21 +71,17 @@ const Main = ({section, genreList, addPost}) => {
 					<table className="article-table" style={{textAlign: 'center', width: '100%', borderCollapse: 'collapse'}}>
 							<thead style={{color: 'gray', borderBottom: '1px solid gray'}}>
 								<tr>
-										<th style={{ width: '10%' }}>NO</th>
-										<th style={{ width: '60%' }}>제목</th>
-										<th style={{ width: '15%' }}>작성자</th>
+										<th style={{ width: '80%' }}>제목</th>
 										<th style={{ width: '15%' }}>작성일</th>
 								</tr>
 							</thead>
 							<tbody>
 								{list.slice(0,3).map((item, index) => (
 										<tr key={item.po_num || index} style={{height: '75px', borderBottom: '1px solid lightgray'}}>
-											<td>{item.no}</td>
 											<td style={{ textAlign: 'left', cursor: 'pointer', textDecoration: hover === index ? 'underline' : 'none' }} onClick={() => navigate(`/post/detail/${co_num || 1}/${item.po_num}`)}
 											onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>
 												{item.po_title}
 											</td>
-											<td>{item.po_me_nickname}</td>
 											<td>{item.date}</td>
 										</tr>
 								))}
