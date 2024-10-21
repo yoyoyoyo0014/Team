@@ -35,6 +35,7 @@ function MakePage(contentsCount,currentPage) {
   for(var i = page.startPage;i<page.endPage;i++)
     pageList.push(i);  
 
+ 
   page.pageList = pageList;
   //console.log("total : "+contentsCount+" endPage" + page.endPage,"next" + page.next+"currentPage"+page.currentPage)
   return page;
@@ -51,6 +52,7 @@ export function PageButton({getPage,pageEvent,prevPageEvent,nextPageEvent}){
     pageList : []
   }
   getPage.pageList=getPage.pageList.slice(0,5);
+  page.currentPage = getPage.currentPage
   page = getPage;
 
   
