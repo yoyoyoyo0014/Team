@@ -6,7 +6,6 @@ const List = () => {
   const { co_num } = useParams();
   const navigate = useNavigate();
   const [list, setList] = useState([]);  // 현재 페이지에 출력될 게시글 목록
-  const [originalList, setOriginalList] = useState([]);  // 전체 게시글 목록
   const [pageMaker, setPageMaker] = useState(null);  // 페이지네이션 정보
   const [hoverIndex, setHoverIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');  // 검색어
@@ -16,6 +15,7 @@ const List = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // 날짜 포맷 함수
   function formatDate(isoString) {
     const date = new Date(isoString);
     const today = new Date();
@@ -43,18 +43,13 @@ const List = () => {
       })
       .then((data) => {
         if (data) {
-          // 게시글 목록 설정
+          // 전체 게시글 목록 설정
           if (data.list) {
-            const sortedList = data.list.map((item, index) => {
-              const no = data.pm ? data.pm.totalCount - (data.pm.cri.page - 1) * data.pm.cri.perPageNum - index : data.list.length - index;
-              return { ...item, no };
-            });
-            setList(sortedList);
-            setOriginalList(sortedList);
+            setList(data.list);  // 리스트 업데이트
           }
           // 페이지네이션 설정
           if (data.pm) {
-            setPageMaker(data.pm);
+            setPageMaker(data.pm);  // 페이지네이션 정보 설정
           }
           // 커뮤니티 이름 설정
           const community = data.communities.find((community) => community.co_num === parseInt(co_num));
@@ -75,14 +70,15 @@ const List = () => {
     }
   }, [co_num]);
 
-  // 검색 처리 함수
+  // 검색 처리 함수 - 입력된 검색어를 백엔드로 넘겨 해당 리스트를 다시 받아옴
   const handleSearch = () => {
-    fetchPosts(1, searchTerm);  // 검색어를 기준으로 게시글을 다시 가져옴
+    // 검색어가 있을 때만 필터링 처리
+    fetchPosts(1, searchTerm);  // 검색어를 전달하여 fetchPosts 호출
   };
 
   // 페이지 클릭 시 처리 함수
   const handlePageClick = (page) => {
-    fetchPosts(page, searchTerm);  // 페이지 번호와 검색어를 기준으로 게시글을 가져옴
+    fetchPosts(page, searchTerm);  // 페이지 번호와 검색어를 기준으로 게시글을 서버에서 다시 가져옴
   };
 
   // 엔터키로 검색 처리
@@ -114,9 +110,12 @@ const List = () => {
       <table className="table" style={{ textAlign: 'center', width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ color: 'gray', borderBottom: '1px solid gray' }}>
           <tr>
-            <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>NO</th>
-            <th style={{ width: co_num !== '2' ? '70%' : '50%' }}>제목</th>
-            <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>작성자</th>
+            <th style={{ width: co_num !== '2' ? '90%' : '60%' }}>제목</th>
+            {co_num === '2' && (
+              <>
+                <th style={{ width: '10%' }}>작성자</th>
+              </>
+            )}
             <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>작성일</th>
             {co_num === '2' && (
               <>
@@ -130,18 +129,16 @@ const List = () => {
           {list && list.length > 0 ? (
             list.map((item, idx) => (
               <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
-                <td>{item.no}</td>
                 <td style={{ textAlign: 'left' }}>
-                  <span 
-                    style={{ cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} 
-                    onMouseEnter={() => setHoverIndex(idx)} 
-                    onMouseLeave={() => setHoverIndex(null)} 
-                    onClick={() => navigate(`/post/detail/${co_num}/${item.po_num}`)}
-                  >
+                  <span style={{ cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)} onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${co_num}/${item.po_num}`)}>
                     {item.po_title}
                   </span>
                 </td>
-                <td>{item.po_me_nickname}</td>
+                {co_num === '2' && (
+                  <>
+                    <td>{item.po_me_nickname}</td>
+                  </>
+                )}
                 <td>{formatDate(item.po_date)}</td>
                 {co_num === '2' && (
                   <>
@@ -160,7 +157,7 @@ const List = () => {
       </table>
 
       {/* 페이지네이션 */}
-      {pageMaker && pageMaker.totalCount > pageMaker.cri.perPageNum && (
+      {pageMaker && pageMaker.totalCount > 10 && (  /* 게시글이 10개 초과할 때만 페이지네이션 출력 */
         <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
           {pageMaker.prev && (
             <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
