@@ -61,7 +61,18 @@ public class BuyController {
     @PostMapping("/checkBuied")
     public ResponseEntity<Boolean> checkBuied(@RequestBody Map<String, Object> request) {
         String me_id = (String) request.get("me_id");
-        int bk_num = (int) request.get("bk_num");
+        
+        // bk_num을 Object에서 Integer로 변환
+        Object bkNumObject = request.get("bk_num");
+        int bk_num;
+        
+        if (bkNumObject instanceof Integer) {
+            bk_num = (Integer) bkNumObject;
+        } else if (bkNumObject instanceof String) {
+            bk_num = Integer.parseInt((String) bkNumObject);
+        } else {
+            return ResponseEntity.badRequest().body(false); // 잘못된 타입 처리
+        }
 
         boolean isBuied = buyService.isBookAlreadyBuied(me_id, bk_num);
         return ResponseEntity.ok(isBuied);
