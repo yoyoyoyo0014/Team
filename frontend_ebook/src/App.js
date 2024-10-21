@@ -8,15 +8,35 @@ import * as Common from './js/common.js';
 import './css/default.css';
 import './css/style.css';
 
-const App = () => {
-	let root = document.querySelector('#root');
-  window.addEventListener('resize', Common.setVh(root));
-  Common.setVh(root);
+import {useEffect, useState} from "react";
+
+function App() {
+  let [section, setSection] = useState('');
+  let [genreList, setGenreList] = useState([{}]);
+  let [majorGenreList, setMajorGenreList] = useState([{}]);
+
+  useEffect(() => {
+    window.addEventListener('resize', ()=> Common.setVh());
+    Common.setVh();
+
+    fetch('/main')
+			.then((res) => res.json())
+			.then(res=>{
+				setGenreList(res.genreList);
+        setMajorGenreList(res.majorGenreList);
+			})
+  }, [])
+
+  const selectSection = (section) => {
+    setSection(section);
+  }
 
 	return(
-		<div className="fix-layout">
-      <Header />
-      <Home />
+		<div>
+      <Header selectSection={selectSection} genreList={genreList} majorGenreList={majorGenreList}/>
+      <main id="body" className="fix-layout">
+        <Home genreList={genreList}/>
+      </main>
       <Footer />
     </div>
 	);

@@ -8,8 +8,11 @@ input, select, textarea, button {font: inherit; color: inherit; border: 0;}
 input:focus, select:focus, textarea:focus, button:focus {outline: none;}
 textarea {resize: vertical;}
 
+fieldset {border: 0;}
+
 .hidden {display: none;}
 
-.fix-layout {width: 95vw; max-width: 1040px; margin: 0 auto;}
+.fix-layout {margin: 0 auto; padding: 1em; max-width: 1040px;}
 
-#root {min-height: calc(var(--vh) * 100);}
+#body {min-height: calc(var(--vh) * 100); padding-bottom: 8em;}
+main {padding: 2em 0 7em; clear: both;}

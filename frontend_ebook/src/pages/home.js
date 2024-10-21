@@ -1,8 +1,8 @@
 import Router from "../Router.js";
 
-const Home = () => {
+const Home = ({genreList}) => {
 	return(
-    <Router />
+    <Router genreList={genreList} />
 	);
 }
 
