@@ -69,7 +69,7 @@ export function PageButton({getPage,pageEvent,prevPageEvent,nextPageEvent}){
             return(
               <button onClick={()=>{
                 if(pageEvent){
-                  pageEvent[index]();
+                  pageEvent(item);
                 }
               }} key={index}>{item}</button>
             )

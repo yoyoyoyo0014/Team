@@ -140,13 +140,10 @@ function BookInsert() {
     for(var i = 0; i<addWriterList.length;i++)
       delete addWriterList[i].wr_name;
 
-    console.log(addWriterList)
-
     var formData = new FormData();
     formData.append('bK_img',bookImgFile);
     formData.append('bK_epub',bookEqubFile);
 
-    console.log(book)
     
     formData.append('bk_data',JSON.stringify(book));
     formData.append('writerList',JSON.stringify(addWriterList));

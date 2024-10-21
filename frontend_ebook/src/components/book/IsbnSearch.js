@@ -8,6 +8,7 @@ function IsbnSearch({exit, onClose}) {
   let[searchDataList,setSearchDataList] = useState([])
   let[selectBookData,setSelectBookData] = useState({})
 
+  let [eventButtons,setEventButtons] =useState([]);
   let[page,setPage] = useState({
     contentsCount : 0,
     currentPage : 1,
@@ -25,9 +26,21 @@ function IsbnSearch({exit, onClose}) {
     setSearchDataList(searchDataList);
 
     page.contentsCount = objs.total;
-    //page.currentPage = 1;
+    
+    page.pageList = page.pageList.slice(0,5);
+   
+    
 
     page = MakePage(page.contentsCount,page.currentPage);
+
+
+    eventButtons = [];
+    for(var i = page.startPage;i<=page.endPage;i++){
+      console.log("페이지 이벤트 체크 : " + i)
+      var res = i ; 
+      eventButtons.push(()=>{changePage(res)});
+    }
+    setEventButtons(eventButtons);
     
     setPage(page);
   }//검색하기
@@ -44,6 +57,7 @@ function IsbnSearch({exit, onClose}) {
   }//책 추가
 
   function changePage(num){
+    console.log("갈 페이지" + num)
     page.currentPage = num;
     
     page = MakePage(page.contentsCount,page.currentPage);
@@ -84,7 +98,7 @@ function IsbnSearch({exit, onClose}) {
       }
       </tbody>
     </table>
-    <PageButton getPage={page} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
+    <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
     </div>
   );
 }
