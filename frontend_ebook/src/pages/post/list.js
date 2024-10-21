@@ -90,19 +90,26 @@ const List = () => {
     }
   };
 
+  // 검색어 초기화 함수
+  const clearSearch = () => {
+    setSearchTerm('');
+  };
+
   return (
     <div className="container">
-      <h2 style={{ padding: '30px 0 60px' }}>{communityName} 게시판</h2>
-      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <input 
-          type="text" 
-          placeholder="검색어를 입력하세요" 
-          value={searchTerm} 
-          onChange={(e) => setSearchTerm(e.target.value)} 
-          onKeyDown={handleKeyPress} 
-          style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }}
-        />
-        <button onClick={handleSearch} style={{ padding: '10px 20px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
+      <h2 style={{ padding: '30px 0 60px', textAlign: 'center' }}>{communityName} 게시판</h2>
+      {/* 검색창과 X 버튼 */}
+      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleKeyPress} 
+            style={{ padding: '10px 40px 10px 10px', width: '400px', borderRadius: '5px', border: '1px solid lightgray' }}/>
+          {searchTerm && (
+            <button onClick={clearSearch} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent', fontSize: '16px', cursor: 'pointer' }}>
+              ✕
+            </button>
+          )}
+        </div>
+        <button onClick={handleSearch} style={{ padding: '10px 20px', marginLeft: '10px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
           검색
         </button>
       </div>
@@ -159,7 +166,7 @@ const List = () => {
       </table>
 
       {/* 페이지네이션 */}
-      { searchCount < 10 || pageMaker && pageMaker.totalCount > 10 && (  /* 게시글이 10개 초과할 때만 페이지네이션 출력*/
+      { searchCount < 10 || pageMaker && pageMaker.totalCount > 10 && (  /* 게시글이 10개 초과할 때만 페이지네이션 출력 */
         <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
           {pageMaker.prev && (
             <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
@@ -167,10 +174,7 @@ const List = () => {
             </button>
           )}
           {Array.from({ length: pageMaker.endPage - pageMaker.startPage + 1 }, (_, i) => pageMaker.startPage + i).map((page) => (
-            <button 
-              key={page} 
-              onClick={() => handlePageClick(page)} 
-              style={{ margin: '0 5px', padding: '10px', cursor: 'pointer', backgroundColor: pageMaker.cri.page === page ? '#007BFF' : '#FFFFFF',
+            <button key={page} onClick={() => handlePageClick(page)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer', backgroundColor: pageMaker.cri.page === page ? '#007BFF' : '#FFFFFF',
                 color: pageMaker.cri.page === page ? '#FFFFFF' : '#007BFF', border: '1px solid #007BFF', borderRadius: '5px' }}>
               {page}
             </button>
