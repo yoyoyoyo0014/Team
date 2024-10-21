@@ -24,9 +24,10 @@ function MakePage(contentsCount,currentPage) {
   else 
     page.prev = false;
 
-
-  if(currentPage+1<=page.endPage)
+  if(currentPage+1<=page.endPage){
     page.next = true
+  }
+    
   else
     page.next = false;
 
@@ -35,7 +36,6 @@ function MakePage(contentsCount,currentPage) {
     pageList.push(i);  
 
   page.pageList = pageList;
-  console.log(page)
   return page;
 }
 
@@ -51,9 +51,11 @@ export function PageButton({getPage,pageEvent,prevPageEvent,nextPageEvent}){
   }
   getPage.pageList=getPage.pageList.slice(0,5);
   page = getPage;
+
+  
   return(
     <div>
-      <button onClick={prevPageEvent} disabled={page.prev}>이전</button>
+      <button onClick={prevPageEvent} disabled={!page.prev}>이전</button>
       {
             Array.isArray(page.pageList) && page.pageList.length > 0 && page.pageList.map((item, index) => {
             return(
@@ -65,7 +67,7 @@ export function PageButton({getPage,pageEvent,prevPageEvent,nextPageEvent}){
             )
             })
           }
-      <button onClick={nextPageEvent} disabled={page.next}>다음</button>
+      <button onClick={nextPageEvent} disabled={!page.next}>다음</button>
     </div>
   )
 }
