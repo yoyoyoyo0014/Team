@@ -12,11 +12,16 @@ function MakePage(contentsCount,currentPage) {
   }
   
   page.startPage = currentPage-2;
-  page.startPage > 1 ? (page.startPage = page.startPage) : page.prev = false; page.startPage = 1;
+  if(page.startPage <= 1){
+    page.prev = false; page.startPage = 1;
+  }
 
   page.endPage = currentPage+2;
-  let maxPage = Math.ceil(contentsCount/lookPage);
-  page.endPage <= maxPage ? (page.endPage  = page.endPage) : page.next = false;page.endPage = maxPage;
+  let maxPage = Math.ceil(contentsCount/lookPage)-1;
+  if(page.endPage > maxPage){
+    page.next = false;
+    page.endPage = maxPage;
+  }
   
   
   if(currentPage-1>=page.startPage)
@@ -32,10 +37,10 @@ function MakePage(contentsCount,currentPage) {
     page.next = false;
 
   let pageList = [];
-  for(var i = page.startPage;i<page.endPage;i++)
-    pageList.push(i);  
+  
+  for(var i = page.startPage;i<=page.endPage;i++)
+    pageList.push(i);
 
- 
   page.pageList = pageList;
   //console.log("total : "+contentsCount+" endPage" + page.endPage,"next" + page.next+"currentPage"+page.currentPage)
   return page;
@@ -52,7 +57,7 @@ export function PageButton({getPage,pageEvent,prevPageEvent,nextPageEvent}){
     pageList : []
   }
   getPage.pageList=getPage.pageList.slice(0,5);
-  page.currentPage = getPage.currentPage
+  //page.currentPage = getPage.currentPage
   page = getPage;
 
   
