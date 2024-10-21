@@ -10,6 +10,7 @@ const List = () => {
   const [hoverIndex, setHoverIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');  // 검색어
   const [communityName, setCommunityName] = useState('');  // 커뮤니티 이름
+  const [searchCount, setSearchCount] = useState(0);  // 검색된 게시글 개수
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -46,6 +47,7 @@ const List = () => {
           // 전체 게시글 목록 설정
           if (data.list) {
             setList(data.list);  // 리스트 업데이트
+            setSearchCount(data.list.length);  // 검색된 게시글 개수 저장
           }
           // 페이지네이션 설정
           if (data.pm) {
@@ -157,7 +159,7 @@ const List = () => {
       </table>
 
       {/* 페이지네이션 */}
-      {pageMaker && pageMaker.totalCount > 10 && (  /* 게시글이 10개 초과할 때만 페이지네이션 출력 */
+      { searchCount < 10 || pageMaker && pageMaker.totalCount > 10 && (  /* 게시글이 10개 초과할 때만 페이지네이션 출력*/
         <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
           {pageMaker.prev && (
             <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
