@@ -64,6 +64,7 @@ public class WriterController {
 			WriterVO writer = writerService.selectWriter(bookWriterList.get(i).getWl_wr_num());
 			res.add(writer);
 		}
+		
 		return res;
 	}
 	//작가이름으로 검색하기
@@ -71,7 +72,8 @@ public class WriterController {
 	@ResponseBody
 	public List<WriterVO> searchWriter(@PathVariable("page") int page,@PathVariable("search") String search){
 		search = search.replace("Search=", "");
-		List<WriterVO> searchList = writerService.searchWriterList(search,page);
+		List<WriterVO> searchList = writerService.searchWriterList(search,page-1);
+		System.out.println(searchList);
 		return searchList;
 	}
 	
