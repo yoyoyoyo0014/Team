@@ -38,4 +38,7 @@ public class BookVO {
 	private int bk_age_20_female;
 	private int bk_age_10_male;
 	private int bk_age_10_female;
+	
+	//private String bk_me_id;
+	private String bk_publisher;
 }

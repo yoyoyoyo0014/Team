@@ -9,9 +9,11 @@ import org.apache.ibatis.annotations.Param;
 
 import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
+import kr.kh.ebook.model.vo.BookSecondGenreVO;
 import kr.kh.ebook.model.vo.BookVO;
-import kr.kh.ebook.model.vo.GenreVO;
+import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.ReviewVO;
+import kr.kh.ebook.model.vo.WriterListVO;
 import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookCriteria;
 import kr.kh.ebook.pagination.BookPageMaker;
@@ -20,14 +22,15 @@ import kr.kh.ebook.pagination.PageMaker;
 @Repository
 @Mapper
 public interface BookDAO {
-
-	int count();  //테스트용 
+	//테스트용 
+	int count();  
 	
 	List<BookVO> searchBookList(PageMaker pm);
 
 	List<BookGenreVO> selectAllGenre();
 
 	List<BookGenreVO> selectAllSecondGenre(int ge_num);
+
 	List<BookVO> searchBookList(@Param("pm") BookPageMaker pm); //검색시 사용되는
 	
 	BookVO detailSelectBook(int num); //책 클릭 시 
@@ -61,7 +64,8 @@ public interface BookDAO {
 	boolean deleteReview(@Param("bookNum")int bookNum, @Param("id")String id);
 
 	List<WriterVO> selectWriter(int bookNum);
-	List<GenreVO> selectGenreList();
 
-	public BookVO findByNum(@Param("bk_num")int bk_num);
+	int insertBook(@Param("bk")BookVO book);
+
+	boolean insertWriterList(@Param("wr")WriterListVO writerVO);
 }

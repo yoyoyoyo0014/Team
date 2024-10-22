@@ -55,21 +55,23 @@ public class BookContoller {
 		System.out.println(country + genre +"search" + search);
 
 		BookPageMaker pm = new BookPageMaker(5, bookCri);
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		List<BookVO> list = bookService.searchBookList(pm);
+
 		map.put("bookList", list);
 		System.out.println(list);
 		return map;
 	}
 	
 	//책 검색 개수만
-	@PostMapping("/searchBookCount/{country}/{genre}/{search}")
+	@PostMapping("/searchBookCount/{country}/{genre}/SearchWord={search}")
 	@ResponseBody
 	public int selectBookCount(@PathVariable String country,
 			@PathVariable int genre,
 			@PathVariable String search) {
 		
-		if(search.equals("do not exist"))
+		if(search.equals("doNotExist"))
 			search = "";
 		int searchBookCount = bookService.searchBookCount(country,genre,search);
 		return searchBookCount;
@@ -149,7 +151,7 @@ public class BookContoller {
 	//장르 리스트 가져오기
 	@PostMapping("/selectGenreList")
 	@ResponseBody
-	public List<GenreVO> selectGenreList(){
+	public List<BookGenreVO> selectGenreList(){
 		return bookService.selectGenreList();
 	}//리뷰 보기
 }

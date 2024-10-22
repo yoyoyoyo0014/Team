@@ -1,5 +1,5 @@
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
 import { GenreContext } from "../context/GenreContext";
 import { Input } from "./form/input";
@@ -10,8 +10,11 @@ const Header = ({setSection}) => {
 	const { isLoggedIn, setIsLoggedIn, setUser, user } = useContext(LoginContext);
 	const { genreList } = useContext(GenreContext);
 
-	let [query, setQuery] = useSearchParams();
-	const search = query.get('search');
+	let [country, setCountry] = useState('');
+	let [genre, setGenre] = useState('');
+	let [category, setCategory] = useState('');
+	let [keyword, setKeyword] = useState('');
+
 
 	const showBooks = (sectionName) => {
 		setSection(sectionName);
@@ -33,6 +36,10 @@ const Header = ({setSection}) => {
 		navigate('/');
   };
 
+	function clickSearchBtn(){
+		navigate("/searchBook/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
+	}
+
 	const UserMenu = ({isLoggedIn}) => {
 		if(isLoggedIn !== true){
 			return(<ul>
@@ -49,16 +56,14 @@ const Header = ({setSection}) => {
 	}
 	return(
 		<header>
-			<pre>
-			</pre>
 			<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
 				
 			<div className="search-box">
-				<form name="search">
-					<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={setQuery}/>
-					<Button text={"검색"} cls={"ico btn search"}/>
-				</form>
-			</div>
+					<form name="search">
+						<Input  type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={e=>setKeyword(e)} value={keyword}/>
+						<Button click={e=>clickSearchBtn()} text={"검색"} cls={"ico btn search"}/>
+					</form>
+				</div>
 
 			<div className="menu">
 				<button type="button" className="cate-toggle-btn btn btn-basic" onClick={showGenre}>

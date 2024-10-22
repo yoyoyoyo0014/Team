@@ -59,5 +59,4 @@ public class MainController {
 		map.put("list", list);
 		return map;
 	}
-		
 }

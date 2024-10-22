@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import kr.kh.ebook.dao.BookDAO;
 import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
+import kr.kh.ebook.model.vo.BookSecondGenreVO;
 import kr.kh.ebook.model.vo.BookVO;
-import kr.kh.ebook.model.vo.GenreVO;
+import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.ReviewVO;
+import kr.kh.ebook.model.vo.WriterListVO;
 import kr.kh.ebook.model.vo.WriterVO;
-import kr.kh.ebook.pagination.BookCriteria;
 import kr.kh.ebook.pagination.BookPageMaker;
-import kr.kh.ebook.pagination.PageMaker;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -108,11 +108,30 @@ public class BookService {
 		return bookDao.deleteReview(bookNum,id);
 	}
 
-	public List<WriterVO> selectWriter(int bookNum) {
-		return bookDao.selectWriter(bookNum);
-	}
-	public List<GenreVO> selectGenreList() {
+	public List<BookGenreVO> selectGenreList() {
 		return bookDao.selectGenreList();
+	}
+	
+	public List<BookGenreVO> getAllGenre() {
+		List<BookGenreVO> list = bookDao.selectAllGenre();
+		return list;
+	}
+
+	public List<BookGenreVO> getSecondGenre(int ge_num) {	
+		List<BookGenreVO> list = bookDao.selectAllSecondGenre(ge_num);
+		return list;
+	}
+
+	public List<BookSecondGenreVO> selectSecondGenreList() {
+		return bookDao.selectSecondGenre();
+	}
+
+	public int insertBook(BookVO book) {
+		return bookDao.insertBook(book);
+	}
+
+	public boolean insertWriterList(WriterListVO writerListVO) {
+		return bookDao.insertWriterList(writerListVO);
 	}
 	
 }

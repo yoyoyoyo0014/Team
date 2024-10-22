@@ -6,6 +6,12 @@ import Button from '../form/button';
 import '../../css/detail.css';
 import StarRating from '../starRating';
 
+import BookReview from './bookReview';
+import '../../css/barGraphs.css';
+import Highcharts from 'highcharts';
+import Accessibility from 'highcharts/modules/accessibility';
+import { SelectWriterList,SelectWriter,SelectWriterBookList,selectWriterType } from './WriterList';
+
 const BookDetail = ({Getuser}) => {
   const bookNum = useParams().bk_num;
 
@@ -44,8 +50,8 @@ const BookDetail = ({Getuser}) => {
   let [writer, setWriter] = useState([]);
 
   let[user,setUser] = useState({
-    me_id : '', //아이디
-    me_nickname : '', //닉네임
+    me_id : 'admin123', //아이디
+    me_nickname : '꼬꼬마', //닉네임
     me_pw : '', //비밀번호
     me_email : '',  //이메일
     me_address : '',  //주소
@@ -67,6 +73,7 @@ const BookDetail = ({Getuser}) => {
 
   let[useIsBuy, setUserIsBuy] = useState(false); //유저가 책을 샀는가
   let[writerList,setWriteList] =useState([]); //작가 리스트
+  let[writerTypeList,setwriterTypeList] =useState([]); //작가 리스트
 
   let[popularityDistributionChart,setPopularityDistributionChart] = useState({
     bk_age_60_malePer: 0,
@@ -213,6 +220,9 @@ const BookDetail = ({Getuser}) => {
           })}
         </ul>
       </div>
+
+      <BarGraph popularityDistributionChart={popularityDistributionChart}/>
+      <BookReview bookNum={bookNum} userId={user.me_id}></BookReview>
     </div>
   )
 }
@@ -234,6 +244,107 @@ function PopularityDistributionChart(book){
   }//인기분포도 %
 
   return popularityDistributionChart;
+}//인기 분포도 세팅
+
+export async function SelectookData(bo_num) {
+  try{
+    const response = await fetch('/selectBook/'+bo_num,{
+      headers: {
+        'Content-Type': 'application/json',  // Content-Type 헤더 설정
+      },
+    });
+    const res =await response.json();
+    return res;
+  }catch(e){
+    console.error(e);
+  }
+}
+
+function BarGraph({popularityDistributionChart}){
+  var chart = popularityDistributionChart;
+  Accessibility(Highcharts);
+
+  if (document.getElementById('container')) {
+      Highcharts.chart('container', {
+          chart: {
+              type: 'bar'
+          },
+          title: {
+              text: '연령, 성별 구매 율',
+              align: 'left'
+          },
+          subtitle: {
+              text: 'Source: <a href="https://countryeconomy.com/demography/population-structure/andorra" target="_blank">countryeconomy.com</a>',
+              align: 'left'
+          },
+          xAxis: [{
+              categories: [
+                  '10대 남자','20대 남자','30대 남자','40대 남자','50대 남자','60대 남자'
+              ],
+              reversed: false,
+              labels: {
+                  step: 1
+              }
+          }, {
+              opposite: true,
+              reversed: false,
+              linkedTo: 0,
+              categories: [
+                  '10대 여자','20대 여자','30대 여자','40대 여자','50대 여자','60대 여자'
+              ]
+          }],
+          yAxis: {
+              title: {
+                  text: null
+              },
+              labels: {
+                  formatter: function () {
+                      return Math.abs(this.value) + '%';
+                  }
+              }
+          },
+          plotOptions: {
+              series: {
+                  stacking: 'normal',
+                  borderRadius: '30%'
+              }
+          },
+          tooltip: {
+              formatter: function () {
+                  return '<b>' + this.series.name + ', age ' + this.point.category + '</b><br/>' +
+                      'Population: ' + Math.abs(this.point.y).toFixed(2) + '%';
+              }
+          },
+          series: [{
+              name: '남자',
+              data: [
+                -chart.bk_age_10_malePer,-chart.bk_age_20_malePer,-chart.bk_age_30_malePer,-chart.bk_age_40_malePer,-chart.bk_age_50_malePer,-chart.bk_age_60_malePer
+              ]
+          }, {
+              name: '여자',
+              data: [
+                chart.bk_age_10_femalePer,chart.bk_age_20_femalePer,chart.bk_age_30_femalePer,chart.bk_age_40_femalePer,chart.bk_age_50_femalePer,chart.bk_age_60_femalePer
+              ]
+          }]
+      });
+  }
+
+
+  return(
+    <div>
+      <script src="https://code.highcharts.com/highcharts.js"></script>
+      <script src="https://code.highcharts.com/modules/exporting.js"></script>
+      <script src="https://code.highcharts.com/modules/export-data.js"></script>
+      <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+      <figure className="highcharts-figure">
+          <div id="container"></div>
+          <p className="highcharts-description">
+          </p>
+      </figure>
+
+    </div>
+  )
 }
 
 export default BookDetail;

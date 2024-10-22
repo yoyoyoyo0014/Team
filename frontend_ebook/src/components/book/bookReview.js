@@ -1,13 +1,16 @@
 import {useState} from 'react';
 import React, { useEffect } from 'react';
-import MakePage from './pageButton';
 import Modal from 'react-modal';
-import Report, { bookReviewReport } from './report';
-import ReportType from './reportType';
+//import Report from '../reportType';
+import ReportType from '../reportType';
+//import Report from '../../report';
+import { bookReviewReport } from '../report';
+import MakePage from '../pageButton';
+import Report from '../report';
 
 Modal.setAppElement('#root'); // 접근성 관련 설정 (필수)
 
-function BookReview({bookNum,userId,userIsBuy}) {
+function BookReview({bookNum,userId}) {
   //bookNum = 받을 책 번호
   //userIsBuy = 유저가 이미 책을 샀는가
   //review =  유저가 리뷰를 작성 하면 받는 값
@@ -16,7 +19,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
   const reviewPageCount = 5;//한 페이지에 존재하는 리뷰 수
 
   let [reviewList,setReviewList] = useState([]); //리뷰 리스트
-  
+  let [userIsBuy,setUserIsBuy] = useState(true);
   let [writeUserReview,setWriteUserReview] = useState({
     re_num : 0,
     re_content : '',
@@ -80,7 +83,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
     if(!TestStar(writeUserReview.re_star))
       return;//제대로 된 별점 X
 
-    fetch('/ebook/insertReview',{
+    fetch('insertReview',{
       method : "post",
       body : JSON.stringify(writeUserReview),
       headers: {
@@ -116,7 +119,7 @@ function BookReview({bookNum,userId,userIsBuy}) {
     if(!TestStar(writeUserReview.re_star))
       return;//제대로 된 별점 X
 
-    fetch('/ebook/updateReview',{
+    fetch('updateReview',{
       method : "post",
       body : JSON.stringify(writeUserReview),
       headers: {
@@ -143,8 +146,8 @@ function BookReview({bookNum,userId,userIsBuy}) {
     if(!writerIsReview)
       return;
 
-    fetch('/ebook/deleteReview/'+bookNum+'/'+userId,{
-      method : "post",
+    fetch('deleteReview/'+bookNum+'/'+userId,{
+      //method : "post",
       //body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
@@ -192,8 +195,8 @@ function BookReview({bookNum,userId,userIsBuy}) {
     if(userId ==null)
       return;
 
-    fetch('/ebook/selectMyReview/'+userId+'/'+bookNum,{
-      method : "post",
+    fetch('selectMyReview/'+userId+'/'+bookNum,{
+      //method : "post",
       //body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
@@ -216,8 +219,8 @@ function BookReview({bookNum,userId,userIsBuy}) {
   function selectReviewList(currentPageNum ,successSelectReviewList = null){
     var pageNum = (currentPageNum-1) * reviewPageCount;
     
-    fetch("/ebook/reviewList/"+bookNum+"/"+pageNum,{
-      method : "post",
+    fetch("reviewList/"+bookNum+"/"+pageNum,{
+      //method : "post",
       //body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
@@ -236,8 +239,8 @@ function BookReview({bookNum,userId,userIsBuy}) {
   }//리뷰 목록(현제 페이지 번호, 성공할 시 실행할 메소드)
 
   function selectReviewCount (){
-    fetch('/ebook/reviewCount/'+bookNum,{
-      method : "post",
+    fetch('reviewCount/'+bookNum,{
+      //method : "post",
       //body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
@@ -293,13 +296,11 @@ function BookReview({bookNum,userId,userIsBuy}) {
 
   function userReport(id,content,reviewNum){
     report.rp_target = id;
-    report.rp_id = bookReviewReport(reviewNum);
+    report.rp_id =bookReviewReport(reviewNum);//bookReviewReport(reviewNum);
     report.rp_content = '신고 위치 : 책 리뷰에서 신고, '+ '신고 내용 : ' +content;
     setReport({...report});
   }//유저 리폿할 때
 
-  
-  
   //console.log(렌더링 횟수);
   useEffect(() => {
       selectReviewCount();//리뷰 개수
@@ -350,17 +351,16 @@ function BookReview({bookNum,userId,userIsBuy}) {
       })}
 
       <button onClick={()=>changePage(page.currentPage+1)} disabled = {!page.next}>다음</button>
-
+      <button onClick={()=>setModalIsOpen(true)}>클릭</button>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         style={{
-          overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-          content: { color: 'black', padding: '20px', borderRadius: '8px' },
+          overlay: { backgroundColor: 'rgba(1, 1, 1, 0.5)', zIndex:100 },
+          content: { color: 'black', padding: '20px', borderRadius: '8px'},
         }}
       >
-        <Report reportTypeList={reportType} getReport={report} exit={()=>setModalIsOpen(false)}/>
-       
+       <Report reportTypeList={reportType} getReport={report} exit={()=>setModalIsOpen(false)}/>
       </Modal>
      
     </div>
