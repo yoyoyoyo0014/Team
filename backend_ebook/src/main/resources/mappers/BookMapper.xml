@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.kh.ebook.dao.BookDAO">
 
 	<select id="count">
@@ -19,23 +17,49 @@
 		select count(*)
 		from book
 		where 
+			bk_name LIKE CONCAT('%', #{search}, '%') and
 			<choose>
-    			<when test = "bookCri.country == 'domestic' ">
-    				 bk_state ='국내도서' and
+    			<when test = " country == 'domestic' ">
+    				bk_state = '국내도서'
     			</when>
-    			<when test = "bookCri.country == 'foreign' ">
-    				 bk_state = '해외도서' and
+    			<when test = "country == 'foreign' ">
+    				 bk_state = '해외도서' 
     			</when>
+    			<otherwise>
+    				(bk_state ='국내도서' or  bk_state = '해외도서') 
+    			</otherwise>
     		</choose>
-    		<if test ="bookCri.genre != '0'">
-    			 bk_sg_num = #{pm.cri.genre}
+    		<if test ="genre != 0">
+    			and bk_sg_num = #{genre}
   			</if>
+  			
+  				
 	</select>
     
     <select id="searchBookList">
     	select *
     	from book
-    	order by
+    	where
+    		 bk_name LIKE CONCAT('%', #{pm.cri.search}, '%') 
+    	
+    		<choose>
+    			<when test = "pm.cri.country == 'domestic' ">
+    				 and bk_state ='국내도서'
+    			</when>
+    			<when test = "pm.cri.country == 'foreign' ">
+    				and bk_state = '해외도서'
+    			</when>
+    			<otherwise>
+    				and (bk_state = '해외도서' or bk_state ='국내도서')
+    			</otherwise>
+    		</choose>
+    	
+    		<if test ="pm.cri.genre != 0">
+    			and bk_sg_num = #{pm.cri.genre}
+  			</if>
+  			
+  			
+  		order by
     		<choose>
 	    			<when test ="pm.cri.category == 'popularity'">
 	    				bk_totalPurchase desc
@@ -59,39 +83,7 @@
 	    				bk_reviewCount desc
 	    			</when>
 	    	</choose>
-    	where
-    		<choose>
-    			<when test = "pm.cri.country == 'domestic' ">
-    				 bk_state ='국내도서' and
-    			</when>
-    			<when test = "pm.cri.country == 'foreign' ">
-    				 bk_state = '해외도서' and
-    			</when>
-    		</choose>
-    		
-    		<if  test ="pm.cri.category == 'popularity'">
-    			bk_date >=date_sub(now(),interval 1 year); and
-    		</if>
-    		
-    		
-    		<if test ="pm.cri.genre != '0'">
-    			 bk_sg_num = #{pm.cri.genre}
-  			</if>
-  			<if test = "pm.cri.search !=''">
-  				bk_name like concat('%',#{pm.cri.search}, '%')
-  			</if>
   		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
-	    	
-    </select>
-
-	<select id="selectAllGenre" resultType="BookGenreVO">
-    	select * from genre
-    </select>
-    
-    <select id="selectAllSecondGenre" resultType="BookGenreVO">
-    	select sg_num as ge_num, sg_name as ge_name, sg_parent as ge_parent
-    	from secondgenre
-    	where sg_parent = #{ge_num}
     </select>
    
 	<select id="detailSelectBook">
@@ -119,10 +111,12 @@
 	</select>
 	
 	<select id="selectReviewList">
-		select *
+		select re_num,re_content,re_star,re_me_id,re_date
 		from review
+		join member on me_id = re_me_id
 		where re_bk_num = #{bookNum}
-		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
+		order by re_date asc
+		limit #{pageNum}, 5;
 	</select>
 	
 	<insert id="insertReview">
@@ -141,5 +135,47 @@
 		set bl_nowPage = #{readBook.bl_nowPage}
 		where bl_me_id = #{readBook.bl_me_id} and bl_bk_num = #{readBook.bl_bk_num}
 	</update>
+	
+	<update id="updateReview">
+		update review
+		set re_content = #{re.re_content},re_star = #{re.re_star}, re_date = now()
+		where re_me_id = #{re.re_me_id} and re_bk_num = #{re.re_bk_num}
+	</update>
+	
+	<delete id="deleteReview">
+		delete from review
+		where re_bk_num = #{bookNum} and re_me_id = #{id}
+	</delete>
+	
+	<select id="selectGenreList">
+		select *
+		from genre
+	</select>
+	
+	
+	<select id="selectAllGenre" resultType="BookGenreVO">
+    	select * from genre
+    </select>
+    
+    <select id="selectAllSecondGenre" resultType="BookGenreVO">
+    	select sg_num as ge_num, sg_name as ge_name, sg_parent as ge_parent
+    	from secondgenre
+    	where sg_parent = #{ge_num}
+    </select>
+    
+    <select id="selectSecondGenre">
+    	select *
+    	from secondgenre
+    </select>
+    
+    <insert id="insertBook" useGeneratedKeys="true" keyProperty="bk.bk_num">
+    	INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_publisher)
+    	VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_publisher})
+    </insert>
+    
+    <insert id="insertWriterList">
+    	insert into writer_list (wl_wr_num, wl_bk_num, wl_wt_num )
+    	VALUES(#{wr.wl_wr_num}, #{wr.wl_bk_num}, #{wr.wl_wt_num})
+    </insert>
 
 </mapper>
