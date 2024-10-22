@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom"; // useNavigate 임포트
+import { InputItem } from "../components/form/input";
+import { Link, useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
 import "../css/login.css";
@@ -10,45 +11,9 @@ const Login = () => {
 	const navigate = useNavigate(); // useNavigate 훅 사용
 
   const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
-  const [credentials, setCredentials] = useState({ me_id: "", me_pw: "" }); // 사용자 입력 상태
-  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태
-
-   // 입력 값 변경 핸들러
-   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
-  };
-
-    // 일반 로그인 처리
-    const handleLoginSubmit = (e) => {
-      e.preventDefault();
   
-      fetch("/ebook/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("서버 응답:", data);  // 서버로부터 받은 응답 로그 출력
-
-        if (data.success) {
-          // 로그인 성공 시 토큰을 localStorage에 저장
-          localStorage.setItem("loginToken", data.token);
-          setIsLoggedIn(true);
-          setUser(data.loginDTO);
-          navigate("/");  // 메인 페이지로 이동
-        } else {
-          setErrorMessage(data.message || "로그인 실패22");
-        }
-      })
-      .catch((error) => {
-        console.error("로그인 처리 중 오류:", error);
-        setErrorMessage("서버 오류가 발생했습니다.");
-      });
-    };
+  const [id, setId] = useState(""); // 일반 로그인 ID 상태
+  const [password, setPassword] = useState(""); // 일반 로그인 비밀번호 상태
 
   useEffect(() => {
     const kakaoScript = document.createElement("script");
@@ -75,7 +40,6 @@ const Login = () => {
           callback: handleGoogleLoginSuccess,
         });
         setGoogleInitialized(true); // 구글 초기화 완료
-        //console.log("Google SDK loaded and initialized");
       } else {
         console.error("Google API failed to load");
       }
@@ -86,7 +50,7 @@ const Login = () => {
       console.log("Google ID Token:", idToken);
       
       // ID 토큰을 백엔드로 전송
-      fetch("/ebook/google/login", {
+      fetch("/ebook/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,8 +60,8 @@ const Login = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          // 로그인 성공 시 토큰을 localStorage에 저장
-          localStorage.setItem("googleLoginToken", idToken);
+          // 로그인 성공 시 JWT 토큰을 localStorage에 저장
+          localStorage.setItem("googleLoginToken", data.token); // 백엔드에서 받은 JWT 토큰 저장
           setIsLoggedIn(true);
           navigate("/");  // 메인 페이지로 이동
         } else {
@@ -118,8 +82,42 @@ const Login = () => {
 
   }, [setIsLoggedIn, navigate]);  // setIsLoggedIn과 navigate를 의존성 배열에 추가
 
+  // 일반 로그인 처리 함수
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+
+    fetch("/ebook/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        me_id: id,
+        me_pw: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // 로그인 성공 시
+          localStorage.setItem("loginToken", data.token); // JWT 토큰을 localStorage에 저장
+          setIsLoggedIn(true); // 로그인 상태 업데이트
+          navigate("/"); // 메인 페이지로 이동
+      } else {
+          // 로그인 실패 시
+          alert(data.message || "로그인 실패"); // 백엔드에서 반환된 메시지 출력
+          setIsLoggedIn(false); // 로그인 실패 상태 설정
+      }
+      })
+      .catch((error) => {
+        console.error("로그인 처리 오류", error);
+        alert("로그인 처리 중 오류가 발생했습니다.");
+      });
+  };
+
   const handleKakaoLogin = () => {
     window.Kakao.Auth.login({
+      scope: 'account_email, name, gender, birthday, birthyear, phone_number, shipping_address',
       success: (authObj) => {
         console.log("로그인 성공", authObj);
 
@@ -127,7 +125,8 @@ const Login = () => {
          fetch("/ebook/kakao/login", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json" ,
+            "Authorization": `Bearer ${authObj.access_token}`
           },
           body: JSON.stringify({ token: authObj.access_token })
         })
@@ -152,8 +151,56 @@ const Login = () => {
                 console.error("사용자 정보 요청 실패", err);
               },
             });
+          } else if (data.registerRequired) {
+            // 회원가입이 필요한 경우 처리
+            alert("등록되지 않은 사용자입니다. 회원가입을 진행합니다.");
+
+            // 회원가입 요청
+            window.Kakao.API.request({
+              url: '/v2/user/me',
+              success: (res) => {
+                // 백엔드에 사용자 정보를 포함하여 회원가입 요청
+                fetch("/ebook/kakao/register", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json" ,
+                    "Authorization": `Bearer ${authObj.access_token}`
+                  },
+                  body: JSON.stringify({
+                    token: authObj.access_token,
+                    id: res.id,
+                    email: res.kakao_account.email,
+                    name: res.properties.nickname,
+                    gender: res.kakao_account.gender,
+                    birthyear: res.kakao_account.birthyear,
+                    birthday: res.kakao_account.birthday,
+                    phone_number: res.kakao_account.phone_number,
+                    address: res.kakao_account.shipping_address
+                  })
+                })
+                .then(response => response.json())
+                .then(registerData => {
+                  if (registerData.success) {
+                    // 회원가입 후 로그인 처리
+                    localStorage.setItem("loginToken", authObj.access_token);
+                    setIsLoggedIn(true);
+                    navigate("/"); // 회원가입 후 메인 페이지로 이동
+                  } else {
+                    alert(registerData.message || "회원가입 처리 중 오류가 발생했습니다.");
+                  }
+                })
+                .catch(error => {
+                  console.error("회원가입 처리 오류", error);
+                  alert("회원가입 처리 중 오류가 발생했습니다.");
+                });
+              },
+              fail: (err) => {
+                console.error("사용자 정보 요청 실패", err);
+                alert("카카오 사용자 정보 요청 중 오류가 발생했습니다.");
+              },
+            });
           } else {
-            // 사용자 정보가 없는 경우 처리
+            // 로그인 실패 처리
             alert(data.message || "사용자가 존재하지 않습니다.");
             setIsLoggedIn(false);
           }
@@ -168,10 +215,10 @@ const Login = () => {
         alert("카카오 로그인에 실패했습니다.");
       },
     });
-  };
+};
 
-    // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
-    const handleNaverLogin = () => {
+      // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
+  const handleNaverLogin = () => {
     const clientId = process.env.REACT_APP_NAVER_CLIENT_ID; // 네이버 클라이언트 ID
     const redirectUri = "http://localhost:3000/auth/naver/callback"; // 네이버 로그인 콜백 URL
     const state = Math.random().toString(36).substring(2, 15); // CSRF 방지를 위한 상태값
@@ -185,29 +232,30 @@ const Login = () => {
     <div className="login-form">
       <h2 className="txt-center page-title">Book<br />Garden</h2>
       <form onSubmit={handleLoginSubmit}>
-        <div className="input-item">
-          <input
-            id="me_id"
-            name="me_id"
-            type="text"
-            onChange={handleInputChange}
-            value={credentials.me_id}/>
-          <label htmlFor="me_id">아이디</label>
-        </div>
 
-        <div className="input-item">
-          <input
-            id="me_pw"
-            name="me_pw"
-            type="password"
-            onChange={handleInputChange}
-            value={credentials.me_pw}/>
-          <label htmlFor="me_pw">비밀번호</label>
-        </div>
+      <InputItem
+          id="me_id"
+          name="me_id"
+          type="text"
+          cls="frm-input"
+          placeholder="아이디를 입력하세요"
+          value={id}
+          change={(value) => setId(value)} // ID 상태와 변경 핸들러 추가
+          label="아이디"
+        />
+        <InputItem
+          id="me_pw"
+          name="me_pw"
+          type="password"
+          cls="frm-input"
+          placeholder="비밀번호를 입력하세요"
+          value={password}
+          change={(value) => setPassword(value)} // 비밀번호 상태와 변경 핸들러 추가
+          label="비밀번호"
+        />
 
         <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em', position: 'static'}}/>
 
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
 
         <div className="sns-login">

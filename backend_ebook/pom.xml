@@ -32,11 +32,19 @@
 	</properties>
 	
 	<repositories>
+		
 	     <repository>
 	       <id>jitpack.io</id>
 	       <url>https://jitpack.io</url>
 	     </repository>
+	     
+	     <repository>
+	        <id>google-maven</id>
+	        <url>https://maven.google.com/</url>
+	    </repository>
+	     
 	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -68,7 +76,7 @@
 		<dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
-		    <version>8.0.16</version>
+		    <version>8.0.33</version>
 		</dependency>
 		
 		 <dependency>
@@ -183,8 +191,28 @@
 		   <artifactId>iamport-rest-client-java</artifactId>
 		   <version>0.2.14</version>
 		</dependency>
+		
+		<!-- 구글 peopleAPI  -->
+		<dependency>
+		    <groupId>com.google.api-client</groupId>
+		    <artifactId>google-api-client</artifactId>
+		    <version>1.32.1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.google.auth</groupId>
+		    <artifactId>google-auth-library-oauth2-http</artifactId>
+		    <version>1.11.0</version>
+		</dependency>
+		
+		<!-- 암호화를 위한 의존성 설정 -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
 	</dependencies>
-
+	
 	<build>
 		<plugins>
 			<plugin>

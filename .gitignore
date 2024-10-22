@@ -69,3 +69,4 @@ config.properties
 
 # Ignore application.properties
 application.properties
+backend_ebook/src/main/resources/application.properties

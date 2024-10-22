@@ -2,6 +2,9 @@ package kr.kh.ebook.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
 import org.apache.ibatis.annotations.Param;
 
 import kr.kh.ebook.model.vo.BookGenreVO;
@@ -14,7 +17,8 @@ import kr.kh.ebook.pagination.BookCriteria;
 import kr.kh.ebook.pagination.BookPageMaker;
 import kr.kh.ebook.pagination.PageMaker;
 
-//https://github.com/st8324/java_240528/blob/main/servlet/servlet2/src/main/java/kr/kh/app/dao/PostMapper.xml
+@Repository
+@Mapper
 public interface BookDAO {
 
 	int count();  //테스트용 
