@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import MakePage from './pageButton';
+import MakePage from '../pageButton';
 import { useParams } from 'react-router-dom';
 
 function BookSearch() {
