@@ -6,9 +6,11 @@ import org.apache.ibatis.annotations.Param;
 
 import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
+import kr.kh.ebook.model.vo.BookSecondGenreVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.ReviewVO;
+import kr.kh.ebook.model.vo.WriterListVO;
 import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookCriteria;
 import kr.kh.ebook.pagination.BookPageMaker;
@@ -51,4 +53,10 @@ public interface BookDAO {
 	List<BookGenreVO> selectAllGenre();
 
 	List<BookGenreVO> selectAllSecondGenre(int ge_num);
+
+	List<BookSecondGenreVO> selectSecondGenre();
+
+	int insertBook(@Param("bk")BookVO book);
+
+	boolean insertWriterList(@Param("wr")WriterListVO writerVO);
 }
