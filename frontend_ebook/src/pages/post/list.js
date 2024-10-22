@@ -166,7 +166,7 @@ const List = () => {
       </table>
 
       {/* 페이지네이션 */}
-      { searchCount < 10 || pageMaker && pageMaker.totalCount > 10 && (  /* 게시글이 10개 초과할 때만 페이지네이션 출력 */
+      {(searchCount > 10 || (pageMaker && pageMaker.totalCount > 10)) && (  /* 게시글이 10개 이상일 때만 페이지네이션 출력 */
         <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
           {pageMaker.prev && (
             <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
