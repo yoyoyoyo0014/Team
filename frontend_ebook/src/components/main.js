@@ -24,10 +24,9 @@ const Main = ({section, genreList, addPost}) => {
       .then((res) => res.json())
       .then(res=>{
 				if (res.postList) {
-					var tmp = res.postList.map((item, index) => {
+					var tmp = res.postList.map((item) => {
 						var date = new Date(item.po_date).toLocaleDateString();
-						const no = res.pm ? res.pm.totalCount - (res.pm.cri.page - 1) * res.pm.cri.perPageNum - index : res.postList.length - index;
-						item = { ...item, date, no };
+						item = { ...item, date };
 						return item;
 					});
 					setList(tmp);

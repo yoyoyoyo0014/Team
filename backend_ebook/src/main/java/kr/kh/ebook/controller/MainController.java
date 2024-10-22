@@ -62,7 +62,7 @@ public class MainController {
 		    HashMap<String, Object> map = new HashMap<>();
 		    map.put("majorGenreList", dbList);
 		    map.put("genreList", list);
-		    map.put("postList", postList);
+		    map.put("postList", postList);	
 		    map.put("communities", communities);
 		    map.put("pm", pm);
 	
