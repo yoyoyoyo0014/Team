@@ -296,13 +296,27 @@ const Login = () => {
         <div className="sns-login">
           <Button type={"button"} text={"카카오 로그인"} cls={"btn btn-kakao full"} click={handleKakaoLogin}/>
 					<Button type={"button"} text={"네이버 로그인"} cls={"btn btn-naver full"} click={handleNaverLogin}/>
-					<Button type={"button"} text={"구글 로그인"} cls={"btn btn-google full"} click={() => {
+					<Button 
+            type={"button"} 
+            text={"구글 로그인"} 
+            cls={"btn btn-google full"} 
+            click={() => {
+
               if (googleInitialized) {
-                window.google.accounts.id.prompt();  // 구글 로그인 팝업 호출
-              } else {
-                console.error("Google API is not loaded yet.");
-              }
-            }}/>
+                window.google.accounts.id.prompt((notification) => {
+                  if (notification.isNotDisplayed) {
+                    console.error("팝업이 표시되지 않았습니다. 이유: ", notification.notDisplayedReason);
+                    console.log("전체 notification 객체: ", notification); // notification 전체 객체 출력
+                  }
+                  if (notification.isSkipped) {
+                    console.error("팝업이 스킵되었습니다. 이유: ", notification.skipReason);
+                  }
+                });
+            } else {
+              console.error("Google API is not loaded yet.");
+            }
+          }}
+        />
         </div>
       </form>
     </div>
