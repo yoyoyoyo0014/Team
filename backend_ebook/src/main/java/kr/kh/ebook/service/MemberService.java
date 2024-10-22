@@ -1,6 +1,7 @@
 package kr.kh.ebook.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.kh.ebook.dao.MemberDAO;
@@ -11,6 +12,9 @@ public class MemberService {
 	
 	@Autowired
 	private MemberDAO memberDao;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	/* 카카오 로그인 관련 */
 	
@@ -39,15 +43,33 @@ public class MemberService {
 	
 	/* 일반 로그인 관련 */
 	
-	  public MemberVO login(String me_id, String me_pw) {
-	        // ID와 비밀번호로 회원 정보 검색
-	        MemberVO member = memberDao.getMemberById(me_id);
-	        
-	        if (member != null && member.getMe_pw().equals(me_pw)) {
-	            return member;  // 로그인 성공
-	        }
-	        return null;  // 로그인 실패
-	    }
+    public MemberVO login(String me_id, String rawPassword) {
+        MemberVO member = memberDao.getMemberById(me_id);
+        
+        if (member != null) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            // 비밀번호 비교 (DB에 저장된 암호화된 비밀번호와 사용자가 입력한 비밀번호 비교)
+            if (passwordEncoder.matches(rawPassword, member.getMe_pw())) {
+                return member; // 비밀번호가 맞으면 로그인 성공
+            }
+        }
+        return null; // 로그인 실패
+    }
+
+	public boolean registerNormalMember(MemberVO memberVO) {
+		
+		// 비밀번호 암호화
+		String encryptedPassword = passwordEncoder.encode(memberVO.getMe_pw());
+		memberVO.setMe_pw(encryptedPassword);
+		
+		try {
+			memberDao.insertNormalMember(memberVO);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	
 }

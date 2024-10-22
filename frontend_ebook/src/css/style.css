@@ -93,12 +93,16 @@ input[type="email"] {
 .input-item input {width: 100%;}
 
 .check {position: relative;}
-.check input {display: none;}
-.check input + label {
+input[type="checkbox"],
+input[type="radio"] {display: none;}
+input[type="checkbox"] + label,
+input[type="radio"] + label {
     position: relative;
     padding-left: 2em;
+		cursor: pointer;
 }
-.check input + label::before {
+input[type="checkbox"] + label::before,
+input[type="radio"] + label::before {
     content: '';
     position: absolute;
     width: 1.5em;
@@ -109,12 +113,14 @@ input[type="email"] {
     border: 1px solid var(--color-grey);
     box-sizing: border-box;
 }
-.check input:checked + label::before {
+input[type="checkbox"]:checked + label::before,
+input[type="radio"]:checked + label::before {
     background: var(--color-brand);
     box-shadow: var(--box-inner-shadow);
     border: 0;
 }
-.check input + label::after {
+input[type="checkbox"] + label::after,
+input[type="radio"] + label::after {
     content: '\f00c';
     position: absolute;
     font-family: var(--icon-font-family);
@@ -122,7 +128,17 @@ input[type="email"] {
     left: .25em;
     color: var(--color-grey);
 }
-.check input:checked + label::after {color: var(--color-bak);}
+input[type="checkbox"]:checked + label::after,
+input[type="radio"]:checked + label::after {color: var(--color-bak);}
+
+.radio-container {display: flex; gap: 2em;}
+.radio-container label {
+	position: relative;
+	top: unset;
+	transform: none;
+	padding-left: .5em;
+}
+.radio-container input {width: unset;}
 
 /* basic element */
 .btn {cursor: pointer; line-height: 1; padding: .8em; border-radius: 2em; box-shadow: var(--box-shadow);}
@@ -132,6 +148,7 @@ input[type="email"] {
 
 .btn-basic {background: var(--color-light-grey);}
 .btn-point {background: var(--color-brand); color: var(--color-bak);}
+.btn-dark {background: var(--color-default); color: white;}
 
 .btn.ico{font-size: 0;}
 .btn.ico::before {
@@ -139,6 +156,10 @@ input[type="email"] {
 	font-size: var(--font-size);
 }
 .btn.ico.search::before {content: '\f002';}
+button.btn[disabled] {
+	color: #ccc;
+	box-shadow: var(--box-inner-shadow);
+}
 
 .theme-box {
 	background: var(--color-light-grey);
@@ -165,10 +186,14 @@ hr {
 .star-rating input {display: none;}
 .star-rating input + label {font-size: 0;}
 .star-rating input + label::before {
+	position: relative;
 	content: '\f005';
 	font-size: var(--big-font-size);
 	font-family: var(--icon-font-family);
 	color: var(--color-grey);
+	background: none !important;
+	border: 0 !important;
+	box-shadow: none !important;
 }
 .star-rating .checked + div label::before {color: var(--color-brand);}
 
@@ -219,6 +244,10 @@ header {
 	flex-wrap: wrap;
 }
 .gnb-genre-wrapper.show {opacity: 1; visibility: visible;}
+
+@media all and (max-width: 1280px) {
+	.gnb-genre-wrapper {gap: 3rem; font-size: var(--small-font-size);}
+}
 
 #my-books {
 	position: absolute;

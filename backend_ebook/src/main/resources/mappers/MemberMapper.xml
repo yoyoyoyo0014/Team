@@ -40,5 +40,22 @@
         INSERT INTO member (me_id, me_email, me_nickname, me_authority, me_name, me_ms_name)
         VALUES (#{me_id}, #{me_email}, #{me_nickname}, #{me_authority}, #{me_name}, '사용')
     </insert>
-
+	
+	<!-- 신규 회원 등록 (일반) -->
+	<insert id="insertNormalMember" parameterType="MemberVO">
+		INSERT INTO member (
+            me_id, me_nickname, me_name, me_pw, me_email, 
+            me_phone, me_address, me_postalCode, me_gender, 
+            me_birth, me_authority,
+            me_ms_name, 
+            me_cm
+        ) VALUES (
+            #{me_id}, #{me_nickname}, #{me_name}, #{me_pw}, #{me_email}, 
+            #{me_phone}, #{me_address}, #{me_postalCode}, #{me_gender}, 
+            #{me_birth}, 'USER', 
+            '사용', 
+            #{me_cm}
+        )
+	</insert>
+	
 </mapper>

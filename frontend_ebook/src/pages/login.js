@@ -98,16 +98,16 @@ const Login = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.me_id) {
+        if (data.success) {
           // 로그인 성공 시
-          localStorage.setItem("loginToken", data.token); // 로그인 토큰을 localStorage에 저장
-          setIsLoggedIn(true);
+          localStorage.setItem("loginToken", data.token); // JWT 토큰을 localStorage에 저장
+          setIsLoggedIn(true); // 로그인 상태 업데이트
           navigate("/"); // 메인 페이지로 이동
-        } else {
+      } else {
           // 로그인 실패 시
-          alert("로그인 실패");
-          setIsLoggedIn(false);
-        }
+          alert(data.message || "로그인 실패"); // 백엔드에서 반환된 메시지 출력
+          setIsLoggedIn(false); // 로그인 실패 상태 설정
+      }
       })
       .catch((error) => {
         console.error("로그인 처리 오류", error);
@@ -234,11 +234,23 @@ const Login = () => {
       <form onSubmit={handleLoginSubmit}>
 
       <InputItem
-          inputs={[{ id: "me_id", name: "me_id", type: "text", value: id, onChange: (e) => setId(e.target.value) }]} // ID 상태와 변경 핸들러 추가
+          id="me_id"
+          name="me_id"
+          type="text"
+          cls="frm-input"
+          placeholder="아이디를 입력하세요"
+          value={id}
+          change={(value) => setId(value)} // ID 상태와 변경 핸들러 추가
           label="아이디"
         />
         <InputItem
-          inputs={[{ id: "me_pw", name: "me_pw", type: "password", value: password, onChange: (e) => setPassword(e.target.value) }]} // 비밀번호 상태와 변경 핸들러 추가
+          id="me_pw"
+          name="me_pw"
+          type="password"
+          cls="frm-input"
+          placeholder="비밀번호를 입력하세요"
+          value={password}
+          change={(value) => setPassword(value)} // 비밀번호 상태와 변경 핸들러 추가
           label="비밀번호"
         />
 
