@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { InputItem } from "../components/form/input";
-import { Link, useNavigate } from "react-router-dom"; // useNavigate 임포트
+import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
 import "../css/login.css";
@@ -14,6 +14,17 @@ const Login = () => {
   
   const [id, setId] = useState(""); // 일반 로그인 ID 상태
   const [password, setPassword] = useState(""); // 일반 로그인 비밀번호 상태
+  const [autoLogin, setAutoLogin] = useState(false); // 자동 로그인 상태
+
+    // 페이지 로드 시 localStorage 또는 sessionStorage에서 토큰 확인
+    useEffect(() => {
+      const token = localStorage.getItem("loginToken") || sessionStorage.getItem("loginToken");
+      if (token) {
+        setIsLoggedIn(true);
+        console.log("로그인된 상태입니다. 메인 페이지로 이동합니다."); // 디버깅용 로그
+        navigate("/"); // 이미 로그인된 상태라면 메인 페이지로 이동
+      }
+    }, []); // setIsLoggedIn, navigate 의존성 배열 제거 (초기 로드 시만 실행)
 
   useEffect(() => {
     const kakaoScript = document.createElement("script");
@@ -85,6 +96,7 @@ const Login = () => {
   // 일반 로그인 처리 함수
   const handleLoginSubmit = (e) => {
     e.preventDefault();
+    console.log("로그인 시도: ID:", id, "비밀번호:", password, "자동 로그인 여부:", autoLogin); // 디버깅용 로그
 
     fetch("/ebook/login", {
       method: "POST",
@@ -96,23 +108,39 @@ const Login = () => {
         me_pw: password,
       }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          // 로그인 성공 시
-          localStorage.setItem("loginToken", data.token); // JWT 토큰을 localStorage에 저장
-          setIsLoggedIn(true); // 로그인 상태 업데이트
-          navigate("/"); // 메인 페이지로 이동
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("로그인 성공, 토큰:", data.token);  // 디버깅용 로그
+        // 로그인 성공 시
+        if (autoLogin) {
+          // 자동 로그인이 체크된 경우 localStorage에 토큰 저장
+          console.log("자동 로그인 선택됨. localStorage에 토큰 저장."); // 디버깅용 로그
+          localStorage.setItem("loginToken", data.token);
+        } else {
+          // 자동 로그인이 체크되지 않은 경우 sessionStorage에 토큰 저장
+          console.log("자동 로그인 선택되지 않음. sessionStorage에 토큰 저장."); // 디버깅용 로그
+          sessionStorage.setItem("loginToken", data.token);
+        }
+        setIsLoggedIn(true); // 로그인 상태 업데이트
+        navigate("/"); // 메인 페이지로 이동
       } else {
-          // 로그인 실패 시
-          alert(data.message || "로그인 실패"); // 백엔드에서 반환된 메시지 출력
-          setIsLoggedIn(false); // 로그인 실패 상태 설정
+        // 로그인 실패 시
+        console.error("로그인 실패:", data.message || "로그인 실패");  // 디버깅용 로그
+        alert(data.message || "로그인 실패"); // 백엔드에서 반환된 메시지 출력
+        setIsLoggedIn(false); // 로그인 실패 상태 설정
       }
-      })
-      .catch((error) => {
-        console.error("로그인 처리 오류", error);
-        alert("로그인 처리 중 오류가 발생했습니다.");
-      });
+    })
+    .catch((error) => {
+      console.error("로그인 처리 오류", error);
+      alert("로그인 처리 중 오류가 발생했습니다.");
+    });
+  };
+
+  // 자동 로그인 체크박스 상태 변경 핸들러
+  const handleAutoLoginChange = (e) => {
+    setAutoLogin(e.target.checked); // 체크박스 상태 업데이트
+    console.log("자동 로그인 체크 상태:", e.target.checked);  // 디버깅용 로그
   };
 
   const handleKakaoLogin = () => {
@@ -254,7 +282,14 @@ const Login = () => {
           label="비밀번호"
         />
 
-        <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em'}}/>
+        <Check
+          name={"autoLogin"} 
+          id="autoLogin" 
+          label={"자동 로그인"} 
+          style={{marginTop: '2em'}}
+          checked={autoLogin} 
+          change={handleAutoLoginChange} 
+        />
 
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
 
