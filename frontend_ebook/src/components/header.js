@@ -1,14 +1,18 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Input } from "./form/input";
 import Button from "./form/button";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({selectSection, genreList}) => {
 	let [keyword, setKeyword] = useState('');
 	let [section, setSection] = useState('');
 
-	const {co_num} = useParams('');
+	const navigate = useNavigate();
+  let [country,setCountry] = useState("all");
+  let [genre,setGenre] = useState(0);
+  let [category,setCategory] = useState('popularity');
 
 	const showBooks = (sectionName) => {
 		selectSection(sectionName);
@@ -29,6 +33,9 @@ const Header = ({selectSection, genreList}) => {
 
 		wrapper.classList.toggle('show');
 	}
+	function clickSearchBtn(){
+	 navigate("/searchBook/"+country+"/"+genre+"/"+category+"/"+0+"/bookSearch="+keyword);
+	}
 
 	return(
 		<header>
@@ -37,8 +44,8 @@ const Header = ({selectSection, genreList}) => {
 					
 				<div className="search-box">
 					<form name="search">
-						<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={setKeyword}/>
-						<Button text={"검색"} cls={"ico btn search"}/>
+						<Input  type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={e=>setKeyword(e)} value={keyword}/>
+						<Button click={e=>clickSearchBtn()} text={"검색"} cls={"ico btn search"}/>
 					</form>
 				</div>
 
@@ -54,8 +61,8 @@ const Header = ({selectSection, genreList}) => {
 								<li onClick={()=>showBooks('bestsellers')}>베스트셀러</li>
 								<li onClick={()=>showBooks('newbooks')}>신상 도서</li>
 								<li><Link to="/forsales">할인 중인 도서</Link></li>
-								<li><Link to={`/post/list/${co_num || 3}`}>이벤트</Link></li>
-								<li><Link to={`/post/list/${co_num || 4}`}>작가와의 만남</Link></li>
+								<li><Link to="/event">이벤트</Link></li>
+								<li><Link to="/meeting">작가와의 만남</Link></li>
 							</ul>
 						</div>
 

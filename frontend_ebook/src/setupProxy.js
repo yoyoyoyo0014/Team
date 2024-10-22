@@ -8,4 +8,11 @@ module.exports = function(app) {
       changeOrigin: true,
     })
   );
+  // app.use(
+  //       'isbnLb/', 
+  //       createProxyMiddleware({
+  //         target: 'https://www.nl.go.kr/',	//스프링 포트
+  //         changeOrigin: true,
+  //       })
+  //     );
 };
