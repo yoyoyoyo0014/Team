@@ -93,12 +93,14 @@ function Detail() {
         <label htmlFor="po_title">제목</label>
         <input type="text" id="po_title" className="form-control" value={post.po_title || ''} readOnly />
       </div>
-
-      <div className="form-group">
-        <label htmlFor="po_me_nickname">작성자</label>
-        <input type="text" id="po_me_nickname" className="form-control" value={post.po_me_nickname || ''} readOnly />
-      </div>
-
+      {co_num === '2' && (
+        <>
+        <div className="form-group">
+          <label htmlFor="po_me_nickname">작성자</label>
+          <input type="text" id="po_me_nickname" className="form-control" value={post.po_me_nickname || ''} readOnly />
+        </div>
+        </>
+      )}
       <div className="form-group">
         <label htmlFor="po_date">작성일</label>
         <input type="text" id="po_date" className="form-control" value={formatDate(post.po_date) || ''} readOnly />
