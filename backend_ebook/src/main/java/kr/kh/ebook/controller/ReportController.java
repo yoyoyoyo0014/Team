@@ -24,21 +24,22 @@ public class ReportController {
 	ReportService reportService;
 	
 	//리폿타입 가져오기
-	@GetMapping("/selectBook/selectReportType")
+	@GetMapping("/{anyPath}/selectReportType")
 	@ResponseBody
 	public List<ReportTypeVO> selectReportTypeList() {
-		List<ReportTypeVO> reportTypeList =  reportService.selectReportType();
-		return reportTypeList;
+	    List<ReportTypeVO> reportTypeList = reportService.selectReportType();
+	    System.out.println(reportTypeList);
+	    return reportTypeList;
 	}
 	
 	//신고 추가하기
-	@PostMapping("/selectBook/report/insertReport")
+	@PostMapping("/{anyPath}/report/insertReport")
 	@ResponseBody
 	public boolean insertReport(@RequestBody ReportVO report) {
 		return reportService.insertReport(report);
 	}
 	//신고 추가하기
-	@GetMapping("/selectBook/report/existReport/{userId}/{targetId}/{reportId}")
+	@GetMapping("/{anyPath}/report/existReport/{userId}/{targetId}/{reportId}")
 	@ResponseBody
 	public boolean selectReportid(@PathVariable("userId") String userId,
 			@PathVariable("targetId") String targetId,
