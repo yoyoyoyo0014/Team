@@ -3,7 +3,7 @@ import { Input } from "./form/input";
 import Button from "./form/button";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Header = ({selectSection, genreList}) => {
 	let [keyword, setKeyword] = useState('');
@@ -13,6 +13,7 @@ const Header = ({selectSection, genreList}) => {
   let [country,setCountry] = useState("all");
   let [genre,setGenre] = useState(0);
   let [category,setCategory] = useState('popularity');
+	const { co_num } = useParams();
 
 	const showBooks = (sectionName) => {
 		selectSection(sectionName);
@@ -61,8 +62,8 @@ const Header = ({selectSection, genreList}) => {
 								<li onClick={()=>showBooks('bestsellers')}>베스트셀러</li>
 								<li onClick={()=>showBooks('newbooks')}>신상 도서</li>
 								<li><Link to="/forsales">할인 중인 도서</Link></li>
-								<li><Link to="/event">이벤트</Link></li>
-								<li><Link to="/meeting">작가와의 만남</Link></li>
+								<li><Link to={`/post/list/${co_num || 3}`}>이벤트</Link></li>
+								<li><Link to={`/post/list/${co_num || 4}`}>작가와의 만남</Link></li>
 							</ul>
 						</div>
 
