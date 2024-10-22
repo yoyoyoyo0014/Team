@@ -205,7 +205,7 @@ const Login = () => {
           <label htmlFor="me_pw">비밀번호</label>
         </div>
 
-        <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em'}}/>
+        <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em', position: 'static'}}/>
 
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />

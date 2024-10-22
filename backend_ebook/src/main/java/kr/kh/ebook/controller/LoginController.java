@@ -33,8 +33,6 @@ public class LoginController {
             LoginDTO dto = new LoginDTO(token, member);
             response.put("success", true);
             response.put("loginDTO", dto);
-            System.out.println(member);
-            System.out.println(dto);
             // 로그인 성공 로그
             System.out.println("로그인 성공: 사용자 ID = " + memberVO.getMe_id());
         } else {
@@ -57,8 +55,6 @@ public class LoginController {
             LoginDTO dto = new LoginDTO(token, member);
             response.put("success", true);
             response.put("loginDTO", dto);
-            System.out.println(member);
-            System.out.println(dto);
             // 로그인 성공 로그
             System.out.println("로그인 성공: 사용자 ID = " + memberVO.getMe_id());
         } else {

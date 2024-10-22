@@ -12,11 +12,13 @@ import Login from "./pages/login.js";
 import Join from "./pages/join.js";
 import BookDetail from "./components/book/bookDetail.js";
 import BookSearch from "./components/book/bookSearch.js";
-import CartPage from "./pages/cart/cartpage.js";
+import CartPage2 from "./pages/cart/cartpage2.js";
 import MypageIndex from "./pages/mypage/index.js";
 
 import NaverCallback from "./components/auth/NaverCallback.js"; // NaverCallback 컴포넌트 import
 import EpubReader from "./pages/mypage/epubreader.js";
+import EventDetail from "./pages/eventDetail.js";
+import Order from "./pages/cart/order.js";
 
 function Router({section}) {
 	const { isLoggedIn } = useContext(LoginContext);
@@ -28,7 +30,6 @@ function Router({section}) {
       <Route path="/bestsellers" element={<BestSellers />} />
       <Route path="/newbooks" element={<NewBooks />} />
       <Route path="/forsales" element={<ForSales />} />
-      <Route path="/event" element={<Event />} />
       <Route path="/login" element={<Login />} />
       <Route path="/join" element={<Join />} />
 
@@ -48,7 +49,11 @@ function Router({section}) {
         element={isLoggedIn ? <EpubReader /> : <Navigate to="/login" />}
       />
       
-      <Route path="/cart/:me_id" element={isLoggedIn ? <CartPage/> : <Navigate to="/login" />}/>
+      <Route path="/cart/:me_id" element={isLoggedIn ? <CartPage2/> : <Navigate to="/login" />}/>
+      <Route path="/order/:me_id" element={isLoggedIn ? <Order/> : <Navigate to="/login" />}/>
+
+      <Route path="/event" element={<Event />} />
+      <Route path="/event/:ev_id" element={<EventDetail />} />
     </Routes>
   );
 }
