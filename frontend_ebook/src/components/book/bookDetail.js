@@ -2,8 +2,12 @@ import {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom'
 import Header from '../header';
 import BookReview from './bookReview';
+import '../../css/barGraphs.css';
+import Highcharts from 'highcharts';
+import Accessibility from 'highcharts/modules/accessibility';
+import { SelectWriterList,SelectWriter,SelectWriterBookList,selectWriterType } from './WriterList';
 function BookDetail() {
-  
+
   const {bo_num} = useParams();
   let [book,setBook] = useState({
     bk_num : 0, //도서 번호
@@ -61,6 +65,7 @@ function BookDetail() {
 
   let[useIsBuy, setUserIsBuy] = useState(false); //유저가 책을 샀는가
   let[writerList,setWriteList] =useState([]); //작가 리스트
+  let[writerTypeList,setwriterTypeList] =useState([]); //작가 리스트
 
   let[popularityDistributionChart,setPopularityDistributionChart] = useState({
     bk_age_60_malePer: 0,
@@ -77,35 +82,71 @@ function BookDetail() {
 	  bk_age_10_femalePer: 0
   });//인기분포도 %
 
-  function getBookData(success){
-    fetch('/selectBook/'+bo_num,{
-			//body : JSON.stringify(book),
-			headers : {
-				"Content-type" : "application/json"
-			}
-    })
-      .then(res=>res.text())
-      .then(bookData=>{
-        if(bookData){
-          book = JSON.parse(bookData); 
-          setBook(book);
-          popularityDistributionChart = PopularityDistributionChart(book);//인기분포율 세팅
-          if(success!=null)success();
-        }
-      })
-      .catch(e=>console.error(e));
-  }//책 데이터 가져오기
+  async function getBookData(){
+    book =await SelectookData(bo_num);
+    setBook(book);
+    popularityDistributionChart = PopularityDistributionChart(book);//인기분포율 세팅
+    setPopularityDistributionChart(popularityDistributionChart)
+  } 
+
+  async function getWriterList(){
+    writerList = await SelectWriterBookList(bo_num)
+
+    for(var i =0;i<writerList.length;i++){
+      var writer = await SelectWriter(writerList[i].wl_wr_num);
+      writerList[i].wr_name = writer.wr_name;
+    }
+
+    setWriteList(writerList);
+  }
+
+  async function  getWriterType() {
+    writerTypeList = await selectWriterType();
+    setwriterTypeList(writerTypeList)
+  }
 
   useEffect(() => {
     getBookData();
+    getWriterList();
+    getWriterType();
 }, []); //처음 시작할 때
 
   return (
     <div>
+      <img src={'/img/book_'+ bo_num + '.jpg'} alt="불러오지 못한 이미지"  width="50" height="75"></img>
       <div>책 제목 : {book.bk_name}</div>
+      <div>목차 : {book.bk_index}</div>
+      <div>줄거리 : {book.bk_plot}</div>
+      <div>가격 : {book.bk_price}</div>
+      <table>
+        <thead>
+            <tr>
+                <th>작가 유형</th>
+                <th>작가 명</th>
+            </tr>
+        </thead>
+        <tbody>
+        {
+          Array.isArray(writerList) && writerList.length > 0 &&    writerList.map((item, index) => {
+            return (
+                <tr key={index}>
+                  <td>
+                    {writerTypeList && writerTypeList[item.wl_wt_num]
+                      ? writerTypeList[item.wl_wt_num-1].wt_name
+                      : ""}
+                  </td>
+                  <td>{item.wr_name}</td>
+                </tr>
+                );
+              })
+          }
+        </tbody>
+    </table>
+    
       <br/>
-      <BookReview bookNum={bo_num} userId={user.me_id}></BookReview>
       
+      <BarGraph popularityDistributionChart={popularityDistributionChart}/>
+      <BookReview bookNum={bo_num} userId={user.me_id}></BookReview>
     </div>
   )
 }
@@ -127,6 +168,107 @@ function PopularityDistributionChart(book){
   }//인기분포도 %
 
   return popularityDistributionChart;
+}//인기 분포도 세팅
+
+export async function SelectookData(bo_num) {
+  try{
+    const response = await fetch('/selectBook/'+bo_num,{
+      headers: {
+        'Content-Type': 'application/json',  // Content-Type 헤더 설정
+      },
+    });
+    const res =await response.json();
+    return res;
+  }catch(e){
+    console.error(e);
+  }
+}
+
+function BarGraph({popularityDistributionChart}){
+var chart = popularityDistributionChart;
+Accessibility(Highcharts);
+
+  if (document.getElementById('container')) {
+      Highcharts.chart('container', {
+          chart: {
+              type: 'bar'
+          },
+          title: {
+              text: '연령, 성별 구매 율',
+              align: 'left'
+          },
+          subtitle: {
+              text: 'Source: <a href="https://countryeconomy.com/demography/population-structure/andorra" target="_blank">countryeconomy.com</a>',
+              align: 'left'
+          },
+          xAxis: [{
+              categories: [
+                  '10대 남자','20대 남자','30대 남자','40대 남자','50대 남자','60대 남자'
+              ],
+              reversed: false,
+              labels: {
+                  step: 1
+              }
+          }, {
+              opposite: true,
+              reversed: false,
+              linkedTo: 0,
+              categories: [
+                  '10대 여자','20대 여자','30대 여자','40대 여자','50대 여자','60대 여자'
+              ]
+          }],
+          yAxis: {
+              title: {
+                  text: null
+              },
+              labels: {
+                  formatter: function () {
+                      return Math.abs(this.value) + '%';
+                  }
+              }
+          },
+          plotOptions: {
+              series: {
+                  stacking: 'normal',
+                  borderRadius: '30%'
+              }
+          },
+          tooltip: {
+              formatter: function () {
+                  return '<b>' + this.series.name + ', age ' + this.point.category + '</b><br/>' +
+                      'Population: ' + Math.abs(this.point.y).toFixed(2) + '%';
+              }
+          },
+          series: [{
+              name: '남자',
+              data: [
+                -chart.bk_age_10_malePer,-chart.bk_age_20_malePer,-chart.bk_age_30_malePer,-chart.bk_age_40_malePer,-chart.bk_age_50_malePer,-chart.bk_age_60_malePer
+              ]
+          }, {
+              name: '여자',
+              data: [
+                chart.bk_age_10_femalePer,chart.bk_age_20_femalePer,chart.bk_age_30_femalePer,chart.bk_age_40_femalePer,chart.bk_age_50_femalePer,chart.bk_age_60_femalePer
+              ]
+          }]
+      });
+  }
+
+
+  return(
+    <div>
+      <script src="https://code.highcharts.com/highcharts.js"></script>
+      <script src="https://code.highcharts.com/modules/exporting.js"></script>
+      <script src="https://code.highcharts.com/modules/export-data.js"></script>
+      <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+      <figure className="highcharts-figure">
+          <div id="container"></div>
+          <p className="highcharts-description">
+          </p>
+      </figure>
+
+    </div>
+  )
 }
 
 export default BookDetail;

@@ -1,24 +1,35 @@
-import {useState} from 'react';
-import { Link, useLocation } from "react-router-dom";
-function BookList({readLastPage,LastPage}) {
-  let[useIsBuy, setUserIsBuy] = useState(false); //유저가 책을 샀는가
-  let [currentPage,setCurrentPage] = useState(0); //현재 페이지
-  let readLastPage;//마지막으로 읽은 페이지
-  let LastPage;//마지막 페이지
 
-  function exit(){
-    if(readLastPage>currentPage){
-      //마지막 페이지를 현재 페이지로 정할것인가 묻기
-    }
-  }
+import { useNavigate } from 'react-router-dom';
+function BookList({bookList}) {
+  const navigate = useNavigate();
 
-  function dataSubmit(savePage){
-    //데이터 베이스에 저장
+  function clickBookDetail(bookNum){
+    navigate('/selectBook/'+bookNum)
   }
   return (
     <div >
-     
-
+      <table>
+      <thead>
+        <tr>
+          <th>책표지</th>
+          <th>책 제목</th>
+          <th>가격</th>
+        </tr>
+      </thead>
+      <tbody>
+     {
+      Array.isArray(bookList) && bookList.length > 0 &&    bookList.map((item, index) => {
+         return (
+            <tr onClick={()=>{clickBookDetail(item.bk_num)}} key={index}>
+              <td><img src={'/img/book_'+ item.bk_num + '.jpg'} alt="불러오지 못한 이미지"  width="50" height="75"></img></td>
+              <td>{item.bk_name}</td>
+              <td>{item.bk_price}</td>
+              </tr>
+            );
+          })
+      }
+      </tbody>
+      </table>
     </div>
   );
 }

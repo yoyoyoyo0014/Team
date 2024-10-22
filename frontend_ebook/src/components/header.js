@@ -34,7 +34,7 @@ const Header = ({selectSection, genreList}) => {
 		wrapper.classList.toggle('show');
 	}
 	function clickSearchBtn(){
-	 navigate("/searchBook/"+country+"/"+genre+"/"+category+"/"+0+"/bookSearch="+keyword);
+	 navigate("/searchBook/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
 	}
 
 	return(

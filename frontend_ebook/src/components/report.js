@@ -110,7 +110,6 @@ export function Report({getReport,exit}) {
   }, []); //처음 시작할 때
 
   return (
-   
     <div>
       {reportType.map((item,index)=>{
         return(

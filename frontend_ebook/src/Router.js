@@ -17,6 +17,7 @@ import Detail from "./pages/post/detail.js";
 
 import BookSearch from "./components/book/bookSearch.js";
 import BookDetail from "./components/book/bookDetail.js";
+import BookInsert from "./components/book/bookInsert.js";
 
 function Router({genreList}){
 	return(
@@ -34,8 +35,10 @@ function Router({genreList}){
 
 			<Route path="/post/list/:co_num" element={<List />} />
 			<Route path="/post/detail/:po_num" element={<Detail />} />
+
 			<Route path="/searchBook/:bo_country/:bo_genre/:bo_categori/:bo_page/:bo_search" element ={<BookSearch/>}/>
 			<Route path="/selectBook/:bo_num" element = {<BookDetail/>}/>
+			<Route path="/insertBook" element = {<BookInsert/>}/>
 		</Routes>
 	)
 }
