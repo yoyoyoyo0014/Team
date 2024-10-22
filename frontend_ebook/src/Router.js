@@ -19,6 +19,7 @@ import NaverCallback from "./components/auth/NaverCallback.js"; // NaverCallback
 import EpubReader from "./pages/mypage/epubreader.js";
 import EventDetail from "./pages/eventDetail.js";
 import Order from "./pages/cart/order.js";
+import MyBadges from "./pages/mypage/mybadges.js";
 
 function Router({section}) {
 	const { isLoggedIn } = useContext(LoginContext);
@@ -47,6 +48,10 @@ function Router({section}) {
       <Route
         path="/mypage/mybooks/book/:bk_num"
         element={isLoggedIn ? <EpubReader /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/mypage/badges"
+        element={isLoggedIn ? <MyBadges/> : <Navigate to="/login" />}
       />
       
       <Route path="/cart/:me_id" element={isLoggedIn ? <CartPage2/> : <Navigate to="/login" />}/>

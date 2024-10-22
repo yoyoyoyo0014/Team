@@ -157,7 +157,6 @@ const CartPage2 = () => {
                   else
                     e.target.previousSibling.checked = true;
                     handleCheckboxChange(item.ca_num)
-                  
                 }}
                 />
               <div className="book-img">

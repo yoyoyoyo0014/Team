@@ -8,7 +8,8 @@ import "../../css/reader.css";
 const EpubReader = () => {
   const bk_num = useParams().bk_num;
   const user = useContext(LoginContext).user;
-  const me_id = user.member.me_id;
+  //const me_id = user.member.me_id;
+  const me_id = 'admin123';
   
   const viewerRef = useRef(null); // 뷰어를 참조하기 위한 ref
   const renditionRef = useRef(null); // 렌디션을 참조하기 위한 ref

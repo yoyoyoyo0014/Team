@@ -1,7 +1,5 @@
 @charset 'utf-8';
 
-.mypage-content h2 {padding-bottom: 1.5em;}
-
 .bookshelf {height: 680px; padding-top: 0 !important;}
 .bookshelf .container {
 	display: flex;

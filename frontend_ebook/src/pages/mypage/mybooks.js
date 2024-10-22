@@ -9,7 +9,7 @@ const MyBooks = () => {
 		<Fragment>
 			<MySubMenu/>
 			<section className="mypage-content">
-				<h2>내 책꽂이</h2>
+				<h2 className="section-title">내 책꽂이</h2>
 				<div className="bookshelf theme-box">	
 					<div className="container">
 						{[...Array(parseInt(3))].map((n, i) => {

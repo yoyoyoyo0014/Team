@@ -128,8 +128,8 @@ const Join = () => {
             registerProps={register("me_nickname", {
               required: "닉네임을 입력해주세요",
               pattern: {
-                value: /^[0-9a-zA-Z가-힣]{5,8}$/,
-                message: "닉네임은 최소 5자, 최대 8자 한글, 영문, 숫자를 포함합니다.",
+                value: /^[0-9a-zA-Z가-힣]{1,8}$/,
+                message: "닉네임은 최대 8자입니다",
               }
             })}
             placeholder="최대 8자 이내의 한글/영문/숫자"

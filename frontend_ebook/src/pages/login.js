@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { InputItem } from "../components/form/input";
-import { Link, useNavigate } from "react-router-dom"; // useNavigate 임포트
+import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
 import "../css/login.css";
@@ -101,6 +100,8 @@ const Login = () => {
         if (data.success) {
           // 로그인 성공 시
           localStorage.setItem("loginToken", data.token); // JWT 토큰을 localStorage에 저장
+          localStorage.setItem("user", data.user); // JWT 토큰을 localStorage에 저장
+          setUser(data.user);
           setIsLoggedIn(true); // 로그인 상태 업데이트
           navigate("/"); // 메인 페이지로 이동
       } else {
@@ -233,26 +234,28 @@ const Login = () => {
       <h2 className="txt-center page-title">Book<br />Garden</h2>
       <form onSubmit={handleLoginSubmit}>
 
-      <InputItem
+
+      <div className="input-item">
+        <input
           id="me_id"
           name="me_id"
           type="text"
-          cls="frm-input"
           placeholder="아이디를 입력하세요"
-          value={id}
-          change={(value) => setId(value)} // ID 상태와 변경 핸들러 추가
-          label="아이디"
-        />
-        <InputItem
+          onChange={(e) => setId(e.target.value)}
+          value={id}/>
+        <label htmlFor="me_id">아이디</label>
+      </div>
+
+      <div className="input-item">
+        <input
           id="me_pw"
           name="me_pw"
           type="password"
-          cls="frm-input"
           placeholder="비밀번호를 입력하세요"
-          value={password}
-          change={(value) => setPassword(value)} // 비밀번호 상태와 변경 핸들러 추가
-          label="비밀번호"
-        />
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}/>
+        <label htmlFor="me_pw">비밀번호</label>
+      </div>
 
         <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em', position: 'static'}}/>
 

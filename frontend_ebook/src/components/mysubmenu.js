@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const MySubMenu = () => {
 	return(<nav id="my-sub-menu">
 		<div>
@@ -11,8 +13,8 @@ const MySubMenu = () => {
 		<div>
 			<h3>내 컬렉션</h3>
 			<ul>
-				<li>내 책꽂이</li>
-				<li>내 뱃지</li>
+				<li><Link to="/mypage/mybooks">내 책꽂이</Link></li>
+				<li><Link to="/mypage/badges">내 뱃지</Link></li>
 				<li>내 리뷰</li>
 			</ul>
 		</div>

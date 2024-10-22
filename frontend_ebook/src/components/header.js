@@ -7,7 +7,7 @@ import Button from "./form/button";
 
 const Header = ({setSection}) => {
 	const navigate = useNavigate();
-	const { isLoggedIn, setIsLoggedIn, setUser } = useContext(LoginContext);
+	const { isLoggedIn, setIsLoggedIn, setUser, user } = useContext(LoginContext);
 	const { genreList } = useContext(GenreContext);
 
 	let [query, setQuery] = useSearchParams();
@@ -28,6 +28,7 @@ const Header = ({setSection}) => {
 		alert('로그아웃 되었습니다');
     setIsLoggedIn(false);  // 로그인 상태를 false로 업데이트
 		setUser(null);
+		localStorage.removeItem('user');
     localStorage.removeItem('loginToken');  // localStorage에서 토큰 삭제
 		navigate('/');
   };
@@ -46,7 +47,6 @@ const Header = ({setSection}) => {
 			</ul>)
 		}
 	}
-
 	return(
 		<header>
 			<pre>
