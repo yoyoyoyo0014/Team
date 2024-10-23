@@ -75,6 +75,13 @@ const List = () => {
     fetchPosts(1);  // 검색어를 전달하지 않고 fetchPosts 호출
   };
 
+    // 엔터키로 검색 처리
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        handleSearch();
+      }
+    };
+
   // 페이지 클릭 시 처리 함수
   const handlePageClick = (page) => {
     fetchPosts(page);  // 페이지 번호와 검색어를 기준으로 게시글을 서버에서 다시 가져옴
@@ -86,7 +93,7 @@ const List = () => {
       {/* 검색창과 X 버튼 */}
       <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div style={{ position: 'relative', display: 'inline-block' }}>
-          <input type="text" placeholder="검색어를 입력하세요" value={pageMaker && pageMaker.cri ? pageMaker.cri.search : ''} onChange={(e) => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: e.target.value }})} 
+        <input type="text" placeholder="검색어를 입력하세요" value={pageMaker && pageMaker.cri ? pageMaker.cri.search : ''} onChange={(e) => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: e.target.value }})} onKeyPress={handleKeyPress}
             style={{ padding: '10px 40px 10px 10px', width: '400px', borderRadius: '5px', border: '1px solid lightgray' }}/>
           {pageMaker && pageMaker.cri && pageMaker.cri.search && (
             <button onClick={() => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: '' }})} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent', fontSize: '16px', cursor: 'pointer' }}>
