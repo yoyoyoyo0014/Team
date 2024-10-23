@@ -7,7 +7,6 @@ const List = () => {
   const [list, setList] = useState([]);  // 현재 페이지에 출력될 게시글 목록
   const [pageMaker, setPageMaker] = useState(null);
   const [hoverIndex, setHoverIndex] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');  // 검색어
   const [communityName, setCommunityName] = useState('');
 
   useEffect(() => {
@@ -32,7 +31,8 @@ const List = () => {
   }
 
   // 데이터를 가져오는 함수로 분리
-  const fetchPosts = (page = 1, search = '') => {
+  const fetchPosts = (page = 1) => {
+    const search = pageMaker && pageMaker.cri ? pageMaker.cri.search : '';
     fetch(`/post/list/${co_num}?page=${page}&search=${search}`)
       .then((response) => {
         if (!response.ok) {
@@ -72,13 +72,12 @@ const List = () => {
 
   // 검색 처리 함수 - 입력된 검색어를 백엔드로 넘겨 해당 리스트를 다시 받아옴
   const handleSearch = () => {
-    // 검색어가 있을 때만 필터링 처리
-    fetchPosts(1, searchTerm);  // 검색어를 전달하여 fetchPosts 호출
+    fetchPosts(1);  // 검색어를 전달하지 않고 fetchPosts 호출
   };
 
   // 페이지 클릭 시 처리 함수
   const handlePageClick = (page) => {
-    fetchPosts(page, searchTerm);  // 페이지 번호와 검색어를 기준으로 게시글을 서버에서 다시 가져옴
+    fetchPosts(page);  // 페이지 번호와 검색어를 기준으로 게시글을 서버에서 다시 가져옴
   };
 
   // 엔터키로 검색 처리
@@ -88,21 +87,16 @@ const List = () => {
     }
   };
 
-  // 검색어 초기화 함수
-  const clearSearch = () => {
-    setSearchTerm('');
-  };
-
   return (
     <div className="container">
       <h2 style={{ padding: '30px 0 60px', textAlign: 'center' }}>{communityName} 게시판</h2>
       {/* 검색창과 X 버튼 */}
       <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div style={{ position: 'relative', display: 'inline-block' }}>
-          <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleKeyPress} 
+          <input type="text" placeholder="검색어를 입력하세요" value={pageMaker && pageMaker.cri ? pageMaker.cri.search : ''} onChange={(e) => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: e.target.value }})} onKeyPress={handleKeyPress}
             style={{ padding: '10px 40px 10px 10px', width: '400px', borderRadius: '5px', border: '1px solid lightgray' }}/>
-          {searchTerm && (
-            <button onClick={clearSearch} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent', fontSize: '16px', cursor: 'pointer' }}>
+          {pageMaker && pageMaker.cri && pageMaker.cri.search && (
+            <button onClick={() => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: '' }})} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent', fontSize: '16px', cursor: 'pointer' }}>
               ✕
             </button>
           )}
@@ -164,7 +158,7 @@ const List = () => {
       </table>
 
       {/* 페이지네이션 */}
-      {pageMaker && pageMaker.totalCount > 10 && (  /* 게시글이 10개 이상일 때만 페이지네이션 출력 */
+      {pageMaker && pageMaker.cri && pageMaker.cri.totalCount > 10 && (  /* 게시글이 10개 이상일 때만 페이지네이션 출력 */
         <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
           {pageMaker.prev && (
             <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
