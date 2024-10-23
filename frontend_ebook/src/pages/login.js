@@ -161,8 +161,8 @@ const Login = () => {
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            // 로그인 성공 후 토큰을 localStorage에 저장
-            localStorage.setItem("loginToken", authObj.access_token);
+            // 백엔드에서 받은 JWT 토큰을 localStorage에 저장
+            localStorage.setItem("loginToken", data.jwtToken); // 백엔드에서 발급된 JWT 토큰 사용
 
             // 로그인 상태를 true로 설정
             setIsLoggedIn(true);
@@ -209,8 +209,8 @@ const Login = () => {
                 .then(response => response.json())
                 .then(registerData => {
                   if (registerData.success) {
-                    // 회원가입 후 로그인 처리
-                    localStorage.setItem("loginToken", authObj.access_token);
+                    // 회원가입 후 백엔드에서 받은 JWT 토큰을 localStorage에 저장
+                    localStorage.setItem("loginToken", registerData.jwtToken);
                     setIsLoggedIn(true);
                     navigate("/"); // 회원가입 후 메인 페이지로 이동
                   } else {
@@ -254,6 +254,26 @@ const Login = () => {
     const naverLoginUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
 
     window.location.href = naverLoginUrl;  // 네이버 로그인 URL로 리디렉션
+  };
+
+  const handleLogout = () => {
+    // 카카오 토큰 및 백엔드에서 받은 토큰 삭제
+    localStorage.removeItem("loginToken"); // 백엔드 JWT 토큰 삭제
+    sessionStorage.removeItem("loginToken");
+    localStorage.removeItem("kakao_access_token"); // 카카오 토큰 삭제 (예시)
+  
+    // 카카오 로그아웃 처리 (선택 사항)
+    if (window.Kakao.Auth) {
+      window.Kakao.Auth.logout(() => {
+        console.log("카카오 로그아웃 완료");
+      });
+    }
+  
+    // 로그인 상태를 false로 설정
+    setIsLoggedIn(false);
+  
+    // 로그인 페이지로 이동
+    navigate("/login");
   };
 
   return (

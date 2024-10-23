@@ -24,9 +24,18 @@ const Header = ({setSection}) => {
 
 	 // 로그아웃 핸들러
 	 const handleLogout = () => {
-    setIsLoggedIn(false);  // 로그인 상태를 false로 업데이트
-    localStorage.removeItem('loginToken');  // localStorage에서 토큰 삭제
-  };
+		setIsLoggedIn(false);  // 로그인 상태를 false로 업데이트
+		localStorage.removeItem('loginToken');  // localStorage에서 토큰 삭제
+		sessionStorage.removeItem('loginToken');  // sessionStorage에서도 삭제
+		localStorage.removeItem("kakao_access_token"); // 카카오 토큰 삭제 (예시)
+
+		 // 카카오 로그아웃 처리 (API 호출)
+		 const CLIENT_ID = process.env.REACT_APP_KAKAO_APP_KEY; // 실제 클라이언트 ID로 변경
+		 const LOGOUT_REDIRECT_URI = "http://localhost:3000/login"; // 로그아웃 후 리디렉션할 페이지
+ 
+		 const logoutUrl = `https://kauth.kakao.com/oauth/logout?client_id=${CLIENT_ID}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`;
+		 window.location.href = logoutUrl; // 카카오 로그아웃 페이지로 리디렉션
+	};
 
 	const UserMenu = ({isLoggedIn}) => {
 		if(isLoggedIn !== true){
