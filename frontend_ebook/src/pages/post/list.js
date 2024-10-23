@@ -2,15 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const List = () => {
-
   const { co_num } = useParams();
   const navigate = useNavigate();
   const [list, setList] = useState([]);  // 현재 페이지에 출력될 게시글 목록
-  const [pageMaker, setPageMaker] = useState(null);  // 페이지네이션 정보
+  const [pageMaker, setPageMaker] = useState(null);
   const [hoverIndex, setHoverIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');  // 검색어
-  const [communityName, setCommunityName] = useState('');  // 커뮤니티 이름
-  const [searchCount, setSearchCount] = useState(0);  // 검색된 게시글 개수
+  const [communityName, setCommunityName] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -47,10 +45,10 @@ const List = () => {
           // 전체 게시글 목록 설정
           if (data.list) {
             setList(data.list);  // 리스트 업데이트
-            setSearchCount(data.list.length);  // 검색된 게시글 개수 저장
           }
           // 페이지네이션 설정
           if (data.pm) {
+            if (data.totalCount !== undefined) { data.pm.totalCount = data.totalCount; }  // 검색된 게시글 수를 totalCount에 설정
             setPageMaker(data.pm);  // 페이지네이션 정보 설정
           }
           // 커뮤니티 이름 설정
@@ -166,7 +164,7 @@ const List = () => {
       </table>
 
       {/* 페이지네이션 */}
-      {(searchCount > 10 || (pageMaker && pageMaker.totalCount > 10)) && (  /* 게시글이 10개 이상일 때만 페이지네이션 출력 */
+      {pageMaker && pageMaker.totalCount > 10 && (  /* 게시글이 10개 이상일 때만 페이지네이션 출력 */
         <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
           {pageMaker.prev && (
             <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>

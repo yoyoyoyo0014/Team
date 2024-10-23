@@ -35,6 +35,11 @@ public class PostController {
         // 설정된 co_num과 페이지 설정
         cri.setCo_num(co_num);
         cri.setPerPageNum(10);
+        
+        // 검색어 추가 설정
+        if (cri.getSearch() != null && !cri.getSearch().isEmpty()) {
+            cri.setSearch(cri.getSearch());
+        }
 
         // 게시글 목록 가져오기
         List<PostVO> list = postService.getPostList(cri);
