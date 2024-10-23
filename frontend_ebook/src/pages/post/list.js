@@ -80,20 +80,13 @@ const List = () => {
     fetchPosts(page);  // 페이지 번호와 검색어를 기준으로 게시글을 서버에서 다시 가져옴
   };
 
-  // 엔터키로 검색 처리
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
   return (
     <div className="container">
       <h2 style={{ padding: '30px 0 60px', textAlign: 'center' }}>{communityName} 게시판</h2>
       {/* 검색창과 X 버튼 */}
       <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div style={{ position: 'relative', display: 'inline-block' }}>
-          <input type="text" placeholder="검색어를 입력하세요" value={pageMaker && pageMaker.cri ? pageMaker.cri.search : ''} onChange={(e) => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: e.target.value }})} onKeyPress={handleKeyPress}
+          <input type="text" placeholder="검색어를 입력하세요" value={pageMaker && pageMaker.cri ? pageMaker.cri.search : ''} onChange={(e) => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: e.target.value }})} 
             style={{ padding: '10px 40px 10px 10px', width: '400px', borderRadius: '5px', border: '1px solid lightgray' }}/>
           {pageMaker && pageMaker.cri && pageMaker.cri.search && (
             <button onClick={() => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: '' }})} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent', fontSize: '16px', cursor: 'pointer' }}>
@@ -158,7 +151,7 @@ const List = () => {
       </table>
 
       {/* 페이지네이션 */}
-      {pageMaker && pageMaker.cri && pageMaker.cri.totalCount > 10 && (  /* 게시글이 10개 이상일 때만 페이지네이션 출력 */
+      {pageMaker && pageMaker.totalCount > 10 && (  /* 게시글이 10개 이상일 때만 페이지네이션 출력 */
         <div className="pagination" style={{ marginTop: '20px', textAlign: 'center' }}>
           {pageMaker.prev && (
             <button onClick={() => handlePageClick(pageMaker.startPage - 1)} style={{ margin: '0 5px', padding: '10px', cursor: 'pointer' }}>
