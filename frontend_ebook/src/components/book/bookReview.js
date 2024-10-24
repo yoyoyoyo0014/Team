@@ -370,15 +370,13 @@ function BookReview({bookNum,userId}) {
             <div className="review-content">
               <div className="review-header">
                 <strong>{item.me_nickname}</strong>
-                {() => {
+                {(() => {
                   const date = new Date(item.re_date);
                   const y = date.getFullYear();
                   const m = date.getMonth();
                   const d = date.getDate();
-                  console.log('date');
-                  console.log(y, m, d);
-                  return (<span className="review-date">{`${y}-${m}-${d}`}</span>);
-                }}                
+                  return (<span className="review-date">{y}.{m}.{d}</span>);
+                })()}               
               </div>
               <div className="rating">
                 <StarRating score={item.re_star}/>
