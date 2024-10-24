@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.kh.ebook.dao.WriterDAO">
 
 <insert id="insertWriter">
@@ -12,10 +14,14 @@
 	values(#{wl.wl_wr_num},#{wl.wl_bk_num},#{wl.wr_wt_num})
 </insert>
 <select id="selectWriterList">
-	select *
+	select wr_name, wt_name
 	from writer_list
+	join writer
+	on wr_num = wl_wr_num
+	join writer_type
+	on wt_num = wl_wt_num
 	where wl_bk_num = #{bookNum}
-	order by wl_bk_num desc
+	order by wt_num;
 </select>
 
 <select id="selectWriter">
