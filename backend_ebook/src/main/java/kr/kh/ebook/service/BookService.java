@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import kr.kh.ebook.dao.BookDAO;
 import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
-import kr.kh.ebook.model.vo.BookSecondGenreVO;
 import kr.kh.ebook.model.vo.BookVO;
-import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterListVO;
 import kr.kh.ebook.model.vo.WriterVO;
@@ -21,11 +19,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class BookService {
 	private BookDAO bookDao;
-	
-	public int count() {
-		return bookDao.count();
-	}
-	
+
 	//검색할 책 개수
 	public int searchBookCount(String country,int genre,String search) {
 		return bookDao.searchBookCount(country,genre,search);
@@ -105,25 +99,8 @@ public class BookService {
 	}
 
 	public boolean deleteReview(int bookNum, String id) {
+		System.out.println("del : " + bookNum + " " + id);
 		return bookDao.deleteReview(bookNum,id);
-	}
-
-	public List<BookGenreVO> selectGenreList() {
-		return bookDao.selectGenreList();
-	}
-	
-	public List<BookGenreVO> getAllGenre() {
-		List<BookGenreVO> list = bookDao.selectAllGenre();
-		return list;
-	}
-
-	public List<BookGenreVO> getSecondGenre(int ge_num) {	
-		List<BookGenreVO> list = bookDao.selectAllSecondGenre(ge_num);
-		return list;
-	}
-
-	public List<BookSecondGenreVO> selectSecondGenreList() {
-		return bookDao.selectSecondGenre();
 	}
 
 	public int insertBook(BookVO book) {
@@ -132,6 +109,14 @@ public class BookService {
 
 	public boolean insertWriterList(WriterListVO writerListVO) {
 		return bookDao.insertWriterList(writerListVO);
+	}
+
+	public void updateReviewCount(int re_bk_num) {
+		bookDao.updateReviewCount(re_bk_num);
+	}
+
+	public void updateReviewScore(int re_bk_num, double re_star) {
+		bookDao.updateReviewScore(re_bk_num, re_star);
 	}
 	
 }

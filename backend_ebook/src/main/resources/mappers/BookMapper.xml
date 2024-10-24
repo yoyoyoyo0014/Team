@@ -15,17 +15,6 @@
 		where bk_num = #{bookNum}
 	</select>
 	
-	<select id="selectWriter">
-		select wr_name, wt_name
-		from writer_list
-		join writer
-		on wr_num = wl_wr_num
-		join writer_type
-		on wt_num = wl_wt_num
-		where wl_bk_num = #{bookNum}
-		order by wt_num;
-	</select>
-	
 	<select id="searchBookCount">
 		select count(*)
 		from book
@@ -119,7 +108,7 @@
 	</select>
 	
 	<select id="selectReviewList">
-		select re_num,re_content,re_star,re_me_id,re_date
+		select *
 		from review
 		join member on me_id = re_me_id
 		where re_bk_num = #{bookNum}
@@ -195,4 +184,12 @@
 		insert into writer_list (wl_wr_num, wl_bk_num, wl_wt_num )
 		VALUES(#{wr.wl_wr_num}, #{wr.wl_bk_num}, #{wr.wl_wt_num})
 	</insert>
+	
+	<update id="updateReviewCount">
+		update book set bk_reviewCount = bk_reviewCount + 1 where bk_num = #{re_bk_num}
+	</update>
+	
+	<update id="updateReviewScore">
+		update book set bk_score = bk_score + #{re_star} where bk_num = #{re_bk_num}
+	</update>
 </mapper>

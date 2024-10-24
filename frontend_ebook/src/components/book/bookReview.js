@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {Fragment, useState} from 'react';
 import React, { useEffect } from 'react';
 import Modal from 'react-modal';
 //import Report from '../reportType';
@@ -7,6 +7,10 @@ import ReportType from '../reportType';
 import { bookReviewReport } from '../report';
 import MakePage from '../pageButton';
 import Report from '../report';
+import Button from '../form/button';
+import axios from 'axios';
+import { Input } from '../form/input';
+import StarRating from '../starRating';
 
 Modal.setAppElement('#root'); // 접근성 관련 설정 (필수)
 
@@ -60,55 +64,78 @@ function BookReview({bookNum,userId}) {
     rp_rt_num : 0,
     rp_id : ''
   })//신고객체
-
+  
   function insertReview(){
     if(userId == null){
       alert('로그인을 해주세요.')
       return;
     }
-    if(writerIsReview){
-      alert('이미 리뷰를 작성하였습니다.')
-      return;
-    }
+    // if(writerIsReview){
+    //   alert('이미 리뷰를 작성하였습니다.')
+    //   return;
+    // }
     if(!userIsBuy){
       alert('책을 구매하지 않았습니다.')
       return;
     }
-    
 
     writeUserReview.re_me_id =  userId;
     writeUserReview.re_bk_num = bookNum; //리뷰 책 번호 세팅
-    setWriteUserReview(writeUserReview);
+    setWriteUserReview(prev => {
+      return {...prev,
+        re_star: writeUserReview.re_star,
+        re_content: writeUserReview.re_content
+      }
+    });
 
     if(!TestStar(writeUserReview.re_star))
       return;//제대로 된 별점 X
 
-    fetch('insertReview',{
-      method : "post",
-      body : JSON.stringify(writeUserReview),
-      headers: {
-        'Content-Type': 'application/json',  // Content-Type 헤더 설정
+    const options = {
+      url: '/review/insertReview',
+      method:'POST',
+      header: {
+        'Accept':'application/json',
+        'Content-Type': "'application/json;charset=UTP-8'"
       },
-    })
-    .then(res=>res.text())
-    .then(resGetReviewData=>{
+      data: {
+        re_me_id: userId,
+        re_bk_num: bookNum,
+        re_content: writeUserReview.re_content,
+        re_star: writeUserReview.re_star
+      }
+    }
+
+    axios(options)
+		.then(res=>{
       // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
-      if(resGetReviewData){
+      if(res.data.success){
         alert('성공적으로 작성되었습니다.');
         setWriterIsReview(true);
         oriWriteUserReview = writeUserReview;
         selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
         changePageOri();//페이지 번호 재설정
-      }
-      else
-        alert('리뷰가 작성되지 않았습니다.');
+      } else console.log('리뷰가 작성되지 않았습니다.');
     })
-    .catch(e=>console.error(e));
-  }//유저가 리뷰를 쓸 때
+		.catch((error) => {
+			if (error.response) {
+				// 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
+				console.log(error.response.status);
+			} else if (error.request) {
+				// 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
+				// 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+				// node.js에서는 http.ClientRequest 인스턴스입니다.
+				console.log(error.request);
+			} else {
+				// 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+				console.log('Error', error.message);
+			}
+		})
+   }//유저가 리뷰를 쓸 때
 
   function updateReview(){
-    if(oriWriteUserReview.re_content == writeUserReview.re_content &&
-       oriWriteUserReview.re_star == writeUserReview.re_star){
+    if(oriWriteUserReview.re_content === writeUserReview.re_content &&
+       oriWriteUserReview.re_star === writeUserReview.re_star){
       alert('리뷰가 수정되지 않았습니다.');
       return;
     }
@@ -119,7 +146,7 @@ function BookReview({bookNum,userId}) {
     if(!TestStar(writeUserReview.re_star))
       return;//제대로 된 별점 X
 
-    fetch('updateReview',{
+    fetch('/review/updateReview',{
       method : "post",
       body : JSON.stringify(writeUserReview),
       headers: {
@@ -130,64 +157,76 @@ function BookReview({bookNum,userId}) {
     .then(resGetReviewData=>{
       // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
       if(resGetReviewData){
-        alert('성공적으로 변경되었습니다.');
+        alert('성공적으로 수정되었습니다.');
         oriWriteUserReview = writeUserReview;
         setOriWriteUserReview(writeUserReview);
         selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
         changePageOri();//페이지 번호 재설정
       }
       else
-        alert('리뷰변경을 실패했습니다.');
+        alert('리뷰 수정에 실패했습니다.');
     })
     .catch(e=>console.error(e));
   }//리뷰 수정
 
   function deleteReview(){
+    console.log(userId);
+    console.log(bookNum);
     if(!writerIsReview)
       return;
-
-    fetch('deleteReview/'+bookNum+'/'+userId,{
-      //method : "post",
-      //body : JSON.stringify(writeUserReview),
+    fetch('/review/deleteReview', {
+      method : "post",
+      body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
+      data: {
+        bookNum: parseInt(bookNum),
+        userId: userId
+      }
     })
     .then(res=>res.text())
     .then(resDeleteData=>{
-      // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
-      if(resDeleteData){
-        alert('성공적으로 삭제되었습니다.');
-        oriWriteUserReview = null;
-        //setOriWriteUserReview(writeUserReview);
-        setWriterIsReview(false);
+      console.log(resDeleteData);
+      // // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
+      // if(resDeleteData){
+      //   alert('성공적으로 삭제되었습니다.');
+      //   oriWriteUserReview = null;
+      //   //setOriWriteUserReview(writeUserReview);
+      //   setWriterIsReview(false);
 
-        writeUserReview.re_content = '';
-        setWriteUserReview({...writeUserReview, re_content : ' '});
-        setWriteUserReview({...writeUserReview, re_star : 0});
-        selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
-        changePageOri();//페이지 번호 재설정
-      }
-      else
-        alert('리뷰삭제를 실패했습니다.');
+      //   writeUserReview.re_content = '';
+      //   setWriteUserReview({...writeUserReview, re_content : ' '});
+      //   setWriteUserReview({...writeUserReview, re_star : 0});
+      //   selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
+      //   changePageOri();//페이지 번호 재설정
+      // }
+      // else
+      //   alert('리뷰삭제를 실패했습니다.');
     })
     .catch(e=>console.error(e));
   }//리뷰삭제
 
-  function writeContent(e){
-      setWriteUserReview({...writeUserReview, re_content : e.target.value});
+  function changeContent(e){
+    setWriteUserReview(prev => {
+      return {...prev, re_content: e.target.value}
+    });
   }//컨텐츠 작성
 
-  function writerStar(e){
-    setWriteUserReview({...writeUserReview, re_star : e.target.value});
-  }//별점 작성
+  const selectStar = (e) => {
+    e.target.previousElementSibling.checked = true;
+    setWriteUserReview(prev => {
+      return {...prev, re_star: e.target.previousElementSibling.value}
+    });
+    
+    //changeStar(e.target.previousElementSibling.value);
+  }
 
   function TestStar(starValue){
     if(starValue<=0 || starValue>5){
       alert("별점을 작성해주세요.");
       return false;
     }
-      
     return true;
   }//별점이 0점이하 5점 초과 시 false
 
@@ -195,9 +234,9 @@ function BookReview({bookNum,userId}) {
     if(userId ==null)
       return;
 
-    fetch('selectMyReview/'+userId+'/'+bookNum,{
-      //method : "post",
-      //body : JSON.stringify(writeUserReview),
+    fetch('/review/selectMyReview/' + bookNum + '/' + userId, {
+      method : "post",
+      body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
@@ -217,11 +256,11 @@ function BookReview({bookNum,userId}) {
   }//해당 유저가 리뷰를 썼는지
 
   function selectReviewList(currentPageNum ,successSelectReviewList = null){
-    var pageNum = (currentPageNum-1) * reviewPageCount;
+    var pageNum = (currentPageNum - 1) * reviewPageCount;
     
-    fetch("reviewList/"+bookNum+"/"+pageNum,{
-      //method : "post",
-      //body : JSON.stringify(writeUserReview),
+    fetch("/review/selectReview/" + bookNum + "/" + pageNum, {
+      method : "post",
+      body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
@@ -230,7 +269,7 @@ function BookReview({bookNum,userId}) {
     .then(reviewListData=>{
       // reviewListData = 리뷰 목록 데이터
       var objs = [];
-      objs = [...reviewListData];
+      objs = [...reviewListData.reviewList];
       setReviewList(objs);
       if(successSelectReviewList)
         successSelectReviewList()// 리뷰목록을 성공적으로 가져오면 실행하기
@@ -239,9 +278,9 @@ function BookReview({bookNum,userId}) {
   }//리뷰 목록(현제 페이지 번호, 성공할 시 실행할 메소드)
 
   function selectReviewCount (){
-    fetch('reviewCount/'+bookNum,{
-      //method : "post",
-      //body : JSON.stringify(writeUserReview),
+    fetch('/review/reviewCount/' + bookNum, {
+      method : "post",
+      body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
@@ -308,50 +347,75 @@ function BookReview({bookNum,userId}) {
       checkReview();  //리뷰 썼는지 확인
   }, []); //처음 시작할 때
 
-  
   return (
-    <div>
-      <label>리뷰내용
-       <input value={writeUserReview.re_content} onChange={e=>writeContent(e)} type='text' maxLength="255" placeholder="최대 255자 입력 가능"/>
-      </label>
+    <Fragment>
+      <div className="theme-box review-write">
+        <div className="star-rating">
+        {[...Array(parseInt(5))].map((n, i) => {
+					return(
+            <Fragment>
+              <Input
+              type="radio"
+              cls="star"
+              value={i + 1}
+              name="rating" 
+              checked={writeUserReview.re_star == i + 1}/>
+              <label onClick={(e) => selectStar(e)}>{i+1}</label>
+          </Fragment>
+          )
+        })}
+				</div>
 
-      <label>평점
-       <input value={writeUserReview.re_star} onChange={e=>writerStar(e)} type='number'/>
-      </label>
-      {writerIsReview ? ( <button onClick={updateReview}>변경</button>) : ( <button onClick={insertReview}>작성</button>)}
+        <textarea onChange={e => changeContent(e)} placeholder="최대 255자 입력 가능"></textarea>
 
-      {writerIsReview ? (<button onClick={deleteReview}>삭제</button>) : (<input type='hidden'/>)}
-      <table>
-          <thead>
-            <tr>
-              <th>이름</th>
-              <th>내용</th>
-              <th>별점</th>
-              <th>신고</th>
-            </tr>
-          </thead>
-        
-        <tbody>
-        {reviewList.map((item, index) => (
-            <tr key={index}>
-              <td>{item.re_me_id}</td>
-              <td>{item.re_content}</td>
-              <td>{item.re_star}</td>
-              <td><button onClick={() => {userReport(item.re_me_id,item.re_content,item.re_num);
-                 setModalIsOpen(true)}}>신고하기</button></td>
-            </tr>
+        <Button click={insertReview} text="작성" cls="btn btn-point"/>
+      </div>
+
+      <div className="review-list">
+        <ul>
+        {reviewList.length === 0 ? <li className="no-data txt-center">작성된 리뷰가 없습니다</li> :
+        reviewList.map((item, index) => (
+          <li key={index}>
+            <div className="theme-box pf"></div>
+
+            <div className="review-content">
+              <div className="review-header">
+                <strong>{item.me_nickname}</strong>
+                {() => {
+                  const date = new Date(item.re_date);
+                  const y = date.getFullYear();
+                  const m = date.getMonth();
+                  const d = date.getDate();
+                  console.log('date');
+                  console.log(y, m, d);
+                  return (<span className="review-date">{`${y}-${m}-${d}`}</span>);
+                }}                
+              </div>
+              <div className="rating">
+                <StarRating score={item.re_star}/>
+              </div>
+              
+              <p>{item.re_content}</p>
+              
+              <div className="review-footer">
+                {writerIsReview ? (<Button click={updateReview} text="수정" cls="btn btn-point"/>) : ''}
+                {writerIsReview ? (<Button click={deleteReview} text="삭제" cls="btn"/>) : ''}
+                {!writerIsReview ? (<Button click={() => {userReport(item.re_me_id,item.re_content,item.re_num); setModalIsOpen(true)}} text="신고" cls="btn btn-danger" />) : ''}
+              </div>
+            </div>
+          </li>
           ))}
-        </tbody>
-      </table>
+        </ul>
+        
+        <Button click={()=>changePage(page.currentPage-1)}  cls="btn" disabled = {!page.prev} text="이전"/>
+        
+        {page.pageList.map((item,index)=>{
+            return(<Button click={()=>changePage({index})} disabled={page.currentPage===(index+1)} key={index} cls="btn" text={item}/>)
+        })}
 
-      <button onClick={()=>changePage(page.currentPage-1)} disabled= {!page.prev}>이전</button>
+        <Button click={()=>changePage(page.currentPage+1)}  cls="btn" disabled = {!page.next} text="다음"/>
+      </div>
 
-      {page.pageList.map((item,index)=>{
-          return(<button  onClick={()=>changePage({index})} disabled={page.currentPage==(index+1)} key={index}>{item}</button>)
-      })}
-
-      <button onClick={()=>changePage(page.currentPage+1)} disabled = {!page.next}>다음</button>
-      <button onClick={()=>setModalIsOpen(true)}>클릭</button>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
@@ -362,8 +426,7 @@ function BookReview({bookNum,userId}) {
       >
        <Report reportTypeList={reportType} getReport={report} exit={()=>setModalIsOpen(false)}/>
       </Modal>
-     
-    </div>
+    </Fragment>
   );
 }
 
