@@ -149,6 +149,7 @@ input[type="radio"]:checked + label::after {color: var(--color-bak);}
 .btn-basic {background: var(--color-light-grey);}
 .btn-point {background: var(--color-brand); color: var(--color-bak);}
 .btn-dark {background: var(--color-default); color: white;}
+.btn-danger {background: var(--color-caution); color: white;}
 
 .btn.ico{font-size: 0;}
 .btn.ico::before {
@@ -159,6 +160,7 @@ input[type="radio"]:checked + label::after {color: var(--color-bak);}
 button.btn[disabled] {
 	color: #ccc;
 	box-shadow: var(--box-inner-shadow);
+	cursor: default;
 }
 
 .theme-box {
@@ -182,8 +184,8 @@ hr {
 .book-img img {box-shadow: var(--box-shadow);}
 
 .rating {display: flex; gap: 1em; margin-top: 1em;}
-.star-rating {display: flex; gap: .3em; flex-direction: row-reverse;}
-.star-rating input {display: none;}
+.star-rating {display: flex; gap: .3em;}
+.star-rating.readonly * {cursor: default;}
 .star-rating input + label {font-size: 0;}
 .star-rating input + label::before {
 	position: relative;
@@ -195,7 +197,9 @@ hr {
 	border: 0 !important;
 	box-shadow: none !important;
 }
-.star-rating .checked + div label::before {color: var(--color-brand);}
+.star-rating:not(.readonly) [type="radio"]:has(~ :hover) + label::before,
+.star-rating [type="radio"]:checked + label::before,
+.star-rating [type="radio"]:has(~ :checked) + label::before {color: var(--color-brand);}
 
 /* search form */
 .search-box {position: relative; width: 70%; float: right;}

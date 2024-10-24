@@ -11,7 +11,6 @@ const BestSellers = () => {
 		header: {
 			'Accept':'application/json',
 			'Content-Type': "'text/plain';charset=UTP-8'"
-			//연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
 		},
 		data: {
 			section: 'bestSellers'

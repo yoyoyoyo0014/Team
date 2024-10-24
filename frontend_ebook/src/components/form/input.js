@@ -1,6 +1,4 @@
-import { useState } from "react"
-
-const Input = ({id, type, placeholder, name, cls, change, value, readOnly, checked}) => {
+const Input = ({id, type, placeholder, name, cls, change, value, readOnly, checked, max}) => {
 	return(
 		<input
 			type={type}
@@ -15,7 +13,8 @@ const Input = ({id, type, placeholder, name, cls, change, value, readOnly, check
 			}
 			checked={
 				checked ? 'checked' : ''
-			}/>
+			}
+			maxLength={max}/>
 	)
 }
 

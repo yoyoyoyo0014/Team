@@ -54,7 +54,7 @@ export function Report({getReport,exit}) {
       return;
     }
 
-    fetch("/ebook/report/insertReport",{
+    fetch("report/insertReport",{
       method : "post",
       body : JSON.stringify(report),
       headers: {
@@ -82,9 +82,9 @@ export function Report({getReport,exit}) {
 
     try {
       // fetch 요청이 완료될 때까지 대기
-      const response = await fetch("/ebook/report/existReport/"+report.rp_id+"/"+
+      const response = await fetch("report/existReport/"+report.rp_id+"/"+
         report.rp_target+"/"+report.rp_id,{
-          method: "post",
+          //method: "post",
           headers: {
               'Content-Type': 'application/json',
           },
@@ -110,7 +110,6 @@ export function Report({getReport,exit}) {
   }, []); //처음 시작할 때
 
   return (
-   
     <div>
       {reportType.map((item,index)=>{
         return(
@@ -127,10 +126,8 @@ export function Report({getReport,exit}) {
     </div>
   )
 }
-
+//
 export function bookReviewReport(targetNum){
   return 'BR'+targetNum;
 }//책리뷰 신고 할 때
-
-
 export default Report;

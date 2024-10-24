@@ -23,7 +23,7 @@ public class MainController {
 	BookService bookService;
 	
 	@GetMapping("/main")
-	public HashMap<String, Object> main() {
+	public HashMap<String, Object> mainGet() {
 		List<BookGenreVO> dbList = bookService.getAllGenre();
 		BookVO book = bookService.getRandomBook();
 		
@@ -46,7 +46,7 @@ public class MainController {
 	}
 	
 	@PostMapping("/main")
-	public HashMap<String, Object> mainPost(@RequestBody HashMap<String, Object>map){
+	public HashMap<String, Object> mainPost(@RequestBody HashMap<String, Object>map){ 
 		String section = (String)map.get("section");
 		
 		List<BookVO> list = null;
@@ -59,5 +59,4 @@ public class MainController {
 		map.put("list", list);
 		return map;
 	}
-		
 }

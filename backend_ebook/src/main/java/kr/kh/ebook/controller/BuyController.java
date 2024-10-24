@@ -44,7 +44,7 @@ public class BuyController {
             return ResponseEntity.status(500).body("구매 정보 저장 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
-    @PostMapping("list/save")
+    @PostMapping("/list/save")
     public ResponseEntity<String> saveBuyList(@RequestBody BuyListVO buyListVO) {
         try {
             // 구매 정보 저장

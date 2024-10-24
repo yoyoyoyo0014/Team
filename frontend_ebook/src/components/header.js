@@ -7,11 +7,14 @@ import Button from "./form/button";
 
 const Header = ({setSection}) => {
 	const navigate = useNavigate();
-	const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
+	const { isLoggedIn, setIsLoggedIn, setUser, user } = useContext(LoginContext);
 	const { genreList } = useContext(GenreContext);
 
-	let [query, setQuery] = useSearchParams();
-	const search = query.get('search');
+	let [country, setCountry] = useState('');
+	let [genre, setGenre] = useState('');
+	let [category, setCategory] = useState('');
+	let [keyword, setKeyword] = useState('');
+
 
 	const showBooks = (sectionName) => {
 		setSection(sectionName);
@@ -37,6 +40,10 @@ const Header = ({setSection}) => {
 		 window.location.href = logoutUrl; // 카카오 로그아웃 페이지로 리디렉션
 	};
 
+	function clickSearchBtn(){
+		navigate("/searchBook/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
+	}
+
 	const UserMenu = ({isLoggedIn}) => {
 		if(isLoggedIn !== true){
 			return(<ul>
@@ -45,23 +52,22 @@ const Header = ({setSection}) => {
 			</ul>)
 		} else {
 			return(<ul>
-				<li><Link to="/cart">장바구니</Link></li>
+				<li><Link to={"/cart/admin123"}>장바구니</Link></li>
 				<li><Link to="/mypage">마이페이지</Link></li>
-				<li><Link to="/logout" onClick={handleLogout}>로그아웃</Link></li>
+				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
 			</ul>)
 		}
 	}
-
 	return(
 		<header>
 			<Link to="/"><h1 id="logo">Book<br/>Garden</h1></Link>
 				
 			<div className="search-box">
-				<form name="search">
-					<Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={setQuery}/>
-					<Button text={"검색"} cls={"ico btn search"}/>
-				</form>
-			</div>
+					<form name="search">
+						<Input  type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={e=>setKeyword(e)} value={keyword}/>
+						<Button click={e=>clickSearchBtn()} text={"검색"} cls={"ico btn search"}/>
+					</form>
+				</div>
 
 			<div className="menu">
 				<button type="button" className="cate-toggle-btn btn btn-basic" onClick={showGenre}>

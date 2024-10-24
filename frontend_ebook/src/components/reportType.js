@@ -3,8 +3,8 @@ import {useState} from 'react';
 async function ReportType() {
     try {
       // fetch 요청이 완료될 때까지 대기
-      const response = await fetch("/ebook/report/selectReportType", {
-          method: "post",
+      const response = await fetch("selectReportType", {
+          //method: "post",
           headers: {
               'Content-Type': 'application/json',
           },
@@ -14,6 +14,7 @@ async function ReportType() {
   } catch (e) {
       console.error(e);
       return undefined;
+      // <Report reportTypeList={reportType} getReport={report} exit={()=>setModalIsOpen(false)}/>
   }
 }
 

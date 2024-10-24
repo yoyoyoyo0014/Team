@@ -19,7 +19,7 @@ public class MyBatisConfig {
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/bookgarden");
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/bookgarden?useSSL=false&serverTimezone=Asia/Seoul");
         config.setUsername("root");
         config.setPassword("root");
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");

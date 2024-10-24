@@ -14,7 +14,8 @@ public class ReviewVO {
 	private int re_num = 0;
     private String re_content;
     private int re_bk_num = 0;
-    private int re_star;
+    private double re_star;
     private Date re_date; 
     private String re_me_id;
+    private String me_nickname; 
 }

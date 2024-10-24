@@ -23,11 +23,11 @@ public class LoginController {
     public Map<String, Object> login(@RequestBody MemberVO member) {
         Map<String, Object> response = new HashMap<>();
         MemberVO loginUser = memberService.login(member.getMe_id(), member.getMe_pw());
-
+        
         if (loginUser != null) {
             // 로그인 성공 시 사용자 정보와 성공 메시지 반환
             response.put("success", true);
-            response.put("me_id", loginUser.getMe_id());
+            response.put("user", loginUser);
             response.put("token", "generated_jwt_token"); // 실제 토큰 생성 로직 필요
         } else {
             // 로그인 실패 시 메시지 반환

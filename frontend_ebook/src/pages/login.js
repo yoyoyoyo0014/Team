@@ -7,7 +7,7 @@ import "../css/login.css";
 import Check from "../components/form/check";
 
 const Login = () => {
-  const { setIsLoggedIn } = useContext(LoginContext); // 로그인 상태 업데이트 함수 가져오기
+  const { setIsLoggedIn, setUser } = useContext(LoginContext); // 로그인 상태 업데이트 함수 가져오기
 	const navigate = useNavigate(); // useNavigate 훅 사용
 
   const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
@@ -281,26 +281,28 @@ const Login = () => {
       <h2 className="txt-center page-title">Book<br />Garden</h2>
       <form onSubmit={handleLoginSubmit}>
 
-      <InputItem
+
+      <div className="input-item">
+        <input
           id="me_id"
           name="me_id"
           type="text"
-          cls="frm-input"
           placeholder="아이디를 입력하세요"
-          value={id}
-          change={(value) => setId(value)} // ID 상태와 변경 핸들러 추가
-          label="아이디"
-        />
-        <InputItem
+          onChange={(e) => setId(e.target.value)}
+          value={id}/>
+        <label htmlFor="me_id">아이디</label>
+      </div>
+
+      <div className="input-item">
+        <input
           id="me_pw"
           name="me_pw"
           type="password"
-          cls="frm-input"
           placeholder="비밀번호를 입력하세요"
-          value={password}
-          change={(value) => setPassword(value)} // 비밀번호 상태와 변경 핸들러 추가
-          label="비밀번호"
-        />
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}/>
+        <label htmlFor="me_pw">비밀번호</label>
+      </div>
 
         <Check
           name={"autoLogin"} 

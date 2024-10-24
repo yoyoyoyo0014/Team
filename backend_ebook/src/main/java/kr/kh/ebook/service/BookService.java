@@ -9,23 +9,17 @@ import kr.kh.ebook.dao.BookDAO;
 import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
-import kr.kh.ebook.model.vo.GenreVO;
 import kr.kh.ebook.model.vo.ReviewVO;
+import kr.kh.ebook.model.vo.WriterListVO;
 import kr.kh.ebook.model.vo.WriterVO;
-import kr.kh.ebook.pagination.BookCriteria;
 import kr.kh.ebook.pagination.BookPageMaker;
-import kr.kh.ebook.pagination.PageMaker;
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class BookService {
 	private BookDAO bookDao;
-	
-	public int count() {
-		return bookDao.count();
-	}
-	
+
 	//검색할 책 개수
 	public int searchBookCount(String country,int genre,String search) {
 		return bookDao.searchBookCount(country,genre,search);
@@ -105,14 +99,24 @@ public class BookService {
 	}
 
 	public boolean deleteReview(int bookNum, String id) {
+		System.out.println("del : " + bookNum + " " + id);
 		return bookDao.deleteReview(bookNum,id);
 	}
 
-	public List<WriterVO> selectWriter(int bookNum) {
-		return bookDao.selectWriter(bookNum);
+	public int insertBook(BookVO book) {
+		return bookDao.insertBook(book);
 	}
-	public List<GenreVO> selectGenreList() {
-		return bookDao.selectGenreList();
+
+	public boolean insertWriterList(WriterListVO writerListVO) {
+		return bookDao.insertWriterList(writerListVO);
+	}
+
+	public void updateReviewCount(int re_bk_num, char operator) {
+		bookDao.updateReviewCount(re_bk_num, operator);
+	}
+
+	public void updateReviewScore(int re_bk_num, double re_star, char operator) {
+		bookDao.updateReviewScore(re_bk_num, re_star, operator);
 	}
 	
 }

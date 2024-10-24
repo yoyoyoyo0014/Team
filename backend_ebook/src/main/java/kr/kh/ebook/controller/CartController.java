@@ -1,5 +1,5 @@
 package kr.kh.ebook.controller;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.kh.ebook.model.dto.BookInCartDTO;
-import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.CartVO;
-import kr.kh.ebook.service.BookService;
 import kr.kh.ebook.service.CartService;
 import lombok.AllArgsConstructor;
 
@@ -23,31 +20,24 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CartController {
 
-    private CartService cartService;
-    private BookService bookService;	
+    private CartService cartService;	
     
     @GetMapping("/{ca_me_id}")
-    public List<BookInCartDTO> getCart(@PathVariable String ca_me_id) {
-    	List<CartVO> cart = cartService.getCartByUser(ca_me_id); 
-    	List<BookInCartDTO> bookInCart = new ArrayList<>();
-
-	     for (CartVO item : cart) {
-	         BookVO book = bookService.selectBook(item.getCa_bk_num());
-	         bookInCart.add(new BookInCartDTO(item, book)); 
-	     }
-	
-	     return bookInCart;
+    public List<CartVO> getCart(@PathVariable String ca_me_id) {
+		List<CartVO> cart = cartService.getCartByUser(ca_me_id); 
+	    return cart;
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> addCart(@RequestBody CartVO cartVO) {
-        boolean addSuccess = cartService.addCart(cartVO.getCa_bk_num(), cartVO.getCa_me_id());
+    public HashMap<String, Object> addCart(@RequestBody CartVO cartVO) {
+        boolean addSuccess = cartService.addCart(cartVO.getBk_num(), cartVO.getCa_me_id());
         
-        if (addSuccess) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 중복일 경우 409 Conflict 반환
-        }
+        HashMap<String, Object> map = new HashMap<String, Object>();
+		
+        if (addSuccess) map.put("res", true);
+        else map.put("res", false);
+        
+        return map;
     }
 
     @PostMapping("/remove/{ca_num}")

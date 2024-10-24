@@ -7,7 +7,7 @@ img {max-width: 100%;}
 ul, ol, li {list-style: none;}
 input, select, textarea, button {font: inherit; color: inherit; border: 0;}
 input:focus, select:focus, textarea:focus, button:focus {outline: none;}
-textarea {resize: vertical;}
+textarea {resize: vertical; min-height: 100px; padding: 1em;}
 
 fieldset {border: 0;}
 

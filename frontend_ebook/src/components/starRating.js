@@ -1,19 +1,19 @@
+import { Fragment } from "react";
 import { Input } from "./form/input";
 
 const StarRating = ({score}) => {
-	return(<div className="star-rating">
+	return(<div className="star-rating readonly">
 		{[...Array(parseInt(5))].map((n, i) => {
 			return(
-				<div className={score >= i + 1 ? 'checked' : ''}>
+				<Fragment>
 					<Input
 						type="radio"
 						cls="star"
-						value={5 - i}
-						name="rating"
+						value={i}
 						readOnly={true}
 						checked={score === i + 1 ? 'checked' : ''}/>
-						<label>{i+1}</label>
-				</div>
+						<label></label>
+				</Fragment>
 			)
 		})}
 	</div>)
