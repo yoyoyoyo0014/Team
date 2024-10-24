@@ -190,8 +190,6 @@
 	        <artifactId>google-http-client</artifactId>
 	        <version>1.40.1</version>
 	    </dependency>
-		
-	</dependencies>
 
 		 <!-- 구글 API 클라이언트 -->
 	    <dependency>

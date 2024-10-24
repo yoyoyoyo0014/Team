@@ -18,7 +18,7 @@ public class MemberService {
 	
 	/* 카카오 로그인 관련 */
 	
-	// 회원 ID로 사용자 조회 ( 일반 로그인, 카카오 로그인에 사용 )
+	// 회원 ID로 사용자 조회 (일반 로그인, 소셜 로그인 통합)
 	public MemberVO getMemberById(String me_id) {
 		return memberDao.findMemberById(me_id);
 	}

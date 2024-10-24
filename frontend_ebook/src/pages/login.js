@@ -8,7 +8,7 @@ import Check from "../components/form/check";
 
 const Login = () => {
   const { setIsLoggedIn, setUser } = useContext(LoginContext); // 로그인 상태 업데이트 함수 가져오기
-	const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   const [googleInitialized, setGoogleInitialized] = useState(false); // 구글 초기화 상태
   
@@ -59,33 +59,38 @@ const Login = () => {
     };
 
     const handleGoogleLoginSuccess = (response) => {
-      const idToken = response.credential;  // 구글에서 받은 ID 토큰
+      const idToken = response.credential; // 구글에서 받은 ID 토큰
       console.log("Google ID Token:", idToken);
-      
+  
       // ID 토큰을 백엔드로 전송
       fetch("/ebook/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ idToken }),  // ID 토큰을 백엔드로 전송
+        body: JSON.stringify({ idToken }), // ID 토큰을 백엔드로 전송
       })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          // 로그인 성공 시 JWT 토큰을 localStorage에 저장
-          localStorage.setItem("googleLoginToken", data.token); // 백엔드에서 받은 JWT 토큰 저장
-          setIsLoggedIn(true);
-          navigate("/");  // 메인 페이지로 이동
-        } else {
-          alert(data.message || "로그인 실패");
-          setIsLoggedIn(false);
-        }
-      })
-      .catch((error) => {
-        console.error("백엔드 로그인 처리 오류", error);
-        alert("로그인 처리 중 오류가 발생했습니다.");
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            // 로그인 성공 시 백엔드에서 받은 JWT 토큰을 localStorage에 저장
+            localStorage.setItem("googleLoginToken", data.token); // JWT 토큰 저장
+            
+            // LoginContext에 사용자 정보 저장
+            setUser(data.user);
+            
+            setIsLoggedIn(true); // 로그인 상태 설정
+            navigate("/"); // 메인 페이지로 이동
+          } else {
+            // 로그인 실패 처리
+            alert(data.message || "로그인 실패");
+            setIsLoggedIn(false);
+          }
+        })
+        .catch((error) => {
+          console.error("백엔드 로그인 처리 오류", error);
+          alert("로그인 처리 중 오류가 발생했습니다.");
+        });
     };
 
     return () => {
@@ -114,11 +119,15 @@ const Login = () => {
     .then((data) => {
       if (data.success) {
         console.log("로그인 성공, 토큰:", data.token);  // 디버깅용 로그
-        // 로그인 성공 시
+
+        // 로그인 성공 시, 사용자 정보를 LoginContext에 저장
+        setUser(data.user);
+
         if (autoLogin) {
           // 자동 로그인이 체크된 경우 localStorage에 토큰 저장
           console.log("자동 로그인 선택됨. localStorage에 토큰 저장."); // 디버깅용 로그
           localStorage.setItem("loginToken", data.token);
+
         } else {
           // 자동 로그인이 체크되지 않은 경우 sessionStorage에 토큰 저장
           console.log("자동 로그인 선택되지 않음. sessionStorage에 토큰 저장."); // 디버깅용 로그
@@ -126,6 +135,7 @@ const Login = () => {
         }
         setIsLoggedIn(true); // 로그인 상태 업데이트
         navigate("/"); // 메인 페이지로 이동
+
       } else {
         // 로그인 실패 시
         console.error("로그인 실패:", data.message || "로그인 실패");  // 디버깅용 로그
@@ -145,107 +155,101 @@ const Login = () => {
     console.log("자동 로그인 체크 상태:", e.target.checked);  // 디버깅용 로그
   };
 
-  const handleKakaoLogin = () => {
-    window.Kakao.Auth.login({
-      scope: 'account_email, name, gender, birthday, birthyear, phone_number, shipping_address',
-      success: (authObj) => {
-        console.log("로그인 성공", authObj);
+  
 
-         // 카카오 로그인 성공 후 백엔드로 토큰 전송
-         fetch("/ebook/kakao/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json" ,
-            "Authorization": `Bearer ${authObj.access_token}`
-          },
-          body: JSON.stringify({ token: authObj.access_token })
-        })
-        .then(response => response.json())
-        .then(data => {
+// 카카오 로그인 처리 함수
+const handleKakaoLogin = () => {
+  window.Kakao.Auth.login({
+    scope: 'account_email, name, gender, birthday, birthyear, phone_number, shipping_address',
+    success: (authObj) => {
+      fetch("/ebook/kakao/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authObj.access_token}`,
+        },
+        body: JSON.stringify({ token: authObj.access_token }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
           if (data.success) {
-            // 백엔드에서 받은 JWT 토큰을 localStorage에 저장
-            localStorage.setItem("loginToken", data.jwtToken); // 백엔드에서 발급된 JWT 토큰 사용
+            localStorage.setItem("loginToken", data.jwtToken); // **jwtToken으로 변경**
 
-            // 로그인 상태를 true로 설정
-            setIsLoggedIn(true);
-
-            // 사용자 정보 가져오기
-            window.Kakao.API.request({
-              url: '/v2/user/me',
-              success: (res) => {
-                console.log("사용자 정보", res);
-                // 메인 페이지로 이동
-                navigate("/");
-              },
-              fail: (err) => {
-                console.error("사용자 정보 요청 실패", err);
-              },
-            });
-          } else if (data.registerRequired) {
-            // 회원가입이 필요한 경우 처리
-            alert("등록되지 않은 사용자입니다. 회원가입을 진행합니다.");
-
-            // 회원가입 요청
-            window.Kakao.API.request({
-              url: '/v2/user/me',
-              success: (res) => {
-                // 백엔드에 사용자 정보를 포함하여 회원가입 요청
-                fetch("/ebook/kakao/register", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json" ,
-                    "Authorization": `Bearer ${authObj.access_token}`
-                  },
-                  body: JSON.stringify({
-                    token: authObj.access_token,
-                    id: res.id,
-                    email: res.kakao_account.email,
-                    name: res.properties.nickname,
-                    gender: res.kakao_account.gender,
-                    birthyear: res.kakao_account.birthyear,
-                    birthday: res.kakao_account.birthday,
-                    phone_number: res.kakao_account.phone_number,
-                    address: res.kakao_account.shipping_address
-                  })
-                })
-                .then(response => response.json())
-                .then(registerData => {
-                  if (registerData.success) {
-                    // 회원가입 후 백엔드에서 받은 JWT 토큰을 localStorage에 저장
-                    localStorage.setItem("loginToken", registerData.jwtToken);
-                    setIsLoggedIn(true);
-                    navigate("/"); // 회원가입 후 메인 페이지로 이동
-                  } else {
-                    alert(registerData.message || "회원가입 처리 중 오류가 발생했습니다.");
-                  }
-                })
-                .catch(error => {
-                  console.error("회원가입 처리 오류", error);
-                  alert("회원가입 처리 중 오류가 발생했습니다.");
-                });
-              },
-              fail: (err) => {
-                console.error("사용자 정보 요청 실패", err);
-                alert("카카오 사용자 정보 요청 중 오류가 발생했습니다.");
-              },
-            });
+            if (data.user) {
+              setUser(data.user);  // user 객체가 제대로 전달되었는지 확인**
+              console.log("User 객체:", data.user); // 디버깅용 로그
+              console.log("Member ID:", data.user.me_id); // ID 확인
           } else {
-            // 로그인 실패 처리
-            alert(data.message || "사용자가 존재하지 않습니다.");
+              console.error("User 객체가 null입니다.");
+          }
+
+            setIsLoggedIn(true); // **로그인 상태 업데이트**
+            navigate("/"); // 메인 페이지로 이동
+          } else if (data.registerRequired) {
+            handleKakaoRegister(authObj);
+          } else {
             setIsLoggedIn(false);
+            alert(data.message || "사용자가 존재하지 않습니다.");
           }
         })
-        .catch(error => {
-          console.error("백엔드 로그인 처리 오류", error);
-          alert("로그인 처리 중 오류가 발생했습니다.");
+        .catch((error) => {
+          console.error("로그인 처리 오류:", error);
         });
-      },
-      fail: (err) => {
-        console.error("로그인 실패", err);
-        alert("카카오 로그인에 실패했습니다.");
-      },
-    });
+    },
+    fail: (err) => {
+      console.error("카카오 로그인 실패", err);
+    },
+  });
 };
+
+// 카카오 회원가입 처리 함수
+const handleKakaoRegister = (authObj) => {
+  window.Kakao.API.request({
+    url: '/v2/user/me',
+    success: (res) => {
+      fetch("/ebook/kakao/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authObj.access_token}`,
+        },
+        body: JSON.stringify({
+          token: authObj.access_token,
+          id: res.id,
+          email: res.kakao_account.email,
+          name: res.properties.nickname,
+        }),
+      })
+        .then((response) => response.json())
+        .then((registerData) => {
+          if (registerData.success) {
+            localStorage.setItem("loginToken", registerData.jwtToken);
+            setUser(registerData.user);
+            setIsLoggedIn(true);  // 회원가입 후 로그인 상태 설정
+            navigate("/"); // 회원가입 후 메인 페이지로 이동
+          } else {
+            alert(registerData.message || "회원가입 처리 중 오류가 발생했습니다.");
+          }
+        })
+        .catch((error) => {
+          console.error("회원가입 처리 오류", error);
+        });
+    },
+    fail: (err) => {
+      console.error("사용자 정보 요청 실패", err);
+    },
+  });
+};
+
+// useEffect를 통해 로그인 상태 유지
+useEffect(() => {
+  const token = localStorage.getItem("loginToken");
+  if (token) {
+    setIsLoggedIn(true); // 토큰이 있으면 로그인 상태로 설정
+  } else {
+    setIsLoggedIn(false); // 토큰이 없으면 로그아웃 상태
+  }
+}, []);
 
       // 네이버 로그인 처리 (이미지를 클릭하면 네이버 로그인 실행)
   const handleNaverLogin = () => {

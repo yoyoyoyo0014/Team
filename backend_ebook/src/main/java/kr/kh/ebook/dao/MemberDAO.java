@@ -10,7 +10,7 @@ import kr.kh.ebook.model.vo.MemberVO;
 @Mapper
 public interface MemberDAO {
 	
-	// 회원 ID로 사용자 조회 ( 카카오 )
+	// 회원 ID로 사용자 조회 (일반 로그인, 소셜 로그인 통합)
 	MemberVO findMemberById(String me_id);
 	
 	// 카카오 회원 등록
