@@ -17,6 +17,8 @@ const Slide = ({list}) => {
 	const move = (index) => {
 		const ul = document.querySelector('.slide-ul');
 		ul.style.marginLeft = -w * index + 'px';
+		document.querySelector('.indicator .now').classList.remove('now');
+		document.querySelector('.indicator :nth-child('+(index+1)+')').classList.add('now');
 	}
 
 	const indicatorClic = (item, i)=>{
