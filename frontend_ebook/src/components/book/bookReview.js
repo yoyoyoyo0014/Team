@@ -174,15 +174,10 @@ function BookReview({bookNum,userId}) {
     console.log(bookNum);
     if(!writerIsReview)
       return;
-    fetch('/review/deleteReview', {
+    fetch('/review/deleteReview/' + bookNum + '/' + userId, {
       method : "post",
-      body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
-      },
-      data: {
-        bookNum: parseInt(bookNum),
-        userId: userId
       }
     })
     .then(res=>res.text())

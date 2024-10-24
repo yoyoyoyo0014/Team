@@ -111,12 +111,12 @@ public class BookService {
 		return bookDao.insertWriterList(writerListVO);
 	}
 
-	public void updateReviewCount(int re_bk_num) {
-		bookDao.updateReviewCount(re_bk_num);
+	public void updateReviewCount(int re_bk_num, char operator) {
+		bookDao.updateReviewCount(re_bk_num, operator);
 	}
 
-	public void updateReviewScore(int re_bk_num, double re_star) {
-		bookDao.updateReviewScore(re_bk_num, re_star);
+	public void updateReviewScore(int re_bk_num, double re_star, char operator) {
+		bookDao.updateReviewScore(re_bk_num, re_star, operator);
 	}
 	
 }

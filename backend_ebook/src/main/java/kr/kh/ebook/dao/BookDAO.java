@@ -52,13 +52,13 @@ public interface BookDAO {
 	
 	boolean updateReview(@Param("re")ReviewVO writeUserReview);  //리뷰 업데이트
 
+	void updateReviewCount(int re_bk_num, char operator);
+
+	void updateReviewScore(int re_bk_num, double re_star, char operator);
+	
 	boolean deleteReview(@Param("bookNum")int bookNum, @Param("id")String id);
 
 	int insertBook(@Param("bk")BookVO book);
 
 	boolean insertWriterList(@Param("wr")WriterListVO writerVO);
-
-	void updateReviewCount(int re_bk_num);
-
-	void updateReviewScore(int re_bk_num, double re_star);
 }

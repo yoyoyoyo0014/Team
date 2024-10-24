@@ -58,8 +58,8 @@ public class ReviewController {
 		
 		boolean res = bookService.insertReview(writeUserReview);
 		if (res) {
-			bookService.updateReviewCount(writeUserReview.getRe_bk_num());
-			bookService.updateReviewScore(writeUserReview.getRe_bk_num(), writeUserReview.getRe_star());
+			bookService.updateReviewCount(writeUserReview.getRe_bk_num(), '+');
+			bookService.updateReviewScore(writeUserReview.getRe_bk_num(), writeUserReview.getRe_star(), '+');
 			return true;
 		} else return false;
 	}
@@ -73,12 +73,19 @@ public class ReviewController {
 	}
 	
 	//리뷰 삭제
-	@PostMapping("/deleteReview")
+	@PostMapping("/deleteReview/{bookNum}/{userId}")
 	@ResponseBody
-	public boolean deleteReview(@PathVariable("bookNum") int bookNum, @PathVariable("userId") String id) {
-		System.out.println(bookNum + " " + id);
-		//return bookService.deleteReview(bookNum, id);
-		return false;
+	public boolean deleteReview(@PathVariable("bookNum") int bookNum, @PathVariable("userId") String userId) {
+		ReviewVO myReview = bookService.selectMyReview(userId, bookNum);
+		
+		boolean res = false;
+		//boolean res = 
+		if (myReview != null) {
+			bookService.updateReviewCount(myReview.getRe_bk_num(), '-');
+			bookService.updateReviewScore(myReview.getRe_bk_num(), myReview.getRe_star(), '-');
+			bookService.deleteReview(bookNum, userId);
+			return true;
+		} else return false;
 	}
 	
 }

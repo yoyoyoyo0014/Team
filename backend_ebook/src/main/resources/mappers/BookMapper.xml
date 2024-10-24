@@ -170,6 +170,30 @@
 		where re_bk_num = #{bookNum} and re_me_id = #{id}
 	</delete>
 	
+	<update id="updateReviewCount">
+		update book
+		<choose>
+   			<when test ="operator == '+'">
+   				set bk_reviewCount = bk_reviewCount + 1 where bk_num = #{re_bk_num}
+   			</when>
+   			<when test ="operator == '-'">
+   				set bk_reviewCount = bk_reviewCount - 1 where bk_num = #{re_bk_num}
+   			</when>
+   		</choose>
+	</update>
+	
+	<update id="updateReviewScore">
+		update book
+		<choose>
+   			<when test ="operator == '+'">
+   				set bk_score = bk_score + #{re_star} where bk_num = #{re_bk_num}
+   			</when>
+   			<when test ="operator == '-'">
+   				set bk_score = bk_score - #{re_star} where bk_num = #{re_bk_num}
+   			</when>
+   		</choose>
+	</update>
+	
 	<select id="selectGenreList">
 		select *
 		from genre
@@ -185,11 +209,4 @@
 		VALUES(#{wr.wl_wr_num}, #{wr.wl_bk_num}, #{wr.wl_wt_num})
 	</insert>
 	
-	<update id="updateReviewCount">
-		update book set bk_reviewCount = bk_reviewCount + 1 where bk_num = #{re_bk_num}
-	</update>
-	
-	<update id="updateReviewScore">
-		update book set bk_score = bk_score + #{re_star} where bk_num = #{re_bk_num}
-	</update>
 </mapper>
