@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.kh.ebook.model.vo.ReviewVO;
+import kr.kh.ebook.pagination.Criteria;
+import kr.kh.ebook.pagination.PageMaker;
 import kr.kh.ebook.service.BookService;
 
 @RequestMapping("/review")
@@ -23,11 +25,25 @@ public class ReviewController {
 	BookService bookService;
 	
 	// 내 리뷰 보기 - 없음 null
-	//@GetMapping("selectBook/selectMyReview/{userId}/{bookNum}")
 	@GetMapping("/myReviewCount/{bookNum}/{userId}")
 	@ResponseBody
 	public ReviewVO selectMyReview(@PathVariable("bookNum") int bookNum, @PathVariable("userId") String userId) {
 		return bookService.selectMyReview(userId, bookNum);
+	}
+	
+	// 내 리뷰 리스트 보기 - 없음 null
+	@GetMapping("/myReview/{userId}/{pageNo}")
+	@ResponseBody
+	public HashMap<String, Object> selectAllMyReview(@PathVariable("userId") String userId, @PathVariable("pageNo") int pageNo) {
+		Criteria cri = new Criteria(pageNo, 5);
+		List<ReviewVO> list = bookService.selectAllMyReview(cri, userId);
+		int cnt = bookService.selectMyReviewCount(userId);
+		PageMaker pm = new PageMaker(5, cri, cnt);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("pm", pm);
+		return map;
 	}
 	
 	//리뷰 보기
@@ -42,9 +58,10 @@ public class ReviewController {
 	@PostMapping("/selectReview/{bookNum}/{pageNum}")
 	@ResponseBody
 	public HashMap<String, Object> selectReview(@PathVariable("bookNum") int bookNum, @PathVariable("pageNum") int pageNum) {
+		System.out.println("hi");
 		List<ReviewVO> list = bookService.selectReviewList(bookNum, pageNum);
-		System.out.println(list);
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		System.out.println("review : " + list);
 		map.put("reviewList", list);
 		return map;
 	}

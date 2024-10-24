@@ -109,7 +109,7 @@ function BookReview({bookNum,userId}) {
     axios(options)
 		.then(res=>{
       // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
-      if(res.data.success){
+      if(res){
         alert('성공적으로 작성되었습니다.');
         setWriterIsReview(true);
         oriWriteUserReview = writeUserReview;
@@ -117,6 +117,7 @@ function BookReview({bookNum,userId}) {
         changePageOri();//페이지 번호 재설정
       } else console.log('리뷰가 작성되지 않았습니다.');
     })
+
 		.catch((error) => {
 			if (error.response) {
 				// 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
@@ -170,8 +171,6 @@ function BookReview({bookNum,userId}) {
   }//리뷰 수정
 
   function deleteReview(){
-    console.log(userId);
-    console.log(bookNum);
     if(!writerIsReview)
       return;
     fetch('/review/deleteReview/' + bookNum + '/' + userId, {
@@ -182,22 +181,21 @@ function BookReview({bookNum,userId}) {
     })
     .then(res=>res.text())
     .then(resDeleteData=>{
-      console.log(resDeleteData);
-      // // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
-      // if(resDeleteData){
-      //   alert('성공적으로 삭제되었습니다.');
-      //   oriWriteUserReview = null;
-      //   //setOriWriteUserReview(writeUserReview);
-      //   setWriterIsReview(false);
+      // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
+      if(resDeleteData){
+        alert('성공적으로 삭제되었습니다.');
+        oriWriteUserReview = null;
+        //setOriWriteUserReview(writeUserReview);
+        setWriterIsReview(false);
 
-      //   writeUserReview.re_content = '';
-      //   setWriteUserReview({...writeUserReview, re_content : ' '});
-      //   setWriteUserReview({...writeUserReview, re_star : 0});
-      //   selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
-      //   changePageOri();//페이지 번호 재설정
-      // }
-      // else
-      //   alert('리뷰삭제를 실패했습니다.');
+        writeUserReview.re_content = '';
+        setWriteUserReview({...writeUserReview, re_content : ' '});
+        setWriteUserReview({...writeUserReview, re_star : 0});
+        selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
+        changePageOri();//페이지 번호 재설정
+      }
+      else
+        alert('리뷰삭제를 실패했습니다.');
     })
     .catch(e=>console.error(e));
   }//리뷰삭제
@@ -250,12 +248,11 @@ function BookReview({bookNum,userId}) {
     .catch(e=>console.error(e));
   }//해당 유저가 리뷰를 썼는지
 
-  function selectReviewList(currentPageNum ,successSelectReviewList = null){
+  function selectReviewList(currentPageNum, successSelectReviewList = null){
     var pageNum = (currentPageNum - 1) * reviewPageCount;
     
     fetch("/review/selectReview/" + bookNum + "/" + pageNum, {
       method : "post",
-      body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
@@ -297,14 +294,11 @@ function BookReview({bookNum,userId}) {
 
       const successSelectPage =  function(){
         page.currentPage = i;
-  
         page = MakePage(page.contentsCount,page.currentPage);
-  
         setPage({...page});
       }
   
       selectReviewList(i,successSelectPage);//리뷰 목록 바꾸기
-
       return;
     }else{
       i ={index : 0}
