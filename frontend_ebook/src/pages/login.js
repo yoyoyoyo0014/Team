@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
 import "../css/login.css";
-import Check from "../components/form/check";
+//import Check from "../components/form/check";
 
 const Login = () => {
   const { setIsLoggedIn, setUser } = useContext(LoginContext); // 로그인 상태 업데이트 함수 가져오기
@@ -257,7 +257,7 @@ const Login = () => {
         <label htmlFor="me_pw">비밀번호</label>
       </div>
 
-        <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em', position: 'static'}}/>
+        {/* <Check name={"autoLogin"} id="autoLogin" label={"자동 로그인"} style={{marginTop: '2em', position: 'static'}}/> */}
 
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
 
