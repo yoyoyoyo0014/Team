@@ -58,4 +58,9 @@
         )
 	</insert>
 	
+	<!-- 닉네임으로 멤버 찾기 -->
+    <select id="getMemberByNickname" parameterType="String" resultType="kr.kh.ebook.model.vo.MemberVO">
+        SELECT * FROM member WHERE me_nickname = #{meNickname}
+    </select>
+	
 </mapper>

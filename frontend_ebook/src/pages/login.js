@@ -49,10 +49,12 @@ const Login = () => {
         window.google.accounts.id.initialize({
           client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,  
           callback: handleGoogleLoginSuccess,
+          ux_mode: "popup", // 팝업 모드 설정
         });
         setGoogleInitialized(true); // 구글 초기화 완료
       } else {
         console.error("Google API failed to load");
+        alert("Google API를 로드하는 데 실패했습니다. 다시 시도해주세요.");
       }
     };
 
@@ -256,24 +258,22 @@ const Login = () => {
     window.location.href = naverLoginUrl;  // 네이버 로그인 URL로 리디렉션
   };
 
-  const handleLogout = () => {
-    // 카카오 토큰 및 백엔드에서 받은 토큰 삭제
-    localStorage.removeItem("loginToken"); // 백엔드 JWT 토큰 삭제
-    sessionStorage.removeItem("loginToken");
-    localStorage.removeItem("kakao_access_token"); // 카카오 토큰 삭제 (예시)
-  
-    // 카카오 로그아웃 처리 (선택 사항)
-    if (window.Kakao.Auth) {
-      window.Kakao.Auth.logout(() => {
-        console.log("카카오 로그아웃 완료");
+  const handleGoogleLoginClick = () => {
+    window.google.accounts.id.disableAutoSelect(); // 자동 로그인을 비활성화
+    if (googleInitialized) {
+      window.google.accounts.id.prompt((notification) => {
+        console.log("Prompt 호출 결과: ", notification);
+        if (notification.isNotDisplayed) {
+          console.error("팝업이 표시되지 않았습니다: ", notification.notDisplayedReason);
+        }
+        if (notification.isSkipped) {
+          console.error("팝업이 스킵되었습니다: ", notification.skipReason);
+        }
       });
+    } else {
+      console.error("Google API가 아직 로드되지 않았습니다.");
+      alert("Google API가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
     }
-  
-    // 로그인 상태를 false로 설정
-    setIsLoggedIn(false);
-  
-    // 로그인 페이지로 이동
-    navigate("/login");
   };
 
   return (
@@ -320,22 +320,7 @@ const Login = () => {
             type={"button"} 
             text={"구글 로그인"} 
             cls={"btn btn-google full"} 
-            click={() => {
-
-              if (googleInitialized) {
-                window.google.accounts.id.prompt((notification) => {
-                  if (notification.isNotDisplayed) {
-                    console.error("팝업이 표시되지 않았습니다. 이유: ", notification.notDisplayedReason);
-                    console.log("전체 notification 객체: ", notification); // notification 전체 객체 출력
-                  }
-                  if (notification.isSkipped) {
-                    console.error("팝업이 스킵되었습니다. 이유: ", notification.skipReason);
-                  }
-                });
-            } else {
-              console.error("Google API is not loaded yet.");
-            }
-          }}
+            click={handleGoogleLoginClick}
         />
         </div>
       </form>

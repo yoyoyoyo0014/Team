@@ -71,5 +71,16 @@ public class MemberService {
 		}
 	}
 
+	/* 일반 회원가입 관련 */
+	
+	// 아이디 중복 체크
+    public boolean isIdDuplicate(String meId) {
+        return memberDao.getMemberById(meId) != null;
+    }
+
+    // 닉네임 중복 체크
+    public boolean isNicknameDuplicate(String meNickname) {
+        return memberDao.getMemberByNickname(meNickname) != null;
+    }
 	
 }

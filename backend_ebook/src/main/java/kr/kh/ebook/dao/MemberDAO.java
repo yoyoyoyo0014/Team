@@ -29,9 +29,12 @@ public interface MemberDAO {
 	// 일반 로그인
 	@Select("SELECT * FROM member WHERE me_id = #{me_id}")
     MemberVO getMemberById(String me_id);
+	
+	MemberVO getMemberByNickname(String meNickname);
 
 	// 일반 회원가입 후, 사용자 정보 db 저장
 	void insertNormalMember(MemberVO memberVO);
+
 
 	
 }
