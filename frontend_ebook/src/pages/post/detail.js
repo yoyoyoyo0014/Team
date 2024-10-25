@@ -42,6 +42,7 @@ function Detail() {
         .then((data) => {
           if (data && data.post) {
             setPost(data.post);
+            console.log(data.post)
           } else {
             console.error("No post data received");
           }
@@ -105,31 +106,35 @@ function Detail() {
         <label htmlFor="po_date">작성일</label>
         <input type="text" id="po_date" className="form-control" value={formatDate(post.po_date) || ''} readOnly />
       </div>
-      {co_num === '2' && (
-        <>
+      {(co_num === '3' || co_num === '4') && (
         <div className="form-group">
-          <label htmlFor="po_view">조회수</label>
-          <input type="text" id="po_view" className="form-control" value={post.po_view || ''} readOnly />
+          <div>
+            <label>이벤트 기간</label>
+            <input type="text" className="form-control" value={`${post.po_start} ~ ${post.po_end}`} readOnly/>
+          </div>
+          <div className="form-group">
+            {post.po_image ? (
+              <img src={post.po_image} alt="이벤트 이미지" className="img-fluid" style={{ marginTop: '20px', maxHeight: '400px' }}/>
+            ) : (
+              <p>이미지가 없습니다.</p>
+            )}
+          </div>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="po_like">추천수</label>
-          <input type="text" id="po_like" className="form-control" value={post.po_like || ''} readOnly />
-        </div>
-        </>
+        
       )}
-      <div className="form-group">
-        <label htmlFor="po_content">내용</label>
-        <textarea id="po_content" className="form-control" value={post.po_content || ''} readOnly style={{ height: '400px' }} />
-      </div>
+      {(co_num !== '3' && co_num !== '4') && (
+        <div className="form-group">
+          <label htmlFor="po_content">내용</label>
+          <textarea id="po_content" className="form-control" value={post.po_content || ''} readOnly style={{ height: '400px' }} />
+        </div>
+      )}
 
       <button className="btn btn-outline-success" onClick={() => navigate(`/post/list/${co_num}`)}>목록으로</button>
-      {post.po_me_id && (
+      
         <div>
           <button className="btn btn-outline-primary" onClick={() => navigate(`/post/update/${po_num}`)}>수정하기</button>
           <button className="btn btn-outline-danger" onClick={handleDelete}>삭제하기</button>
         </div>
-      )}
     </div>
   );
 }

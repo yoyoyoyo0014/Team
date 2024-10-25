@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 function Insert() {
   const { co_num } = useParams();
@@ -8,68 +10,51 @@ function Insert() {
   const [writer, setWriter] = useState("");
   const [nickname, setNickname] = useState("");
   const [content, setContent] = useState("");
+  const [start, setStart] = useState(null);
+  const [end, setEnd] = useState(null);
+  const [postImage, setPostImage] = useState(null); // 게시글 이미지 파일
+  const [contentImage, setContentImage] = useState(null); // 게시글 내용 이미지 파일
+  const [postImagePreview, setPostImagePreview] = useState(""); // 게시글 이미지 미리보기 URL
+  const [contentImagePreview, setContentImagePreview] = useState(""); // 게시글 내용 이미지 미리보기 URL
 
-  // 스크롤을 맨 위로 이동
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    // 로그인한 사용자의 아이디를 설정 (예: 로컬 스토리지나 서버에서 가져오기)
-    const loggedInUserId = localStorage.getItem('me_id');
-    if (loggedInUserId) {
-      setWriter(loggedInUserId);
-      
-      // 닉네임 가져오기
-      fetch(`/member/nickname/${loggedInUserId}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (data && data.nickname) {
-            setNickname(data.nickname);
-          } else {
-            console.error("No nickname data received");
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching nickname:', error);
-        });
-    } else {
-      setWriter("admin123");
-      setNickname("관리자");
+  // 게시글 이미지 파일이 변경될 때 미리보기 URL 설정
+  const handlePostImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPostImage(file);
+      const previewUrl = URL.createObjectURL(file);
+      setPostImagePreview(previewUrl);
     }
-  }, []);
+  };
+
+  // 게시글 내용 이미지 파일이 변경될 때 미리보기 URL 설정
+  const handleContentImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setContentImage(file);
+      const previewUrl = URL.createObjectURL(file);
+      setContentImagePreview(previewUrl);
+    }
+  };
 
   const btnClick = (e) => {
     e.preventDefault(); // 기본 폼 제출 방지
-    
-    // 제목과 내용이 비어 있는지 확인
-    if (!title.trim() || !content.trim()) {
-      alert('제목과 내용을 모두 입력해 주세요.');
-      return;
-    }
-
-    // 서버에 전송할 게시글 데이터
-    let post = {
-      po_title: title,
-      po_me_id: writer,
-      po_me_nickname: nickname,
-      po_content: content,
-      po_co_num: parseInt(co_num, 10),
-      po_date: new Date().toISOString() // 현재 시간을 ISO 문자열로 변환하여 po_date 설정
-    };
-
-    // 서버로 POST 요청 보내기
+  
+    // 서버에 전송할 데이터
+    const formData = new FormData();
+    formData.append("po_title", title);
+    formData.append("po_me_id", writer);
+    formData.append("po_me_nickname", nickname);
+    formData.append("po_content", content);
+    formData.append("po_co_num", co_num);
+    if (start) formData.append("po_start", start);
+    if (end) formData.append("po_end", end);
+    if (postImage) formData.append("po_post_image", postImage); // 게시글 이미지 파일 추가
+    if (contentImage) formData.append("po_content_image", contentImage); // 게시글 내용 이미지 파일 추가
+  
     fetch(`/post/insert/${co_num}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(post),
+      body: formData, // FormData를 직접 전송
     })
     .then((response) => {
       if (!response.ok) {
@@ -101,10 +86,50 @@ function Insert() {
         </div>
         <input type="hidden" id="writer" name="writer" value={writer} readOnly />
         <input type="hidden" id="nickname" name="nickname" value={nickname} readOnly />
+
+        {/* co_num이 3 또는 4일 경우에만 이벤트 기간 입력 필드 표시 */}
+        {(co_num === '3' || co_num === '4') && (
+          <div className="form-group" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+            <div style={{ flex: 1 }}>
+              <label>이벤트 시작일</label>
+              <DatePicker selected={start} onChange={(date) => setStart(date)} dateFormat="yyyy/MM/dd" className="form-control"/>
+            </div>
+            <div style={{ flex: 1 }}>
+              <label>이벤트 종료일</label>
+              <DatePicker selected={end} onChange={(date) => setEnd(date)} dateFormat="yyyy/MM/dd" className="form-control"/>
+            </div>
+          </div>
+        )}
+
         <div className="form-group">
           <label htmlFor="content">내용:</label>
           <textarea id="content" name="content" className="form-control" style={{ minHeight: '400px', height: 'auto' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
         </div>
+        {(co_num === '3' || co_num === '4') && (
+        <div>
+          {/* 게시글 이미지 업로드 필드 */}
+          <div className="image">
+            <label htmlFor="postImage">게시글 이미지:</label>
+            <input type="file" id="postImage" name="postImage" className="form-control" accept="image/*" onChange={handlePostImageChange} />
+            {postImagePreview && (
+              <div>
+                <img src={postImagePreview} alt="게시글 이미지 미리보기" style={{ width: '200px', height: 'auto', marginTop: '10px' }} />
+              </div>
+            )}
+          </div>
+
+          {/* 게시글 내용 이미지 업로드 필드 */}
+          <div className="image">
+            <label htmlFor="contentImage">게시글 내용 이미지:</label>
+            <input type="file" id="contentImage" name="contentImage" className="form-control" accept="image/*" onChange={handleContentImageChange} />
+            {contentImagePreview && (
+              <div>
+                <img src={contentImagePreview} alt="게시글 내용 이미지 미리보기" style={{ width: '200px', height: 'auto', marginTop: '10px' }} />
+              </div>
+            )}
+          </div>
+        </div>
+        )}
         <button type="submit" className="btn btn-outline-info col-12">게시글 등록</button>
       </form>
       <a className="btn btn-outline-info" href={`/post/list/${co_num}`}>목록으로</a>

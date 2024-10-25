@@ -98,20 +98,22 @@ const List = () => {
     <div className="container">
       <h2 style={{ padding: '30px 0 60px', textAlign: 'center' }}>{communityName} 게시판</h2>
       {/* 검색창과 X 버튼 */}
-      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          <input type="text" placeholder="검색어를 입력하세요" value={pageMaker && pageMaker.cri ? pageMaker.cri.search : ''} onChange={(e) => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: e.target.value }})} onKeyPress={handleKeyPress}
-            style={{ padding: '10px 40px 10px 10px', width: '400px', borderRadius: '5px', border: '1px solid lightgray' }} />
-          {pageMaker && pageMaker.cri && pageMaker.cri.search && (
-            <button onClick={() => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: '' }})} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent', fontSize: '16px', cursor: 'pointer' }}>
-              ✕
-            </button>
-          )}
+      {(co_num !== '3' && co_num !== '4') && (
+        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <input type="text" placeholder="검색어를 입력하세요" value={pageMaker && pageMaker.cri ? pageMaker.cri.search : ''} onChange={(e) => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: e.target.value }})} onKeyPress={handleKeyPress}
+              style={{ padding: '10px 40px 10px 10px', width: '400px', borderRadius: '5px', border: '1px solid lightgray' }} />
+            {pageMaker && pageMaker.cri && pageMaker.cri.search && (
+              <button onClick={() => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: '' }})} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent', fontSize: '16px', cursor: 'pointer' }}>
+                ✕
+              </button>
+            )}
+          </div>
+          <button onClick={handleSearch} style={{ padding: '10px 20px', marginLeft: '10px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
+            검색
+          </button>
         </div>
-        <button onClick={handleSearch} style={{ padding: '10px 20px', marginLeft: '10px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
-          검색
-        </button>
-      </div>
+      )}
       <div className="insert">
         <button style={{ marginBottom: '20px', float: 'right' }} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
       </div>
@@ -124,7 +126,12 @@ const List = () => {
                 <th style={{ width: '10%' }}>작성자</th>
               </>
             )}
-            <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>작성일</th>
+            {(co_num !== '3' && co_num !== '4') && (
+              <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>작성일</th>
+            )}
+            {(co_num === '3' || co_num === '4') && (
+              <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>이벤트 기간</th>
+            )}
             {co_num === '2' && (
               <>
                 <th style={{ width: '10%' }}>조회수</th>
@@ -147,12 +154,24 @@ const List = () => {
                     <td>{item.po_me_nickname}</td>
                   </>
                 )}
-                <td>{formatDate(item.po_date)}</td>
+                {(co_num !== '3' && co_num !== '4') && (
+                  <td>{formatDate(item.po_date)}</td>
+                )}
                 {co_num === '2' && (
                   <>
                     <td>{item.po_view}</td>
                     <td>{item.po_like}</td>
                   </>
+                )}
+                {(co_num === '3' || co_num === '4') && (
+                  <td>
+                    <div>
+                      {item.po_link && (
+                        <img src={item.po_link} alt="첨부 이미지" style={{ width: '100px', height: 'auto', marginBottom: '10px' }} />
+                      )}
+                      <div>{`${item.po_start} ~ ${item.po_end}`}</div>
+                    </div>
+                  </td>
                 )}
               </tr>
             ))
@@ -163,9 +182,6 @@ const List = () => {
           )}
         </tbody>
       </table>
-
-      {/* 이벤트 */}
-      
 
       {/* 페이지네이션 */}
       {!isSearchMode && pageMaker && pageMaker.totalCount > 10 && (  /* 기본 게시글이 10개 이상일 때 페이지네이션 출력 */
