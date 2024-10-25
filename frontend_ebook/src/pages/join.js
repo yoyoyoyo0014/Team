@@ -223,8 +223,39 @@ const Join = () => {
   let [month, setMonth] = useState('');
   let [day, setDay] = useState('');
 
-  // submit 함수에서 상태를 업데이트하고 서버로 전송
-  const submit = (data) => {
+   // 중복 확인 상태
+   const [isIdDuplicate, setIsIdDuplicate] = useState(false);
+   const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(false);
+
+  // 닉네임 중복 확인 API 호출
+  const checkDuplicateNickname = async (nickname) => {
+    try {
+      const response = await fetch(`/ebook/member/check-duplicate-nickname?me_nickname=${nickname}`);
+      const result = await response.json();
+      setIsNicknameDuplicate(result.exists); // 중복일 경우 true, 그렇지 않으면 false
+    } catch (error) {
+      console.error("Error checking nickname:", error);
+    }
+  };
+  
+  // 아이디 중복 확인 API 호출
+  const checkDuplicateId = async (id) => {
+    try {
+      const response = await fetch(`/ebook/member/check-duplicate-id?me_id=${id}`);
+      const result = await response.json();
+      setIsIdDuplicate(result.exists); // 중복일 경우 true, 그렇지 않으면 false
+    } catch (error) {
+      console.error("Error checking ID:", error);
+    }
+  };
+
+   // submit 함수에서 상태를 업데이트하고 서버로 전송
+   const submit = (data) => {
+    if (isIdDuplicate || isNicknameDuplicate) {
+      alert("아이디 또는 닉네임이 이미 존재합니다.");
+      return;
+    }
+
     const memberData = {
       ...member,
       me_id: data.me_id,
@@ -280,22 +311,30 @@ const Join = () => {
       <h2 className="txt-center page-title">회원가입</h2>
       <form name="join" onSubmit={handleSubmit(submit)}>
         <fieldset className="form-wrapper">
-          <InputItem
-            id="me_id"
-            name="me_id"
-            type="text"
-            cls="frm-input"
-            registerProps={register("me_id", {
-              required: "아이디를 입력해주세요",
-              pattern: {
-                value: /^[0-9a-zA-Z_]{8,15}$/,
-                message: "아이디는 8~15자이며, 영문 혹은 숫자를 포함해야 합니다",
-              },
-            })}
-            placeholder="8~15자의 영문 혹은 숫자"
-            error={errors.me_id}
-            label={"아이디"}
-          />
+
+        <InputItem
+          id="me_id"
+          name="me_id"
+          type="text"
+          cls="frm-input"
+          registerProps={register("me_id", {
+            required: "아이디를 입력해주세요",
+            pattern: {
+              value: /^[0-9a-zA-Z_]{8,15}$/,
+              message: "아이디는 8~15자이며, 영문 혹은 숫자를 포함해야 합니다",
+            },
+            onBlur: (e) => checkDuplicateId(e.target.value), // 중복 체크
+          })}
+          placeholder="8~15자의 영문 혹은 숫자"
+          error={errors.me_id}
+          label={"아이디"}
+        >
+          {isIdDuplicate && (
+            <p className="error-msg">아이디가 이미 사용 중입니다.</p>
+          )}
+        </InputItem>
+
+
           <InputItem
             id="me_name"
             name="me_name"
@@ -307,22 +346,29 @@ const Join = () => {
             error={errors.me_name}
             label={"이름"}
           />
+
           <InputItem
-            id="me_nickname"
-            name="me_nickname"
-            type="text"
-            cls="frm-input"
-            registerProps={register("me_nickname", {
-              required: "닉네임을 입력해주세요",
-              pattern: {
-                value: /^[0-9a-zA-Z가-힣]{1,8}$/,
-                message: "닉네임은 최대 8자입니다",
-              }
-            })}
-            placeholder="최대 8자 이내의 한글/영문/숫자"
-            error={errors.me_nickname}
-            label={"닉네임"}
-          />
+          id="me_nickname"
+          name="me_nickname"
+          type="text"
+          cls="frm-input"
+          registerProps={register("me_nickname", {
+            required: "닉네임을 입력해주세요",
+            pattern: {
+              value: /^[0-9a-zA-Z가-힣]{2,8}$/,
+              message: "닉네임은 최소 2자, 최대 8자 한글, 영문, 숫자를 포함합니다.",
+            },
+            onBlur: (e) => checkDuplicateNickname(e.target.value), // 중복 체크
+          })}
+          placeholder="최대 8자 이내의 한글/영문/숫자"
+          error={errors.me_nickname}
+          label={"닉네임"}
+        >
+          {isNicknameDuplicate && (
+            <p className="error-msg">닉네임이 이미 사용 중입니다.</p>
+          )}
+        </InputItem>
+
           <InputItem
             id="me_pw"
             name="me_pw"

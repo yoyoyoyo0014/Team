@@ -1,12 +1,4 @@
 import {useEffect, useState} from 'react';
-<<<<<<< HEAD
-import { useParams } from 'react-router-dom'
-import Header from '../header';
-import BookReview from './bookReview';
-function BookDetail() {
-  
-  const {bo_num} = useParams();
-=======
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -24,7 +16,6 @@ const BookDetail = ({Getuser}) => {
   const bookNum = useParams().bk_num;
 
   let [reviewList, setReviewList] = useState([]);
->>>>>>> KCL
   let [book,setBook] = useState({
     bk_num : 0, //도서 번호
     bk_name : '', //도서 이름
@@ -43,21 +34,6 @@ const BookDetail = ({Getuser}) => {
 
 
     bk_totalPurchase: 0,  //총 구매 수
-<<<<<<< HEAD
-    bk_age_60_male: 0,  //60대 남자
-    bk_age_60_female: 0,  //60대 여자
-    bk_age_50_male: 0,  //50대 남자
-	  bk_age_50_female: 0,  //50대 여자
-  	bk_age_40_male: 0,  //40대 남자
-  	bk_age_40_female: 0,  //40대 여자
-    bk_age_30_male: 0,  //30대 남자
-	  bk_age_30_female: 0,  //30대 여자
-	  bk_age_20_male: 0,  //20대 남자
-  	bk_age_20_female: 0,  //20대 여자
-	  bk_age_10_male: 0,  //10대 남자
-	  bk_age_10_female: 0  //10대 여자
-  })//책 데이터
-=======
     bk_age_60_male: 0,  //60대 남성
     bk_age_60_female: 0,  //60대 여성
     bk_age_50_male: 0,  //50대 남성
@@ -72,7 +48,6 @@ const BookDetail = ({Getuser}) => {
 	  bk_age_10_female: 0  //10대 여성
   })//책 데이터
   let [writer, setWriter] = useState([]);
->>>>>>> KCL
 
   let[user,setUser] = useState({
     me_id : 'admin123', //아이디
@@ -97,10 +72,6 @@ const BookDetail = ({Getuser}) => {
   })//유저 데이터
 
   let[useIsBuy, setUserIsBuy] = useState(false); //유저가 책을 샀는가
-<<<<<<< HEAD
-  let[writerList,setWriteList] =useState([]); //작가 리스트
-=======
->>>>>>> KCL
 
   let[popularityDistributionChart,setPopularityDistributionChart] = useState({
     bk_age_60_malePer: 0,
@@ -117,36 +88,6 @@ const BookDetail = ({Getuser}) => {
 	  bk_age_10_femalePer: 0
   });//인기분포도 %
 
-<<<<<<< HEAD
-  function getBookData(success){
-    fetch('/selectBook/'+bo_num,{
-			//body : JSON.stringify(book),
-			headers : {
-				"Content-type" : "application/json"
-			}
-    })
-      .then(res=>res.text())
-      .then(bookData=>{
-        if(bookData){
-          book = JSON.parse(bookData); 
-          setBook(book);
-          popularityDistributionChart = PopularityDistributionChart(book);//인기분포율 세팅
-          if(success!=null)success();
-        }
-      })
-      .catch(e=>console.error(e));
-  }//책 데이터 가져오기
-
-  useEffect(() => {
-    getBookData();
-}, []); //처음 시작할 때
-
-  return (
-    <div>
-      <div>책 제목 : {book.bk_name}</div>
-      <br/>
-      <BookReview bookNum={bo_num} userId={user.me_id}></BookReview>
-=======
   function getBookData(){
     popularityDistributionChart = PopularityDistributionChart(book);//인기분포율 세팅
   }
@@ -270,10 +211,8 @@ const BookDetail = ({Getuser}) => {
         
         <BookReview bookNum={bookNum} userId={user.me_id}></BookReview>
       </div>
-
-      <BarGraph popularityDistributionChart={popularityDistributionChart}/>
->>>>>>> KCL
       
+      <BarGraph popularityDistributionChart={popularityDistributionChart}/>
     </div>
   )
 }
@@ -295,21 +234,6 @@ function PopularityDistributionChart(book){
   }//인기분포도 %
 
   return popularityDistributionChart;
-<<<<<<< HEAD
-}
-
-function selectWriterList(bookNum){
-  fetch('/selectWriter/'+bookNum,{
-    headers : {
-      "Content-type" : "application/json"
-    }
-  })
-  .then(res=>res.json())
-  .then(writerList=>{
-    
-  })
-  .catch(e=>console.error(e))
-=======
 }//인기 분포도 세팅
 
 function BarGraph({popularityDistributionChart}){
@@ -396,7 +320,6 @@ function BarGraph({popularityDistributionChart}){
       </figure>
     </div>
   )
->>>>>>> KCL
 }
 
 export default BookDetail;

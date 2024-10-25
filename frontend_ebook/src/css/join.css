@@ -30,6 +30,11 @@
 	color: var(--color-caution);
 }
 
+.error-msg {
+	color: red;
+	font-size: 14px; /* 필요에 따라 글꼴 크기 변경 가능 */
+}
+
 #wrap {
 	position: fixed;
 	top: 0;
