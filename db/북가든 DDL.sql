@@ -119,7 +119,11 @@ CREATE TABLE `post` (
 	`po_date`	datetime	NOT NULL,
 	`po_co_num`	int	NOT NULL,
 	`po_view`	int	NOT NULL default 0,
-	`po_like`	int	NOT NULL default 0
+	`po_like`	int	NOT NULL default 0,
+	`po_link`	varchar(255) NULL,
+	`po_image`	varchar(255) NULL,
+	`po_start`	date NULL,
+	`po_end`	date NULL
 );
 
 CREATE TABLE `community` (

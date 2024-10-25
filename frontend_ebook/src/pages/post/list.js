@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 const List = () => {
   const { co_num } = useParams();
-  const { list } = useParams();
   const navigate = useNavigate();
   const [currentPosts, setCurrentPosts] = useState([]);  // 현재 페이지에 출력될 게시글 목록
   const [pageMaker, setPageMaker] = useState(null);
@@ -164,6 +163,9 @@ const List = () => {
           )}
         </tbody>
       </table>
+
+      {/* 이벤트 */}
+      
 
       {/* 페이지네이션 */}
       {!isSearchMode && pageMaker && pageMaker.totalCount > 10 && (  /* 기본 게시글이 10개 이상일 때 페이지네이션 출력 */
