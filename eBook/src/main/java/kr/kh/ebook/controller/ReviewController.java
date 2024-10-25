@@ -1,4 +1,4 @@
-package kr.kh.ebook.contoller;
+package kr.kh.ebook.controller;
 
 import java.util.List;
 

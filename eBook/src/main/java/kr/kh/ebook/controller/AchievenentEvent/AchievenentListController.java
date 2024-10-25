@@ -1,4 +1,4 @@
-package kr.kh.ebook.contoller.AchievenentEvent;
+package kr.kh.ebook.controller.AchievenentEvent;
 
 
 
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.PostConstruct;
-import kr.kh.ebook.contoller.CheckAchievenent;
 import kr.kh.ebook.model.vo.AchievenentListVO;
 import kr.kh.ebook.model.vo.AchievenentVO;
 import kr.kh.ebook.service.AchievenentService;

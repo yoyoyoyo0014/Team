@@ -1,7 +1,6 @@
-package kr.kh.ebook.contoller.AchievenentEvent;
+package kr.kh.ebook.controller.AchievenentEvent;
 
 
-import kr.kh.ebook.contoller.CheckAchievenent;
 import kr.kh.ebook.model.vo.AchievenentVO;
 
 public class Achievenents {
