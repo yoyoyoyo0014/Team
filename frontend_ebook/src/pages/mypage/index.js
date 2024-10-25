@@ -40,6 +40,22 @@ const MypageIndex = () => {
 		}
 	}, [user]);
 
+	// 팝업 창 열기
+  const openNicknamePopup = () => {
+		const popup = window.open(
+			"/nickname-popup.html", // public 폴더 경로로 지정
+			"닉네임 수정", // 팝업 창의 이름
+			"width=300,height=125,resizable=no,scrollbars=no,status=no" // 팝업 창의 옵션 설정
+		);
+	
+		popup.onbeforeunload = () => {
+			const updatedNickname = popup.document.getElementById("updatedNickname")?.value;
+			if (updatedNickname) {
+				setNickname(updatedNickname);
+			}
+		};
+	};
+
 	const openFileUploader = () => {
 		const event = new MouseEvent('click', {
 			view: window,
@@ -63,9 +79,7 @@ const MypageIndex = () => {
 						<div className="pf-nickname">
 							<h2 style={{ marginRight: '5px' }}>{nickname || '닉네임 없음'}</h2>
 							<span style={{ fontSize: '1.2em' }}> 님 </span>
-							<Link to={`/mypage/edit/${user?.member?.me_id || ''}`}>
-								<i className="fa-solid fa-pen"></i>
-							</Link>
+							<i className="fa-solid fa-pen" onClick={openNicknamePopup}></i>
 						</div>
 						
 						<div className="pf-desc">
