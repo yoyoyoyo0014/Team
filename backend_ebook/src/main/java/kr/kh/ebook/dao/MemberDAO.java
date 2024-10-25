@@ -10,7 +10,7 @@ import kr.kh.ebook.model.vo.MemberVO;
 @Mapper
 public interface MemberDAO {
 	
-	// 회원 ID로 사용자 조회 ( 카카오 )
+	// 회원 ID로 사용자 조회 (일반 로그인, 소셜 로그인 통합)
 	MemberVO findMemberById(String me_id);
 	
 	// 카카오 회원 등록
@@ -29,9 +29,12 @@ public interface MemberDAO {
 	// 일반 로그인
 	@Select("SELECT * FROM member WHERE me_id = #{me_id}")
     MemberVO getMemberById(String me_id);
+	
+	MemberVO getMemberByNickname(String meNickname);
 
 	// 일반 회원가입 후, 사용자 정보 db 저장
 	void insertNormalMember(MemberVO memberVO);
+
 
 	
 }

@@ -18,7 +18,7 @@ const Input = ({id, type, placeholder, name, cls, change, value, readOnly, check
 	)
 }
 
-const InputItem = ({id, type, placeholder, name, cls, change, value, readOnly, label, notice, registerProps, error, style, checked}) => {
+const InputItem = ({id, type, placeholder, name, cls, change, value, readOnly, label, notice, registerProps, error, style, checked, children}) => {
 
 	return(
 		<div className="input-item" style={style}>
@@ -39,6 +39,7 @@ const InputItem = ({id, type, placeholder, name, cls, change, value, readOnly, l
 				}/>
 			{label && label !== "" ? <label htmlFor={id}>{label} {notice && notice ? <span>{notice}</span> : ''}</label> : ""}
 			{error && <span className="error">{error.message}</span>} {/* 에러 메시지 */}
+			{children /* 추가된 부분으로, 외부에서 전달된 에러 메시지를 처리합니다 */}
 		</div>
 	)
 }

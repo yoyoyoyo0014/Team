@@ -18,7 +18,7 @@ public class MemberService {
 	
 	/* 카카오 로그인 관련 */
 	
-	// 회원 ID로 사용자 조회 ( 일반 로그인, 카카오 로그인에 사용 )
+	// 회원 ID로 사용자 조회 (일반 로그인, 소셜 로그인 통합)
 	public MemberVO getMemberById(String me_id) {
 		return memberDao.findMemberById(me_id);
 	}
@@ -71,5 +71,16 @@ public class MemberService {
 		}
 	}
 
+	/* 일반 회원가입 관련 */
+	
+	// 아이디 중복 체크
+    public boolean isIdDuplicate(String meId) {
+        return memberDao.getMemberById(meId) != null;
+    }
+
+    // 닉네임 중복 체크
+    public boolean isNicknameDuplicate(String meNickname) {
+        return memberDao.getMemberByNickname(meNickname) != null;
+    }
 	
 }
