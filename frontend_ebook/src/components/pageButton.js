@@ -1,7 +1,6 @@
-
 function MakePage(contentsCount,currentPage) {
   const lookPage = 5;
-  let page ={
+  let page = {
     contentsCount : contentsCount,
     currentPage : currentPage,
     startPage : 0,
@@ -29,11 +28,9 @@ function MakePage(contentsCount,currentPage) {
   else 
     page.prev = false;
 
-  if(currentPage+1<=page.endPage){
+  if(currentPage+1<=page.endPage)
     page.next = true
-  }
-    
-  else
+   else
     page.next = false;
 
   let pageList = [];

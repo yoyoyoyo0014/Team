@@ -273,3 +273,13 @@ footer {
 	font-size: 1.8em;
 	padding-bottom: 1em;
 }
+
+.ui-paging {
+	display: flex;
+	justify-content: center;
+	gap: 1em;
+	margin: 1.5em 0;
+}
+.ui-paging .paging-btn {cursor: pointer; padding: 0 .5em;}
+.ui-paging .paging-btn.num.now,
+.ui-paging .paging-btn.num:hover {font-weight: 900;}

@@ -13,6 +13,7 @@ import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterListVO;
 import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookPageMaker;
+import kr.kh.ebook.pagination.Criteria;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -117,6 +118,14 @@ public class BookService {
 
 	public void updateReviewScore(int re_bk_num, double re_star, char operator) {
 		bookDao.updateReviewScore(re_bk_num, re_star, operator);
+	}
+
+	public List<ReviewVO> selectAllMyReview(Criteria cri, String userId) {
+		return bookDao.selectAllMyReview(cri, userId);
+	}
+
+	public int selectMyReviewCount(String userId) {
+		return bookDao.selectMyReviewCount(userId);
 	}
 	
 }

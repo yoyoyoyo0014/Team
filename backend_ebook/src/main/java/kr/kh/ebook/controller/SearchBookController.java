@@ -112,15 +112,15 @@ public class SearchBookController {
 	@GetMapping("/selectGenreList")
 	@ResponseBody
 	public List<BookGenreVO> selectGenreList(){
-		List<BookGenreVO> res = bookService.selectGenreList();
+		List<BookGenreVO> res = bookService.getAllGenre();
 		return res;
 	}
 
 	//두번째 장르 가져오기
 	@GetMapping("/selectSecondGenreList")
 	@ResponseBody
-	public List<BookSecondGenreVO> selectSecondGenreList(){
-		List<BookSecondGenreVO> res = bookService.selectSecondGenreList();
+	public List<BookGenreVO> selectSecondGenreList(int parent){
+		List<BookGenreVO> res = bookService.getSecondGenre(parent);
 		return res;
 	}
 

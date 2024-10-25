@@ -21,6 +21,8 @@ import EventDetail from "./pages/eventDetail.js";
 import Order from "./pages/cart/order.js";
 import MyBadges from "./pages/mypage/mybadges.js";
 
+import PostList from "./pages/post/list.js";
+
 function Router({section}) {
 	const { isLoggedIn } = useContext(LoginContext);
 
@@ -59,6 +61,8 @@ function Router({section}) {
 
       <Route path="/event" element={<Event />} />
       <Route path="/event/:ev_id" element={<EventDetail />} />
+
+      <Route path="/request" element={<PostList />} />
     </Routes>
   );
 }

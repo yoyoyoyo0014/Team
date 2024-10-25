@@ -32,17 +32,16 @@ public class ReviewController {
 	}
 	
 	// 내 리뷰 리스트 보기 - 없음 null
-	@GetMapping("/myReview/{userId}/{pageNo}")
+	@PostMapping("/myReview/{userId}/{pageNum}")
 	@ResponseBody
-	public HashMap<String, Object> selectAllMyReview(@PathVariable("userId") String userId, @PathVariable("pageNo") int pageNo) {
-		Criteria cri = new Criteria(pageNo, 5);
+	public HashMap<String, Object> selectAllMyReview(@PathVariable("userId") String userId, @PathVariable("pageNum") int pageNum) {
+		Criteria cri = new Criteria(pageNum, 1);
 		List<ReviewVO> list = bookService.selectAllMyReview(cri, userId);
 		int cnt = bookService.selectMyReviewCount(userId);
-		PageMaker pm = new PageMaker(5, cri, cnt);
-		
+		PageMaker pm = new PageMaker(2, cri, cnt);
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list);
-		map.put("pm", pm);
+		map.put("reviewList", list);
+		map.put("reviewPm", pm);
 		return map;
 	}
 	

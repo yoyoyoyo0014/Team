@@ -90,11 +90,6 @@
 		    <version>3.0.3</version>
 		</dependency>
 		
-		<dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-starter-jdbc</artifactId>
-	    </dependency>
-	    
  		<dependency>
 			<groupId>org.springframework.boot</groupId>
 		 	<artifactId>
@@ -108,31 +103,11 @@
 	        <artifactId>thymeleaf-layout-dialect</artifactId>
 	        <version>3.1.0</version>
     	</dependency>
-    	
-    	<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-		    <version>8.0.16</version>
-		</dependency>
-		
-		 <dependency>
-		    <groupId>org.mybatis.spring.boot</groupId>
-		    <artifactId>mybatis-spring-boot-starter</artifactId>
-		    <version>3.0.3</version>
-		</dependency>
 		
 		<dependency>
 	        <groupId>org.springframework.boot</groupId>
 	        <artifactId>spring-boot-starter-jdbc</artifactId>
 	    </dependency>
-	    
- 		<dependency>
-		 	<groupId>org.springframework.boot</groupId>
-		 	<artifactId>
-		 		spring-boot-configuration-processor
-		 	</artifactId>
-		 	<optional>true</optional>
-		 </dependency>
 		 
 		<dependency>
 			<groupId>io.projectreactor</groupId>
@@ -191,47 +166,10 @@
 	        <version>1.40.1</version>
 	    </dependency>
 		
-	</dependencies>
-
-		 <!-- 구글 API 클라이언트 -->
-	    <dependency>
-	        <groupId>com.google.api-client</groupId>
-	        <artifactId>google-api-client</artifactId>
-	        <version>1.32.1</version>
-	    </dependency>
-	
-	    <!-- 구글 OAuth 클라이언트 -->
-	    <dependency>
-	        <groupId>com.google.oauth-client</groupId>
-	        <artifactId>google-oauth-client</artifactId>
-	        <version>1.32.1</version>
-	    </dependency>
-	
-	    <!-- JSON 파싱 라이브러리 (Jackson2) -->
-	    <dependency>
-	        <groupId>com.google.http-client</groupId>
-	        <artifactId>google-http-client-jackson2</artifactId>
-	        <version>1.40.1</version>
-	    </dependency>
-	
-	    <!-- HTTP 클라이언트 -->
-	    <dependency>
-	        <groupId>com.google.http-client</groupId>
-	        <artifactId>google-http-client</artifactId>
-	        <version>1.40.1</version>
-	    </dependency>
-		
 		<dependency>
 		   <groupId>com.github.iamport</groupId>
 		   <artifactId>iamport-rest-client-java</artifactId>
 		   <version>0.2.14</version>
-		</dependency>
-		
-		<!-- 구글 peopleAPI  -->
-		<dependency>
-		    <groupId>com.google.api-client</groupId>
-		    <artifactId>google-api-client</artifactId>
-		    <version>1.32.1</version>
 		</dependency>
 		
 		<dependency>
@@ -255,6 +193,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<defaultGoal>install</defaultGoal>
 	</build>
 
 </project>

@@ -18,7 +18,7 @@ import lombok.AllArgsConstructor;
 //@AllArgsConstructor
 public class AchievenentListController {
 	
-	@Autowired
+//	@Autowired
 	
 	@PostConstruct
 	public void init() {

@@ -107,13 +107,25 @@
 		where re_me_id = #{userId} and re_bk_num = #{bookNum}
 	</select>
 	
-	<select id="selectReviewList">
+	<select id="selectAllMyReview" resultType="ReviewVO">
+		select *
+		from review
+		where re_me_id = #{userId}
+		order by re_date asc
+		limit #{cri.page}, #{cri.perPageNum}
+	</select>
+	
+	<select id="selectMyReviewCount" resultType="Integer">
+		select count(*) from review where re_me_id = #{userId}
+	</select>
+	
+	<select id="selectReviewList" resultType="ReviewVO">
 		select *
 		from review
 		join member on me_id = re_me_id
 		where re_bk_num = #{bookNum}
 		order by re_date asc
-		limit #{pageNum}, 5;
+		limit #{pageNum}, 5
 	</select>
 	
 	<insert id="insertReview">

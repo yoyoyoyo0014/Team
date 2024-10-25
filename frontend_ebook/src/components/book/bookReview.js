@@ -376,7 +376,7 @@ function BookReview({bookNum,userId}) {
                   const m = date.getMonth();
                   const d = date.getDate();
                   return (<span className="review-date">{y}.{m}.{d}</span>);
-                })()}               
+                })()}
               </div>
               <div className="rating">
                 <StarRating score={item.re_star}/>

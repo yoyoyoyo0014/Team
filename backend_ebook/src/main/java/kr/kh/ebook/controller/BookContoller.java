@@ -91,4 +91,20 @@ public class BookContoller {
 		return bookService.updateReadBook(readBook);
 	}
 	
+
+//	@GetMapping("/selectGenreList")
+//	@ResponseBody
+//	public List<BookGenreVO> selectGenreList(){
+//		List<BookGenreVO> res = bookService.getAllGenre();
+//		return res;
+//	}
+//
+//	//두번째 장르 가져오기
+//	@GetMapping("/selectSecondGenreList")
+//	@ResponseBody
+//	public List<BookGenreVO> selectSecondGenreList(int parent){
+//		List<BookGenreVO> res = bookService.getSecondGenre(parent);
+//		return res;
+//	}
+	
 }

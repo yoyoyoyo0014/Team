@@ -27,15 +27,15 @@ public class MemberContorller {
 		return memberService.getMemberById(me_id);
 	}
 	
-	 @PostMapping("/register")
-	    public Map<String, String> registerNormalMember(@RequestBody MemberVO memberVO) {
-	        boolean isRegistered = memberService.registerNormalMember(memberVO);
+	@PostMapping("/register")
+    public Map<String, String> registerNormalMember(@RequestBody MemberVO memberVO) {
+        boolean isRegistered = memberService.registerNormalMember(memberVO);
 
-	        // JSON 형식으로 응답 반환
-	        Map<String, String> response = new HashMap<>();
-	        response.put("message", isRegistered ? "회원 등록 완료" : "회원 등록 실패");
+        // JSON 형식으로 응답 반환
+        Map<String, String> response = new HashMap<>();
+        response.put("message", isRegistered ? "회원 등록 완료" : "회원 등록 실패");
 
-	        return response;  // Map 객체를 반환하면 Spring이 이를 JSON으로 변환
-	    }
+        return response; // Map 객체를 반환하면 Spring이 이를 JSON으로 변환
+   }
 	
 }
