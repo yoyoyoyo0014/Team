@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 
 function MakePage(contentsCount,currentPage) {
   const lookPage = 5;
   let page ={
+=======
+function MakePage(contentsCount,currentPage) {
+  const lookPage = 5;
+  let page = {
+>>>>>>> KCL
     contentsCount : contentsCount,
     currentPage : currentPage,
     startPage : 0,
@@ -29,11 +35,17 @@ function MakePage(contentsCount,currentPage) {
   else 
     page.prev = false;
 
+<<<<<<< HEAD
   if(currentPage+1<=page.endPage){
     page.next = true
   }
     
   else
+=======
+  if(currentPage+1<=page.endPage)
+    page.next = true
+   else
+>>>>>>> KCL
     page.next = false;
 
   let pageList = [];

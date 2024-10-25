@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+<<<<<<< HEAD
 
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +16,31 @@ function BookSearch() {
   const { bo_search } = useParams();
 
   let [bookList,setBookList] = useState([])
+=======
+import MakePage from '../pageButton';
+import { useParams } from 'react-router-dom';
+
+function BookSearch() {
+
+  //initCountry/:initGenre/:initSearch/:initCategory/:initPage
+
+  const {initCountry}= useParams();
+  const {initGenre}= useParams();
+  const {initSearch}= useParams();
+  const {initCategory}= useParams();
+  const {initPage}= useParams();
+
+  let [data, setData] = useState({
+    search : '',
+    country : 'all',
+    genre : 0,
+    category : '',
+    page : 0
+  })//검색 시 필요한 목록
+//Route path={"/searchBook/:initCountry/:initGenre/:initCategory/:initPage/SearchWord=:initSearch"}element ={<BookSearch/>}/>
+  let [bookList,setBookList] = useState([])
+  //let [bookCount,setBookCount] = useState(0); //책 숫자
+>>>>>>> KCL
   
   let [search,setSearch] = useState('');
   let [country,setCountry] = useState("all");
@@ -50,20 +76,52 @@ function BookSearch() {
     setSearch(e.target.value);
   }//검색 설정
 
+<<<<<<< HEAD
   async function getSearchCount(inputSerch = ''){
     inputSerch = inputSerch.slice(11);
     if(inputSerch=='')
       inputSerch = search
 
+=======
+  function getGenreList(){
+    fetch('api/selectGenreList',{
+      method : "post",
+      //body : JSON.stringify(writeUserReview),
+      headers: {
+        'Content-Type': 'application/json',  // Content-Type 헤더 설정
+      },
+    })
+    .then(res=>res.json())
+    .then(genreListData=>{
+      // genreListData = 장르 리스트
+      if(genreListData){
+        setGenreList([...genreListData]);
+      }
+      
+    })
+    .catch(e=>console.error(e));
+  }//장르리스트 가져오는 함수
+
+  async function getSearchCount(){
+>>>>>>> KCL
     for(var i = 0;i<bannedSearchTerms.length;i++){
       if(search.indexOf(bannedSearchTerms[i]) !==-1){
         alert('금지된 검색이 포함되어있습니다.')
         return false;
       }
     }
+<<<<<<< HEAD
     try {
       // fetch 요청이 완료될 때까지 대기
       const response = await fetch('/searchBookCount/'+country+"/"+genre+"/SearchWord="+inputSerch,{
+=======
+   
+
+    try {
+      // fetch 요청이 완료될 때까지 대기
+      const response = await fetch('api/searchBookCount/'+country+"/"+genre+"/SearchWord="+search,{
+        method : "post",
+>>>>>>> KCL
         //body : JSON.stringify(writeUserReview),
         headers: {
           'Content-Type': 'application/json',  // Content-Type 헤더 설정
@@ -75,6 +133,7 @@ function BookSearch() {
       console.error(e);
       return false;;
     }
+<<<<<<< HEAD
   }//검색개수 가져오기
 
   async function selectSearch(inputSerch = ''){
@@ -82,6 +141,13 @@ function BookSearch() {
     if(inputSerch=='')
       inputSerch = search
 
+=======
+
+
+  }//검색개수 가져오기
+
+  async function selectSearch(){
+>>>>>>> KCL
     for(var i = 0;i<bannedSearchTerms.length;i++){
       if(search.indexOf(bannedSearchTerms[i]) !==-1){
         alert('금지된 검색이 포함되어있습니다.')
@@ -89,15 +155,25 @@ function BookSearch() {
       }
     }
 
+<<<<<<< HEAD
     try {
       const response = await fetch('/searchBook/'+category+"/"+country+'/'+
         genre+'/'+page.currentPage+'/SearchWord='+inputSerch,{
+=======
+
+    try {
+      // fetch 요청이 완료될 때까지 대기
+      const response = await fetch('api/searchBook/'+category+"/"+country+'/'+
+        genre+'/'+page.currentPage+'/SearchWord='+search,{
+        method : "post",
+>>>>>>> KCL
         //body : JSON.stringify(writeUserReview),
         headers: {
           'Content-Type': 'application/json',  // Content-Type 헤더 설정
         },
       })
       const bookListData = await response.json();
+<<<<<<< HEAD
       if(bookListData ==null)
         return false;
       
@@ -109,6 +185,12 @@ function BookSearch() {
     } catch (e) {
       //console.error(e);
       return false;
+=======
+      return bookListData;
+    } catch (e) {
+      console.error(e);
+      return false;;
+>>>>>>> KCL
     }
 
   }//검색하기
@@ -117,6 +199,10 @@ function BookSearch() {
     if(typeof index ==='number'){
       page.currentPage = index;
     }else{
+<<<<<<< HEAD
+=======
+      
+>>>>>>> KCL
       var i ={
         index : 0
       }
@@ -124,6 +210,7 @@ function BookSearch() {
       page.currentPage = i.index+1;
     }
     page = MakePage(page.contentsCount,page.currentPage);
+<<<<<<< HEAD
 
     if(page.currentPage>page.endPage){
       page.currentPage = page.endPage;
@@ -133,19 +220,27 @@ function BookSearch() {
    if(page.currentPage<=0)
       page.currentPage = 1;
     navigate("/searchBook/"+country+"/"+genre+"/"+category+"/"+page.currentPage+"/bookSearch="+search);
+=======
+>>>>>>> KCL
     await submitSearch();
     
   }//페이지 바꾸기
 
+<<<<<<< HEAD
   async function submitSearch(inputSerch = ''){
     if(inputSerch=='')
       inputSerch = search
 
     var searchCount = await getSearchCount(inputSerch);
+=======
+  async function submitSearch(){
+    var searchCount = await getSearchCount();
+>>>>>>> KCL
     if(!searchCount)
       return;
     page.contentsCount = searchCount;
     page = MakePage(page.contentsCount,page.currentPage);
+<<<<<<< HEAD
     
     if(page.currentPage>page.endPage){
       page.currentPage = page.endPage;
@@ -153,10 +248,15 @@ function BookSearch() {
     }
     var searchDataList = await selectSearch(inputSerch);
 
+=======
+    var searchDataList = await selectSearch();
+    console.log(searchDataList)
+>>>>>>> KCL
     setBookList(searchDataList);
     setPage({...page});
   }//책 검색
 
+<<<<<<< HEAD
   function urlSetting(){
     setCountry(bo_country)
     setGenre(bo_genre)
@@ -183,6 +283,22 @@ function BookSearch() {
     })();
     
     },[]);
+=======
+  useEffect(()=>{
+
+    console.log(initCountry,initCategory,initGenre,initSearch,initPage)
+    setCountry(initCountry);
+    setGenre(initGenre);
+    setSearch(initSearch);
+
+    page.currentPage = initPage;
+    setPage({...page});
+    setCategory(initCategory);
+    
+    getGenreList();//장르 리스트 가져오기
+    submitSearch(); //그냥 검색
+  },[]);
+>>>>>>> KCL
   //console.log('렌더링 횟수')
   return (
     <div >
@@ -232,9 +348,12 @@ function BookSearch() {
           </label> 
         </div>
           <br/>
+<<<<<<< HEAD
           <label>
                <input defaultChecked onClick={()=>{checkedGenre(0)}} type="radio" id={0} name="genre" value="전체"/>전체
           </label>
+=======
+>>>>>>> KCL
           {
             genreList.map((item,index)=>(
               <label key={index} >
@@ -242,6 +361,7 @@ function BookSearch() {
              </label> 
             ))
           }
+<<<<<<< HEAD
             <input onClick={()=>changePage(1)} type="submit" value="제출"></input>
             {bookList && bookList.length > 0 &&   bookList.map((item, index) => {
             return (
@@ -253,6 +373,16 @@ function BookSearch() {
         }
         
       <button onClick={()=>changePage(page.currentPage-1)} disabled= {!page.prev}>이전</button>
+=======
+        <input onClick={()=>changePage(1)} type="submit" value="제출"></input>
+        {
+          bookList.map((item,index)=>{
+            return (<div key={index}>{item.bk_name} : {item.bk_price}</div>)
+          })
+        }
+        
+        <button onClick={()=>changePage(page.currentPage-1)} disabled= {!page.prev}>이전</button>
+>>>>>>> KCL
 
       {page.pageList.map((item,index)=>{
           return(<button  onClick={()=>changePage({index})} disabled={page.currentPage==(index+1)} key={index}>{item}</button>)

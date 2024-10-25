@@ -26,6 +26,7 @@ function IsbnSearch({exit, onClose}) {
     setSearchDataList(searchDataList);
 
     page.contentsCount = objs.total;
+<<<<<<< HEAD
     
     page.pageList = page.pageList.slice(0,5);
    
@@ -34,6 +35,10 @@ function IsbnSearch({exit, onClose}) {
     page = MakePage(page.contentsCount,page.currentPage);
 
 
+=======
+    page.pageList = page.pageList.slice(0,5);
+    page = MakePage(page.contentsCount,page.currentPage);
+>>>>>>> KCL
     eventButtons = [];
     for(var i = page.startPage;i<=page.endPage;i++){
       console.log("페이지 이벤트 체크 : " + i)

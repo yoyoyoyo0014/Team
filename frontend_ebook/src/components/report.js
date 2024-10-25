@@ -130,4 +130,8 @@ export function Report({getReport,exit}) {
 export function bookReviewReport(targetNum){
   return 'BR'+targetNum;
 }//책리뷰 신고 할 때
+<<<<<<< HEAD
 export default Report;
+=======
+export default Report;
+>>>>>>> KCL

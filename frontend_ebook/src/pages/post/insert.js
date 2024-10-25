@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 
+<<<<<<< HEAD
 function Insert({list, setList, me_id}){
+=======
+function PostInsert({list, setList, me_id}){
+>>>>>>> KCL
 	let [title, setTitle] = useState("");
 	let [content, setContent] = useState("");
 
@@ -23,4 +27,8 @@ function Insert({list, setList, me_id}){
 		</div>
 	)
 }
+<<<<<<< HEAD
 export default Insert;
+=======
+export default PostInsert;
+>>>>>>> KCL

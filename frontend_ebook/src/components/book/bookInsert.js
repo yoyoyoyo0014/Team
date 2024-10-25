@@ -59,6 +59,10 @@ function BookInsert() {
   let[searchWriterList,setSearchWriterList] = useState([]);//검색한 작가 리스트
   let[currentWriterSearch,SetCurrentWriterSearch] = useState('')//현재 작가 검색 단어
   let[currentWriterPage,setCurrentWriterPage] = useState(0);//현재 작가 검색 페이지
+<<<<<<< HEAD
+=======
+
+>>>>>>> KCL
   let[writerPage,setWriterPage] = useState({
     contentsCount : 0,
     currentPage : 0,
@@ -129,14 +133,22 @@ function BookInsert() {
       return false;
     }
     return true
+<<<<<<< HEAD
   }
+=======
+  }//빈 칸 확인
+>>>>>>> KCL
 
   function submitFile(){
     if(!checkInsertBook(book)){
       return
     }
+<<<<<<< HEAD
       
 
+=======
+    
+>>>>>>> KCL
     for(var i = 0; i<addWriterList.length;i++)
       delete addWriterList[i].wr_name;
 
@@ -147,7 +159,10 @@ function BookInsert() {
     
     formData.append('bk_data',JSON.stringify(book));
     formData.append('writerList',JSON.stringify(addWriterList));
+<<<<<<< HEAD
     //book,addWriterList, bookImgFile,bookEqubFile); // 'file'은 서버에서 기대하는 파라미터 이름과 동일해야 함
+=======
+>>>>>>> KCL
 
     
     fetch('insertBook',{

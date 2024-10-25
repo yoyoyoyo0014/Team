@@ -1,12 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+<<<<<<< HEAD
 const List = ({ communities = [] }) => {
   const { co_num } = useParams();
   const navigate = useNavigate();
   const [list, setList] = useState([]);
   const [pageMaker, setPageMaker] = useState(null);
   const [hoverIndex, setHoverIndex] = useState(null);
+=======
+import {Input} from '../../components/form/input';
+import Button from '../../components/form/button';
+
+import './style.css';
+
+const PostList = ({ communities = [] }) => {
+  const { co_num } = useParams();
+  const navigate = useNavigate();
+  const [PostList, setPostList] = useState([]);
+  const [pageMaker, setPageMaker] = useState(null);
+  const [hoverIndex, setHoverIndex] = useState(null);
+  let [keyword, setKeyword] = useState('');
+>>>>>>> KCL
 
   // 스크롤을 맨 위로 이동
   useEffect(() => {
@@ -31,7 +46,11 @@ const List = ({ communities = [] }) => {
 
   useEffect(() => {
     if (co_num) {
+<<<<<<< HEAD
       fetch(`/post/list/${co_num}`)
+=======
+      fetch(`/post/PostList/${co_num}`)
+>>>>>>> KCL
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -40,9 +59,15 @@ const List = ({ communities = [] }) => {
         })
         .then((data) => {
           if (data) {
+<<<<<<< HEAD
             if (data.list) {
               const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
               setList(sortedList);
+=======
+            if (data.PostList) {
+              const sortedPostList = data.PostList.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
+              setPostList(sortedPostList);
+>>>>>>> KCL
             }
             if (data.pm) {
               setPageMaker(data.pm);
@@ -57,7 +82,11 @@ const List = ({ communities = [] }) => {
 
   const handlePageClick = (page) => {
     // 페이지 번호 클릭 시 해당 페이지의 데이터를 가져옴
+<<<<<<< HEAD
     fetch(`/post/list/${co_num}?page=${page}`)
+=======
+    fetch(`/post/PostList/${co_num}?page=${page}`)
+>>>>>>> KCL
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -65,9 +94,15 @@ const List = ({ communities = [] }) => {
         return response.json();
       })
       .then((data) => {
+<<<<<<< HEAD
         if (data.list) {
           const sortedList = data.list.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
           setList(sortedList);
+=======
+        if (data.PostList) {
+          const sortedPostList = data.PostList.sort((a, b) => new Date(b.po_date) - new Date(a.po_date));
+          setPostList(sortedPostList);
+>>>>>>> KCL
         }
         if (data.pm) {
           setPageMaker(data.pm);
@@ -81,12 +116,20 @@ const List = ({ communities = [] }) => {
   return (
     <div className="container">
       <h2>{communityName}</h2>
+<<<<<<< HEAD
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
         <input type="text" placeholder="검색어를 입력하세요" style={{ padding: '10px', width: '60%', borderRadius: '5px', border: '1px solid lightgray' }} />
         <button style={{ padding: '10px 20px', marginLeft: '10px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
           검색
         </button>
       </div>
+=======
+      <div className="post-search-box">
+        <Input type="text" cls="frm-input" placeholder="검색어를 입력하세요" change={setKeyword} />
+        <Button text="검색" cls="btn btn-point" />
+      </div>
+      
+>>>>>>> KCL
       <table className="table" style={{ textAlign: 'center', width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ color: 'gray', borderBottom: '1px solid gray' }}>
           <tr>
@@ -102,10 +145,17 @@ const List = ({ communities = [] }) => {
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
           {list && list.length > 0 ? (
             list.map((item, idx) => (
               <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
                 <td>{list.length - idx}</td>
+=======
+          {PostList && PostList.length > 0 ? (
+            PostList.map((item, idx) => (
+              <tr key={idx} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
+                <td>{PostList.length - idx}</td>
+>>>>>>> KCL
                 <td style={{ textAlign: 'left'}}>
                   <span style={{cursor: 'pointer', textDecoration: hoverIndex === idx ? 'underline' : 'none' }} onMouseEnter={() => setHoverIndex(idx)}onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${item.po_num}`)}>
                     {item.po_title}
@@ -153,4 +203,8 @@ const List = ({ communities = [] }) => {
   );
 };
 
+<<<<<<< HEAD
 export default List;
+=======
+export default PostList;
+>>>>>>> KCL
