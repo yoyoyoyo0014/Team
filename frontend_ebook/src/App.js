@@ -9,13 +9,15 @@ import './css/default.css';
 import './css/style.css';
 
 import {useEffect, useState} from "react";
-
+import { AchievenentEvent, CollectAchievenent } from "./components/achievenent/achievenentEvent.js";
+import { AchievenentSwitch } from "./components/achievenent/AchieventContext.js";
 function App() {
   let [section, setSection] = useState('');
   let [genreList, setGenreList] = useState([{}]);
   let [majorGenreList, setMajorGenreList] = useState([{}]);
 
   useEffect(() => {
+
     window.addEventListener('resize', ()=> Common.setVh());
     Common.setVh();
 
@@ -38,6 +40,9 @@ function App() {
         <Home genreList={genreList}/>
       </main>
       <Footer />
+      <AchievenentSwitch>
+        <AchievenentEvent/>
+      </AchievenentSwitch>
     </div>
 	);
 }

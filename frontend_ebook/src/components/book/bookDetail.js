@@ -111,6 +111,7 @@ function BookDetail() {
     getWriterType();
 }, []); //처음 시작할 때
 
+
   return (
     <div>
       <img src={'/img/book_'+ bo_num + '.jpg'} alt="불러오지 못한 이미지"  width="50" height="75"></img>

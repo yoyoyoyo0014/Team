@@ -42,7 +42,6 @@ function MakePage(contentsCount,currentPage) {
     pageList.push(i);
 
   page.pageList = pageList;
-  //console.log("total : "+contentsCount+" endPage" + page.endPage,"next" + page.next+"currentPage"+page.currentPage)
   return page;
 }
 
