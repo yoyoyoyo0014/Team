@@ -39,8 +39,6 @@ export async function selectWriterType() {
     console.error(e);
   }
 }
-<<<<<<< HEAD
-=======
 
 export async function SelectWriterList(bo_num) {
   try{
@@ -85,6 +83,5 @@ export async function SelectWriter(wr_num) {
   }
 }
 
->>>>>>> KCL
 export default SearchWriterList;
 

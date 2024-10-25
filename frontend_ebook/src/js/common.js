@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-export function setVh(){
-=======
 export const setVh = () => {
->>>>>>> KCL
 	let ele = document.getElementById('body');
 	let vh = window.innerHeight * 0.01;
 	ele.style.setProperty('--vh', `${vh}px`);

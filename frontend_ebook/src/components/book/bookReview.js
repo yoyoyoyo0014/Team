@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import {useState} from 'react';
-=======
 import {Fragment, useState} from 'react';
->>>>>>> KCL
 import React, { useEffect } from 'react';
 import Modal from 'react-modal';
 //import Report from '../reportType';
@@ -11,13 +7,10 @@ import ReportType from '../reportType';
 import { bookReviewReport } from '../report';
 import MakePage from '../pageButton';
 import Report from '../report';
-<<<<<<< HEAD
-=======
 import Button from '../form/button';
 import axios from 'axios';
 import { Input } from '../form/input';
 import StarRating from '../starRating';
->>>>>>> KCL
 
 Modal.setAppElement('#root'); // 접근성 관련 설정 (필수)
 
@@ -71,38 +64,20 @@ function BookReview({bookNum,userId}) {
     rp_rt_num : 0,
     rp_id : ''
   })//신고객체
-<<<<<<< HEAD
-
-=======
   
->>>>>>> KCL
   function insertReview(){
     if(userId == null){
       alert('로그인을 해주세요.')
       return;
     }
-<<<<<<< HEAD
-    if(writerIsReview){
-      alert('이미 리뷰를 작성하였습니다.')
-      return;
-    }
-=======
     // if(writerIsReview){
     //   alert('이미 리뷰를 작성하였습니다.')
     //   return;
     // }
->>>>>>> KCL
     if(!userIsBuy){
       alert('책을 구매하지 않았습니다.')
       return;
     }
-<<<<<<< HEAD
-    
-
-    writeUserReview.re_me_id =  userId;
-    writeUserReview.re_bk_num = bookNum; //리뷰 책 번호 세팅
-    setWriteUserReview(writeUserReview);
-=======
 
     writeUserReview.re_me_id =  userId;
     writeUserReview.re_bk_num = bookNum; //리뷰 책 번호 세팅
@@ -112,24 +87,10 @@ function BookReview({bookNum,userId}) {
         re_content: writeUserReview.re_content
       }
     });
->>>>>>> KCL
 
     if(!TestStar(writeUserReview.re_star))
       return;//제대로 된 별점 X
 
-<<<<<<< HEAD
-    fetch('insertReview',{
-      method : "post",
-      body : JSON.stringify(writeUserReview),
-      headers: {
-        'Content-Type': 'application/json',  // Content-Type 헤더 설정
-      },
-    })
-    .then(res=>res.text())
-    .then(resGetReviewData=>{
-      // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
-      if(resGetReviewData){
-=======
     const options = {
       url: '/review/insertReview',
       method:'POST',
@@ -149,24 +110,11 @@ function BookReview({bookNum,userId}) {
 		.then(res=>{
       // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
       if(res){
->>>>>>> KCL
         alert('성공적으로 작성되었습니다.');
         setWriterIsReview(true);
         oriWriteUserReview = writeUserReview;
         selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
         changePageOri();//페이지 번호 재설정
-<<<<<<< HEAD
-      }
-      else
-        alert('리뷰가 작성되지 않았습니다.');
-    })
-    .catch(e=>console.error(e));
-  }//유저가 리뷰를 쓸 때
-
-  function updateReview(){
-    if(oriWriteUserReview.re_content == writeUserReview.re_content &&
-       oriWriteUserReview.re_star == writeUserReview.re_star){
-=======
       } else console.log('리뷰가 작성되지 않았습니다.');
     })
 
@@ -189,7 +137,6 @@ function BookReview({bookNum,userId}) {
   function updateReview(){
     if(oriWriteUserReview.re_content === writeUserReview.re_content &&
        oriWriteUserReview.re_star === writeUserReview.re_star){
->>>>>>> KCL
       alert('리뷰가 수정되지 않았습니다.');
       return;
     }
@@ -200,11 +147,7 @@ function BookReview({bookNum,userId}) {
     if(!TestStar(writeUserReview.re_star))
       return;//제대로 된 별점 X
 
-<<<<<<< HEAD
-    fetch('updateReview',{
-=======
     fetch('/review/updateReview',{
->>>>>>> KCL
       method : "post",
       body : JSON.stringify(writeUserReview),
       headers: {
@@ -215,22 +158,14 @@ function BookReview({bookNum,userId}) {
     .then(resGetReviewData=>{
       // resGetReviewData = 리뷰가 성공적으로 보내졌는지 유무
       if(resGetReviewData){
-<<<<<<< HEAD
-        alert('성공적으로 변경되었습니다.');
-=======
         alert('성공적으로 수정되었습니다.');
->>>>>>> KCL
         oriWriteUserReview = writeUserReview;
         setOriWriteUserReview(writeUserReview);
         selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
         changePageOri();//페이지 번호 재설정
       }
       else
-<<<<<<< HEAD
-        alert('리뷰변경을 실패했습니다.');
-=======
         alert('리뷰 수정에 실패했습니다.');
->>>>>>> KCL
     })
     .catch(e=>console.error(e));
   }//리뷰 수정
@@ -238,21 +173,11 @@ function BookReview({bookNum,userId}) {
   function deleteReview(){
     if(!writerIsReview)
       return;
-<<<<<<< HEAD
-
-    fetch('deleteReview/'+bookNum+'/'+userId,{
-      //method : "post",
-      //body : JSON.stringify(writeUserReview),
-      headers: {
-        'Content-Type': 'application/json',  // Content-Type 헤더 설정
-      },
-=======
     fetch('/review/deleteReview/' + bookNum + '/' + userId, {
       method : "post",
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       }
->>>>>>> KCL
     })
     .then(res=>res.text())
     .then(resDeleteData=>{
@@ -275,15 +200,6 @@ function BookReview({bookNum,userId}) {
     .catch(e=>console.error(e));
   }//리뷰삭제
 
-<<<<<<< HEAD
-  function writeContent(e){
-      setWriteUserReview({...writeUserReview, re_content : e.target.value});
-  }//컨텐츠 작성
-
-  function writerStar(e){
-    setWriteUserReview({...writeUserReview, re_star : e.target.value});
-  }//별점 작성
-=======
   function changeContent(e){
     setWriteUserReview(prev => {
       return {...prev, re_content: e.target.value}
@@ -298,17 +214,12 @@ function BookReview({bookNum,userId}) {
     
     //changeStar(e.target.previousElementSibling.value);
   }
->>>>>>> KCL
 
   function TestStar(starValue){
     if(starValue<=0 || starValue>5){
       alert("별점을 작성해주세요.");
       return false;
     }
-<<<<<<< HEAD
-      
-=======
->>>>>>> KCL
     return true;
   }//별점이 0점이하 5점 초과 시 false
 
@@ -316,15 +227,9 @@ function BookReview({bookNum,userId}) {
     if(userId ==null)
       return;
 
-<<<<<<< HEAD
-    fetch('selectMyReview/'+userId+'/'+bookNum,{
-      //method : "post",
-      //body : JSON.stringify(writeUserReview),
-=======
     fetch('/review/selectMyReview/' + bookNum + '/' + userId, {
       method : "post",
       body : JSON.stringify(writeUserReview),
->>>>>>> KCL
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
@@ -343,20 +248,11 @@ function BookReview({bookNum,userId}) {
     .catch(e=>console.error(e));
   }//해당 유저가 리뷰를 썼는지
 
-<<<<<<< HEAD
-  function selectReviewList(currentPageNum ,successSelectReviewList = null){
-    var pageNum = (currentPageNum-1) * reviewPageCount;
-    
-    fetch("reviewList/"+bookNum+"/"+pageNum,{
-      //method : "post",
-      //body : JSON.stringify(writeUserReview),
-=======
   function selectReviewList(currentPageNum, successSelectReviewList = null){
     var pageNum = (currentPageNum - 1) * reviewPageCount;
     
     fetch("/review/selectReview/" + bookNum + "/" + pageNum, {
       method : "post",
->>>>>>> KCL
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
@@ -365,11 +261,7 @@ function BookReview({bookNum,userId}) {
     .then(reviewListData=>{
       // reviewListData = 리뷰 목록 데이터
       var objs = [];
-<<<<<<< HEAD
-      objs = [...reviewListData];
-=======
       objs = [...reviewListData.reviewList];
->>>>>>> KCL
       setReviewList(objs);
       if(successSelectReviewList)
         successSelectReviewList()// 리뷰목록을 성공적으로 가져오면 실행하기
@@ -378,15 +270,9 @@ function BookReview({bookNum,userId}) {
   }//리뷰 목록(현제 페이지 번호, 성공할 시 실행할 메소드)
 
   function selectReviewCount (){
-<<<<<<< HEAD
-    fetch('reviewCount/'+bookNum,{
-      //method : "post",
-      //body : JSON.stringify(writeUserReview),
-=======
     fetch('/review/reviewCount/' + bookNum, {
       method : "post",
       body : JSON.stringify(writeUserReview),
->>>>>>> KCL
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
@@ -408,21 +294,11 @@ function BookReview({bookNum,userId}) {
 
       const successSelectPage =  function(){
         page.currentPage = i;
-<<<<<<< HEAD
-  
         page = MakePage(page.contentsCount,page.currentPage);
-  
-=======
-        page = MakePage(page.contentsCount,page.currentPage);
->>>>>>> KCL
         setPage({...page});
       }
   
       selectReviewList(i,successSelectPage);//리뷰 목록 바꾸기
-<<<<<<< HEAD
-
-=======
->>>>>>> KCL
       return;
     }else{
       i ={index : 0}
@@ -460,52 +336,6 @@ function BookReview({bookNum,userId}) {
       checkReview();  //리뷰 썼는지 확인
   }, []); //처음 시작할 때
 
-<<<<<<< HEAD
-  
-  return (
-    <div>
-      <label>리뷰내용
-       <input value={writeUserReview.re_content} onChange={e=>writeContent(e)} type='text' maxLength="255" placeholder="최대 255자 입력 가능"/>
-      </label>
-
-      <label>평점
-       <input value={writeUserReview.re_star} onChange={e=>writerStar(e)} type='number'/>
-      </label>
-      {writerIsReview ? ( <button onClick={updateReview}>변경</button>) : ( <button onClick={insertReview}>작성</button>)}
-
-      {writerIsReview ? (<button onClick={deleteReview}>삭제</button>) : (<input type='hidden'/>)}
-      <table>
-          <thead>
-            <tr>
-              <th>이름</th>
-              <th>내용</th>
-              <th>별점</th>
-              <th>신고</th>
-            </tr>
-          </thead>
-        
-        <tbody>
-        {reviewList.map((item, index) => (
-            <tr key={index}>
-              <td>{item.re_me_id}</td>
-              <td>{item.re_content}</td>
-              <td>{item.re_star}</td>
-              <td><button onClick={() => {userReport(item.re_me_id,item.re_content,item.re_num);
-                 setModalIsOpen(true)}}>신고하기</button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <button onClick={()=>changePage(page.currentPage-1)} disabled= {!page.prev}>이전</button>
-
-      {page.pageList.map((item,index)=>{
-          return(<button  onClick={()=>changePage({index})} disabled={page.currentPage==(index+1)} key={index}>{item}</button>)
-      })}
-
-      <button onClick={()=>changePage(page.currentPage+1)} disabled = {!page.next}>다음</button>
-      <button onClick={()=>setModalIsOpen(true)}>클릭</button>
-=======
   return (
     <Fragment>
       <div className="theme-box review-write">
@@ -573,7 +403,6 @@ function BookReview({bookNum,userId}) {
         <Button click={()=>changePage(page.currentPage+1)}  cls="btn" disabled = {!page.next} text="다음"/>
       </div>
 
->>>>>>> KCL
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
@@ -584,12 +413,7 @@ function BookReview({bookNum,userId}) {
       >
        <Report reportTypeList={reportType} getReport={report} exit={()=>setModalIsOpen(false)}/>
       </Modal>
-<<<<<<< HEAD
-     
-    </div>
-=======
     </Fragment>
->>>>>>> KCL
   );
 }
 

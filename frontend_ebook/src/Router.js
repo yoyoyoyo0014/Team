@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-import { Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
-
-=======
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { LoginContext } from "./context/LoginContext.js"; // LoginContext 사용
->>>>>>> KCL
 import Main from "./components/main.js";
 import MyBooks from "./pages/mypage/mybooks.js";
 import BestSellers from "./components/main/bestsellers.js";
@@ -21,37 +15,6 @@ import BookSearch from "./components/book/bookSearch.js";
 import CartPage2 from "./pages/cart/cartpage2.js";
 import MypageIndex from "./pages/mypage/index.js";
 
-<<<<<<< HEAD
-import List from './pages/post/list';
-import Detail from "./pages/post/detail.js";
-
-import BookSearch from "./components/book/bookSearch.js";
-import BookDetail from "./components/book/bookDetail.js";
-import BookInsert from "./components/book/bookInsert.js";
-
-function Router({genreList}){
-	return(
-		<Routes>
-			<Route path="/" element={<Main genreList={genreList}/>} />
-			<Route path="/mypage/mybooks" element={<MyBooks/>}/>
-			<Route path="/main/bestsellers" element={<BestSellers/>}/>
-			<Route path="/main/newbooks" element={<NewBooks/>}/>
-			<Route path="/forsales" element={<ForSales/>}/>
-			<Route path="/event" element={<Event/>}/>
-			<Route path="/meeting" element={<Meeting/>}/>
-
-			<Route path="/login" element={<Login/>}/>
-			<Route path="/join" element={<Join/>}/>
-
-			<Route path="/post/list/:co_num" element={<List />} />
-			<Route path="/post/detail/:po_num" element={<Detail />} />
-
-			<Route path="/searchBook/:bo_country/:bo_genre/:bo_categori/:bo_page/:bo_search" element ={<BookSearch/>}/>
-			<Route path="/selectBook/:bo_num" element = {<BookDetail/>}/>
-			<Route path="/insertBook" element = {<BookInsert/>}/>
-		</Routes>
-	)
-=======
 import NaverCallback from "./components/auth/NaverCallback.js"; // NaverCallback 컴포넌트 import
 import EpubReader from "./pages/mypage/epubreader.js";
 import EventDetail from "./pages/eventDetail.js";
@@ -102,7 +65,6 @@ function Router({section}) {
       <Route path="/request" element={<PostList />} />
     </Routes>
   );
->>>>>>> KCL
 }
 
 export default Router;

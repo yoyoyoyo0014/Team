@@ -1,11 +1,8 @@
 @charset 'utf-8';
 
 #main-section {position: relative;}
-<<<<<<< HEAD
-=======
 #main-section section:not(:last-of-type) {margin-bottom: 2em;}
 
->>>>>>> KCL
 #top-section {height: 100%;}
 .top-section-content {
 	position: relative;
@@ -14,12 +11,8 @@
 	gap: 2em;
 }
 
-<<<<<<< HEAD
-.section-title {padding-bottom: 2em;}
-=======
 .section-title {margin-bottom: 2em; position: relative;}
 .section-title p{padding-top: .5em;}
->>>>>>> KCL
 
 #category-navbar {width: 20%;}
 #category-navbar .category-navbar-wrapper {
@@ -41,17 +34,6 @@
 	 display: block;
 }
 
-<<<<<<< HEAD
-#books {width: 80%;}
-
-#request-books {padding: 4em 0;}
-#request-books ul li {padding: 1em 0; display: flex; justify-content: space-between;}
-#request-books ul li:not(:last-of-type) {border-bottom: 1px solid var(--color-grey);}
-#request-books ul li .article-info .writer {padding-right: 2em;}
-
-#today-book .theme-box > h2 {font-size: 1.2em; padding-bottom: 1em;}
-
-=======
 .books {
 	width: 80%;
 	display: flex;
@@ -110,26 +92,18 @@
 
 #event {}
 
->>>>>>> KCL
 #today-book .book-info {
 	display: flex;
 	justify-content: space-between;
 	gap: 3em;
 	align-items: center;
 }
-<<<<<<< HEAD
-#today-book .book-img {display: flex; justify-content: center; align-items: center; flex-wrap: wrap; box-shadow: var(--box-shadow); max-height: 100%;}
-=======
 #today-book .book-img {display: flex; justify-content: center; align-items: center; flex-wrap: wrap; max-height: 100%;}
->>>>>>> KCL
 
 #today-book .book-title h3 {font-size: var(--page-title-font-size);}
 #today-book .book-title .writer {line-height: 3;}
 
-<<<<<<< HEAD
-=======
 #today-book .book-desc {width: 100%;}
->>>>>>> KCL
 #today-book .book-content {position: relative; height: 200px; overflow: hidden;}
 #today-book .book-content::before {
 	content: '';
@@ -146,32 +120,18 @@
 .blind {
 	position: absolute;
 	width: 100%;
-<<<<<<< HEAD
-	height: calc(100% - 3em);
-=======
 	height: 100%;
->>>>>>> KCL
 	bottom: 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-<<<<<<< HEAD
-	background: linear-gradient(to top, var(--color-light-grey) 60%, transparent);
-}
-.blind button {margin-bottom: -2em; padding-left: 4em; padding-right: 4em; font-weight: 900;}
-
-@media all and (max-width: 1024px) {
-	.top-section {flex-direction: column;}
-	.top-section-content {flex-direction: column;}
-=======
 	background: linear-gradient(to top, var(--color-light-grey) 50%, transparent 150%);
 }
 .blind .btn-point {margin-bottom: -2em; padding-left: 4em; padding-right: 4em; font-weight: 900;}
 
 @media all and (max-width: 1024px) {
 	.top-section-content {flex-direction: column; height: unset;}
->>>>>>> KCL
 
 	#category-navbar {width: 100%;}
 	#category-navbar .category-navbar-wrapper {flex-direction: row;}
@@ -185,14 +145,10 @@
 		left: -1em;
 	}
 
-<<<<<<< HEAD
-	#books {width: 100%;}
-=======
 	.books {width: 100%;}
 }
 
 @media all and (max-width: 768px) {
 	#today-book .book-info {flex-direction: column;}
 	#today-book .book-img {width: 200px;}
->>>>>>> KCL
 }
