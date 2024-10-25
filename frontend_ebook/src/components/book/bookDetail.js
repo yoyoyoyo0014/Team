@@ -211,9 +211,8 @@ const BookDetail = ({Getuser}) => {
         
         <BookReview bookNum={bookNum} userId={user.me_id}></BookReview>
       </div>
-
-      <BarGraph popularityDistributionChart={popularityDistributionChart}/>
       
+      <BarGraph popularityDistributionChart={popularityDistributionChart}/>
     </div>
   )
 }
