@@ -4,10 +4,116 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>닉네임 수정</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      max-width: 500px;
+      padding: 10px 20px 30px 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+      margin-bottom: 5px; /* '닉네임 수정' 텍스트 아래의 여백을 5px로 설정 */
+    }
+
+    hr {
+      margin-top: 5px; /* hr 태그 위의 여백을 5px로 설정 */
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    .form-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nickNameChange {
+      background-color: #80c565;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 30px;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .nickNameChange:hover {
+      background-color: #72b354;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      flex-grow: 1;
+    }
+  </style>
+  <script>
+    function updateNickname() {
+    const updatedNickname = document.getElementById('updatedNickname').value;
+
+    if (!updatedNickname) {
+        alert("닉네임을 입력해주세요.");
+        return;
+    }
+
+    // 부모 창의 user 객체가 존재하는지 확인
+    const userId = window.opener?.user?.me_id;
+
+    if (!userId) {
+        alert("사용자 ID를 가져올 수 없습니다.");
+        return;
+    }
+
+    console.log("사용자 ID:", userId);  // 부모 창의 사용자 ID 확인
+
+    // 서버로 닉네임 수정 요청 전송
+    fetch('/ebook/member/update-nickname', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ me_id: userId, nickname: updatedNickname })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 부모 창의 닉네임을 업데이트
+            window.opener.setNickname(updatedNickname);
+            window.close();
+        } else {
+            alert("닉네임 수정 실패: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("닉네임 수정 오류:", error);
+        alert("닉네임 수정 중 오류가 발생했습니다.");
+    });
+}
+
+  </script>
+  
 </head>
 <body>
-  <h3>닉네임 수정</h3>
-  <input type="text" id="updatedNickname" placeholder="새 닉네임 입력" value="">
-  <button onclick="window.close()">수정 완료</button>
+  <div class="container">
+    <h3>닉네임 수정</h3>
+    <hr>
+    <div class="form-container">
+      <input type="text" id="updatedNickname" placeholder="새 닉네임 입력" value="">
+      <button class="nickNameChange" onclick="updateNickname()">수정</button>
+    </div>
+  </div>
 </body>
 </html>

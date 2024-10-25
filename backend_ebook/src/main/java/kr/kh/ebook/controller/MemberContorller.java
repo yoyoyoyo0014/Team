@@ -101,4 +101,22 @@ public class MemberContorller {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+    
+    /// 일반 회원 닉네임 수정
+    @PostMapping("/update-nickname")
+    public ResponseEntity<Map<String, String>> updateNickname(@RequestBody Map<String, String> payload) {
+        String memberId = payload.get("me_id");
+        String newNickname = payload.get("nickname");
+
+        boolean isUpdated = memberService.updateNickname(memberId, newNickname);
+
+        Map<String, String> response = new HashMap<>();
+        if (isUpdated) {
+            response.put("message", "닉네임이 성공적으로 변경되었습니다.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", "닉네임 변경 실패.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }

@@ -35,6 +35,7 @@ public interface MemberDAO {
 	// 일반 회원가입 후, 사용자 정보 db 저장
 	void insertNormalMember(MemberVO memberVO);
 
-
+	// 닉네임 수정
+	void updateNickname(String memberId, String newNickname);
 	
 }

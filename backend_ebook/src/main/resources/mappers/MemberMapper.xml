@@ -64,5 +64,12 @@
     <select id="getMemberByNickname" parameterType="String" resultType="kr.kh.ebook.model.vo.MemberVO">
         SELECT * FROM member WHERE me_nickname = #{meNickname}
     </select>
+    
+    <!-- 닉네임 수정 쿼리 -->
+    <update id="updateNickname">
+        UPDATE member
+        SET me_nickname = #{newNickname}
+        WHERE me_id = #{memberId}
+    </update>
 	
 </mapper>

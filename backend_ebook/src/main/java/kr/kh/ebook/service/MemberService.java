@@ -82,5 +82,15 @@ public class MemberService {
     public boolean isNicknameDuplicate(String meNickname) {
         return memberDao.getMemberByNickname(meNickname) != null;
     }
-	
+    
+    // 닉네임 업데이트
+    public boolean updateNickname(String memberId, String newNickname) {
+        try {
+            memberDao.updateNickname(memberId, newNickname);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

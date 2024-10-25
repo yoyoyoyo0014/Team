@@ -1,0 +1,40 @@
+.input-item {
+  margin-bottom: 10px;
+  width: 100%; /* 입력 필드 너비를 100%로 설정 */
+}
+
+.auto-login-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%; /* 체크박스가 포함된 영역도 100%로 설정 */
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.check input[type="checkbox"] {
+  margin-right: 10px; /* 체크박스와 텍스트 사이의 간격 */
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.button-group {
+  width: 100%; /* 로그인 버튼 그룹의 너비를 100%로 설정 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* 버튼 간의 간격 설정 */
+}
+
+.button-group button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 30px;
+}

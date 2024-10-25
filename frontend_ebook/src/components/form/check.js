@@ -1,3 +1,5 @@
+import '../../css/check.css'; // check.css 파일을 경로에 맞게 import
+
 const Check = ({ id, name, cls, label, value, style, checked, change, click }) => {
   return (
     <div className="check" style={style}>

@@ -19,42 +19,53 @@ const MypageIndex = () => {
 	// }
 
 	useEffect(() => {
-		const fetchNickname = async () => {
-			try {
-				const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
-				const data = await response.json();
-				
-				if (data.nickname) {
-					setNickname(data.nickname);  // 서버로부터 받은 닉네임 설정
-				} else {
-					setNickname("닉네임없음");  // 닉네임이 없을 경우 기본값 설정
-				}
-			} catch (error) {
-				console.error("닉네임 가져오기 오류:", error);
-				setNickname("닉네임없음");  // 오류 발생 시 기본값 설정
-			}
-		};
-	
-		if (user?.me_id) {
-			fetchNickname();  // 사용자 ID가 있을 때 닉네임을 가져옴
-		}
-	}, [user]);
+    const fetchNickname = async () => {
+      try {
+        const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
+        const data = await response.json();
+        setNickname(data.nickname || "닉네임없음");
+      } catch (error) {
+        console.error("닉네임 가져오기 오류:", error);
+        setNickname("닉네임없음");
+      }
+    };
+
+    if (user?.me_id) {
+      fetchNickname(); // 사용자 ID가 있을 때 닉네임을 가져옴
+    }
+  }, [user]);
+
+  // 부모 창에서 호출될 닉네임 업데이트 함수
+  window.setNickname = (newNickname) => {
+    setNickname(newNickname);
+  };
 
 	// 팝업 창 열기
   const openNicknamePopup = () => {
-		const popup = window.open(
-			"/nickname-popup.html", // public 폴더 경로로 지정
-			"닉네임 수정", // 팝업 창의 이름
-			"width=300,height=125,resizable=no,scrollbars=no,status=no" // 팝업 창의 옵션 설정
-		);
-	
-		popup.onbeforeunload = () => {
-			const updatedNickname = popup.document.getElementById("updatedNickname")?.value;
-			if (updatedNickname) {
-				setNickname(updatedNickname);
-			}
-		};
-	};
+    if (!user?.me_id) {
+        alert("사용자 정보를 불러오지 못했습니다.");
+        return;
+    }
+
+    const popup = window.open(
+        "/nickname-popup.html",
+        "닉네임 수정",
+        "width=400,height=150,resizable=no,scrollbars=no,status=no"
+    );
+
+    popup.onload = function() {
+        console.log("팝업 창 로드 완료");
+
+        // 부모 창에서 user 정보를 제대로 가져오는지 확인
+        if (popup.window.opener && popup.window.opener.user) {
+            console.log("Parent window user object in popup:", popup.window.opener.user);
+        } else {
+            console.error("사용자 정보를 가져올 수 없습니다.");
+            alert("사용자 정보를 가져올 수 없습니다.");
+        }
+    };
+};
+
 
 	const openFileUploader = () => {
 		const event = new MouseEvent('click', {
