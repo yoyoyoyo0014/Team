@@ -169,7 +169,7 @@ const List = () => {
                       {item.po_link && (
                         <img src={item.po_link} alt="첨부 이미지" style={{ width: '100px', height: 'auto', marginBottom: '10px' }} />
                       )}
-                      <div>{`${item.po_start} ~ ${item.po_end}`}</div>
+                      <div>{`${formatDate(item.po_start)} ~ ${formatDate(item.po_end)}`}</div>
                     </div>
                   </td>
                 )}
