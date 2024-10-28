@@ -38,7 +38,7 @@ public interface BookDAO {
 
 	boolean insertReview(@Param("review")ReviewVO review);
 
-	BookListVO selectReadBook(@Param("bookNum")int bookNum, @Param("userId") String userId);
+	BookListVO selectReadBook(@Param("bl")BookListVO bookListVO);
 
 	boolean updateReadBook(BookListVO readBook);
 

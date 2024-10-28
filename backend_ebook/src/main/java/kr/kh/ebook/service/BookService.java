@@ -55,8 +55,8 @@ public class BookService {
 		return bookDao.insertReview(review);
 	}
 
-	public BookListVO selectReadBook(int bookNum, String userId) {
-		return bookDao.selectReadBook(bookNum,userId);
+	public BookListVO selectReadBook(BookListVO bookListVo) {
+		return bookDao.selectReadBook(bookListVo);
 	}
 
 	public boolean updateReadBook(BookListVO readBook) {
