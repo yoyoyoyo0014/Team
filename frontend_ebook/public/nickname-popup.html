@@ -61,6 +61,10 @@
     }
   </style>
   <script>
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('me_id');
+
     function updateNickname() {
     const updatedNickname = document.getElementById('updatedNickname').value;
 
@@ -68,9 +72,6 @@
         alert("닉네임을 입력해주세요.");
         return;
     }
-
-    // 부모 창의 user 객체가 존재하는지 확인
-    const userId = window.opener?.user?.me_id;
 
     if (!userId) {
         alert("사용자 ID를 가져올 수 없습니다.");
@@ -89,9 +90,11 @@
     })
     .then(response => response.json())
     .then(data => {
+      console.log("응답 데이터:", data); // 응답 데이터 확인
         if (data.success) {
             // 부모 창의 닉네임을 업데이트
             window.opener.setNickname(updatedNickname);
+            alert("닉네임이 성공적으로 변경되었습니다."); // 성공 메시지 알림
             window.close();
         } else {
             alert("닉네임 수정 실패: " + data.message);

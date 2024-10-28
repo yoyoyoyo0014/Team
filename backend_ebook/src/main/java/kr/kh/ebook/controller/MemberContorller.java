@@ -104,19 +104,21 @@ public class MemberContorller {
     
     /// 일반 회원 닉네임 수정
     @PostMapping("/update-nickname")
-    public ResponseEntity<Map<String, String>> updateNickname(@RequestBody Map<String, String> payload) {
+    public ResponseEntity<Map<String, Object>> updateNickname(@RequestBody Map<String, String> payload) {
         String memberId = payload.get("me_id");
         String newNickname = payload.get("nickname");
 
         boolean isUpdated = memberService.updateNickname(memberId, newNickname);
 
-        Map<String, String> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
         if (isUpdated) {
+            response.put("success", true); // success 필드를 추가
             response.put("message", "닉네임이 성공적으로 변경되었습니다.");
             return ResponseEntity.ok(response);
         } else {
-            response.put("message", "닉네임 변경 실패.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            response.put("success", false); // 실패 시 success 필드 추가
+            response.put("message", "닉네임 변경에 실패하였습니다.");
+            return ResponseEntity.ok(response);
         }
     }
 }

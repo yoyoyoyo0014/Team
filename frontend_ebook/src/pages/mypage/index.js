@@ -18,22 +18,22 @@ const MypageIndex = () => {
 	// 	console.log(user.member);
 	// }
 
-	useEffect(() => {
-    const fetchNickname = async () => {
-      try {
-        const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
-        const data = await response.json();
-        setNickname(data.nickname || "닉네임없음");
-      } catch (error) {
-        console.error("닉네임 가져오기 오류:", error);
-        setNickname("닉네임없음");
-      }
-    };
+	const fetchNickname = async () => {
+		try {
+			const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
+			const data = await response.json();
+			setNickname(data.nickname || "닉네임없음");
+		} catch (error) {
+			console.error("닉네임 가져오기 오류:", error);
+			setNickname("닉네임없음");
+		}
+	};
 
+	useEffect(() => {
     if (user?.me_id) {
       fetchNickname(); // 사용자 ID가 있을 때 닉네임을 가져옴
     }
-  }, [user]);
+  }, [user, fetchNickname]);
 
   // 부모 창에서 호출될 닉네임 업데이트 함수
   window.setNickname = (newNickname) => {
@@ -41,31 +41,37 @@ const MypageIndex = () => {
   };
 
 	// 팝업 창 열기
-  const openNicknamePopup = () => {
-    if (!user?.me_id) {
-        alert("사용자 정보를 불러오지 못했습니다.");
-        return;
-    }
-
-    const popup = window.open(
-        "/nickname-popup.html",
-        "닉네임 수정",
-        "width=400,height=150,resizable=no,scrollbars=no,status=no"
-    );
-
-    popup.onload = function() {
-        console.log("팝업 창 로드 완료");
-
-        // 부모 창에서 user 정보를 제대로 가져오는지 확인
-        if (popup.window.opener && popup.window.opener.user) {
-            console.log("Parent window user object in popup:", popup.window.opener.user);
-        } else {
-            console.error("사용자 정보를 가져올 수 없습니다.");
-            alert("사용자 정보를 가져올 수 없습니다.");
-        }
-    };
-};
-
+	const openNicknamePopup = () => {
+		if (!user?.me_id) {
+			alert("사용자 정보를 불러오지 못했습니다.");
+			return;
+		}
+ 
+		// 팝업 창 열기
+		const popup = window.open(
+			`/nickname-popup.html?me_id=${user.me_id}`,
+			"닉네임 수정",
+			"width=600,height=150,resizable=no,scrollbars=no,status=no"
+		);
+ 
+		// 팝업 창이 로드된 후 실행되는 이벤트
+		popup.onload = () => {
+			console.log("팝업 창 로드 완료");
+ 
+			// 여기서 팝업에 데이터를 보내거나 추가 작업을 수행할 수 있습니다.
+			popup.postMessage({ type: 'INIT_DATA', data: { me_id: user.me_id } }, '*');
+		};
+ 
+		// 팝업 창이 닫혔는지 주기적으로 확인
+		const popupCheckInterval = setInterval(() => {
+			if (popup.closed) {
+				clearInterval(popupCheckInterval);
+				console.log("팝업 창이 닫혔습니다.");
+				fetchNickname();
+			}
+		}, 500);
+	};
+ 
 
 	const openFileUploader = () => {
 		const event = new MouseEvent('click', {
