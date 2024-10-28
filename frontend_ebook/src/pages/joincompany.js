@@ -8,7 +8,7 @@ import {Input, InputItem} from "../components/form/input";
 import Button from "../components/form/button";
 import AddressInput from "../components/form/addressinput";
 
-const Join = () => {
+const JoinCompany = () => {
   const {
     register,
     handleSubmit,
@@ -29,7 +29,7 @@ const Join = () => {
     me_postalCode: '',
     me_address: '',
     me_birth: '',
-    me_authority: 'USER'
+    me_authority: 'COMPANY'
   });
 
   let [addr2, setAddr2] = useState('');
@@ -122,7 +122,7 @@ const Join = () => {
 
   return (
     <div className="join-form">
-      <h2 className="txt-center page-title">일반 회원 가입</h2>
+      <h2 className="txt-center page-title">사업자 회원 가입</h2>
       <form name="join" onSubmit={handleSubmit(submit)}>
         <fieldset className="form-wrapper">
 
@@ -155,10 +155,10 @@ const Join = () => {
             type="text"
             cls="frm-input"
             registerProps={register("me_name", {
-              required: "이름을 입력해주세요"
+              required: "대표명을 입력해주세요"
             })}
             error={errors.me_name}
-            label={"이름"}
+            label={"대표명"}
           />
 
           <InputItem
@@ -167,19 +167,19 @@ const Join = () => {
           type="text"
           cls="frm-input"
           registerProps={register("me_nickname", {
-            required: "닉네임을 입력해주세요",
+            required: "사업자명을 입력해주세요",
             pattern: {
-              value: /^[0-9a-zA-Z가-힣]{2,8}$/,
-              message: "닉네임은 최소 2자, 최대 8자 한글, 영문, 숫자를 포함합니다.",
+              value: /^[0-9a-zA-Z가-힣]{1,8}$/,
+              message: "사업자명은 최대 8자 한글, 영문, 숫자를 포함합니다.",
             },
             onBlur: (e) => checkDuplicateNickname(e.target.value), // 중복 체크
           })}
           placeholder="최대 8자 이내의 한글/영문/숫자"
           error={errors.me_nickname}
-          label={"닉네임"}
+          label={"사업자명"}
         >
           {isNicknameDuplicate && (
-            <p className="error-msg">닉네임이 이미 사용 중입니다.</p>
+            <p className="error-msg">중복된 사업자명입니다.</p>
           )}
         </InputItem>
 
@@ -288,4 +288,4 @@ const Join = () => {
   );
 };
 
-export default Join;
+export default JoinCompany;

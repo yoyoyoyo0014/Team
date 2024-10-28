@@ -271,7 +271,7 @@ footer {
 /* page element */
 .page-title {
 	font-size: 1.8em;
-	padding-bottom: 1em;
+	padding: 3em 0 1em;
 }
 
 .ui-paging {

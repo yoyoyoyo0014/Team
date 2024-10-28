@@ -22,6 +22,8 @@ import Order from "./pages/cart/order.js";
 import MyBadges from "./pages/mypage/mybadges.js";
 
 import PostList from "./pages/post/list.js";
+import JoinSelect from "./pages/joinSelect.js";
+import JoinCompany from "./pages/joincompany.js";
 
 function Router({section}) {
 	const { isLoggedIn } = useContext(LoginContext);
@@ -33,7 +35,9 @@ function Router({section}) {
       <Route path="/newbooks" element={<Main section={"newBooks"}/>} />
       <Route path="/forsales" element={<ForSales />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/join" element={<Join />} />
+      <Route path="/join" element={<JoinSelect />} />
+      <Route path="/join/normal" element={<Join />} />
+      <Route path="/join/company" element={<JoinCompany />} />
 
       {/* 네이버 로그인 콜백 경로 */}
       <Route path="/auth/naver/callback" element={<NaverCallback />} />

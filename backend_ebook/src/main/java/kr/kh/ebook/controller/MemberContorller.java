@@ -53,7 +53,7 @@ public class MemberContorller {
         }
     }
 
-    // 일반 회원 가입 처리
+    // 회원 가입 처리
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerNormalMember(@RequestBody MemberVO memberVO) {
         boolean isRegistered = memberService.registerNormalMember(memberVO);
