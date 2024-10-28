@@ -120,7 +120,7 @@ const List = () => {
       <table className="table" style={{ textAlign: 'center', width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ color: 'gray', borderBottom: '1px solid gray' }}>
           <tr>
-            <th style={{ width: co_num !== '2' ? '90%' : '60%' }}>제목</th>
+            <th style={{ width: co_num !== '2' ? '80%' : '60%' }}>제목</th>
             {co_num === '2' && (
               <>
                 <th style={{ width: '10%' }}>작성자</th>
@@ -130,7 +130,7 @@ const List = () => {
               <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>작성일</th>
             )}
             {(co_num === '3' || co_num === '4') && (
-              <th style={{ width: co_num !== '2' ? '10%' : '10%' }}>이벤트 기간</th>
+              <th style={{ width: co_num !== '2' ? '20%' : '20%' }}>이벤트 기간</th>
             )}
             {co_num === '2' && (
               <>
