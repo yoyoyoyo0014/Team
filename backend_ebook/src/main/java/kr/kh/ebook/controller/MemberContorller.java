@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.kh.ebook.model.vo.MemberVO;
 import kr.kh.ebook.service.MemberService;
+import kr.kh.ebook.util.JwtUtil;
 
 @RestController
 @RequestMapping("/ebook/member")
@@ -23,6 +25,9 @@ public class MemberContorller {
 
     @Autowired
     private MemberService memberService;
+    
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // 회원 아이디로 사용자 정보 조회 (일반 로그인, 소셜 로그인 통합)
     @GetMapping("/{me_id}")
@@ -42,12 +47,14 @@ public class MemberContorller {
 
         Map<String, Object> response = new HashMap<>();
         if (member != null) {
-            // 로그인 성공
+            // JWT 토큰 생성
+            String token = jwtUtil.generateToken(member.getMe_id());
+            System.out.println("Generated Token: " + token); // 로그 추가
+            
             response.put("user", member);
-            response.put("token", "JWT 토큰 예시"); // JWT 토큰을 여기서 발급
+            response.put("token", token); // 생성된 JWT 토큰을 응답에 포함
             return ResponseEntity.ok(response);
         } else {
-            // 로그인 실패
             response.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
@@ -121,4 +128,28 @@ public class MemberContorller {
             return ResponseEntity.ok(response);
         }
     }
+    
+    @GetMapping("/profile")
+    public ResponseEntity<MemberVO> getProfile(@RequestHeader("Authorization") String token) {
+        if (token == null || !token.startsWith("Bearer ")) {
+            System.out.println("Invalid Authorization header format.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        // "Bearer " 접두사를 제거하여 순수 토큰 값 추출
+        String jwtToken = token.replace("Bearer ", "");
+        System.out.println("JWT Token: " + jwtToken); // 토큰 값 로그로 확인
+
+        String memberId;
+        try {
+            memberId = jwtUtil.extractUserId(jwtToken); // JwtUtil로 사용자 ID 추출
+        } catch (Exception e) {
+            System.out.println("JWT parsing error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        MemberVO member = memberService.getMemberProfile(memberId);
+        return ResponseEntity.ok(member);
+    }
+    
 }

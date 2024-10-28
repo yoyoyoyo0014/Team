@@ -71,5 +71,12 @@
         SET me_nickname = #{newNickname}
         WHERE me_id = #{memberId}
     </update>
+    
+    <!-- 사용자 정보 가져오기 쿼리 -->
+    <select id="findById" parameterType="String" resultType="kr.kh.ebook.model.vo.MemberVO">
+        SELECT me_id, me_name, me_nickname, me_email, me_gender, me_phone, me_postalCode, me_address, me_birth
+        FROM member
+        WHERE me_id = #{memberId}
+    </select>
 	
 </mapper>

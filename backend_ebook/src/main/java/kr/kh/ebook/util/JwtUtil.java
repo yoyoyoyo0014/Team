@@ -5,8 +5,11 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 
 @Component
 public class JwtUtil {
@@ -29,13 +32,24 @@ public class JwtUtil {
                 .compact();
     }
 
-    // 토큰에서 사용자 ID 추출
-    public String extractUserId(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    public String extractUserId(String token) throws SignatureException {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody();
+            System.out.println("Token valid. Extracted user ID: " + claims.getSubject());
+            return claims.getSubject(); // 사용자 ID가 subject에 저장되어 있다고 가정
+        } catch (SignatureException e) {
+            System.out.println("Invalid JWT signature: " + e.getMessage());
+            throw e;
+        } catch (ExpiredJwtException e) {
+            System.out.println("Expired JWT token: " + e.getMessage());
+            throw new SignatureException("Expired token");
+        } catch (Exception e) {
+            System.out.println("JWT parsing error: " + e.getMessage());
+            throw new SignatureException("Invalid token");
+        }
     }
 
     // 토큰 만료 여부 확인

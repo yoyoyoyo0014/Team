@@ -14,6 +14,7 @@ import BookDetail from "./components/book/bookDetail.js";
 import BookSearch from "./components/book/bookSearch.js";
 import CartPage2 from "./pages/cart/cartpage2.js";
 import MypageIndex from "./pages/mypage/index.js";
+import EditProfile from "./pages/mypage/editprofile.js";
 
 import NaverCallback from "./components/auth/NaverCallback.js"; // NaverCallback 컴포넌트 import
 import EpubReader from "./pages/mypage/epubreader.js";
@@ -41,6 +42,10 @@ function Router({section}) {
       <Route path="/ebook/searchBook" element={<BookSearch/>}/>
 
       <Route path="/mypage" element={isLoggedIn ? <MypageIndex/> : <Navigate to="/login"/>}/>
+      
+      {/* 개인 정보 수정 */}
+      <Route path="/edit-profile" element={<EditProfile />} />
+      
       <Route
         path="/mypage/mybooks"
         element={isLoggedIn ? <MyBooks /> : <Navigate to="/login" />}

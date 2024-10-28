@@ -93,4 +93,12 @@ public class MemberService {
             return false;
         }
     }
+    
+    /* 공통 */
+    
+    // 사용자 정보 가져오기
+    public MemberVO getMemberProfile(String memberId) {
+        return memberDao.findById(memberId);
+    }
+    
 }

@@ -38,4 +38,6 @@ public interface MemberDAO {
 	// 닉네임 수정
 	void updateNickname(String memberId, String newNickname);
 	
+	MemberVO findById(String memberId); // 사용자 정보 가져오기
+	
 }

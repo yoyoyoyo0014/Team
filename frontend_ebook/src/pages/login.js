@@ -117,7 +117,7 @@ const Login = () => {
     })
     .then((response) => response.json())
     .then((data) => {
-      if (data.success) {
+      if (data.token) {
         console.log("로그인 성공, 토큰:", data.token);  // 디버깅용 로그
 
         // 로그인 성공 시, 사용자 정보를 LoginContext에 저장
