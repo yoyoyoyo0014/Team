@@ -307,14 +307,15 @@ useEffect(() => {
         <label htmlFor="me_pw">비밀번호</label>
       </div>
 
+      <div style={{ display: 'flex', alignItems: 'center', marginTop: '2em' }}>
         <Check
-          name={"autoLogin"} 
-          id="autoLogin" 
-          label={"자동 로그인"} 
-          style={{marginTop: '2em'}}
-          checked={autoLogin} 
-          change={handleAutoLoginChange} 
+          name={"autoLogin"}
+          id="autoLogin"
+          label={"자동 로그인"}
+          checked={autoLogin}
+          change={handleAutoLoginChange}
         />
+      </div>
 
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
 

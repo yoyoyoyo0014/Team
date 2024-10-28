@@ -110,13 +110,8 @@ const MypageIndex = () => {
 		const fetchNickname = async () => {
 			try {
 				const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
-				
 				const data = await response.json();
-				if (data.nickname) {
-					setNickname(data.nickname);  // 서버로부터 받은 닉네임 설정
-				} else {
-					setNickname("닉네임없음");  // 닉네임이 없을 경우 기본값 설정
-				}
+				setNickname(data.nickname || "닉네임없음");
 			} catch (error) {
 				console.error("닉네임 가져오기 오류:", error);
 				setNickname("닉네임없음");  // 오류 발생 시 기본값 설정
