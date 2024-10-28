@@ -127,7 +127,7 @@
 	<select id="selectReadBook">
 		select *
 		from book_list
-		where bl_bk_num = #{bookNum} and bl_me_id = #{userId}
+		where bl_bk_num = #{bl.bl_bk_num} and bl_me_id = #{bl.bl_me_id}
 	</select>
 	
 	<update id="updateReadBook">
