@@ -15,19 +15,20 @@
     }
 
     .container {
-      max-width: 500px;
-      padding: 10px 20px 30px 20px;
+      width: 100%;
+      max-width: 500px; /* 너비 확장 */
+      padding: 20px 30px 30px 30px; /* 좌우 패딩을 넓혀서 공간 확보 */
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     h3 {
-      margin-bottom: 5px; /* '닉네임 수정' 텍스트 아래의 여백을 5px로 설정 */
+      margin-bottom: 5px;
     }
 
     hr {
-      margin-top: 5px; /* hr 태그 위의 여백을 5px로 설정 */
+      margin-top: 5px;
       border: none;
       border-top: 1px solid #ccc;
     }
@@ -36,6 +37,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      width: 100%; /* 컨테이너 너비에 맞게 설정 */
     }
 
     .nickNameChange {
@@ -58,65 +60,104 @@
       border-radius: 5px;
       border: 1px solid #ccc;
       flex-grow: 1;
+      width: 70%; /* 입력란을 더 넓게 설정 */
+      height: 90%;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 10px;
     }
   </style>
   <script>
-
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('me_id');
 
-    function updateNickname() {
-    const updatedNickname = document.getElementById('updatedNickname').value;
-
-    if (!updatedNickname) {
-        alert("닉네임을 입력해주세요.");
-        return;
+    // 타당성 검사 함수
+    function validateNickname(nickname) {
+      const errorMessageElement = document.getElementById("error-message");
+      if (!/^[0-9a-zA-Z가-힣]{2,8}$/.test(nickname)) {
+        errorMessageElement.textContent = "닉네임은 최소 2자, 최대 8자 한글, 영문, 숫자를 포함해야 합니다.";
+        return false;
+      }
+      errorMessageElement.textContent = ""; // 에러 메시지 초기화
+      return true;
     }
 
-    if (!userId) {
+    // 중복 검사 함수
+    async function checkDuplicateNickname(nickname) {
+      try {
+        const response = await fetch(`/ebook/member/check-duplicate-nickname?me_nickname=${nickname}`);
+        const result = await response.json();
+        return result.exists; // 중복일 경우 true, 중복이 아닐 경우 false 반환
+      } catch (error) {
+        console.error("중복 검사 오류:", error);
+        alert("중복 검사 중 오류가 발생했습니다.");
+        return true; // 오류 발생 시 중복으로 간주하여 업데이트 차단
+      }
+    }
+
+    // 닉네임 업데이트 함수
+    async function updateNickname() {
+      const updatedNickname = document.getElementById('updatedNickname').value;
+
+      // 타당성 검사
+      if (!validateNickname(updatedNickname)) {
+        return; // 타당성 검사 실패 시 종료
+      }
+
+      // 중복 검사
+      const isDuplicate = await checkDuplicateNickname(updatedNickname);
+      if (isDuplicate) {
+        document.getElementById("error-message").textContent = "이미 사용 중인 닉네임입니다.";
+        return;
+      }
+
+      // 사용자 ID 확인
+      if (!userId) {
         alert("사용자 ID를 가져올 수 없습니다.");
         return;
-    }
+      }
 
-    console.log("사용자 ID:", userId);  // 부모 창의 사용자 ID 확인
+      console.log("사용자 ID:", userId);
 
-    // 서버로 닉네임 수정 요청 전송
-    fetch('/ebook/member/update-nickname', {
+      // 서버로 닉네임 수정 요청 전송
+      fetch('/ebook/member/update-nickname', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ me_id: userId, nickname: updatedNickname })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log("응답 데이터:", data); // 응답 데이터 확인
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log("응답 데이터:", data);
         if (data.success) {
-            // 부모 창의 닉네임을 업데이트
-            window.opener.setNickname(updatedNickname);
-            alert("닉네임이 성공적으로 변경되었습니다."); // 성공 메시지 알림
-            window.close();
+          window.opener.setNickname(updatedNickname); // 부모 창의 닉네임을 업데이트
+          alert("닉네임이 성공적으로 변경되었습니다.");
+          window.close();
         } else {
-            alert("닉네임 수정 실패: " + data.message);
+          alert("닉네임 수정 실패: " + data.message);
         }
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error("닉네임 수정 오류:", error);
         alert("닉네임 수정 중 오류가 발생했습니다.");
-    });
-}
-
+      });
+    }
   </script>
-  
 </head>
 <body>
   <div class="container">
     <h3>닉네임 수정</h3>
     <hr>
     <div class="form-container">
-      <input type="text" id="updatedNickname" placeholder="새 닉네임 입력" value="">
+      <input type="text" id="updatedNickname" placeholder="새 닉네임 입력" oninput="validateNickname(this.value)">
       <button class="nickNameChange" onclick="updateNickname()">수정</button>
     </div>
+    <!-- 에러 메시지를 form-container 아래에 위치시킴 -->
+    <p id="error-message" class="error-msg"></p>
   </div>
 </body>
 </html>

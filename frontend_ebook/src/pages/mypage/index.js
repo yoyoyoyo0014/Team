@@ -51,7 +51,7 @@ const MypageIndex = () => {
 		const popup = window.open(
 			`/nickname-popup.html?me_id=${user.me_id}`,
 			"닉네임 수정",
-			"width=600,height=150,resizable=no,scrollbars=no,status=no"
+			"width=600,height=250,resizable=no,scrollbars=no,status=no"
 		);
  
 		// 팝업 창이 로드된 후 실행되는 이벤트
