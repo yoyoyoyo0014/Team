@@ -57,7 +57,12 @@ export async function selectReadBook(bookNum,userId) {
 }
 
 //해당 책 페이지 업데이트
-export async function UpdateReadBook(bookList) {
+export async function UpdateReadBook(userId,bookNum) {
+  var bookList ={
+    bl_me_id : userId,
+    bl_bk_num : bookNum,
+    bl_nowPage : 0
+  }
   try{
     const response = await fetch('/selectBook/updateBookPage',{
       method: 'POST',  // POST 요청 설정
