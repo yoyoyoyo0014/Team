@@ -11,4 +11,5 @@ public class AchievenentListVO {
 	private int acl_ac_num;
 	private String acl_me_id;
 	private Date acl_date;
+	private String acl_check;
 }
