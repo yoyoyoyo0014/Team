@@ -7,8 +7,8 @@ function Insert() {
   const { co_num } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
-  const [writer, setWriter] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [writer, setWriter] = useState("admin123");
+  const [nickname, setNickname] = useState("관리자");
   const [content, setContent] = useState("");
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
@@ -16,39 +16,62 @@ function Insert() {
   const btnClick = (e) => {
     e.preventDefault(); // 기본 폼 제출 방지
   
-    // 서버에 전송할 데이터
-    const formData = new FormData();
-    formData.append("po_title", title);
-    formData.append("po_me_id", writer);
-    formData.append("po_me_nickname", nickname);
-    formData.append("po_content", content);
-    formData.append("po_co_num", co_num);
-    if (start) formData.append("po_start", start);
-    if (end) formData.append("po_end", end);
+    // 필수 필드가 비어 있는지 확인
+    if (!title) {
+      alert('제목을 입력하세요.');
+      return;
+    }
+
+    if (!writer) {
+      alert('작성자 정보가 설정되지 않았습니다.');
+      return;
+    }
+
+    if (!content) {
+      alert('내용을 입력하세요.');
+      return;
+    }
+  
+    const requestData = {
+      po_title: title,
+      po_me_id: writer,
+      po_me_nickname: nickname,
+      po_content: content,
+      po_co_num: co_num,
+      po_start: start ? start.toISOString().split('T')[0] : null,
+      po_end: end ? end.toISOString().split('T')[0] : null,
+    };
   
     fetch(`/post/insert/${co_num}`, {
       method: 'POST',
-      body: formData, // FormData를 직접 전송
-    })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      if (data.result) {
-        alert('게시글이 등록되었습니다.');
-        navigate(`/post/list/${co_num}`);
-      } else {
-        alert('게시글 등록에 실패했습니다.');
-      }
-    })
-    .catch((error) => {
-      console.error('Error adding post:', error);
-      alert('게시글 등록 중 오류가 발생했습니다.');
-    });
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
+  })
+      .then((response) => {
+          if (!response.ok) {
+              // 서버에서 상태 코드와 메시지를 포함한 응답을 받을 때 처리
+              return response.json().then((data) => {
+                  throw new Error(data.message || `HTTP error! status: ${response.status}`);
+              });
+          }
+          return response.json();
+      })
+      .then((data) => {
+          if (data.result) {
+              alert('게시글이 등록되었습니다.');
+              navigate(`/post/list/${co_num}`);
+          } else {
+              alert(`게시글 등록에 실패했습니다. 서버 메시지: ${data.message || '알 수 없는 오류'}`);
+          }
+      })
+      .catch((error) => {
+          console.error('Error adding post:', error);
+          alert(`게시글 등록 중 오류가 발생했습니다: ${error.message}`);
+      });
   };
+  
 
   return (
     <div>
