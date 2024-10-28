@@ -118,19 +118,6 @@ public class BookContoller {
 		return bookService.deleteReview(bookNum,id);
 	}
 	
-	//읽고 있는책 현재 페이지    구매하지 않았다면 -1
-	@PostMapping("/currentBookPage")
-	public int selectReadBook(@RequestParam int bookNum,@RequestParam String userId) {
-		try {
-			 BookListVO readBook = bookService.selectReadBook(bookNum,userId);
-			 if(readBook==null)
-				 return -1;//구매하지 않은 책
-			return readBook.getBl_nowPage();
-		}catch(Exception e) {
-			return 1;
-		}//혹시 여러개 있음을 방지
-		
-	}
 	
 	//읽고 있는 책 완독률 저장
 	@PostMapping("/updateBookPage")
