@@ -113,15 +113,13 @@ CREATE TABLE `buy` (
 CREATE TABLE `post` (
 	`po_num`	int primary key auto_increment	NOT NULL,
 	`po_title`	varchar(50)	NOT NULL,
-	`po_content`	text	NOT NULL,
+	`po_content`	text	NOT NULL default '내용 없음',
 	`po_me_id`	varchar(15)	NOT NULL,
 	`po_me_nickname`	varchar(8)	NOT NULL,
 	`po_date`	datetime	NOT NULL,
 	`po_co_num`	int	NOT NULL,
 	`po_view`	int	NOT NULL default 0,
 	`po_like`	int	NOT NULL default 0,
-	`po_link`	varchar(255) NULL,
-	`po_image`	varchar(255) NULL,
 	`po_start`	date NULL,
 	`po_end`	date NULL
 );

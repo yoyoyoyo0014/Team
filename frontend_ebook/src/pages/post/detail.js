@@ -112,13 +112,6 @@ function Detail() {
             <label>이벤트 기간</label>
             <input type="text" className="form-control" value={`${post.po_start} ~ ${post.po_end}`} readOnly/>
           </div>
-          <div className="form-group">
-            {post.po_image ? (
-              <img src={post.po_image} alt="이벤트 이미지" className="img-fluid" style={{ marginTop: '20px', maxHeight: '400px' }}/>
-            ) : (
-              <p>이미지가 없습니다.</p>
-            )}
-          </div>
         </div>
         
       )}

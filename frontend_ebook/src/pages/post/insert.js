@@ -12,30 +12,6 @@ function Insert() {
   const [content, setContent] = useState("");
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
-  const [postImage, setPostImage] = useState(null); // 게시글 이미지 파일
-  const [contentImage, setContentImage] = useState(null); // 게시글 내용 이미지 파일
-  const [postImagePreview, setPostImagePreview] = useState(""); // 게시글 이미지 미리보기 URL
-  const [contentImagePreview, setContentImagePreview] = useState(""); // 게시글 내용 이미지 미리보기 URL
-
-  // 게시글 이미지 파일이 변경될 때 미리보기 URL 설정
-  const handlePostImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPostImage(file);
-      const previewUrl = URL.createObjectURL(file);
-      setPostImagePreview(previewUrl);
-    }
-  };
-
-  // 게시글 내용 이미지 파일이 변경될 때 미리보기 URL 설정
-  const handleContentImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setContentImage(file);
-      const previewUrl = URL.createObjectURL(file);
-      setContentImagePreview(previewUrl);
-    }
-  };
 
   const btnClick = (e) => {
     e.preventDefault(); // 기본 폼 제출 방지
@@ -49,8 +25,6 @@ function Insert() {
     formData.append("po_co_num", co_num);
     if (start) formData.append("po_start", start);
     if (end) formData.append("po_end", end);
-    if (postImage) formData.append("po_post_image", postImage); // 게시글 이미지 파일 추가
-    if (contentImage) formData.append("po_content_image", contentImage); // 게시글 내용 이미지 파일 추가
   
     fetch(`/post/insert/${co_num}`, {
       method: 'POST',
@@ -105,31 +79,6 @@ function Insert() {
           <label htmlFor="content">내용:</label>
           <textarea id="content" name="content" className="form-control" style={{ minHeight: '400px', height: 'auto' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
         </div>
-        {(co_num === '3' || co_num === '4') && (
-        <div>
-          {/* 게시글 이미지 업로드 필드 */}
-          <div className="image">
-            <label htmlFor="postImage">게시글 이미지:</label>
-            <input type="file" id="postImage" name="postImage" className="form-control" accept="image/*" onChange={handlePostImageChange} />
-            {postImagePreview && (
-              <div>
-                <img src={postImagePreview} alt="게시글 이미지 미리보기" style={{ width: '200px', height: 'auto', marginTop: '10px' }} />
-              </div>
-            )}
-          </div>
-
-          {/* 게시글 내용 이미지 업로드 필드 */}
-          <div className="image">
-            <label htmlFor="contentImage">게시글 내용 이미지:</label>
-            <input type="file" id="contentImage" name="contentImage" className="form-control" accept="image/*" onChange={handleContentImageChange} />
-            {contentImagePreview && (
-              <div>
-                <img src={contentImagePreview} alt="게시글 내용 이미지 미리보기" style={{ width: '200px', height: 'auto', marginTop: '10px' }} />
-              </div>
-            )}
-          </div>
-        </div>
-        )}
         <button type="submit" className="btn btn-outline-info col-12">게시글 등록</button>
       </form>
       <a className="btn btn-outline-info" href={`/post/list/${co_num}`}>목록으로</a>
