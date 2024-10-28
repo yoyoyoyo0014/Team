@@ -8,6 +8,7 @@ import Modal from 'react-modal';
 import IsbnSearch from './IsbnSearch';
 import { json } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { selectReadBook } from './bookList';
 Modal.setAppElement('#root'); // 접근성 관련 설정 (필수)
 
 function BookInsert() {
@@ -163,7 +164,6 @@ function BookInsert() {
       }
     }
     ).catch(e=>console.error(e))
-
   }//파일 보내기
 
   async function searchWriter(num){
@@ -206,6 +206,11 @@ function BookInsert() {
       setWriterTypeList([...writerTypeList]);
       setGenreList([...genreList]);
       setSecondGenreList([...secondGenreList]);
+
+      var res = await selectReadBook(1,'admin123');
+      console.log(res)
+      if(res == 2)
+        console.log("2일까"+res)
     })();
   },[]);
   return (
