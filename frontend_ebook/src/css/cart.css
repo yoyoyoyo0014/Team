@@ -2,7 +2,7 @@
 
 p.error {top: 4em; left: 0;}
 
-.cart #cart > .check {
+#cart > .check {
 	position: absolute;
 	left: 0;
 	top: 0;

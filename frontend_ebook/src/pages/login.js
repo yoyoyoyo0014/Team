@@ -22,7 +22,7 @@ const Login = () => {
       if (token) {
         setIsLoggedIn(true);
         console.log("로그인된 상태입니다. 메인 페이지로 이동합니다."); // 디버깅용 로그
-        navigate("/"); // 이미 로그인된 상태라면 메인 페이지로 이동
+        //navigate("/"); // 이미 로그인된 상태라면 메인 페이지로 이동
       }
     }, []); // setIsLoggedIn, navigate 의존성 배열 제거 (초기 로드 시만 실행)
 
@@ -113,7 +113,7 @@ const Login = () => {
       body: JSON.stringify({
         me_id: id,
         me_pw: password,
-      }),
+      })
     })
     .then((response) => response.json())
     .then((data) => {

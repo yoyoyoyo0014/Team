@@ -28,10 +28,9 @@ function Router({section}) {
 
   return (
     <Routes>
-      <Route path="/" element={<Main section={section}/>} />
+      <Route path="/" element={<Main section={"bestSellers"}/>} />
 
-      <Route path="/bestsellers" element={<BestSellers />} />
-      <Route path="/newbooks" element={<NewBooks />} />
+      <Route path="/newbooks" element={<Main section={"newBooks"}/>} />
       <Route path="/forsales" element={<ForSales />} />
       <Route path="/login" element={<Login />} />
       <Route path="/join" element={<Join />} />

@@ -5,10 +5,10 @@ import { LoginContext } from "../../context/LoginContext";
 import MySubMenu from "../../components/mysubmenu";
 import "../../css/mypage.css";
 import axios from "axios";
-import { PageButton } from "../../components/pageButton";
-import Paging from "../../components/paging";
+import MakePage, { PageButtonV2 } from "../../components/pageButton";
 
 const MypageIndex = () => {
+	const lookPageContentsCount = 2;
 	const { user } = useContext(LoginContext);
 	const [nickname, setNickname] = useState(''); // 닉네임 상태 추가
 
@@ -16,33 +16,58 @@ const MypageIndex = () => {
 		list: [],
 		pm: {}
 	});
-	let [page, setPage] = useState(1);
 
-	console.log("User 객체:", user);
-	console.log("Member ID:", user?.me_id);
+	const [myRequest, setMyRequest] = useState({
+		list: [],
+		pm: {}
+	});
 
-	// console.log(user.user.member.me_id);
-	// if (user.member === undefined) console.log('null');
-	// else {
-	// 	console.log(user.member);
-	// }
+	let [page, setPage] = useState({
+		contentsCount : 0,
+    currentPage : 1,
+    startPage : 0,
+    endPage : 0,
+    prev : false,
+    next : false,
+    pageList : []
+	});
 
-	const loadMyReview = (url) => {
+	let [requestPage, setRequestPage] = useState({
+		contentsCount : 0,
+    currentPage : 1,
+    startPage : 0,
+    endPage : 0,
+    prev : false,
+    next : false,
+    pageList : []
+	});
+
+	const loadMyList = (url) => {
 		const options = {
-			url: url + page,
-			method:'post',
+			url: url + page.currentPage,
+			method:'get',
 			header: {
 				'Accept': 'application/json',
 				'Content-Type': "'application/json';charset=UTP-8'"
 			},
 		}
-
 		axios(options)
       .then(res => {
-				console.log(res.data.reviewPm);
-        setMyReview(prev => {
-					return {...prev, list: res.data.reviewList, pm: res.data.reviewPm}
-				});
+				if (url === '/review/selectMyReview/' + user?.me_id + '/') {
+					let tmp = MakePage(res.data.reviewPm.totalCount,page.currentPage,lookPageContentsCount);
+					setPage(tmp);
+					setMyReview(prev => {
+						return {...prev, list: res.data.reviewList, pm: res.data.reviewPm}
+					});
+					console.log('review');
+				} else {
+					let tmp = MakePage(res.data.pm.totalCount,page.currentPage,lookPageContentsCount);
+					console.log('request');
+					setRequestPage(tmp);
+					setMyRequest(prev => {
+						return {...prev, list: res.data.list, pm: res.data.pm}
+					});
+				}
       })
       .catch((error) => {
         if (error.response) {
@@ -57,19 +82,36 @@ const MypageIndex = () => {
           // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
           console.log('Error', error.message);
         }
-        console.log(error.config);
+        console.log(error);
       })
 	}
 
+	function pageChange(num, table){
+		if(table === '/review/selectMyReview/' + user?.me_id + '/') {
+			page.currentPage = num;
+			setPage(page);
+		} else {
+			requestPage.contentsCount = num
+			setRequestPage(requestPage);
+		}
+
+		loadMyList(table + user?.me_id + '/');
+	}
+
 	useEffect(() => {
-		loadMyReview();
+		loadMyList('/review/selectMyReview/' + user?.me_id + '/');
 	}, [setMyReview])
+
+	useEffect(() => {
+		loadMyList('/post/list/2/' + user?.me_id + '/');
+	}, [setMyRequest])
+
 	useEffect(() => {
 		const fetchNickname = async () => {
 			try {
 				const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
-				const data = await response.json();
 				
+				const data = await response.json();
 				if (data.nickname) {
 					setNickname(data.nickname);  // 서버로부터 받은 닉네임 설정
 				} else {
@@ -116,7 +158,7 @@ const MypageIndex = () => {
 						
 						<div className="pf-desc">
 							<p><strong>내 구매</strong> 0</p>
-							<p><strong>내 리뷰</strong> 0</p>
+							<p><strong>내 리뷰</strong> {myReview.pm.totalCount}</p>
 							<p><strong>내 뱃지</strong> 0</p>
 							<p><strong>내 도서 요청</strong> 0</p>
 						</div>
@@ -126,7 +168,6 @@ const MypageIndex = () => {
 				<div className="sub-section">
 					<div className="section-title">
 						<h2>내 리뷰</h2>
-						<Link to="/mypage/request">더보기</Link>
 					</div>
 
 					<div className="theme-box">
@@ -147,29 +188,35 @@ const MypageIndex = () => {
 						</ul>
 					</div>
 					
-					<Paging pm={myReview.pm} page={page} setPage={setPage} load={() => loadMyReview('/review/myReview/admin123/')
-					} url={'/review/myReview/admin123/' + page} />
+					<PageButtonV2 getPage={page} pageEvent={pageChange} url={'/review/selectMyReview/'}/>
 				</div>
 
 				<div className="sub-section">
 					<div className="section-title">
 						<h2>내 도서 요청</h2>
-						<Link to="/mypage/request">더보기</Link>
 					</div>
 
 					<div className="theme-box">
 						<ul>
-							<li><Link to="">내 도서 요청</Link></li>
-							<li>내 도서 요청</li>
-							<li>내 도서 요청</li>
-							<li>내 도서 요청</li>
-							<li>내 도서 요청</li>
+						{myRequest.list.length === 0 ? <li className="no-data txt-center">요청한 내역이 없습니다</li> :
+							myRequest.list.map((item, index) => (
+								<li key={index}>
+									<p>{item.po_title}</p>
+									{(() => {
+										const date = new Date(item.po_date);
+										const y = date.getFullYear();
+										const m = date.getMonth();
+										const d = date.getDate();
+										return (<span className="post-date">{y}.{m}.{d}</span>);
+									})()}
+								</li>
+							))}
 						</ul>
 					</div>
+
+					<PageButtonV2 getPage={page} pageEvent={pageChange} url={'/post/list/2/'}/>
 				</div>
 			</section>
-
-			
 		</Fragment>
 	)
 }

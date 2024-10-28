@@ -32,13 +32,15 @@ public class ReviewController {
 	}
 	
 	// 내 리뷰 리스트 보기 - 없음 null
-	@PostMapping("/myReview/{userId}/{pageNum}")
+	@GetMapping("/selectMyReview/{userId}/{pageNum}")
 	@ResponseBody
 	public HashMap<String, Object> selectAllMyReview(@PathVariable("userId") String userId, @PathVariable("pageNum") int pageNum) {
-		Criteria cri = new Criteria(pageNum, 1);
+		System.out.println("pageNum = " + pageNum);
+		int lookPage = 2;//한 페이지에 보이는 컨텐츠 개수
+		Criteria cri = new Criteria((pageNum - 1)*lookPage, lookPage);
 		List<ReviewVO> list = bookService.selectAllMyReview(cri, userId);
 		int cnt = bookService.selectMyReviewCount(userId);
-		PageMaker pm = new PageMaker(2, cri, cnt);
+		PageMaker pm = new PageMaker(1, cri, cnt);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("reviewList", list);
 		map.put("reviewPm", pm);
@@ -57,10 +59,8 @@ public class ReviewController {
 	@PostMapping("/selectReview/{bookNum}/{pageNum}")
 	@ResponseBody
 	public HashMap<String, Object> selectReview(@PathVariable("bookNum") int bookNum, @PathVariable("pageNum") int pageNum) {
-		System.out.println("hi");
 		List<ReviewVO> list = bookService.selectReviewList(bookNum, pageNum);
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		System.out.println("review : " + list);
 		map.put("reviewList", list);
 		return map;
 	}
@@ -69,6 +69,7 @@ public class ReviewController {
 	@PostMapping("/insertReview")
 	@ResponseBody
 	public boolean insertReview(@RequestBody ReviewVO writeUserReview) {
+		System.out.println(writeUserReview.getRe_me_id());
 		ReviewVO Myreview = bookService.selectMyReview(writeUserReview.getRe_me_id(), writeUserReview.getRe_bk_num());
 		if(Myreview != null) return false;
 		

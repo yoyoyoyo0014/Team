@@ -21,6 +21,7 @@ public interface PostDAO {
 	boolean updatePost(PostVO post);
 
 	boolean deletePost(int po_num);
-	
+
+	List<PostVO> selectMyPostList(PostCriteria cri, String userId);
 	
 }

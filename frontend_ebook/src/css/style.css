@@ -280,6 +280,15 @@ footer {
 	gap: 1em;
 	margin: 1.5em 0;
 }
-.ui-paging .paging-btn {cursor: pointer; padding: 0 .5em;}
+.ui-paging .paging-btn {position: relative; cursor: pointer; padding: 0 .5em;}
 .ui-paging .paging-btn.num.now,
 .ui-paging .paging-btn.num:hover {font-weight: 900;}
+.ui-paging .paging-btn.num.now::before {
+	content: '';
+	position: absolute;
+	bottom: -.3em;
+	left: 10%;
+	border-top: 3px solid;
+	width: 80%;
+	height: 0;
+}
