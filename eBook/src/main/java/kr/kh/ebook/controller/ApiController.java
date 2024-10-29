@@ -2,9 +2,12 @@ package kr.kh.ebook.controller;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,13 +28,16 @@ public class ApiController {
         urlBuilder.append("?" + URLEncoder.encode("key","UTF-8") + "=aee1180cf50fe754ec0965bdab10a875b7335aeb32b484491df679316dce5820"); /*Service Key*/
 
         urlBuilder.append("&" + URLEncoder.encode("detailSearch","UTF-8") + "=" + URLEncoder.encode("true", "UTF-8")); /*xml 또는 json*/
-        urlBuilder.append("&" + URLEncoder.encode("isbnOp","UTF-8") + "=" + URLEncoder.encode("isbn", "UTF-8")); /*xml 또는 json*/
+        urlBuilder.append("&" + URLEncoder.encode("apiType","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*xml 또는 json*/
+        urlBuilder.append("&" + URLEncoder.encode("srchTarget","UTF-8") + "=" + URLEncoder.encode("title", "UTF-8")); /*xml 또는 json*/
+        urlBuilder.append("&" + URLEncoder.encode("kwd","UTF-8") + "=" + URLEncoder.encode(search, "UTF-8")); /*xml 또는 json*/
         urlBuilder.append("&" + URLEncoder.encode("isbnCode","UTF-8") + "=" + URLEncoder.encode(search, "UTF-8")); /* 페이지번호*/
         urlBuilder.append("&" + URLEncoder.encode("pageNum","UTF-8") + "=" + URLEncoder.encode(page, "UTF-8")); /*한 페이지 결과 수(조회 날짜로 검색 시 사용 안함)*/
         //urlBuilder.append("&" + URLEncoder.encode("pageSize","UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); /*xml 또는 json*/
-        urlBuilder.append("&" + URLEncoder.encode("apiType","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*xml 또는 json*/
+
         urlBuilder.append("&" + URLEncoder.encode("sort","UTF-8") + "=" + URLEncoder.encode("ititle", "UTF-8")); /*xml 또는 json*/
-        
+        urlBuilder.append("&" + URLEncoder.encode("category","UTF-8") + "=" + URLEncoder.encode("도서", "UTF-8")); /*xml 또는 json*/
+        urlBuilder.append("&" + URLEncoder.encode("systemType ","UTF-8") + "=" + URLEncoder.encode("온라인자료", "UTF-8")); /*xml 또는 json*/
 //        urlBuilder.append("&" + URLEncoder.encode("category","UTF-8") + "=" + URLEncoder.encode("도서", "UTF-8")); /*xml 또는 json*/
 //        urlBuilder.append("&" + URLEncoder.encode("systemType ","UTF-8") + "=" + URLEncoder.encode("온라인자료", "UTF-8")); /*xml 또는 json*/
         URL url = new URL(urlBuilder.toString());
