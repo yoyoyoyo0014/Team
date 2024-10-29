@@ -16,7 +16,7 @@ async function SelectGenreList() {
 
 export async function SelectSecondGenreList() {
   try{
-    const response = await fetch('/selectSecondGenreList',{
+    const response = await fetch('/selectSecondAllGenreList',{
       //body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
