@@ -94,7 +94,7 @@ function Insert() {
         <input type="hidden" id="nickname" name="nickname" value={nickname} readOnly />
 
         {/* co_num이 3 또는 4일 경우에만 이벤트 기간 입력 필드 표시 */}
-        {(co_num === '3' && co_num === '4') && (
+        {(co_num === '3' || co_num === '4') && (
           <div className="form-group" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             <div style={{ flex: 1 }}>
               <label>이벤트 시작일</label>
