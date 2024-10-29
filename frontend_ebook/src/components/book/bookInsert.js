@@ -8,7 +8,6 @@ import Modal from 'react-modal';
 import IsbnSearch from './IsbnSearch';
 import { json } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { selectReadBook } from './bookList';
 Modal.setAppElement('#root'); // 접근성 관련 설정 (필수)
 
 function BookInsert() {
@@ -36,7 +35,7 @@ function BookInsert() {
     bk_reviewCount : 0, //총 리뷰 수
     bk_totalPage : 0,  //총 페이지
     bk_agelimit : 0, //연령제한
-    bk_publisher : '',//출판사
+    bk_me_id : '',//출판사
 
     bk_totalPurchase: 0,  //총 구매 수
     bk_age_60_male: 0,  //60대 남자
@@ -123,6 +122,12 @@ function BookInsert() {
       alert('총 페이지를 적어주세요.')
       return false;
     }
+    if(!book.bk_me_id){
+      var elm = document.querySelector('#bk_totalpage')
+      elm.focus();
+      alert('출판사를 적어주세요.')
+      return false;
+    }
    
     if(!bookImgFile){
       var elm = document.querySelector('#bk_img')
@@ -145,7 +150,7 @@ function BookInsert() {
     formData.append('bK_img',bookImgFile);
     formData.append('bK_epub',bookEqubFile);
 
-    
+    console.log( book)
     formData.append('bk_data',JSON.stringify(book));
     formData.append('writerList',JSON.stringify(addWriterList));
 
@@ -164,12 +169,12 @@ function BookInsert() {
       }
     }
     ).catch(e=>console.error(e))
+
   }//파일 보내기
 
   async function searchWriter(num){
     currentWriterPage = num;
     var listCount =await SearchWriterListCount(currentWriterSearch);
-    console.log(currentWriterSearch)
     writerPage = MakePage(listCount,currentWriterPage);
 
     searchWriterList = await SearchWriterList(currentWriterSearch,currentWriterPage)
@@ -206,11 +211,6 @@ function BookInsert() {
       setWriterTypeList([...writerTypeList]);
       setGenreList([...genreList]);
       setSecondGenreList([...secondGenreList]);
-
-      var res = await selectReadBook(1,'admin123');
-      console.log(res)
-      if(res == 2)
-        console.log("2일까"+res)
     })();
   },[]);
   return (
@@ -269,7 +269,7 @@ function BookInsert() {
       <label id = 'bk_pub'>
         출판사 이름
         <input onChange={e=>{
-          book.bk_publisher = e.target.value;
+          book.bk_me_id = e.target.value;
           setBook({...book});
         }} type='text' maxLength="50" placeholder="출판사 이름 50글자 내외" />
       </label>
@@ -377,12 +377,12 @@ function BookInsert() {
       
       {
         Array.isArray(secondGenreList) && secondGenreList.length > 0 && secondGenreList.map((item, index) => {
-          if(selectedGenreNum===0|| item.sg_parent==selectedGenreNum){
+          if(selectedGenreNum===0|| item.ge_parent==selectedGenreNum){
             return (
-              <label key={index}>{item.sg_name}
+              <label key={index}>{item.ge_name}
                <input onClick={()=>{
-                setSelectedGenreNum(item.sg_parent);
-                book.bk_sg_num = item.sg_parent;
+                setSelectedGenreNum(item.ge_parent);
+                book.bk_sg_num = item.ge_num;
                 setBook({...book});
                 }} type='radio' name='secondGenre'/>
               </label>
@@ -467,6 +467,7 @@ function BookInsert() {
 }
 
 export async function InsertBook(book,imgFile,equbFile,writerList){
+  console.log("추가");
   fetch('insertBook',{
     method : "post",
     body : JSON.stringify(book,imgFile,equbFile,writerList),
@@ -475,7 +476,5 @@ export async function InsertBook(book,imgFile,equbFile,writerList){
     },
   })
 }
-
-
 
 export default BookInsert;
