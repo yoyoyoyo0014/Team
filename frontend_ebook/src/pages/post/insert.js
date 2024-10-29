@@ -13,6 +13,12 @@ function Insert() {
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
 
+  useEffect(() => {
+    if (co_num === '3' || co_num === '4') {
+      setContent("이벤트");
+    }
+  }, [co_num]);
+
   const btnClick = (e) => {
     e.preventDefault(); // 기본 폼 제출 방지
   
@@ -21,12 +27,10 @@ function Insert() {
       alert('제목을 입력하세요.');
       return;
     }
-  
     if (!writer) {
       alert('작성자 정보가 설정되지 않았습니다.');
       return;
     }
-  
     if (!content) {
       alert('내용을 입력하세요.');
       return;
@@ -90,7 +94,7 @@ function Insert() {
         <input type="hidden" id="nickname" name="nickname" value={nickname} readOnly />
 
         {/* co_num이 3 또는 4일 경우에만 이벤트 기간 입력 필드 표시 */}
-        {(co_num === '3' || co_num === '4') && (
+        {(co_num === '3' && co_num === '4') && (
           <div className="form-group" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             <div style={{ flex: 1 }}>
               <label>이벤트 시작일</label>
@@ -102,11 +106,12 @@ function Insert() {
             </div>
           </div>
         )}
-
-        <div className="form-group">
-          <label htmlFor="content">내용:</label>
-          <textarea id="content" name="content" className="form-control" style={{ minHeight: '400px', height: 'auto' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
-        </div>
+        {(co_num !== '3' && co_num !== '4') && (
+          <div className="form-group">
+            <label htmlFor="content">내용:</label>
+            <textarea id="content" name="content" className="form-control" style={{ minHeight: '400px', height: 'auto' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
+          </div>
+        )}
         <button type="submit" className="btn btn-outline-info col-12">게시글 등록</button>
       </form>
       <a className="btn btn-outline-info" href={`/post/list/${co_num}`}>목록으로</a>
