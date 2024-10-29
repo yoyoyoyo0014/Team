@@ -33,21 +33,21 @@ public class FileUploadController {
 
 
 	public static boolean uploadFile(int bookNum, List<MultipartFile> file) {
-		String fileName="book_"+bookNum;
+		
 		String pathStr = "../fronted_ebook/public/";
 
 		for(int i =0;i<file.size();i++) {
 			pathStr = "../fronted_ebook/public/";
 			Path directoryPath;
 			String fileExtension = getFileExtension(file.get(i).getOriginalFilename());//파일 유형
-			
+			String fileName="book_"+bookNum;
 			try {
 				if(fileExtension.equals("epub")) {
-					fileName = fileName+fileExtension;
+					fileName = fileName+".epub";
 					pathStr+="epub";
 					directoryPath = Paths.get(pathStr);
 				}else {
-					fileName = fileName+"jpg";
+					fileName = fileName+".jpg";
 					pathStr+="img";
 					directoryPath = Paths.get(pathStr);
 				}
