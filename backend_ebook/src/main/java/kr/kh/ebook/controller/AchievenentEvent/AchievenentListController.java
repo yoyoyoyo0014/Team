@@ -47,7 +47,7 @@ public class AchievenentListController {
 		achManager.createAccount();
 	}
 
-	//DB에서 해당 도전과제들 불러오기
+	//해당 도전과제들 불러오기
 	@PostMapping("/{anyPath}/selectAchievenent")
 	public List<AchievenentVO> selectAchievenent(@RequestBody List<Integer> achNum) {
 		List<AchievenentVO> res = new ArrayList<AchievenentVO>();
@@ -59,20 +59,20 @@ public class AchievenentListController {
 		return res;
 	}
 	
-	//DB에서 존재하는 도전과제 전부 가져오기
+	//존재하는 도전과제 전부 가져오기
 	public List<AchievenentVO> allAchievenentList(){
 		return achService.allAchievenentList();
 	}
 	
 	
-	//DB에서 방금 달성한 도전과제 가져오기
+	//방금 달성한 도전과제 가져오기
 	@GetMapping("/{anyPath}/selectNowCollectAchList/{meId}")
 	public List<AchievenentListVO> selectNowCollectAchList(@PathVariable String anyPath,@PathVariable String meId){
 		List<AchievenentListVO> res = achService.selecNowCollectAchList(meId);
 		return res;
 	}
 	
-	//DB에서 달성한 도전과제를 확인했어요
+	//달성한 도전과제를 확인했어요
 	@PostMapping("/{anyPath}/checkCollectAchList")
 	public boolean UpdateCollectAchList(@RequestBody List<AchievenentListVO> achList){
 		for(AchievenentListVO ach : achList) {
@@ -84,12 +84,12 @@ public class AchievenentListController {
 	}
 	
 	
-	//DB에서 달성한 도전과제 불러오기
+	//해당 도전과제가 달성했는지 안했는지
 	public List<AchievenentListVO> selectAchievenentList(int achNum,String memberId){
 		List<AchievenentListVO> achList =  achService.selectAchievenentList(achNum,memberId);
 		return achList;
 	}
-	//DB에서 달성한 도전과제 달성 추가하기
+	//도전과제 달성 추가
 	public boolean insertAchievenentList(int achNum,String memberId) {
 		return achService.insertAchList(achNum,memberId);
 	}

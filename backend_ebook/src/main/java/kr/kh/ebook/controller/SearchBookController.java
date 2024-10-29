@@ -8,7 +8,6 @@ import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,10 +49,13 @@ public class SearchBookController {
 			@PathVariable String country,@PathVariable int genre,
 			@PathVariable String search,
 			@PathVariable int count) {
+		//https://github.com/st8324/java_240528/blob/main/spring%20projects/spring3/src/main/java/kr/kh/spring3/controller/ReactController.java
+		System.out.println("category : " + category +", country : "+country+", genre : " + genre +", search : " + search+" 페이지 : "+count);
 		BookCriteria bookCri = new BookCriteria(count,category,country,genre,search);
 		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
 		try {
 			List<BookVO> res = bookService.searchBookList(pm);
+			System.out.println(res);
 			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,49 +79,48 @@ public class SearchBookController {
 	public int reviewCount(@PathVariable("bookNum")int bookNum){
 		int res = bookService.reviewCount(bookNum);
 		return res;
-	}
+	}//리뷰 보기
 
 	//리뷰 리스트
 	@GetMapping("/{anyPath}/reviewList/{bookNum}/{pageNum}")
+
 	public List<ReviewVO> reviewList(@PathVariable("bookNum")int bookNum, @PathVariable("pageNum") int pageNum){
 		List<ReviewVO> res = bookService.selectReviewList(bookNum,pageNum);
 		return res;
 	}//리뷰 보기
 
-	//읽고 있는책 현재 페이지 구매하지 않았다면 -1
-	@PostMapping("/{anyPath}/currentBookPage")
-	public int selectReadBook(@RequestBody BookListVO bookList) {
-		System.out.println(bookList);
+	//읽고 있는책 현재 페이지    구매하지 않았다면 -1
+	@GetMapping("/currentBookPage")
+	public int selectReadBook(@RequestParam int bookNum,@RequestParam String userId) {
 		try {
-			BookListVO readBook = bookService.selectReadBook(bookList);
-			if(readBook==null) {
+			BookListVO readBook = bookService.selectReadBook(bookNum,userId);
+			if(readBook==null)
 				return -1;//구매하지 않은 책
-			}
 			return readBook.getBl_nowPage();
 		}catch(Exception e) {
-			return -1;
-		}
+			return 1;
+		}//혹시 여러개 있음을 방지
 	}
 
 	//읽고 있는 책 완독률 저장
-	@PostMapping("/{anyPath}/updateBookPage")
-	public boolean updateBookPage(@RequestBody BookListVO bookList) {
-		return bookService.updateReadBook(bookList);
+	@GetMapping("/updateBookPage")
+	public boolean updateBookPage(@RequestParam BookListVO readBook) {
+		return bookService.updateReadBook(readBook);
 	}
 
 	//장르 리스트 가져오기
 	@GetMapping("/selectGenreList")
 	@ResponseBody
 	public List<BookGenreVO> selectGenreList(){
-		List<BookGenreVO> res = bookService.selectGenreList();
+		List<BookGenreVO> res = bookService.getAllGenre();
 		return res;
 	}
 
 	//두번째 장르 가져오기
 	@GetMapping("/selectSecondGenreList")
 	@ResponseBody
-	public List<BookSecondGenreVO> selectSecondGenreList(){
-		List<BookSecondGenreVO> res = bookService.selectSecondGenreList();
+	public List<BookGenreVO> selectSecondGenreList(int parent){
+		List<BookGenreVO> res = bookService.getSecondGenre(parent);
 		return res;
 	}
 

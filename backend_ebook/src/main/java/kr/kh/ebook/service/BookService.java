@@ -1,30 +1,26 @@
 package kr.kh.ebook.service;
 
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
 import kr.kh.ebook.dao.BookDAO;
-import kr.kh.ebook.model.vo.BookListVO;
-import kr.kh.ebook.model.vo.BookSecondGenreVO;
-import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.BookGenreVO;
+import kr.kh.ebook.model.vo.BookListVO;
+import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterListVO;
 import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookPageMaker;
+import kr.kh.ebook.pagination.Criteria;
 import lombok.AllArgsConstructor;
-
 
 @Service
 @AllArgsConstructor
 public class BookService {
 	private BookDAO bookDao;
-	
-	public int count() {
-		return bookDao.count();
-	}
-	
+
 	//검색할 책 개수
 	public int searchBookCount(String country,int genre,String search) {
 		return bookDao.searchBookCount(country,genre,search);
@@ -55,8 +51,8 @@ public class BookService {
 		return bookDao.insertReview(review);
 	}
 
-	public BookListVO selectReadBook(BookListVO bookListVo) {
-		return bookDao.selectReadBook(bookListVo);
+	public BookListVO selectReadBook(int bookNum, String userId) {
+		return bookDao.selectReadBook(bookNum,userId);
 	}
 
 	public boolean updateReadBook(BookListVO readBook) {
@@ -66,19 +62,7 @@ public class BookService {
 	public BookVO selectBook(int bookNum) {
 		return bookDao.selectBook(bookNum);
 	}
-	//책 디테일
-	public boolean updateReview(ReviewVO writeUserReview) {
-		return bookDao.updateReview(writeUserReview);
-	}
 
-	public boolean deleteReview(int bookNum, String id) {
-		return bookDao.deleteReview(bookNum,id);
-	}
-
-	public List<BookGenreVO> selectGenreList() {
-		return bookDao.selectGenreList();
-	}
-	
 	public List<BookGenreVO> getAllGenre() {
 		List<BookGenreVO> list = bookDao.selectAllGenre();
 		return list;
@@ -89,8 +73,35 @@ public class BookService {
 		return list;
 	}
 
-	public List<BookSecondGenreVO> selectSecondGenreList() {
-		return bookDao.selectSecondGenre();
+	public List<BookVO> getBestSellers() {
+		List<BookVO> list = bookDao.selectBestSellers();
+		return list;
+	}
+
+	public List<BookVO> getNewBooks() {
+		List<BookVO> list = bookDao.selectNewBooks();
+		return list;
+	}
+
+	public BookVO getRandomBook() {
+		int max = bookDao.selectMaxBookNum();
+		Random random = new Random();
+		int rand = random.nextInt(max);
+		BookVO book = new BookVO();
+		do {
+			book = bookDao.selectBook(rand);
+		} while(book == null);
+		return book;
+	}
+	
+	//책 디테일
+	public boolean updateReview(ReviewVO writeUserReview) {
+		return bookDao.updateReview(writeUserReview);
+	}
+
+	public boolean deleteReview(int bookNum, String id) {
+		System.out.println("del : " + bookNum + " " + id);
+		return bookDao.deleteReview(bookNum,id);
 	}
 
 	public int insertBook(BookVO book) {
@@ -100,8 +111,21 @@ public class BookService {
 	public boolean insertWriterList(WriterListVO writerListVO) {
 		return bookDao.insertWriterList(writerListVO);
 	}
-	
 
-	
+	public void updateReviewCount(int re_bk_num, char operator) {
+		bookDao.updateReviewCount(re_bk_num, operator);
+	}
+
+	public void updateReviewScore(int re_bk_num, double re_star, char operator) {
+		bookDao.updateReviewScore(re_bk_num, re_star, operator);
+	}
+
+	public List<ReviewVO> selectAllMyReview(Criteria cri, String userId) {
+		return bookDao.selectAllMyReview(cri, userId);
+	}
+
+	public int selectMyReviewCount(String userId) {
+		return bookDao.selectMyReviewCount(userId);
+	}
 	
 }

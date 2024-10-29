@@ -1,62 +1,88 @@
 package kr.kh.ebook.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.kh.ebook.model.vo.BookListVO;
-import kr.kh.ebook.model.vo.BookVO;
-import kr.kh.ebook.model.vo.BookGenreVO;
-import kr.kh.ebook.model.vo.ReportTypeVO;
 import kr.kh.ebook.model.vo.ReviewVO;
-import kr.kh.ebook.pagination.BookCriteria;
-import kr.kh.ebook.pagination.BookPageMaker;
 import kr.kh.ebook.pagination.Criteria;
 import kr.kh.ebook.pagination.PageMaker;
 import kr.kh.ebook.service.BookService;
-import kr.kh.ebook.service.PostService;
-import kr.kh.ebook.service.ReportService;
-import lombok.AllArgsConstructor;
 
+@RequestMapping("/review")
 @RestController
-@AllArgsConstructor
 public class ReviewController {
 	
 	@Autowired
 	BookService bookService;
 	
-	@GetMapping("selectBook/selectMyReview/{userId}/{bookNum}")
+	// 내 리뷰 보기 - 없음 null
+	@GetMapping("/myReviewCount/{bookNum}/{userId}")
 	@ResponseBody
-	public ReviewVO selectMyReview(@PathVariable("userId") String userId,@PathVariable("bookNum") int bookNum) {
+	public ReviewVO selectMyReview(@PathVariable("bookNum") int bookNum, @PathVariable("userId") String userId) {
 		return bookService.selectMyReview(userId, bookNum);
-	}// 내 리뷰 보기   -없음 null
+	}
+	
+	// 내 리뷰 리스트 보기 - 없음 null
+	@GetMapping("/selectMyReview/{userId}/{pageNum}")
+	@ResponseBody
+	public HashMap<String, Object> selectAllMyReview(@PathVariable("userId") String userId, @PathVariable("pageNum") int pageNum) {
+		System.out.println("pageNum = " + pageNum);
+		int lookPage = 2;//한 페이지에 보이는 컨텐츠 개수
+		Criteria cri = new Criteria((pageNum - 1)*lookPage, lookPage);
+		List<ReviewVO> list = bookService.selectAllMyReview(cri, userId);
+		int cnt = bookService.selectMyReviewCount(userId);
+		PageMaker pm = new PageMaker(1, cri, cnt);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("reviewList", list);
+		map.put("reviewPm", pm);
+		return map;
+	}
+	
+	//리뷰 보기
+	@PostMapping("/reviewCount/{bookNum}")
+	@ResponseBody
+	public int reviewCount(@PathVariable("bookNum")int bookNum){
+		int res = bookService.reviewCount(bookNum);
+		return res;
+	}
+	
+	//리뷰 보기
+	@PostMapping("/selectReview/{bookNum}/{pageNum}")
+	@ResponseBody
+	public HashMap<String, Object> selectReview(@PathVariable("bookNum") int bookNum, @PathVariable("pageNum") int pageNum) {
+		List<ReviewVO> list = bookService.selectReviewList(bookNum, pageNum);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("reviewList", list);
+		return map;
+	}
 	
 	//리뷰 작성
-	@PostMapping("*/insertReview")
+	@PostMapping("/insertReview")
 	@ResponseBody
 	public boolean insertReview(@RequestBody ReviewVO writeUserReview) {
-		System.out.println(writeUserReview);
+		System.out.println(writeUserReview.getRe_me_id());
 		ReviewVO Myreview = bookService.selectMyReview(writeUserReview.getRe_me_id(), writeUserReview.getRe_bk_num());
-		System.out.println(Myreview);
-		if(Myreview != null)//리뷰가 존재 할 시 반환
-			return false;
+		if(Myreview != null) return false;
+		
 		boolean res = bookService.insertReview(writeUserReview);
-		
-		
-		return res;
-	}//리뷰 쓰기
+		if (res) {
+			bookService.updateReviewCount(writeUserReview.getRe_bk_num(), '+');
+			bookService.updateReviewScore(writeUserReview.getRe_bk_num(), writeUserReview.getRe_star(), '+');
+			return true;
+		} else return false;
+	}
 	
 	//리뷰 수정
-	@PostMapping("*/updateReview")
+	@PostMapping("/updateReview")
 	@ResponseBody
 	public boolean updateReview(@RequestBody ReviewVO writeUserReview) {
 		boolean res = bookService.updateReview(writeUserReview);
@@ -64,10 +90,19 @@ public class ReviewController {
 	}
 	
 	//리뷰 삭제
-	@GetMapping("*/deleteReview/{bookNum}/{id}")
+	@PostMapping("/deleteReview/{bookNum}/{userId}")
 	@ResponseBody
-	public boolean deleteReview(@PathVariable("bookNum") int bookNum, @PathVariable("id") String id) {
-		return bookService.deleteReview(bookNum,id);
+	public boolean deleteReview(@PathVariable("bookNum") int bookNum, @PathVariable("userId") String userId) {
+		ReviewVO myReview = bookService.selectMyReview(userId, bookNum);
+		
+		boolean res = false;
+		//boolean res = 
+		if (myReview != null) {
+			bookService.updateReviewCount(myReview.getRe_bk_num(), '-');
+			bookService.updateReviewScore(myReview.getRe_bk_num(), myReview.getRe_star(), '-');
+			bookService.deleteReview(bookNum, userId);
+			return true;
+		} else return false;
 	}
 	
 }

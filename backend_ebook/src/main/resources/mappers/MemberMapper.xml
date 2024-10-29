@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.kh.ebook.dao.MemberDAO">
+
+	<!-- 카카오 -->
+
+ 	<select id="findMemberById" parameterType="java.lang.String" resultType="kr.kh.ebook.model.vo.MemberVO">
+        select * from member
+        where me_id = #{me_id}
+    </select>
+   
+	<insert id="insertKakaoMember" parameterType="kr.kh.ebook.model.vo.MemberVO">
+	    INSERT INTO member (me_id, me_nickname, me_email, me_name, me_gender, me_birth, me_phone, me_address)
+	    VALUES (#{me_id}, #{me_nickname}, #{me_email}, #{me_name}, #{me_gender}, #{me_birth}, #{me_phone}, #{me_address})
+	</insert>
+
+   
+   <!-- 네이버 -->
+   <!-- 네이버 ID로 회원 조회 -->
+    <select id="selectMemberByNaverId" parameterType="java.lang.String" resultType="kr.kh.ebook.model.vo.MemberVO">
+        select * from member
+        where me_naverId = #{naverId}
+    </select>
+   
+    <!-- 신규 회원 등록 (네이버) -->
+    <insert id="insertMember" parameterType="kr.kh.ebook.model.vo.MemberVO">
+        INSERT INTO member (me_id, me_naverId, me_nickname, me_email, me_phone, me_birth, me_authority, me_name, me_ms_name, me_gender)
+        VALUES (#{me_id}, #{me_naverId}, #{me_nickname}, #{me_email}, #{me_phone}, #{me_birth}, #{me_authority}, #{me_name}, '사용', #{me_gender})
+    </insert>
+   
+   <!-- 구글 -->
+   
+    <select id="findMemberByEmail" resultType="kr.kh.ebook.model.vo.MemberVO">
+        select * from member where me_email = #{email}
+    </select>
+
+	<!-- 신규 회원 등록 (구글) -->
+    <insert id="insertGoogleMember" parameterType="kr.kh.ebook.model.vo.MemberVO">
+        INSERT INTO member (me_id, me_email, me_nickname, me_authority, me_name, me_ms_name)
+        VALUES (#{me_id}, #{me_email}, #{me_nickname}, #{me_authority}, #{me_name}, '사용')
+    </insert>
+	
+	<!-- 신규 회원 등록 (일반) -->
+	<insert id="insertNormalMember" parameterType="MemberVO">
+		INSERT INTO member (
+            me_id, me_nickname, me_name, me_pw, me_email, 
+            me_phone, me_address, me_postalCode, me_gender, 
+            me_birth, me_authority,
+            me_ms_name, 
+            me_cm
+        ) VALUES (
+            #{me_id}, #{me_nickname}, #{me_name}, #{me_pw}, #{me_email}, 
+            #{me_phone}, #{me_address}, #{me_postalCode}, #{me_gender}, 
+            #{me_birth}, #{me_authority}, 
+            '사용', 
+            #{me_cm}
+        )
+	</insert>
+	
+	<!-- 닉네임으로 멤버 찾기 -->
+    <select id="getMemberByNickname" parameterType="String" resultType="kr.kh.ebook.model.vo.MemberVO">
+        SELECT * FROM member WHERE me_nickname = #{meNickname}
+    </select>
+    
+    <!-- 닉네임 수정 쿼리 -->
+    <update id="updateNickname">
+        UPDATE member
+        SET me_nickname = #{newNickname}
+        WHERE me_id = #{memberId}
+    </update>
+	
+</mapper>

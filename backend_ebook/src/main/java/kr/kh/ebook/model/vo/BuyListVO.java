@@ -5,7 +5,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class GenreVO {
-	private int ge_num;
-	private String ge_name;
+public class BuyListVO {
+	private int bl_num;
+	private int bl_bk_num;
+	private String bl_me_id;
 }
