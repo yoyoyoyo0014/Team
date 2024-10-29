@@ -92,7 +92,10 @@
     <select id="selectAllSecondGenre" resultType="BookGenreVO">
     	select sg_num as ge_num, sg_name as ge_name, sg_parent as ge_parent
     	from secondgenre
-    	where sg_parent = #{ge_num}
+    	<if  test ="ge_num != 0">
+   			where sg_parent = #{ge_num}
+   		</if>
+    	
     </select>
 	
 	<select id="reviewCount">
@@ -212,8 +215,8 @@
 	</select>
 	
 	<insert id="insertBook" useGeneratedKeys="true" keyProperty="bk.bk_num">
-		INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_publisher)
-		VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_publisher})
+		INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_me_id)
+		VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_me_id})
 	</insert>
 	
 	<insert id="insertWriterList">
