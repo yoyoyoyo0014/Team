@@ -19,6 +19,8 @@ public class PostVO {
     private String po_end;    // 이벤트 종료일
     private String po_me_id;
     private String po_me_nickname;
+    private String po_link;   // 게시글 리스트에 띄워지는 이미지
+    private String po_image;  // 이벤트 이미지
 
     // Getter와 Setter 추가
     public String getPo_start() {
@@ -35,5 +37,21 @@ public class PostVO {
 
     public void setPo_end(String po_end) {
         this.po_end = po_end;
+    }
+    
+    public String getPo_link() {
+        return po_link;
+    }
+
+    public void setPo_link(String po_link) {
+        this.po_link = po_link;
+    }
+
+    public String getPo_image() {
+        return po_image;
+    }
+
+    public void setPo_image(String po_image) {
+        this.po_image = po_image;
     }
 }
