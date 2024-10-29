@@ -116,7 +116,7 @@ CREATE TABLE `post` (
 	`po_content`	text	NOT NULL default '내용 없음',
 	`po_me_id`	varchar(15)	NOT NULL,
 	`po_me_nickname`	varchar(8)	NOT NULL,
-	`po_date`	datetime	NOT NULL,
+	`po_date`	datetime	NOT NULL default now(),
 	`po_co_num`	int	NOT NULL,
 	`po_view`	int	NOT NULL default 0,
 	`po_like`	int	NOT NULL default 0,
