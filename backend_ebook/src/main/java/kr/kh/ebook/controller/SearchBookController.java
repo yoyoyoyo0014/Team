@@ -117,17 +117,28 @@ public class SearchBookController {
 	}
 
 	//두번째 장르 가져오기
+	@GetMapping("/selectSecondAllGenreList")
+	@ResponseBody
+	public List<BookGenreVO> selectSecondAllGenreList(){
+		List<BookGenreVO> res = bookService.getSecondGenre(0);
+		System.out.println(res);
+		return res;
+	}
+
+
+	//두번째 장르 가져오기
 	@GetMapping("/selectSecondGenreList")
 	@ResponseBody
 	public List<BookGenreVO> selectSecondGenreList(int parent){
 		List<BookGenreVO> res = bookService.getSecondGenre(parent);
+		System.out.println(res);
 		return res;
 	}
 
 	@PostMapping("/insertBook")
 	public boolean InsertBook(@RequestPart("bK_img") MultipartFile imgFile,@RequestPart("bK_epub") MultipartFile epubFile,
 			@RequestPart("bk_data") String bookVo, @RequestPart("writerList") String writerListStr ) throws JSONException {
-
+		System.out.println(bookVo);
 		// Jackson ObjectMapper 생성
 		ObjectMapper objectMapper = new ObjectMapper();
 		ObjectMapper bookMapper = new ObjectMapper();
@@ -135,23 +146,24 @@ public class SearchBookController {
 			// JSON 문자열을 List<WriterListVO>로 변환
 			List<WriterListVO> writerList = objectMapper.readValue(writerListStr, new TypeReference<List<WriterListVO>>() {});
 			BookVO book= bookMapper.readValue(bookVo, new TypeReference<BookVO>() {});
+			System.out.println(book);
 			// 변환된 객체 출력
 			List<MultipartFile> fileList =new ArrayList<MultipartFile>();
 			fileList.add(imgFile);
 			fileList.add(epubFile);
-			
+
 			bookService.insertBook(book);
-			
+
 			for(int i=0;i<writerList.size();i++) {
 				writerList.get(i).setWl_bk_num(book.getBk_num());
 				if(!bookService.insertWriterList(writerList.get(i))) {
 					return false;
 				}
-				
+
 			}
 			if(FileUploadController.uploadFile(book.getBk_num(), fileList))
 				return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
