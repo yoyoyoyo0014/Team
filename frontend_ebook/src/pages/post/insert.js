@@ -12,6 +12,8 @@ function Insert() {
   const [content, setContent] = useState("");
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
+  const [postLinkPreview, setPostLinkPreview] = useState(null);
+  const [postImagePreview, setPostImagePreview] = useState(null);
 
   useEffect(() => {
     if (co_num === '3' || co_num === '4') {
@@ -19,10 +21,27 @@ function Insert() {
     }
   }, [co_num]);
 
+  const handlePostLinkChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPostLinkPreview(URL.createObjectURL(file));
+    } else {
+      setPostLinkPreview(null);
+    }
+  };
+
+  const handlePostImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPostImagePreview(URL.createObjectURL(file));
+    } else {
+      setPostImagePreview(null);
+    }
+  };
+
   const btnClick = (e) => {
     e.preventDefault(); // 기본 폼 제출 방지
-  
-    // 필수 필드가 비어 있는지 확인
+
     if (!title) {
       alert('제목을 입력하세요.');
       return;
@@ -35,31 +54,37 @@ function Insert() {
       alert('내용을 입력하세요.');
       return;
     }
-  
+
     const currentDate = new Date();
     const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')} ${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
-  
-    const requestData = {
-      po_title: title,
-      po_me_id: writer,
-      po_me_nickname: nickname,
-      po_content: content,
-      po_co_num: co_num,
-      po_start: start ? start.toISOString().split('T')[0] : null,
-      po_end: end ? end.toISOString().split('T')[0] : null,
-      po_date: formattedDate, // 시 분까지 저장된 현재 날짜 추가
-    };
-  
+
+    const formData = new FormData();
+    formData.append('po_title', title);
+    formData.append('po_me_id', writer);
+    formData.append('po_me_nickname', nickname);
+    formData.append('po_content', content);
+    formData.append('po_co_num', co_num);
+    formData.append('po_start', start ? start.toISOString().split('T')[0] : null);
+    formData.append('po_end', end ? end.toISOString().split('T')[0] : null);
+    formData.append('po_date', formattedDate);
+
+    // 이미지 파일 추가
+    const postLinkFile = document.getElementById('postLinkFile').files[0];
+    if (postLinkFile) {
+      formData.append('po_link', postLinkFile);
+    }
+
+    const postImageFile = document.getElementById('postImageFile').files[0];
+    if (postImageFile) {
+      formData.append('po_image', postImageFile);
+    }
+
     fetch(`/post/insert/${co_num}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData),
+      body: formData,
     })
       .then((response) => {
         if (!response.ok) {
-          // 서버에서 상태 코드와 메시지를 포함한 응답을 받을 때 처리
           return response.json().then((data) => {
             throw new Error(data.message || `HTTP error! status: ${response.status}`);
           });
@@ -79,8 +104,6 @@ function Insert() {
         alert(`게시글 등록 중 오류가 발생했습니다: ${error.message}`);
       });
   };
-  
-  
 
   return (
     <div>
@@ -93,7 +116,6 @@ function Insert() {
         <input type="hidden" id="writer" name="writer" value={writer} readOnly />
         <input type="hidden" id="nickname" name="nickname" value={nickname} readOnly />
 
-        {/* co_num이 3 또는 4일 경우에만 이벤트 기간 입력 필드 표시 */}
         {(co_num === '3' || co_num === '4') && (
           <div className="form-group" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             <div style={{ flex: 1 }}>
@@ -112,6 +134,20 @@ function Insert() {
             <textarea id="content" name="content" className="form-control" style={{ minHeight: '400px', height: 'auto' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
           </div>
         )}
+
+        {/* 이미지 파일 입력 필드 및 미리보기 추가 */}
+        <div className="form-group">
+          <label htmlFor="postLinkFile">게시글 리스트 이미지:</label>
+          <input type="file" id="postLinkFile" name="postLinkFile" className="form-control" onChange={handlePostLinkChange} />
+          {postLinkPreview && <img src={postLinkPreview} alt="게시글 리스트 이미지 미리보기" style={{ marginTop: '10px', maxHeight: '200px' }} />}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="postImageFile">이벤트 이미지:</label>
+          <input type="file" id="postImageFile" name="postImageFile" className="form-control" onChange={handlePostImageChange} />
+          {postImagePreview && <img src={postImagePreview} alt="이벤트 이미지 미리보기" style={{ marginTop: '10px', maxHeight: '200px' }} />}
+        </div>
+
         <button type="submit" className="btn btn-outline-info col-12">게시글 등록</button>
       </form>
       <a className="btn btn-outline-info" href={`/post/list/${co_num}`}>목록으로</a>

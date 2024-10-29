@@ -27,8 +27,8 @@
     	where po_num = #{po_num}
     </select>
     <insert id="insertPost">
-    	insert into post(po_title, po_me_id, po_me_nickname, po_co_num, po_content, po_date, po_start, po_end, po_link, po_image)
-    	values(#{po_title},#{po_me_id},#{po_me_nickname},#{po_co_num},#{po_content},#{po_date},#{po_start},#{po_end},#{po_link},#{po_image})
+    	insert into post(po_title, po_me_id, po_me_nickname, po_co_num, po_content,po_start, po_end, po_link, po_image)
+    	values(#{po_title},#{po_me_id},#{po_me_nickname},#{po_co_num},#{po_content},#{po_start},#{po_end},#{po_link},#{po_image})
     </insert>
 	<update id="updatePost">
 		update post set po_title = #{po_title}, po_content = #{po_content}, po_start = #{po_start}, po_end = #{po_end}, po_link = #{po_link}, po_image = #{po_image} where po_num = #{po_num}

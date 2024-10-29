@@ -54,4 +54,17 @@ public class PostVO {
     public void setPo_image(String po_image) {
         this.po_image = po_image;
     }
+
+	public PostVO(String title, String writer, String nickname, String content, int coNum, String start, String end,
+			String poLinkPath, String poImagePath) {
+		this.po_title = title;
+		this.po_me_id = writer;
+		this.po_me_nickname = nickname;
+		this.po_content = content;
+		this.po_co_num = coNum;
+		this.po_start = start;
+		this.po_end = end;
+		this.po_link = poLinkPath;
+		this.po_image = poImagePath;
+	}
 }

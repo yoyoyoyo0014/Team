@@ -1,5 +1,7 @@
 package kr.kh.ebook.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,12 +9,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.kh.ebook.model.vo.CommunityVO;
 import kr.kh.ebook.model.vo.PostVO;
@@ -62,19 +67,61 @@ public class PostController {
         map.put("co_num", co_num);
         return map;
     }
-
+    
+    @Transactional
     @PostMapping("/post/insert/{co_num}")
-    public HashMap<String, Object> postInsertPost(@RequestBody PostVO post) {
-        HashMap<String, Object> map = new HashMap<>();
-        boolean res = postService.addPost(post);
-        map.put("result", res);
-        if (res) {
-            map.put("redirect", "/post/list/" + post.getPo_co_num());
-        } else {
-            map.put("redirect", "/post/insert/" + post.getPo_co_num());
+    public ResponseEntity<?> insertPost(@PathVariable("co_num") int coNum,
+                                        @RequestParam("po_title") String title,
+                                        @RequestParam("po_me_id") String writer,
+                                        @RequestParam("po_me_nickname") String nickname,
+                                        @RequestParam("po_content") String content,
+                                        @RequestParam(value = "po_start", required = false) String start,
+                                        @RequestParam(value = "po_end", required = false) String end,
+                                        @RequestParam(value = "po_link", required = false) MultipartFile poLink,
+                                        @RequestParam(value = "po_image", required = false) MultipartFile poImage) {
+        try {
+            // 파일 저장 처리
+            String poLinkPath = null;
+            String poImagePath = null;
+
+            if (poLink != null && !poLink.isEmpty()) {
+                poLinkPath = saveFile(poLink);
+            }
+
+            if (poImage != null && !poImage.isEmpty()) {
+                poImagePath = saveFile(poImage);
+            }
+
+            // 서비스 호출하여 게시글 저장
+            PostVO post = new PostVO(title, writer, nickname, content, coNum, start, end, poLinkPath, poImagePath);
+            postService.addPost(post);
+            return ResponseEntity.ok().body(Map.of("result", true));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("result", false, "message", e.getMessage()));
         }
-        return map;
     }
+
+    private String saveFile(MultipartFile file) throws IOException {
+        // 파일 저장 경로를 명확한 위치로 지정 (예: 서버 루트 또는 다른 안정적인 위치)
+        String uploadDir = "D:/git/Team/event_image/";
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            dir.mkdirs(); // 폴더가 없으면 생성
+        }
+
+        // 파일 이름 설정
+        String originalFilename = file.getOriginalFilename();
+        String filePath = uploadDir + System.currentTimeMillis() + "_" + originalFilename;
+
+        // 파일 저장
+        File dest = new File(filePath);
+        file.transferTo(dest); // 파일을 지정된 경로로 이동
+        
+        return filePath;
+    }
+
+
+
 
     @GetMapping("/post/update/{po_num}")
     public HashMap<String, Object> postUpdate(@PathVariable int po_num) {
