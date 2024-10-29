@@ -64,13 +64,14 @@ const EditProfile = () => {
       }
   
       const text = await response.text(); // 응답 텍스트로 받기
-  
+
       if (!text) {
         console.warn("Empty response received.");
         return;
       }
   
       const data = JSON.parse(text); // JSON 파싱
+      
       setMember({
         me_id: data.me_id,
         me_name: data.me_name,
@@ -83,11 +84,19 @@ const EditProfile = () => {
         me_birth: data.me_birth,
       });
   
-      const birth = data.me_birth ? data.me_birth.split("-") : ["", "", ""];
-      setYear(birth[0]);
-      setMonth(birth[1]);
-      setDay(birth[2]);
+    const birthDate = data.me_birth ? new Date(data.me_birth) : null;
+    if (birthDate) {
+      const year = birthDate.getFullYear();
+      const month = (birthDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = birthDate.getDate().toString().padStart(2, '0');
+
+      setYear(year);
+      setMonth(month);
+      setDay(day);
+    }
+
       setAddr2(data.me_address.split(" ")[1] || "");
+
     } catch (error) {
       console.error("Failed to load user data:", error);
     }
@@ -179,7 +188,7 @@ const EditProfile = () => {
             name="me_email"
             type="email"
             cls="frm-input"
-            defaultValue={member.me_email} // DB에서 가져온 값을 표시, 수정 가능한 필드
+            value={member.me_email} // DB에서 가져온 값을 표시, 수정 가능한 필드
             label={"이메일"}
           />
 
@@ -202,7 +211,7 @@ const EditProfile = () => {
             name="me_phone"
             type="text"
             cls="frm-input"
-            defaultValue={member.me_phone} // 수정 가능한 필드
+            value={member.me_phone} // 수정 가능한 필드
             label={"연락처"}
           />
 
@@ -212,14 +221,14 @@ const EditProfile = () => {
             name="me_addr2"
             type="text"
             cls="frm-input"
-            defaultValue={addr2} // 수정 가능한 필드
+            value={addr2} // 수정 가능한 필드
             change={setAddr2}
           />
 
           <div className="input-item" style={{ display: "flex", gap: "1em" }}>
-            <Input name="year" type="text" max="4" defaultValue={year} change={setYear} readOnly/>
-            <Input name="month" type="text" max="2" defaultValue={month} change={setMonth} readOnly/>
-            <Input name="day" type="text" max="2" defaultValue={day} change={setDay} readOnly/>
+            <Input name="year" type="text" max="4" value={year} change={setYear} readOnly/>
+            <Input name="month" type="text" max="2" value={month} change={setMonth} readOnly/>
+            <Input name="day" type="text" max="2" value={day} change={setDay} readOnly/>
             <label>생년월일(8자리)</label>
           </div>
         </fieldset>
