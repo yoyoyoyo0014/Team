@@ -20,6 +20,7 @@ const NaverCallback = () => {
       // 백엔드에 네이버 로그인 요청 보내기
       handleNaverLoginOrRegister("/ebook/naver/login", { code, state })
         .then((data) => {
+          console.log("서버 응답 데이터:", data); // 네이버 응답 전체 데이터
           if (data.success) {
             localStorage.setItem("loginToken", data.token); // 로그인 또는 회원가입 후 토큰 저장
             setIsLoggedIn(true); // 로그인 상태 업데이트

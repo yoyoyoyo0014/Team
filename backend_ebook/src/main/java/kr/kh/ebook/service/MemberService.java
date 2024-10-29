@@ -1,9 +1,12 @@
 package kr.kh.ebook.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import kr.kh.ebook.controller.MemberContorller;
 import kr.kh.ebook.dao.MemberDAO;
 import kr.kh.ebook.model.vo.MemberVO;
 
@@ -15,6 +18,8 @@ public class MemberService {
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 	
 	/* 카카오 로그인 관련 */
 	
@@ -43,15 +48,23 @@ public class MemberService {
 	
 	/* 일반 로그인 관련 */
 	
+    // MemberService의 login 메서드에 추가
     public MemberVO login(String me_id, String rawPassword) {
+        logger.debug("Checking credentials for user ID: {}", me_id);
+
         MemberVO member = memberDao.getMemberById(me_id);
-        
         if (member != null) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            // 비밀번호 비교 (DB에 저장된 암호화된 비밀번호와 사용자가 입력한 비밀번호 비교)
-            if (passwordEncoder.matches(rawPassword, member.getMe_pw())) {
-                return member; // 비밀번호가 맞으면 로그인 성공
+            boolean matches = passwordEncoder.matches(rawPassword, member.getMe_pw());
+            logger.debug("Password matches: {}", matches); // 비밀번호 비교 결과 로그
+
+            if (matches) {
+                logger.info("Login successful for user ID: {}", me_id);
+                return member;
             }
+            logger.warn("Password mismatch for user ID: {}", me_id);
+        } else {
+            logger.warn("User not found with ID: {}", me_id);
         }
         return null; // 로그인 실패
     }

@@ -9,9 +9,6 @@ const MypageIndex = () => {
 	const { user } = useContext(LoginContext);
 	const [nickname, setNickname] = useState(''); // 닉네임 상태 추가
 
-	console.log("User 객체:", user);
-	console.log("Member ID:", user?.me_id);
-
 	// console.log(user.user.member.me_id);
 	// if (user.member === undefined) console.log('null');
 	// else {

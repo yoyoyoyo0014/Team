@@ -30,47 +30,68 @@ const EditProfile = () => {
   let [day, setDay] = useState('');
 
   const loadUserData = async () => {
-		try {
-			const token = localStorage.getItem("loginToken") || sessionStorage.getItem("loginToken");
-			console.log("Token from storage:", token); // 저장된 토큰 로그 확인
-			if (!token) {
-				console.error("No token found. Redirecting to login page.");
-				return; // 토큰이 없으면 함수 종료
-			}
-	
-			const response = await fetch("/ebook/member/profile", {
-				headers: {
-					"Authorization": `Bearer ${token}`, // Authorization 헤더에 Bearer + 토큰 포함
-				},
-			});
-	
-			if (response.status === 401) {
-				console.error("Unauthorized: Invalid token or session expired.");
-				return;
-			}
-	
-			const data = await response.json();
-			setMember({
-				me_id: data.me_id,
-				me_name: data.me_name,
-				me_nickname: data.me_nickname,
-				me_email: data.me_email,
-				me_gender: data.me_gender,
-				me_phone: data.me_phone,
-				me_postalCode: data.me_postalCode,
-				me_address: data.me_address,
-				me_birth: data.me_birth,
-			});
-			const birth = data.me_birth ? data.me_birth.split("-") : ["", "", ""];
-			setYear(birth[0]);
-			setMonth(birth[1]);
-			setDay(birth[2]);
-			setAddr2(data.me_address.split(" ")[1] || "");
-		} catch (error) {
-			console.error("Failed to load user data:", error);
-		}
-	};
-	
+    try {
+      const token = localStorage.getItem("loginToken") || sessionStorage.getItem("loginToken");
+      console.log("Token from storage:", token);
+  
+      if (!token) {
+        console.error("No token found. Redirecting to login page.");
+        return; // 토큰이 없으면 함수 종료
+      }
+      
+      // JWT 형식 확인
+      if (!token || token.split('.').length !== 3) {
+        console.warn("Invalid JWT format. Redirecting to login page.");
+        // 로그인 페이지로 리디렉션 또는 사용자에게 로그인 필요 알림
+        return;
+      }
+
+      const response = await fetch("/ebook/member/profile", {
+        method: "GET", // GET 요청임을 명확히 함
+        headers: {
+          "Authorization": `Bearer ${token}`, // Authorization 헤더에 Bearer + 토큰 포함
+        },
+      });
+  
+      if (response.status === 401) {
+        console.error("Unauthorized: Invalid token or session expired.");
+        return;
+      }
+  
+      if (!response.ok) {
+        console.error("Failed to fetch user data.");
+        return;
+      }
+  
+      const text = await response.text(); // 응답 텍스트로 받기
+  
+      if (!text) {
+        console.warn("Empty response received.");
+        return;
+      }
+  
+      const data = JSON.parse(text); // JSON 파싱
+      setMember({
+        me_id: data.me_id,
+        me_name: data.me_name,
+        me_nickname: data.me_nickname,
+        me_email: data.me_email,
+        me_gender: data.me_gender,
+        me_phone: data.me_phone,
+        me_postalCode: data.me_postalCode,
+        me_address: data.me_address,
+        me_birth: data.me_birth,
+      });
+  
+      const birth = data.me_birth ? data.me_birth.split("-") : ["", "", ""];
+      setYear(birth[0]);
+      setMonth(birth[1]);
+      setDay(birth[2]);
+      setAddr2(data.me_address.split(" ")[1] || "");
+    } catch (error) {
+      console.error("Failed to load user data:", error);
+    }
+  };
 
   useEffect(() => {
     loadUserData(); // 페이지가 로드될 때 사용자 정보 로드

@@ -3,6 +3,8 @@ package kr.kh.ebook.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,9 @@ import kr.kh.ebook.util.JwtUtil;
 @RestController
 @RequestMapping("/ebook/member")
 public class MemberContorller {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(MemberContorller.class);
+	
     @Autowired
     private MemberService memberService;
     
@@ -43,18 +47,21 @@ public class MemberContorller {
     // 일반 회원 로그인 처리
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody MemberVO memberVO) {
+    	
+    	logger.info("Attempting login for user ID: {}", memberVO.getMe_id());
+    	
         MemberVO member = memberService.login(memberVO.getMe_id(), memberVO.getMe_pw());
-
         Map<String, Object> response = new HashMap<>();
+        
         if (member != null) {
-            // JWT 토큰 생성
             String token = jwtUtil.generateToken(member.getMe_id());
-            System.out.println("Generated Token: " + token); // 로그 추가
-            
+            logger.info("Returned Token: {}", token); // 생성된 토큰 로그
+
             response.put("user", member);
-            response.put("token", token); // 생성된 JWT 토큰을 응답에 포함
+            response.put("token", token);
             return ResponseEntity.ok(response);
         } else {
+            logger.warn("Invalid login attempt for user ID: {}", memberVO.getMe_id());
             response.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
@@ -130,26 +137,31 @@ public class MemberContorller {
     }
     
     @GetMapping("/profile")
-    public ResponseEntity<MemberVO> getProfile(@RequestHeader("Authorization") String token) {
+    public MemberVO getProfile(@RequestHeader("Authorization") String token) {
         if (token == null || !token.startsWith("Bearer ")) {
-            System.out.println("Invalid Authorization header format.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            logger.warn("Invalid Authorization header format."); // **System.out.println 대신 logger 사용**
+            return null; // 토큰이 없거나 형식이 잘못된 경우 null 반환
         }
 
-        // "Bearer " 접두사를 제거하여 순수 토큰 값 추출
+        // "Bearer " 접두사를 제거하여 실제 토큰 값 추출
         String jwtToken = token.replace("Bearer ", "");
-        System.out.println("JWT Token: " + jwtToken); // 토큰 값 로그로 확인
+        logger.info("JWT Token: " + jwtToken); // **토큰 값 로그로 확인**
 
         String memberId;
         try {
-            memberId = jwtUtil.extractUserId(jwtToken); // JwtUtil로 사용자 ID 추출
+            memberId = jwtUtil.extractUserId(jwtToken); // JwtUtil을 사용하여 사용자 ID 추출
         } catch (Exception e) {
-            System.out.println("JWT parsing error: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            logger.warn("JWT parsing error: " + e.getMessage()); // **예외 발생 시 경고 로그**
+            return null; // 토큰이 유효하지 않을 때 null 반환
         }
 
         MemberVO member = memberService.getMemberProfile(memberId);
-        return ResponseEntity.ok(member);
+        if (member == null) {
+            logger.warn("No member found for ID: " + memberId);
+        } else {
+            logger.info("Successfully retrieved member profile for ID: " + memberId);
+        }
+        return member; // **VO 반환 (ResponseEntity 사용하지 않음)**
     }
     
 }
