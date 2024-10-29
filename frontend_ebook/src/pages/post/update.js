@@ -53,15 +53,21 @@ function Update() {
   }, [po_num]);
 
   function btnClick() {
-    const formData = new FormData();
-    formData.append('po_num', po_num);
-    formData.append('po_title', title);
-    formData.append('po_content', content);
-    formData.append('po_me_nickname', me_nickname); // 작성자 ID 추가
+    const requestData = {
+      po_num: po_num,
+      po_title: title,
+      po_content: content,
+      po_me_nickname: me_nickname, // 작성자 ID 추가
+      po_start: start ? start.toISOString().split('T')[0] : null,
+      po_end: end ? end.toISOString().split('T')[0] : null,
+    };
   
     fetch(`/post/update/${po_num}`, {
       method: 'POST',
-      body: formData, // FormData를 사용하므로 Content-Type 헤더를 설정하지 않음
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
     })
       .then((response) => {
         if (!response.ok) {
@@ -72,6 +78,7 @@ function Update() {
       })
       .catch((error) => console.error('Error updating post:', error));
   }
+  
   
 
   if (loading) {
