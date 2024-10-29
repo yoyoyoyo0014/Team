@@ -134,20 +134,23 @@ function Insert() {
             <textarea id="content" name="content" className="form-control" style={{ minHeight: '400px', height: 'auto' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
           </div>
         )}
+        
+        {(co_num === '3' || co_num === '4') && (
+          <>
+            {/* 이미지 파일 입력 필드 및 미리보기 추가 */}
+            <div className="form-group">
+              <label htmlFor="postLinkFile">게시글 리스트 이미지:</label>
+              <input type="file" id="postLinkFile" name="postLinkFile" className="form-control" onChange={handlePostLinkChange} />
+              {postLinkPreview && <img src={postLinkPreview} alt="게시글 리스트 이미지 미리보기" style={{ marginTop: '10px', maxHeight: '200px' }} />}
+            </div>
 
-        {/* 이미지 파일 입력 필드 및 미리보기 추가 */}
-        <div className="form-group">
-          <label htmlFor="postLinkFile">게시글 리스트 이미지:</label>
-          <input type="file" id="postLinkFile" name="postLinkFile" className="form-control" onChange={handlePostLinkChange} />
-          {postLinkPreview && <img src={postLinkPreview} alt="게시글 리스트 이미지 미리보기" style={{ marginTop: '10px', maxHeight: '200px' }} />}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="postImageFile">이벤트 이미지:</label>
-          <input type="file" id="postImageFile" name="postImageFile" className="form-control" onChange={handlePostImageChange} />
-          {postImagePreview && <img src={postImagePreview} alt="이벤트 이미지 미리보기" style={{ marginTop: '10px', maxHeight: '200px' }} />}
-        </div>
-
+            <div className="form-group">
+              <label htmlFor="postImageFile">이벤트 이미지:</label>
+              <input type="file" id="postImageFile" name="postImageFile" className="form-control" onChange={handlePostImageChange} />
+              {postImagePreview && <img src={postImagePreview} alt="이벤트 이미지 미리보기" style={{ marginTop: '10px', maxHeight: '200px' }} />}
+            </div>
+          </>
+        )}
         <button type="submit" className="btn btn-outline-info col-12">게시글 등록</button>
       </form>
       <a className="btn btn-outline-info" href={`/post/list/${co_num}`}>목록으로</a>
