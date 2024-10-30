@@ -26,6 +26,8 @@ import PostList from "./pages/post/list.js";
 import JoinSelect from "./pages/joinSelect.js";
 import JoinCompany from "./pages/joincompany.js";
 
+import AdminIndex from './admin/adminIndex';  // adminIndex 컴포넌트 import
+
 function Router({section}) {
 	const { isLoggedIn } = useContext(LoginContext);
 
@@ -64,6 +66,8 @@ function Router({section}) {
         element={isLoggedIn ? <MyBadges/> : <Navigate to="/login" />}
       />
       
+      <Route path="/admin" element={<AdminIndex />} />  {/* /admin 경로 설정 */}
+
       <Route path="/cart/:me_id" element={isLoggedIn ? <CartPage2/> : <Navigate to="/login" />}/>
       <Route path="/order/:me_id" element={isLoggedIn ? <Order/> : <Navigate to="/login" />}/>
 

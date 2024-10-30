@@ -15,6 +15,16 @@ const Header = ({ setSection }) => {
     let [category, setCategory] = useState('');
     let [keyword, setKeyword] = useState('');
 
+    const [isDropdownVisible, setDropdownVisible] = useState(false);
+    
+    const handleMouseEnter = () => {
+        setDropdownVisible(true);
+    };
+
+    const handleMouseLeave = () => {
+        setDropdownVisible(false);
+    };
+
     const showBooks = (sectionName) => {
         setSection(sectionName);
     };
