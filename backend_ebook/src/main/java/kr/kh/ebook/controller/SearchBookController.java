@@ -165,7 +165,6 @@ public class SearchBookController {
 					bookService.deleteWriterList(book.getBk_num());
 					return false;
 				}
-
 			}
 			//EPUB, 책 표지 파일 업로드
 			if(FileUploadController.uploadFile(book.getBk_num(), fileList))
