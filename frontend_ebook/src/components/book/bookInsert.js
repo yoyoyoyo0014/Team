@@ -1,36 +1,34 @@
-import {useEffect, useState, useContext, Fragment} from 'react';
-import SearchWriterList, { selectWriterType, SearchWriterListCount } from './WriterList';
-import MakePage, { PageButton, PageButtonV2 } from '../pageButton';
+import {useEffect, useState, Fragment, useContext} from 'react';
+import SelectGenreList, { SelectSecondGenreList } from './BookGenreList';
+import SearchWriterList, { selectWriterType } from './WriterList';
+import MakePage, { PageButton } from '../pageButton';
+import { SearchWriterListCount } from './WriterList';
 import ePub, { Book } from 'epubjs';
 import Modal from 'react-modal';
 import IsbnSearch from './IsbnSearch';
+import { json } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import {GenreContext} from '../../context/GenreContext';
-import Check from '../form/check';
-import { Input, InputItem } from '../form/input';
-import Button from '../form/button';
+import { selectBookshelf } from './bookList';
 import { useForm } from "react-hook-form";
-import '../../css/company.css';
+import { Input, InputItem } from '../form/input';
+import {GenreContext} from '../../context/GenreContext';
+import Button from '../form/button';
 
 Modal.setAppElement('#root'); // 접근성 관련 설정 (필수)
 
 function BookInsert() {
-  const {majorGenreList, genreList} = useContext(GenreContext);
+  const navigate = useNavigate();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors }
   } = useForm();
-
-  const navigate = useNavigate();
-
-  let [modalIsOpen, setModalIsOpen] = useState(false);
+  const {majorGenreList, genreList} = useContext(GenreContext);
 
   let[bookImgFile,setBookImgFile] = useState(null)//책표지 파일
-  
   let[bookEqubFile,setBookEqubFile] = useState(null)//책 equb 파일
-
   let [book,setBook] = useState({
     bk_num : 0, //도서 번호
     bk_name : '', //도서 이름
@@ -39,13 +37,14 @@ function BookInsert() {
     bk_sg_num : 0,  //도서 분류
     bk_plot : '', //줄거리
     bk_price : 0, //가격
+    bk_amount : 0, //재고
     bk_index : '',  //목차
     bk_isbn : '', //isbn
     bk_score : 0, //평점
     bk_reviewCount : 0, //총 리뷰 수
     bk_totalPage : 0,  //총 페이지
     bk_agelimit : 0, //연령제한
-    bk_publisher : '',//출판사
+    bk_me_id : '',//출판사
 
     bk_totalPurchase: 0,  //총 구매 수
     bk_age_60_male: 0,  //60대 남자
@@ -61,8 +60,6 @@ function BookInsert() {
 	  bk_age_10_male: 0,  //10대 남자
 	  bk_age_10_female: 0  //10대 여자
   })//책 데이터
-
-  let [selectedGenreNum,setSelectedGenreNum] = useState(0);  //클릭한 장르 번호
 
   let[searchWriterList,setSearchWriterList] = useState([]);//검색한 작가 리스트
   let[currentWriterSearch,SetCurrentWriterSearch] = useState('')//현재 작가 검색 단어
@@ -130,7 +127,13 @@ function BookInsert() {
       alert('총 페이지를 적어주세요.')
       return false;
     }
-   
+    if(!book.bk_me_id){
+      var elm = document.querySelector('#bk_totalpage')
+      elm.focus();
+      alert('출판사를 적어주세요.')
+      return false;
+    }
+
     if(!bookImgFile){
       var elm = document.querySelector('#bk_img')
       elm.focus();
@@ -140,9 +143,11 @@ function BookInsert() {
     return true
   }//빈 칸 확인
 
-  function submitFile(e){
-    e.preventDefault();
-    if(!checkInsertBook(book)) return;
+  function submitFile(){
+    if(!checkInsertBook(book)){
+      return
+    }
+
     
     for(var i = 0; i<addWriterList.length;i++)
       delete addWriterList[i].wr_name;
@@ -150,11 +155,19 @@ function BookInsert() {
     var formData = new FormData();
     formData.append('bK_img',bookImgFile);
     formData.append('bK_epub',bookEqubFile);
-    
+
+    console.log( book)
     formData.append('bk_data',JSON.stringify(book));
     formData.append('writerList',JSON.stringify(addWriterList));
+
+
+
+
+
+
+
     
-    fetch('/ebook/insertBook',{
+    fetch('insertBook',{
       method: 'POST',
       body: formData,
     })
@@ -168,13 +181,11 @@ function BookInsert() {
       }
     }
     ).catch(e=>console.error(e))
-
   }//파일 보내기
 
   async function searchWriter(num){
     currentWriterPage = num;
     var listCount =await SearchWriterListCount(currentWriterSearch);
-    console.log(currentWriterSearch)
     writerPage = MakePage(listCount,currentWriterPage);
 
     searchWriterList = await SearchWriterList(currentWriterSearch,currentWriterPage)
@@ -197,9 +208,9 @@ function BookInsert() {
   }//작가 리스트에 추가하기
 
   function isbnAddBookData(data){
-    setBook(prev => {
-      return {...prev, bk_isbn: data.isbn, bk_name: data.titleInfo}
-    });
+    book.bk_isbn = data.isbn;
+    book.bk_name = data.titleInfo;
+    setBook(book);
   }
 
   const [isBkNameDuplicate, setIsBkNameDuplicate] = useState(false);
@@ -212,16 +223,6 @@ function BookInsert() {
       console.error("Error checking nickname:", error);
     }
   };
-
-  const selectCountry = (e) => {
-    e.target.previousElementSibling.checked = true;
-    console.log(e.target.previousElementSibling);
-    setBook(prev => {
-      return {...prev, bk_state: e.target.previousElementSibling.value}
-    });
-    
-    //changeStar(e.target.previousElementSibling.value);
-  }
 
   return (
     <Fragment>
@@ -352,7 +353,6 @@ function BookInsert() {
                       genre.length !== undefined && genre.map(secondGenre => {
                         return(<li>
                           <input onClick={()=>{
-                            setSelectedGenreNum(genre.sg_parent);
                             book.bk_sg_num = genre.sg_parent;
                             setBook({...book});
                             }} type='radio' name="secondGenre" id={"genre_" + secondGenre.ge_num}/>  
@@ -450,6 +450,7 @@ function BookInsert() {
 }
 
 export async function InsertBook(book,imgFile,equbFile,writerList){
+  console.log("추가");
   fetch('insertBook',{
     method : "post",
     body : JSON.stringify(book,imgFile,equbFile,writerList),
@@ -459,7 +460,4 @@ export async function InsertBook(book,imgFile,equbFile,writerList){
   })
 }
 
-
-
 export default BookInsert;
-// 

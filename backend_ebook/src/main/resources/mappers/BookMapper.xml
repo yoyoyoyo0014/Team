@@ -85,14 +85,16 @@
   		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
     </select>
 
-	<select id="selectAllGenre" resultType="BookGenreVO">
+		<select id="selectAllGenre" resultType="BookGenreVO">
     	select * from genre
     </select>
     
     <select id="selectAllSecondGenre" resultType="BookGenreVO">
     	select sg_num as ge_num, sg_name as ge_name, sg_parent as ge_parent
     	from secondgenre
-    	where sg_parent = #{ge_num}
+    	<if  test ="ge_num != 0">
+   			where sg_parent = #{ge_num}
+   		</if>
     </select>
 	
 	<select id="reviewCount">
@@ -185,27 +187,28 @@
 	<update id="updateReviewCount">
 		update book
 		<choose>
-   			<when test ="operator == '+'">
-   				set bk_reviewCount = bk_reviewCount + 1 where bk_num = #{re_bk_num}
-   			</when>
-   			<when test ="operator == '-'">
-   				set bk_reviewCount = bk_reviewCount - 1 where bk_num = #{re_bk_num}
-   			</when>
-   		</choose>
+			<when test ="operator == '+'">
+				set bk_reviewCount = bk_reviewCount + 1 where bk_num = #{re_bk_num}
+			</when>
+			<when test ="operator == '-'">
+				set bk_reviewCount = bk_reviewCount - 1 where bk_num = #{re_bk_num}
+			</when>
+		</choose>
 	</update>
 	
 	<update id="updateReviewScore">
 		update book
 		<choose>
-   			<when test ="operator == '+'">
-   				set bk_score = bk_score + #{re_star} where bk_num = #{re_bk_num}
-   			</when>
-   			<when test ="operator == '-'">
-   				set bk_score = bk_score - #{re_star} where bk_num = #{re_bk_num}
-   			</when>
-   		</choose>
+			<when test ="operator == '+'">
+				set bk_score = bk_score + #{re_star} where bk_num = #{re_bk_num}
+			</when>
+			<when test ="operator == '-'">
+				set bk_score = bk_score - #{re_star} where bk_num = #{re_bk_num}
+			</when>
+		</choose>
 	</update>
 	
+	<!-- 책 추가 후 해당 book객채의 bk_num 변수에 ai 값 변환 -->
 	<insert id="insertBook" useGeneratedKeys="true" keyProperty="bk.bk_num">
 		INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_publisher)
 		VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_publisher})
@@ -215,5 +218,28 @@
 		insert into writer_list (wl_wr_num, wl_bk_num, wl_wt_num )
 		VALUES(#{wr.wl_wr_num}, #{wr.wl_bk_num}, #{wr.wl_wt_num})
 	</insert>
+	
+	<!-- 책꽂이에서 해당 유저의 선택된 책의 페이지 반환 (유저아이디, 책번호) -->
+	<select id="selectBookPage">
+		select bl_nowPage
+		from book_list
+		where bl_me_id = #{userId} and bl_bk_num = #{bookNum}
+	</select>
+	
+	<!-- 책 제거 (책 번호) -->
+	<delete id="deleteBook">
+		DELETE FROM book WHERE bk_num = #{bk_num};
+	</delete>
+	
+	<!-- 작가 리스트 제거 (책 번호) -->
+	<delete id="deleteWriterList">
+		DELETE FROM writer_list WHERE wl_bk_num = #{bk_num};
+	</delete>
+	<!-- 유저의 책 구매 개수 반환 -->
+	<select id="selectCountBookBuy" resultType = "int">
+		select count(*)
+		from book_list
+		where bl_me_id = #{userId}
+	</select>
 	
 </mapper>

@@ -10,6 +10,9 @@ import * as Common from './js/common.js';
 import './css/default.css';
 import './css/style.css';
 
+import {useEffect, useState} from "react";
+import { AchievenentEvent, CollectAchievenent } from "./components/achievenent/achievenentEvent.js";
+import { AchievenentSwitch } from "./components/achievenent/AchieventContext.js";
 function App() {
 	let [section, setSection] = useState('');
 
@@ -21,6 +24,7 @@ function App() {
 	)
 
   useEffect(() => {
+
     window.addEventListener('resize', ()=> Common.setVh());
     Common.setVh();
   }, []);
@@ -37,6 +41,9 @@ function App() {
 				</main>
 			</div>
 			<Footer />
+			<AchievenentSwitch>
+        <AchievenentEvent/>
+      </AchievenentSwitch>
 		</AppProvider>
 	);
 }

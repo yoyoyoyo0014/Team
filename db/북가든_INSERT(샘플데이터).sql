@@ -3,8 +3,8 @@ insert into member(me_id, me_nickname, me_pw, me_email, me_birth, me_adult, me_a
 values('admin123','admin','admin123','admin123@naver.com','990909','1','admin','사용');
 
 #책 추가
-insert into book(bk_name, bk_state, bk_me_id, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_isbn, bk_totalPage, bk_agelimit)
-values('빠르게 생각하고 똑똑하게 말하라','해외도서','admin123','20240910','2','줄거리','17100','0','0010011101','320','12');
+insert into book(bk_name,bk_me_id, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_isbn, bk_totalPage, bk_agelimit)
+values('빠르게 생각하고 똑똑하게 말하라','admin123','해외도서','20240910','2','줄거리','17100','0','0010011101','320','12');
 
 #리뷰 추가
 insert into review(re_content, re_bk_num, re_star, re_date, re_me_id)
@@ -19,5 +19,5 @@ insert into post(po_title, po_content, po_me_id, po_date, po_co_num)
 values('공지제목','공지내용','admin123','2024-10-01','1');
 
 #도전과제 추가
-insert into achievenent(ac_title, ac_info)
-values('첫 방문을 축하합니다!','처음 방문 시 달성');
+insert into achievenent(ac_title, ac_info,ac_id)
+values('첫 방문을 축하합니다!','처음 방문 시 달성','creatAccount');

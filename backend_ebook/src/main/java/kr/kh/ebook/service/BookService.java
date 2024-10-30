@@ -104,7 +104,33 @@ public class BookService {
 		return bookDao.deleteReview(bookNum,id);
 	}
 
-	public int insertBook(BookVO book) {
+	public List<BookVO> getNewBooks() {
+		List<BookVO> list = bookDao.selectNewBooks();
+		return list;
+	}
+
+	public BookVO getRandomBook() {
+		int max = bookDao.selectMaxBookNum();
+		Random random = new Random();
+		int rand = random.nextInt(max);
+		BookVO book = new BookVO();
+		do {
+			book = bookDao.selectBook(rand);
+		} while(book == null);
+		return book;
+	}
+	
+	//책 디테일
+	public boolean updateReview(ReviewVO writeUserReview) {
+		return bookDao.updateReview(writeUserReview);
+	}
+
+	public boolean deleteReview(int bookNum, String id) {
+		System.out.println("del : " + bookNum + " " + id);
+		return bookDao.deleteReview(bookNum,id);
+	}
+
+	public boolean insertBook(BookVO book) {
 		return bookDao.insertBook(book);
 	}
 

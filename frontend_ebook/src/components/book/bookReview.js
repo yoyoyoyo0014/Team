@@ -1,8 +1,6 @@
 import {Fragment, useState, useEffect, useContext} from 'react';
 import Modal from 'react-modal';
-//import Report from '../reportType';
 import ReportType from '../reportType';
-//import Report from '../../report';
 import { bookReviewReport } from '../report';
 import MakePage from '../pageButton';
 import Report from '../report';

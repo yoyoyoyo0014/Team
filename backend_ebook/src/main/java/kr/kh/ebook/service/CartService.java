@@ -15,8 +15,6 @@ public class CartService {
 
     public boolean addCart(int ca_bk_num, String ca_me_id) {
         // 중복 체크
-    	System.out.println("ca_bk_num: " + ca_bk_num);
-    	System.out.println("ca_me_id: " + ca_me_id);
         if (cartDao.existsInCart(ca_bk_num, ca_me_id)) {
             return false; // 이미 카트에 존재하는 경우 false 반환
         }

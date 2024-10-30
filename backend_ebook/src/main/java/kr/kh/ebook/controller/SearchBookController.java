@@ -83,7 +83,6 @@ public class SearchBookController {
 
 	//리뷰 리스트
 	@GetMapping("/{anyPath}/reviewList/{bookNum}/{pageNum}")
-
 	public List<ReviewVO> reviewList(@PathVariable("bookNum")int bookNum, @PathVariable("pageNum") int pageNum){
 		List<ReviewVO> res = bookService.selectReviewList(bookNum,pageNum);
 		return res;
@@ -117,48 +116,80 @@ public class SearchBookController {
 	}
 
 	//두번째 장르 가져오기
-	@GetMapping("/selectSecondGenreList")
+	@GetMapping("/selectSecondAllGenreList")
 	@ResponseBody
 	public List<BookGenreVO> selectSecondGenreList(int parent){
 		List<BookGenreVO> res = bookService.getSecondGenre(parent);
 		return res;
 	}
 
+
+	//두번째 장르 가져오기
+	@GetMapping("/selectSecondGenreList")
+	@ResponseBody
+	public List<BookGenreVO> selectSecondGenreList(int parent){
+		List<BookGenreVO> res = bookService.getSecondGenre(parent);
+		System.out.println(res);
+		return res;
+	}
+	//책 추가 기능
 	@PostMapping("/insertBook")
 	public boolean InsertBook(@RequestPart("bK_img") MultipartFile imgFile,@RequestPart("bK_epub") MultipartFile epubFile,
 			@RequestPart("bk_data") String bookVo, @RequestPart("writerList") String writerListStr ) throws JSONException {
-
-		// Jackson ObjectMapper 생성
-		ObjectMapper objectMapper = new ObjectMapper();
-		ObjectMapper bookMapper = new ObjectMapper();
 		try {
 			// JSON 문자열을 List<WriterListVO>로 변환
-			List<WriterListVO> writerList = objectMapper.readValue(writerListStr, new TypeReference<List<WriterListVO>>() {});
+			ObjectMapper writerListMapper = new ObjectMapper();
+			// JSON 문자열을 BookVO로 변환
+			ObjectMapper bookMapper = new ObjectMapper();
+			
+			List<WriterListVO> writerList = writerListMapper.readValue(writerListStr, new TypeReference<List<WriterListVO>>() {});
 			BookVO book= bookMapper.readValue(bookVo, new TypeReference<BookVO>() {});
-			// 변환된 객체 출력
+			
+			//책의 epub, 표지 파일 담을 객체
 			List<MultipartFile> fileList =new ArrayList<MultipartFile>();
+			//책 표지, epub 파일 추가
 			fileList.add(imgFile);
 			fileList.add(epubFile);
 			
-			bookService.insertBook(book);
-			
+			//책을 DB에 추가,book 객체에 bk_num 값 가져오는 기능  실패시 return
+			if(!bookService.insertBook(book))
+				return false;
+
 			for(int i=0;i<writerList.size();i++) {
 				writerList.get(i).setWl_bk_num(book.getBk_num());
 				if(!bookService.insertWriterList(writerList.get(i))) {
+					//DB에 추가했던 책 삭제
+					bookService.deleteBook(book.getBk_num());
+					//DB에 추가했던 작가리스트 제거
+					bookService.deleteWriterList(book.getBk_num());
 					return false;
 				}
-				
 			}
+			//EPUB, 책 표지 파일 업로드
 			if(FileUploadController.uploadFile(book.getBk_num(), fileList))
 				return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-
-
-
 		return true;
+	}
+	//첵꽂이의 책 가져오기
+	@GetMapping("/selectBookList/selectBookshelfPage/{userId}/{bookNum}")
+	@ResponseBody
+	public int selectBookshelfPage(@PathVariable("userId") String userId, @PathVariable("bookNum") int bookNum){
+		Integer page = bookService.selectMyBookPage(userId,bookNum);
+		if(page == null)
+			page = 0;
+		return page;
+	}
+	
+	/**
+	 * @param userId 유저 아이디
+	 * @return 해당 유저가 구매한 책 개수 반환
+	 */
+	public int bookBuyCount(String userId) {
+		return bookService.selectCountBookBuy(userId);
 	}
 }
