@@ -166,7 +166,7 @@ const List = () => {
                 {(co_num === '3' || co_num === '4') && (
                   <td>
                     <div>
-                      {item.po_link && (console.log('첨부 이미지 링크:', item.po_link), 
+                      {item.po_link && (
                         <>
                           <img src={`${item.po_link}`} alt="첨부 이미지" style={{ width: '100px', height: 'auto', marginBottom: '10px' }}/>
                         </>
