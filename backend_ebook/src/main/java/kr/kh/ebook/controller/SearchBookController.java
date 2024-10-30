@@ -14,14 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
-import kr.kh.ebook.model.vo.BookSecondGenreVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterListVO;
@@ -107,34 +103,9 @@ public class SearchBookController {
 		return bookService.updateReadBook(readBook);
 	}
 
-	//장르 리스트 가져오기
-	@GetMapping("/selectGenreList")
-	@ResponseBody
-	public List<BookGenreVO> selectGenreList(){
-		List<BookGenreVO> res = bookService.getAllGenre();
-		return res;
-	}
-
-	//두번째 장르 가져오기
-	@GetMapping("/selectSecondAllGenreList")
-	@ResponseBody
-	public List<BookGenreVO> selectSecondGenreList(int parent){
-		List<BookGenreVO> res = bookService.getSecondGenre(parent);
-		return res;
-	}
-
-
-	//두번째 장르 가져오기
-	@GetMapping("/selectSecondGenreList")
-	@ResponseBody
-	public List<BookGenreVO> selectSecondGenreList(int parent){
-		List<BookGenreVO> res = bookService.getSecondGenre(parent);
-		System.out.println(res);
-		return res;
-	}
 	//책 추가 기능
 	@PostMapping("/insertBook")
-	public boolean InsertBook(@RequestPart("bK_img") MultipartFile imgFile,@RequestPart("bK_epub") MultipartFile epubFile,
+	public boolean InsertBook(@RequestPart("bK_img") MultipartFile imgFile, @RequestPart("bK_epub") MultipartFile epubFile,
 			@RequestPart("bk_data") String bookVo, @RequestPart("writerList") String writerListStr ) throws JSONException {
 		try {
 			// JSON 문자열을 List<WriterListVO>로 변환
@@ -175,6 +146,7 @@ public class SearchBookController {
 		}
 		return true;
 	}
+	
 	//첵꽂이의 책 가져오기
 	@GetMapping("/selectBookList/selectBookshelfPage/{userId}/{bookNum}")
 	@ResponseBody

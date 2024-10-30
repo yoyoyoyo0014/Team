@@ -11,7 +11,6 @@ import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterListVO;
-import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookPageMaker;
 import kr.kh.ebook.pagination.Criteria;
 import lombok.AllArgsConstructor;
@@ -104,32 +103,6 @@ public class BookService {
 		return bookDao.deleteReview(bookNum,id);
 	}
 
-	public List<BookVO> getNewBooks() {
-		List<BookVO> list = bookDao.selectNewBooks();
-		return list;
-	}
-
-	public BookVO getRandomBook() {
-		int max = bookDao.selectMaxBookNum();
-		Random random = new Random();
-		int rand = random.nextInt(max);
-		BookVO book = new BookVO();
-		do {
-			book = bookDao.selectBook(rand);
-		} while(book == null);
-		return book;
-	}
-	
-	//책 디테일
-	public boolean updateReview(ReviewVO writeUserReview) {
-		return bookDao.updateReview(writeUserReview);
-	}
-
-	public boolean deleteReview(int bookNum, String id) {
-		System.out.println("del : " + bookNum + " " + id);
-		return bookDao.deleteReview(bookNum,id);
-	}
-
 	public boolean insertBook(BookVO book) {
 		return bookDao.insertBook(book);
 	}
@@ -152,6 +125,22 @@ public class BookService {
 
 	public int selectMyReviewCount(String userId) {
 		return bookDao.selectMyReviewCount(userId);
+	}
+
+	public int selectCountBookBuy(String userId) {
+		return bookDao.selectCountBookBuy(userId);
+	}
+
+	public void deleteBook(int bk_num) {
+		bookDao.deleteBook(bk_num);
+	}
+
+	public void deleteWriterList(int bk_num) {
+		bookDao.deleteWriterList(bk_num);
+	}
+
+	public Integer selectMyBookPage(String userId, int bookNum) {
+		return bookDao.selectBookPage(userId,bookNum);
 	}
 	
 }

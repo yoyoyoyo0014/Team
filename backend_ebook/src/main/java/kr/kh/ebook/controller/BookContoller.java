@@ -93,7 +93,7 @@ public class BookContoller {
 	
 	
 	@PostMapping("/insertBook")
-	public int insertBook(@RequestParam BookVO BookVO) {
+	public boolean insertBook(@RequestParam BookVO BookVO) {
 		return bookService.insertBook(BookVO);
 	}
 }

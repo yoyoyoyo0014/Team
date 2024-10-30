@@ -10,9 +10,9 @@ import * as Common from './js/common.js';
 import './css/default.css';
 import './css/style.css';
 
-import {useEffect, useState} from "react";
 import { AchievenentEvent, CollectAchievenent } from "./components/achievenent/achievenentEvent.js";
 import { AchievenentSwitch } from "./components/achievenent/AchieventContext.js";
+
 function App() {
 	let [section, setSection] = useState('');
 

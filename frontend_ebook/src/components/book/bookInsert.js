@@ -1,5 +1,4 @@
 import {useEffect, useState, Fragment, useContext} from 'react';
-import SelectGenreList, { SelectSecondGenreList } from './BookGenreList';
 import SearchWriterList, { selectWriterType } from './WriterList';
 import MakePage, { PageButton } from '../pageButton';
 import { SearchWriterListCount } from './WriterList';
@@ -8,11 +7,11 @@ import Modal from 'react-modal';
 import IsbnSearch from './IsbnSearch';
 import { json } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { selectBookshelf } from './bookList';
 import { useForm } from "react-hook-form";
 import { Input, InputItem } from '../form/input';
 import {GenreContext} from '../../context/GenreContext';
 import Button from '../form/button';
+import '../../css/bookinsert.css';
 
 Modal.setAppElement('#root'); // 접근성 관련 설정 (필수)
 
@@ -45,6 +44,7 @@ function BookInsert() {
     bk_totalPage : 0,  //총 페이지
     bk_agelimit : 0, //연령제한
     bk_me_id : '',//출판사
+    bk_genre: 0,
 
     bk_totalPurchase: 0,  //총 구매 수
     bk_age_60_male: 0,  //60대 남자
@@ -147,7 +147,6 @@ function BookInsert() {
     if(!checkInsertBook(book)){
       return
     }
-
     
     for(var i = 0; i<addWriterList.length;i++)
       delete addWriterList[i].wr_name;
@@ -160,13 +159,6 @@ function BookInsert() {
     formData.append('bk_data',JSON.stringify(book));
     formData.append('writerList',JSON.stringify(addWriterList));
 
-
-
-
-
-
-
-    
     fetch('insertBook',{
       method: 'POST',
       body: formData,
@@ -248,22 +240,29 @@ function BookInsert() {
               })}/>
               <label htmlFor="bk_name">책 제목</label>
           </div>
-          <Input
-            type="radio"
-            id="bk_state_1"
-            name="bk_state"
-            value="국내도서"
-            change={e => setBook(prev => {return {...prev, bk_state: e.target.value}})}/>
-          <label htmlFor="bk_state_1">국내도서</label>
 
-          <Input
-            type="radio"
-            id="bk_state_2"
-            name="bk_state"
-            value="해외도서"
-            change={e => setBook(prev => {return {...prev, bk_state: e.target.value}})}/>
-          <label htmlFor="bk_state_2">해외도서</label>
-          
+          <div className="input-item" style={{display: 'flex'}}>
+            <input
+              type="radio"
+              id="bk_state_1"
+              name="bk_state"
+              onClick={() => {
+                setBook(prev => {return {...prev, bk_state: '국내도서'}});
+                console.log(book);
+              }}/>
+            <label htmlFor="bk_state_1">국내도서</label>
+
+            <input
+              type="radio"
+              id="bk_state_2"
+              name="bk_state"
+              onClick={() => {
+                setBook(prev => {return {...prev, bk_state: '해외도서'}});
+                console.log(book);
+              }}/>
+            <label htmlFor="bk_state_2">해외도서</label>
+          </div>
+
           <div className="input-item">
             <input id="bk_img" name="bk_img" onChange={e=>setBookImgFile(e.target.files[0])} type = "file" accept="image/*"/>
             <label htmlFor="bk_img">책 표지</label>
@@ -354,8 +353,8 @@ function BookInsert() {
                         return(<li>
                           <input onClick={()=>{
                             book.bk_sg_num = genre.sg_parent;
-                            setBook({...book});
-                            }} type='radio' name="secondGenre" id={"genre_" + secondGenre.ge_num}/>  
+                            setBook({...book, bk_genre: secondGenre.ge_num});
+                            }} type='radio' name="secondGenre" id={"genre_" + secondGenre.ge_num} />  
                           <label htmlFor={"genre_" + secondGenre.ge_num}>{secondGenre.ge_name}</label>
                         </li>)
                       })

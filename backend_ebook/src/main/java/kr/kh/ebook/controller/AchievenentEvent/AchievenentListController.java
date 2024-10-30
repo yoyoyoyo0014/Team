@@ -41,9 +41,6 @@ public class AchievenentListController {
 	List<Achievenents> creatAccountList = new ArrayList<Achievenents>();
 	//책 구매 도전과제
 	List<Achievenents> buyAccountList = new ArrayList<Achievenents>();
-	
-	
-
 
 	@PostConstruct
 	void Init() {
@@ -74,8 +71,7 @@ public class AchievenentListController {
 	public List<AchievenentVO> allAchievenentList(){
 		return achService.allAchievenentList();
 	}
-
-
+	
 	//방금 달성한 도전과제 가져오기
 	@GetMapping("/{anyPath}/selectNowCollectAchList/{meId}")
 	public List<AchievenentListVO> selectNowCollectAchList(@PathVariable String anyPath,@PathVariable String meId){
@@ -216,5 +212,3 @@ public class AchievenentListController {
 		checkAchievenent(buyAccountList,userId,book);
 	}
 }
-
-
