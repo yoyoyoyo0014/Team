@@ -18,60 +18,67 @@ import jakarta.annotation.PostConstruct;
 import kr.kh.ebook.model.vo.AchievenentListVO;
 import kr.kh.ebook.model.vo.AchievenentVO;
 import kr.kh.ebook.service.AchievenentService;
+import kr.kh.ebook.service.BookService;
 
 @Component
 @Controller
 @RestController
 public class AchievenentListController {
-	
-	public static AchievenentListController achManager;
 
-	@Autowired 
+	public static AchievenentListController instance;
+
+	@Autowired
 	public AchievenentService achService;
-	
+	//도전과제 목록
 	List<AchievenentVO> achList;
-	
+
 	//계정 생성 도전과제
 	List<Achievenents> creatAccountList = new ArrayList<Achievenents>();
 	//책 구매 도전과제
 	List<Achievenents> buyAccountList = new ArrayList<Achievenents>();
 	
+	@Autowired
+	BookService bookService;
+
+
 	@PostConstruct
 	void Init() {
-		achManager = this;
-		
-		achList = allAchievenentList();//Achievenent 모두 가져오기
-		
-		divisionAchievenent();  //람다식 추가
-		
-		achManager.createAccount();
+		instance = this;
+		//db에서 모든 도전과제 가져오기
+		achList = allAchievenentList();
+		//도전과제 확인 이벤트 추가
+		divisionAchievenent();
+		//계정 생성시 달성되는 도전과제 테스트로 추가
+		instance.createAccount("admin123");
+		//책을 하나 구매 시  달성되는 도전과제 테스트로 추가
+		instance.buyBook("admin123");
 	}
 
 	//해당 도전과제들 불러오기
 	@PostMapping("/{anyPath}/selectAchievenent")
 	public List<AchievenentVO> selectAchievenent(@RequestBody List<Integer> achNum) {
 		List<AchievenentVO> res = new ArrayList<AchievenentVO>();
-		
 		for(int i =0;i<achNum.size();i++)
 			res.add(achService.selectAchievenent(achNum.get(i)));
-		
-		
 		return res;
 	}
-	
-	//존재하는 도전과제 전부 가져오기
+
+	/**
+	 * 모든 도전과제 목록 반환
+	 * @return 도전과제 목록 반환
+	 */
 	public List<AchievenentVO> allAchievenentList(){
 		return achService.allAchievenentList();
 	}
-	
-	
+
+
 	//방금 달성한 도전과제 가져오기
 	@GetMapping("/{anyPath}/selectNowCollectAchList/{meId}")
 	public List<AchievenentListVO> selectNowCollectAchList(@PathVariable String anyPath,@PathVariable String meId){
 		List<AchievenentListVO> res = achService.selecNowCollectAchList(meId);
 		return res;
 	}
-	
+
 	//달성한 도전과제를 확인했어요
 	@PostMapping("/{anyPath}/checkCollectAchList")
 	public boolean UpdateCollectAchList(@RequestBody List<AchievenentListVO> achList){
@@ -82,8 +89,8 @@ public class AchievenentListController {
 		}
 		return true;
 	}
-	
-	
+
+
 	//해당 도전과제가 달성했는지 안했는지
 	public List<AchievenentListVO> selectAchievenentList(int achNum,String memberId){
 		List<AchievenentListVO> achList =  achService.selectAchievenentList(achNum,memberId);
@@ -93,51 +100,113 @@ public class AchievenentListController {
 	public boolean insertAchievenentList(int achNum,String memberId) {
 		return achService.insertAchList(achNum,memberId);
 	}
-	
+
 	//도전과제들을 람다식에 넣기
+	
+	/**
+	 * achList에 ac_id를 통해 도전과제 달성 시 true를 반환하는 이벤트 값 추가
+	 */
 	public void divisionAchievenent() {
 		for(AchievenentVO ach : achList) {
+			//=을 기준으로 String을 나눔
 			String[] parts = ach.getAc_id().split("=");
 			switch(parts[0]) {
+			//처음 값이 'creatAcount'일 시 실행 (멤버 생성 시 실행하는 메소드)
 			case "creatAccount" :
+				//계정 생성 도전과제 메소드 추가
 				insertCreateAccount(ach);
 				break;
+			//처음 값이 'buyBookCount'일 시 실행 (책 구매 시 실행하는 메소드)
+			case "buyBookCount":
+				try {
+					//parts[1]은 책 구매 달성 개수
+					int count = Integer.parseInt(parts[1]);
+					//책 개수 도전과제 메소드 추가
+					buyBookCountInsert(ach,count);
+					break;
+				}catch(Exception e) {
+					System.out.println(ach.getAc_num()+"번 도전과제 ac_id 오류 옳은 예) buyBookCount=1");
+				}
+				
 			}
 		}
 	}
 
-	void checkAchievenent(List<Achievenents> achList) {
-		String id = "admin123";
+	/**
+	 * 도전과제를 달성했는지 안했는지 검사하는 메소드
+	 * @param achList 이벤트들을 모아둔 List
+	 * @param userId 해당 유저 아이디
+	 */
+	void checkAchievenent(List<Achievenents> achList,String userId) {
 		for (Achievenents i : achList) {
-			if(selectAchievenentList(1,"admin123").size()!=0) 
+			//이미 달성한 도전과제면 return
+			if(selectAchievenentList(i.achievenentVo.getAc_num(),userId).size()!=0)
 				return;
-				
-			if(i.CheckAchievenent.checkAccount()) 
-				insertAchievenentList(i.achievenentVo.getAc_num(),id);
+			//checkAccount를 통해 검사
+			if(i.CheckAchievenent.checkAccount(userId)) 
+				//달성 시 실행
+				insertAchievenentList(i.achievenentVo.getAc_num(),userId);
 		}
 	}
 
-	//계정 생성 시 달성 도전과제
-	public void createAccount() {
-		checkAchievenent(creatAccountList);
+	//계정 생성 시 실행되는 메소드
+	public void createAccount(String userId) {
+		checkAchievenent(creatAccountList,userId);
 	}
 
-	//계정 생성 도전과제 추가
+	/**
+	 * creatAccountList에 계정 생성시 발생하는 CheckAchievenent 이벤트 추가  
+	 * @param ach 도전과제
+	 */
 	public void insertCreateAccount(AchievenentVO ach) {
+		//도전과제 확인을 위한 객체 생성
 		Achievenents achievenents = new Achievenents();
-		CheckAchievenent checkEvent = () ->{
+		//확인 없이 무조건 true값 반환
+		CheckAchievenent checkEvent = (isCreateAccount) ->{
 			return true;
 		};
+		//achievenents에 대입
 		achievenents.CheckAchievenent = checkEvent;
 		achievenents.achievenentVo = ach;
+		//도전과제 목록에 추가
 		creatAccountList.add(achievenents);
 	}
 
-
-	public  void buyBook() {
-
+	/**
+	 * creatAccountList에 책 구매시 책 구매 개수에 따라 달성되는 발생하는 CheckAchievenent 이벤트 추가 
+	 * @param ach 도전과제
+	 * @param count 달성해야하는 개수
+	 */
+	public void buyBookCountInsert(AchievenentVO ach,int count) {
+		//도전과제 확인을 위한 객체 생성
+		Achievenents achievenents = new Achievenents();
+		CheckAchievenent checkEvent = (Objs) ->{
+			try {
+				//Objs[0] = 유저 아이디
+				String userId = (String) Objs[0];
+				//해당 유저의 책 구매 개수
+				int buyBookCount = bookService.selectCountBookBuy(userId);
+				//책 구매개수를 목표치 만큼 달성시 true 반환
+				if(count<=buyBookCount)
+					return true;
+				//실패시 false 반환
+				else 
+					return false;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		};
+		//achievenents에 대입
+		achievenents.CheckAchievenent = checkEvent;
+		achievenents.achievenentVo = ach;
+		//도전과제 목록에 추가
+		creatAccountList.add(achievenents);
 	}
-	
+	//책 구매 시 실행되는 메소드
+	public void buyBook(String userId) {
+		checkAchievenent(buyAccountList,userId);
+	}
 }
 
 
