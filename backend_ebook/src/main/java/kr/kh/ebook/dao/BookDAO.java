@@ -72,6 +72,4 @@ public interface BookDAO {
 	void deleteBook(int bk_num);
 
 	void deleteWriterList(int bk_num);
-
-	int selectCountBookBuy(String userId);
 }

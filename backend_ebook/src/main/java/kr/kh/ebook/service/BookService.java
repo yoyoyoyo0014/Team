@@ -140,9 +140,5 @@ public class BookService {
 	public void deleteWriterList(int bk_num) {
 		bookDao.deleteWriterList(bk_num);
 	}
-
-	public int selectCountBookBuy(String userId) {
-		return bookDao.selectCountBookBuy(userId);
-	}
 	
 }
