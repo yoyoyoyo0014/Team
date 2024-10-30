@@ -80,16 +80,17 @@ public class PostController {
                                         @RequestParam(value = "po_link", required = false) MultipartFile poLink,
                                         @RequestParam(value = "po_image", required = false) MultipartFile poImage) {
         try {
-            // 파일 저장 처리
+            // 타임스탬프를 미리 생성하여 파일 이름에 동일하게 사용
+            String timestamp = String.valueOf(System.currentTimeMillis());
             String poLinkPath = null;
             String poImagePath = null;
 
             if (poLink != null && !poLink.isEmpty()) {
-                poLinkPath = saveFile(poLink);
+                poLinkPath = saveFile(poLink, timestamp);
             }
 
             if (poImage != null && !poImage.isEmpty()) {
-                poImagePath = saveFile(poImage);
+                poImagePath = saveFile(poImage, timestamp);
             }
 
             // 서비스 호출하여 게시글 저장
@@ -101,9 +102,9 @@ public class PostController {
         }
     }
 
-    private String saveFile(MultipartFile file) throws IOException {
-        // 파일 저장 경로를 명확한 위치로 지정 (예: 서버 루트 또는 다른 안정적인 위치)
-        String uploadDir = "D:/git/Team/event_image/";
+    private String saveFile(MultipartFile file, String timestamp) throws IOException {
+        // 파일을 저장할 위치 설정
+        String uploadDir = "D:/git/Team/static/event_image/";
         File dir = new File(uploadDir);
         if (!dir.exists()) {
             dir.mkdirs(); // 폴더가 없으면 생성
@@ -111,13 +112,15 @@ public class PostController {
 
         // 파일 이름 설정
         String originalFilename = file.getOriginalFilename();
-        String filePath = uploadDir + System.currentTimeMillis() + "_" + originalFilename;
+        String fileName = timestamp + "_" + originalFilename;
+        String filePath = uploadDir + fileName;
 
         // 파일 저장
         File dest = new File(filePath);
         file.transferTo(dest); // 파일을 지정된 경로로 이동
-        
-        return filePath;
+
+        // 웹에서 접근 가능한 URL 경로 반환
+        return "/event_image/" + fileName;
     }
 
 
