@@ -212,6 +212,7 @@ const EditProfile = () => {
             type="email"
             cls="frm-input"
             value={member.me_email}
+            readOnly
             label={"이메일"}
           />
 
@@ -236,6 +237,7 @@ const EditProfile = () => {
             cls="frm-input"
             value={member.me_phone}
             label={"연락처"}
+            readOnly
             notice="- 를 제외한 번호를 입력해주세요."
           />
 
@@ -246,8 +248,6 @@ const EditProfile = () => {
             <label>생년월일(8자리)</label>
           </div>
         </fieldset>
-
-        <Button type="submit" text="확인" cls="btn btn-point big submit" />
       </form>
     </div>
   );
