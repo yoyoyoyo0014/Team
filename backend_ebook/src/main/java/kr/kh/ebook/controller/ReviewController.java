@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.kh.ebook.model.vo.ReviewVO;
+import kr.kh.ebook.pagination.Criteria;
+import kr.kh.ebook.pagination.PageMaker;
 import kr.kh.ebook.service.BookService;
 
 @RequestMapping("/review")
@@ -23,11 +25,26 @@ public class ReviewController {
 	BookService bookService;
 	
 	// 내 리뷰 보기 - 없음 null
-	//@GetMapping("selectBook/selectMyReview/{userId}/{bookNum}")
 	@GetMapping("/myReviewCount/{bookNum}/{userId}")
 	@ResponseBody
 	public ReviewVO selectMyReview(@PathVariable("bookNum") int bookNum, @PathVariable("userId") String userId) {
 		return bookService.selectMyReview(userId, bookNum);
+	}
+	
+	// 내 리뷰 리스트 보기 - 없음 null
+	@GetMapping("/selectMyReview/{userId}/{pageNum}")
+	@ResponseBody
+	public HashMap<String, Object> selectAllMyReview(@PathVariable("userId") String userId, @PathVariable("pageNum") int pageNum) {
+		System.out.println("pageNum = " + pageNum);
+		int lookPage = 2;//한 페이지에 보이는 컨텐츠 개수
+		Criteria cri = new Criteria((pageNum - 1)*lookPage, lookPage);
+		List<ReviewVO> list = bookService.selectAllMyReview(cri, userId);
+		int cnt = bookService.selectMyReviewCount(userId);
+		PageMaker pm = new PageMaker(1, cri, cnt);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("reviewList", list);
+		map.put("reviewPm", pm);
+		return map;
 	}
 	
 	//리뷰 보기
@@ -43,7 +60,6 @@ public class ReviewController {
 	@ResponseBody
 	public HashMap<String, Object> selectReview(@PathVariable("bookNum") int bookNum, @PathVariable("pageNum") int pageNum) {
 		List<ReviewVO> list = bookService.selectReviewList(bookNum, pageNum);
-		System.out.println(list);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("reviewList", list);
 		return map;
@@ -53,6 +69,7 @@ public class ReviewController {
 	@PostMapping("/insertReview")
 	@ResponseBody
 	public boolean insertReview(@RequestBody ReviewVO writeUserReview) {
+		System.out.println(writeUserReview.getRe_me_id());
 		ReviewVO Myreview = bookService.selectMyReview(writeUserReview.getRe_me_id(), writeUserReview.getRe_bk_num());
 		if(Myreview != null) return false;
 		

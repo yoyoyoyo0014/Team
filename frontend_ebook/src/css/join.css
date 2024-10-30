@@ -1,5 +1,24 @@
 @charset 'utf-8';
 
+.member-select {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 5em;
+}
+.member-select .member-type {
+	width: 10em;
+	padding-top: 5em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	gap: 1em;
+}
+.member-select .member-type i {font-size: 3em;}
+.member-select .member-type h3 {padding-top: 1em; font-size: 1.3em; line-height: 0;}
+.member-select .member-type .btn {margin-top: 3em; width: 100%; text-align: center;}
+
 .join-form form {
 	max-width: 600px;
 	margin: 0 auto;
@@ -46,4 +65,9 @@
 	height: 100vh;
 	background: rgba(0,0,0,.3);
 	z-index: 99;
+}
+
+.container.container.address-modal {
+	background: #fff;
+	box-shadow: var(--box-shadow);
 }

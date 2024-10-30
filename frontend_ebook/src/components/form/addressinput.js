@@ -34,69 +34,53 @@ const AddressInput = ({ change, item }) => {
     setIsOpen((prevOpenState) => !prevOpenState);
   };
 
-  const themeObj = {
-    bgColor: "#fafaf9",
-    searchBgColor: "#f5f5f4",
-    contentBgColor: "#fafaf9",
-    pageBgColor: "#fafaf9",
-    textColor: "#292524",
-    queryTextColor: "#292524",
-    outlineColor: "#c4bfbd"
-  };
+	const themeObj = {
+		bgColor: "#fff", 			// 바탕 배경색
+		pageBgColor: "#fafaf9", 		// 페이지 배경색
+		textColor: "#292524", 			// 기본 글자색
+		queryTextColor: "#292524", 		// 검색창 글자색
+		// postcodeTextColor: "#df5b5b", 	// 우편번호 글자색
+		// emphTextColor: "#84cb70", 		// 강조 글자색
+		outlineColor: "#c4bfbd" 		// 테두리
+	}
 
-  return (
-    <div className="address-input">
-      <div className="inputs">
-        <div className="input-item">
-          <Input
-            id="me_postalCode"
-            name="me_postalCode"
-            type="text"
-            cls="frm-input"
-            change={setCode}
-            value={code}
-            readOnly={true}
-          />
-          <Button type="button" cls="btn btn-point" text="우편번호 찾기" click={toggleHandler} />
-        </div>
-        <InputItem
-          id="me_addr1"
-          name="me_addr1"
-          type="text"
-          cls="frm-input"
-          change={setAddr1}
-          value={addr1}
-          readOnly={true}
-          label="주소"
-          notice="추후 경품 제공에 이용될 수 있습니다"
-        />
-        <InputItem
-          id="me_addr2"
-          name="me_addr2"
-          type="text"
-          cls="frm-input"
-          value={addr2}
-          change={(e) => {
-            setAddr2(e.target.value);
-            change({ ...item, me_addr2: e.target.value });
-          }}
-        />
-      </div>
-      {isOpen && (
-        <div id="wrap">
-          <div className="container">
-            <Button type="button" cls="btn btn-basic" text="닫기" click={toggleHandler} />
-            <DaumPostcode
-              theme={themeObj}
-              style={{ width: '400px', height: '600px' }}
-              onClose={closeHandler}
-              onComplete={completeHandler}
-            />
-          </div>
-        </div>
-      )}
-    </div>
-  );
+	return(
+		<div className="address-input">
+			<div className="inputs">
+				<div className="input-item">
+					<Input id="me_postalCode"
+							name="me_postalCode"
+							type="text"
+							cls="frm-input"
+							change={setCode}
+							value={code}
+							readOnly={true}/>
+					<Button type="button" cls="btn btn-point" text="우편번호 찾기" click={toggleHandler}/>
+				</div>
+				<InputItem
+					id="me_addr1"
+					name="me_addr1"
+					type="text"
+					cls="frm-input"
+					change={setAddr1}
+					value={addr1}
+					readOnly={true}
+					label="주소"
+					notice="추후 경품 제공에 이용될 수 있습니다"/>
+			</div>
+			{isOpen && (
+			<div id="wrap">
+				<div className="container address-modal theme-box">
+					<Button type="button" style={{cursor: 'pointer', float: 'right'}} text="닫기" click={toggleHandler}/>
+					<DaumPostcode
+						theme={themeObj}
+						style={style}
+						onClose={closeHandler}
+						onComplete={completeHandler}/>
+				</div>
+			</div>)}
+		</div>
+	)
 }
 
 export default AddressInput;

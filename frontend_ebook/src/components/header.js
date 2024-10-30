@@ -52,7 +52,7 @@ const Header = ({setSection}) => {
 			</ul>)
 		} else {
 			return(<ul>
-				<li><Link to={"/cart/admin123"}>장바구니</Link></li>
+				<li><Link to={"/cart/" + user?.me_id}>장바구니</Link></li>
 				<li><Link to="/mypage">마이페이지</Link></li>
 				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
 			</ul>)
@@ -78,14 +78,8 @@ const Header = ({setSection}) => {
 				<div className="gnb">
 					<div className="site-menu">
 						<ul>
-							<li onClick={()=>{
-								navigate('/');
-								showBooks('bestSellers');
-							}}>베스트셀러</li>
-							<li onClick={()=>{
-								navigate('/');
-								showBooks('newBooks');
-							}}>신상 도서</li>
+							<li><Link to="/">베스트셀러</Link></li>
+							<li><Link to="/newbooks">신상 도서</Link></li>
 							<li><Link to="/forsales">할인 중인 도서</Link></li>
 							<li><Link to="/event">이벤트</Link></li>
 							<li><Link to="/request">도서 요청</Link></li>

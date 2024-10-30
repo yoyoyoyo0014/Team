@@ -1,0 +1,4 @@
+@charset 'utf-8';
+
+.post-search-box {display: flex; gap: 1em; max-width: 500px; margin: 0 auto;}
+.post-search-box .btn {white-space: nowrap;}

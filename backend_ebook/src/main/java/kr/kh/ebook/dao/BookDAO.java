@@ -12,6 +12,7 @@ import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterListVO;
 import kr.kh.ebook.pagination.BookPageMaker;
+import kr.kh.ebook.pagination.Criteria;
 import kr.kh.ebook.pagination.PageMaker;
 
 @Repository
@@ -61,4 +62,8 @@ public interface BookDAO {
 	int insertBook(@Param("bk")BookVO book);
 
 	boolean insertWriterList(@Param("wr")WriterListVO writerVO);
+
+	List<ReviewVO> selectAllMyReview(@Param("cri")Criteria cri, String userId);
+
+	int selectMyReviewCount(String userId);
 }

@@ -4,71 +4,124 @@ import Button from '../../components/form/button';
 import { LoginContext } from "../../context/LoginContext";
 import MySubMenu from "../../components/mysubmenu";
 import "../../css/mypage.css";
+import axios from "axios";
+import MakePage, { PageButtonV2 } from "../../components/pageButton";
 
 const MypageIndex = () => {
+	const lookPageContentsCount = 2;
 	const { user } = useContext(LoginContext);
 	const [nickname, setNickname] = useState(''); // 닉네임 상태 추가
 
-	// console.log(user.user.member.me_id);
-	// if (user.member === undefined) console.log('null');
-	// else {
-	// 	console.log(user.member);
-	// }
+	const [myReview, setMyReview] = useState({
+		list: [],
+		pm: {}
+	});
 
-	const fetchNickname = async () => {
-		try {
-			const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
-			const data = await response.json();
-			setNickname(data.nickname || "닉네임없음");
-		} catch (error) {
-			console.error("닉네임 가져오기 오류:", error);
-			setNickname("닉네임없음");
+	const [myRequest, setMyRequest] = useState({
+		list: [],
+		pm: {}
+	});
+
+	let [page, setPage] = useState({
+		contentsCount : 0,
+    currentPage : 1,
+    startPage : 0,
+    endPage : 0,
+    prev : false,
+    next : false,
+    pageList : []
+	});
+
+	let [requestPage, setRequestPage] = useState({
+		contentsCount : 0,
+    currentPage : 1,
+    startPage : 0,
+    endPage : 0,
+    prev : false,
+    next : false,
+    pageList : []
+	});
+
+	const loadMyList = (url) => {
+		const options = {
+			url: url + page.currentPage,
+			method:'get',
+			header: {
+				'Accept': 'application/json',
+				'Content-Type': "'application/json';charset=UTP-8'"
+			},
 		}
-	};
+		axios(options)
+      .then(res => {
+				if (url === '/review/selectMyReview/' + user?.me_id + '/') {
+					let tmp = MakePage(res.data.reviewPm.totalCount,page.currentPage,lookPageContentsCount);
+					setPage(tmp);
+					setMyReview(prev => {
+						return {...prev, list: res.data.reviewList, pm: res.data.reviewPm}
+					});
+					console.log('review');
+				} else {
+					let tmp = MakePage(res.data.pm.totalCount,page.currentPage,lookPageContentsCount);
+					console.log('request');
+					setRequestPage(tmp);
+					setMyRequest(prev => {
+						return {...prev, list: res.data.list, pm: res.data.pm}
+					});
+				}
+      })
+      .catch((error) => {
+        if (error.response) {
+          // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
+          console.log(error.response.status);
+        } else if (error.request) {
+          // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
+          // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+          // node.js에서는 http.ClientRequest 인스턴스입니다.
+          console.log(error.request);
+        } else {
+          // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+          console.log('Error', error.message);
+        }
+        console.log(error);
+      })
+	}
+
+	function pageChange(num, table){
+		if(table === '/review/selectMyReview/' + user?.me_id + '/') {
+			page.currentPage = num;
+			setPage(page);
+		} else {
+			requestPage.contentsCount = num
+			setRequestPage(requestPage);
+		}
+
+		loadMyList(table + user?.me_id + '/');
+	}
 
 	useEffect(() => {
-    if (user?.me_id) {
-      fetchNickname(); // 사용자 ID가 있을 때 닉네임을 가져옴
-    }
-  }, [user, fetchNickname]);
+		loadMyList('/review/selectMyReview/' + user?.me_id + '/');
+	}, [setMyReview])
 
-  // 부모 창에서 호출될 닉네임 업데이트 함수
-  window.setNickname = (newNickname) => {
-    setNickname(newNickname);
-  };
+	useEffect(() => {
+		loadMyList('/post/list/2/' + user?.me_id + '/');
+	}, [setMyRequest])
 
-	// 팝업 창 열기
-	const openNicknamePopup = () => {
-		if (!user?.me_id) {
-			alert("사용자 정보를 불러오지 못했습니다.");
-			return;
-		}
- 
-		// 팝업 창 열기
-		const popup = window.open(
-			`/nickname-popup.html?me_id=${user.me_id}`,
-			"닉네임 수정",
-			"width=600,height=250,resizable=no,scrollbars=no,status=no"
-		);
- 
-		// 팝업 창이 로드된 후 실행되는 이벤트
-		popup.onload = () => {
-			console.log("팝업 창 로드 완료");
- 
-			// 여기서 팝업에 데이터를 보내거나 추가 작업을 수행할 수 있습니다.
-			popup.postMessage({ type: 'INIT_DATA', data: { me_id: user.me_id } }, '*');
-		};
- 
-		// 팝업 창이 닫혔는지 주기적으로 확인
-		const popupCheckInterval = setInterval(() => {
-			if (popup.closed) {
-				clearInterval(popupCheckInterval);
-				console.log("팝업 창이 닫혔습니다.");
-				fetchNickname();
+	useEffect(() => {
+		const fetchNickname = async () => {
+			try {
+				const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
+				const data = await response.json();
+				setNickname(data.nickname || "닉네임없음");
+			} catch (error) {
+				console.error("닉네임 가져오기 오류:", error);
+				setNickname("닉네임없음");  // 오류 발생 시 기본값 설정
 			}
-		}, 500);
-	};
- 
+		};
+	
+		if (user?.me_id) {
+			fetchNickname();  // 사용자 ID가 있을 때 닉네임을 가져옴
+		}
+	}, [user]);
 
 	const openFileUploader = () => {
 		const event = new MouseEvent('click', {
@@ -93,12 +146,14 @@ const MypageIndex = () => {
 						<div className="pf-nickname">
 							<h2 style={{ marginRight: '5px' }}>{nickname || '닉네임 없음'}</h2>
 							<span style={{ fontSize: '1.2em' }}> 님 </span>
-							<i className="fa-solid fa-pen" onClick={openNicknamePopup}></i>
+							<Link to={`/mypage/edit/${user?.member?.me_id || ''}`}>
+								<i className="fa-solid fa-pen"></i>
+							</Link>
 						</div>
 						
 						<div className="pf-desc">
 							<p><strong>내 구매</strong> 0</p>
-							<p><strong>내 리뷰</strong> 0</p>
+							<p><strong>내 리뷰</strong> {myReview.pm.totalCount}</p>
 							<p><strong>내 뱃지</strong> 0</p>
 							<p><strong>내 도서 요청</strong> 0</p>
 						</div>
@@ -108,39 +163,55 @@ const MypageIndex = () => {
 				<div className="sub-section">
 					<div className="section-title">
 						<h2>내 리뷰</h2>
-						<Link to="/mypage/request">더보기</Link>
 					</div>
 
 					<div className="theme-box">
 						<ul>
-							<li>내 리뷰</li>
-							<li>내 리뷰</li>
-							<li>내 리뷰</li>
-							<li>내 리뷰</li>
-							<li>내 리뷰</li>
+							{myReview.list.length === 0 ? <li className="no-data txt-center">작성된 리뷰가 없습니다</li> :
+							myReview.list.map((item, index) => (
+								<li key={index}>
+									<p>{item.re_content}</p>
+									{(() => {
+										const date = new Date(item.re_date);
+										const y = date.getFullYear();
+										const m = date.getMonth();
+										const d = date.getDate();
+										return (<span className="review-date">{y}.{m}.{d}</span>);
+									})()}
+								</li>
+							))}
 						</ul>
 					</div>
+					
+					<PageButtonV2 getPage={page} pageEvent={pageChange} url={'/review/selectMyReview/'}/>
 				</div>
 
 				<div className="sub-section">
 					<div className="section-title">
 						<h2>내 도서 요청</h2>
-						<Link to="/mypage/request">더보기</Link>
 					</div>
 
 					<div className="theme-box">
 						<ul>
-							<li>내 도서 요청</li>
-							<li>내 도서 요청</li>
-							<li>내 도서 요청</li>
-							<li>내 도서 요청</li>
-							<li>내 도서 요청</li>
+						{myRequest.list.length === 0 ? <li className="no-data txt-center">요청한 내역이 없습니다</li> :
+							myRequest.list.map((item, index) => (
+								<li key={index}>
+									<p>{item.po_title}</p>
+									{(() => {
+										const date = new Date(item.po_date);
+										const y = date.getFullYear();
+										const m = date.getMonth();
+										const d = date.getDate();
+										return (<span className="post-date">{y}.{m}.{d}</span>);
+									})()}
+								</li>
+							))}
 						</ul>
 					</div>
+
+					<PageButtonV2 getPage={page} pageEvent={pageChange} url={'/post/list/2/'}/>
 				</div>
 			</section>
-
-			
 		</Fragment>
 	)
 }

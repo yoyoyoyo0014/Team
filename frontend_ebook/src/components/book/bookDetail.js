@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -11,10 +11,12 @@ import '../../css/barGraphs.css';
 import Highcharts from 'highcharts';
 import Accessibility from 'highcharts/modules/accessibility';
 import { SelectWriterList,SelectWriter,SelectWriterBookList,selectWriterType } from './WriterList';
+import { LoginContext } from '../../context/LoginContext';
 
-const BookDetail = ({Getuser}) => {
+const BookDetail = () => {
   const bookNum = useParams().bk_num;
-
+  const {user} = useContext(LoginContext);
+  
   let [reviewList, setReviewList] = useState([]);
   let [book,setBook] = useState({
     bk_num : 0, //도서 번호
@@ -49,28 +51,6 @@ const BookDetail = ({Getuser}) => {
   })//책 데이터
   let [writer, setWriter] = useState([]);
 
-  let[user,setUser] = useState({
-    me_id : 'admin123', //아이디
-    me_nickname : '꼬꼬마', //닉네임
-    me_pw : '', //비밀번호
-    me_email : '',  //이메일
-    me_address : '',  //주소
-    me_postalCode : '', //우편번호
-    me_gender : '',
-    me_birth : '',  //생년월일
-    me_phone : '',  //전화번호
-    me_adult : 0, //성인인증
-    me_authority : '',  //권한
-    me_fail : 0,  //로그인실패 횧수
-    me_cookie : '', //쿠키
-    me_report : 0,  //신고횟수
-    me_ms_name : '',  //회원상태명
-    me_stop : '',//정지일
-    me_cm : '',//사업자 번호
-    me_entercount : 0, //로그인 횟수
-    me_last : '' //마지막 접속
-  })//유저 데이터
-
   let[useIsBuy, setUserIsBuy] = useState(false); //유저가 책을 샀는가
 
   let[popularityDistributionChart,setPopularityDistributionChart] = useState({
@@ -94,19 +74,6 @@ const BookDetail = ({Getuser}) => {
 
   let score = (book.bk_score / book.bk_reviewCount).toFixed(1);
 
-  const options = {
-		url: '/api/selectBook/' + bookNum,
-		method:'GET',
-		header: {
-			'Accept':'application/json',
-			'Content-Type': "'application/json';charset=UTP-8'"
-			//연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
-		},
-		data: {
-			bookNum: bookNum
-		}
-	}
-
   const addCart = (bk_num) => {
     const options = {
       url: '/cart/add',
@@ -118,7 +85,7 @@ const BookDetail = ({Getuser}) => {
       },
       data: {
         bk_num: bk_num,
-        ca_me_id: 'admin123',
+        ca_me_id: user?.me_id,
       }
     }
 
@@ -142,28 +109,45 @@ const BookDetail = ({Getuser}) => {
 		})
   }
 
-  useEffect(() => {
+  const loadBook = () => {
+    const options = {
+      url: '/api/selectBook/' + bookNum,
+      method:'GET',
+      header: {
+        'Accept':'application/json',
+        'Content-Type': "'application/json';charset=UTP-8'"
+        //연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
+      },
+      data: {
+        bookNum: bookNum
+      }
+    }
+
     axios(options)
-      .then(res => {
-        setBook(res.data.book);
-        setWriter(res.data.writer);
-        console.log("data load 성공")
-      })
-      .catch((error) => {
-        if (error.response) {
-          // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
-          console.log(error.response.status);
-        } else if (error.request) {
-          // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
-          // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
-          // node.js에서는 http.ClientRequest 인스턴스입니다.
-          console.log(error.request);
-        } else {
-          // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
-          console.log('Error', error.message);
-        }
-        console.log(error.config);
-      })
+    .then(res => {
+      setBook(res.data.book);
+      setWriter(res.data.writer);
+      console.log("data load 성공")
+    })
+    .catch((error) => {
+      if (error.response) {
+        // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
+        console.log(error.response.status);
+      } else if (error.request) {
+        // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
+        // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+        // node.js에서는 http.ClientRequest 인스턴스입니다.
+        console.log(error.request);
+      } else {
+        // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    })
+  }
+
+  useEffect(() => {
+    loadBook();
   }, [setBook])
   
   return (
@@ -209,11 +193,10 @@ const BookDetail = ({Getuser}) => {
       <div className="review-container section">
         <h3>리뷰</h3>
         
-        <BookReview bookNum={bookNum} userId={user.me_id}></BookReview>
+        <BookReview bookNum={bookNum} loadBook={loadBook}></BookReview>
       </div>
-
-      <BarGraph popularityDistributionChart={popularityDistributionChart}/>
       
+      <BarGraph popularityDistributionChart={popularityDistributionChart}/>
     </div>
   )
 }
@@ -243,67 +226,67 @@ function BarGraph({popularityDistributionChart}){
 
   if (document.getElementById('container')) {
       Highcharts.chart('container', {
-          chart: {
-              type: 'bar'
-          },
-          title: {
-              text: '연령, 성별 구매 비율',
-              align: 'left'
-          },
-          subtitle: {
-              text: 'Source: <a href="https://countryeconomy.com/demography/population-structure/andorra" target="_blank">countryeconomy.com</a>',
-              align: 'left'
-          },
-          xAxis: [{
-              categories: [
-                '10대 남성','20대 남성','30대 남성','40대 남성','50대 남성','60대 남성'
-              ],
-              reversed: false,
-              labels: {
-                  step: 1
-              }
-          }, {
-              opposite: true,
-              reversed: false,
-              linkedTo: 0,
-              categories: [
-                  '10대 여성','20대 여성','30대 여성','40대 여성','50대 여성','60대 여성'
-              ]
-          }],
-          yAxis: {
-              title: {
-                text: null
-              },
-              labels: {
-                formatter: function () {
-                    return Math.abs(this.value) + '%';
-                }
-              }
-          },
-          plotOptions: {
-              series: {
-                  stacking: 'normal',
-                  borderRadius: '30%'
-              }
-          },
-          tooltip: {
-            formatter: function () {
-              return '<b>' + this.series.name + ', age ' + this.point.category + '</b><br/>' +
-                  'Population: ' + Math.abs(this.point.y).toFixed(2) + '%';
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '연령, 성별 구매 비율',
+            align: 'left'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://countryeconomy.com/demography/population-structure/andorra" target="_blank">countryeconomy.com</a>',
+            align: 'left'
+        },
+        xAxis: [{
+            categories: [
+              '10대 남성','20대 남성','30대 남성','40대 남성','50대 남성','60대 남성'
+            ],
+            reversed: false,
+            labels: {
+                step: 1
             }
-          },
-          series: [{
-            name: '남성',
-            data: [
-              -chart.bk_age_10_malePer,-chart.bk_age_20_malePer,-chart.bk_age_30_malePer,-chart.bk_age_40_malePer,-chart.bk_age_50_malePer,-chart.bk_age_60_malePer
+        }, {
+            opposite: true,
+            reversed: false,
+            linkedTo: 0,
+            categories: [
+                '10대 여성','20대 여성','30대 여성','40대 여성','50대 여성','60대 여성'
             ]
-          }, {
-            name: '여성',
-            data: [
-              chart.bk_age_10_femalePer,chart.bk_age_20_femalePer,chart.bk_age_30_femalePer,chart.bk_age_40_femalePer,chart.bk_age_50_femalePer,chart.bk_age_60_femalePer
-            ]
-          }]
-      });
+        }],
+        yAxis: {
+            title: {
+              text: null
+            },
+            labels: {
+              formatter: function () {
+                  return Math.abs(this.value) + '%';
+              }
+            }
+        },
+        plotOptions: {
+            series: {
+                stacking: 'normal',
+                borderRadius: '30%'
+            }
+        },
+        tooltip: {
+          formatter: function () {
+            return '<b>' + this.series.name + ', age ' + this.point.category + '</b><br/>' +
+                'Population: ' + Math.abs(this.point.y).toFixed(2) + '%';
+          }
+        },
+        series: [{
+          name: '남성',
+          data: [
+            -chart.bk_age_10_malePer,-chart.bk_age_20_malePer,-chart.bk_age_30_malePer,-chart.bk_age_40_malePer,-chart.bk_age_50_malePer,-chart.bk_age_60_malePer
+          ]
+        }, {
+          name: '여성',
+          data: [
+            chart.bk_age_10_femalePer,chart.bk_age_20_femalePer,chart.bk_age_30_femalePer,chart.bk_age_40_femalePer,chart.bk_age_50_femalePer,chart.bk_age_60_femalePer
+          ]
+        }]
+    });
   }
 
 
