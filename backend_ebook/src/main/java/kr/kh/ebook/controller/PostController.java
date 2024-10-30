@@ -138,7 +138,9 @@ public class PostController {
     public HashMap<String, Object> postUpdatePost(@PathVariable int po_num, @RequestBody PostVO post) {
         HashMap<String, Object> map = new HashMap<>();
         post.setPo_num(po_num);
+
         boolean res = postService.updatePost(post);
+        
         map.put("result", res);
         if (res) {
             map.put("redirect", "/post/detail/" + po_num);

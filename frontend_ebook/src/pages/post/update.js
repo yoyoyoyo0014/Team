@@ -13,11 +13,32 @@ function Update() {
   const [loading, setLoading] = useState(true);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
+  const [link, setLink] = useState(null);
+  const [image, setImage] = useState(null);
+  const [postLinkPreview, setPostLinkPreview] = useState(null);
+  const [postImagePreview, setPostImagePreview] = useState(null);
 
   // 스크롤을 맨 위로 이동
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handlePostLinkChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        setPostLinkPreview(URL.createObjectURL(file)); // 새로 선택한 파일 미리보기 설정
+        setLink(file); // 새로운 파일 설정
+    }
+};
+
+const handlePostImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        setPostImagePreview(URL.createObjectURL(file)); // 새로 선택한 파일 미리보기 설정
+        setImage(file); // 새로운 파일 설정
+    }
+};
+
 
   useEffect(() => {
     // 게시글 정보를 가져오기
@@ -30,11 +51,20 @@ function Update() {
       })
       .then((data) => {
         if (data.post) {
-          setTitle(data.post.po_title || ''); // undefined가 아니라 빈 문자열로 초기화
-          setContent(data.post.po_content || ''); // undefined가 아니라 빈 문자열로 초기화
-          setMeId(data.post.po_me_nickname || ''); // 작성자 ID 설정
-          setPoCoNum(data.post.po_co_num || null); // 커뮤니티 번호 설정
-          console.log(data.post);
+          setTitle(data.post.po_title || '');
+          setContent(data.post.po_content || '');
+          setMeId(data.post.po_me_nickname || '');
+          setPoCoNum(data.post.po_co_num || null);
+
+          // 기존의 po_link 및 po_image가 있다면 미리보기 설정
+          if (data.post.po_link) {
+            setLink(data.post.po_link);
+            setPostLinkPreview(data.post.po_link); // po_link 경로를 미리보기 설정
+          }
+          if (data.post.po_image) {
+            setImage(data.post.po_image);
+            setPostImagePreview(data.post.po_image); // po_image 경로를 미리보기 설정
+          }
 
           // po_start와 po_end 값을 Date 객체로 변환하여 설정
           if (data.post.po_start) {
@@ -44,13 +74,14 @@ function Update() {
             setEnd(new Date(data.post.po_end));
           }
         }
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching post:', error);
-        setLoading(false);
-      });
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error('Error fetching post:', error);
+      setLoading(false);
+    });
   }, [po_num]);
+
 
   function btnClick() {
     const requestData = {
@@ -60,6 +91,8 @@ function Update() {
       po_me_nickname: me_nickname, // 작성자 ID 추가
       po_start: start ? start.toISOString().split('T')[0] : null,
       po_end: end ? end.toISOString().split('T')[0] : null,
+      po_link: link,
+      po_image: image
     };
   
     fetch(`/post/update/${po_num}`, {
@@ -110,10 +143,27 @@ function Update() {
           </div>
         </div>
       )}
-      <div className="form-group">
-        <label htmlFor="content">내용</label>
-        <textarea id="content" name="content" placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content} className="form-control" style={{ height: '200px' }}/>
-      </div>
+      {(po_co_num === 3 || po_co_num === 4) && (
+        <>
+          {/* 이미지 파일 입력 필드 및 미리보기 추가 */}
+          <div className="form-group">
+            <label htmlFor="postLinkFile">게시글 리스트 이미지:</label>
+            <input type="file" id="postLinkFile" name="postLinkFile" className="form-control" onChange={handlePostLinkChange} />
+            {postLinkPreview && <img src={postLinkPreview} alt="게시글 리스트 이미지 미리보기" style={{ marginTop: '10px', maxHeight: '200px' }} />}
+          </div>
+          <div className="form-group">
+            <label htmlFor="postImageFile">이벤트 이미지:</label>
+            <input type="file" id="postImageFile" name="postImageFile" className="form-control" onChange={handlePostImageChange} />
+            {postImagePreview && <img src={postImagePreview} alt="이벤트 이미지 미리보기" style={{ marginTop: '10px', maxHeight: '200px' }} />}
+          </div>
+        </>
+      )}
+      {(po_co_num !== 3 && po_co_num !== 4) && (
+        <div className="form-group">
+          <label htmlFor="content">내용</label>
+          <textarea id="content" name="content" placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content} className="form-control" style={{ height: '200px' }}/>
+        </div>
+      )}
       <button className="btn btn-primary" onClick={btnClick}>
         게시글 수정
       </button>
