@@ -1,0 +1,41 @@
+.report-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 3fr 1fr 1fr 2fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 0;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.report-item, .report-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  border: 1px solid #ddd;
+}
+
+.report-item {
+  font-weight: bold;
+  background-color: #f1f1f1;
+}
+
+.report-content {
+  color: #555;
+}
+
+/* 확인 버튼 스타일 */
+.confirm-button {
+  padding: 5px 10px;
+  border: 1px solid #4CAF50;
+  border-radius: 3px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
