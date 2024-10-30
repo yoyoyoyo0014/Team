@@ -78,5 +78,11 @@
         FROM member
         WHERE me_id = #{memberId}
     </select>
+    
+    <update id="updatePassword" parameterType="map">
+	    UPDATE member
+	    SET me_pw = #{newPassword}
+	    WHERE me_id = #{userId}
+	</update>
 	
 </mapper>

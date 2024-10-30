@@ -107,6 +107,18 @@ public class MemberService {
         }
     }
     
+    // 비밀번호 변경 메서드
+    public boolean changePassword(String userId, String newPassword) {
+        String encryptedPassword = passwordEncoder.encode(newPassword);
+        try {
+            memberDao.updatePassword(userId, encryptedPassword);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     /* 공통 */
     
     // 사용자 정보 가져오기

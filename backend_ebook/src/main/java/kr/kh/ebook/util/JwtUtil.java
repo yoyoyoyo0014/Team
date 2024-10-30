@@ -98,4 +98,13 @@ public class JwtUtil {
             return false;
         }
     }
+    
+ // JWT Claims 가져오기
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+    
 }

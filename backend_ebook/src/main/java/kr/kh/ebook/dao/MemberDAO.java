@@ -1,6 +1,7 @@
 package kr.kh.ebook.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -39,5 +40,8 @@ public interface MemberDAO {
 	void updateNickname(String memberId, String newNickname);
 	
 	MemberVO findById(String memberId); // 사용자 정보 가져오기
+
+	// 사용자 ID로 비밀번호 업데이트
+	void updatePassword(@Param("userId") String userId, @Param("newPassword") String newPassword);
 	
 }

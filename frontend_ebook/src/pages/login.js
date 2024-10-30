@@ -131,9 +131,11 @@ const handleLoginSubmit = (e) => {
         if (autoLogin) {
           console.log("자동 로그인 선택됨. localStorage에 토큰 저장."); // 자동 로그인 선택 여부 확인
           localStorage.setItem("loginToken", data.token);
+          localStorage.setItem("loginMethod", "general");
         } else {
           console.log("자동 로그인 선택되지 않음. sessionStorage에 토큰 저장."); // 자동 로그인 미선택 확인
           sessionStorage.setItem("loginToken", data.token);
+          localStorage.setItem("loginMethod", "general");
         }
         
         setIsLoggedIn(true); // 로그인 상태 업데이트
@@ -176,6 +178,7 @@ const handleKakaoLogin = () => {
         .then((data) => {
           if (data.success) {
             localStorage.setItem("loginToken", data.jwtToken); // **jwtToken으로 변경**
+            localStorage.setItem("loginMethod", "kakao");
 
             if (data.user) {
               setUser(data.user);  // user 객체가 제대로 전달되었는지 확인**

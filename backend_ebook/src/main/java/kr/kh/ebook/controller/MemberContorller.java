@@ -161,7 +161,35 @@ public class MemberContorller {
         } else {
             logger.info("Successfully retrieved member profile for ID: " + memberId);
         }
-        return member; // **VO 반환 (ResponseEntity 사용하지 않음)**
+         return member; // **VO 반환 (ResponseEntity 사용하지 않음)**
     }
     
+    @PostMapping("/changePassword")
+    public ResponseEntity<Map<String, String>> changePassword(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody Map<String, String> passwords) {
+
+        String token = authorizationHeader.replace("Bearer ", "");
+        
+        // 토큰에서 userId 추출
+        String userId = jwtUtil.extractUserId(token);
+        
+     // 토큰 검증
+        if (!jwtUtil.validateToken(token, userId)) { // 추출한 userId를 validateToken에 전달
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "유효하지 않은 토큰입니다."));
+        }
+
+        String newPassword = passwords.get("newPassword");
+        Map<String, String> response = new HashMap<>();
+
+        // 비밀번호 변경 로직
+        boolean isPasswordChanged = memberService.changePassword(userId, newPassword);
+        if (isPasswordChanged) {
+            response.put("message", "비밀번호 변경 성공");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", "비밀번호 변경 실패");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

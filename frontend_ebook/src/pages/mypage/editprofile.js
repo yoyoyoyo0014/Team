@@ -6,11 +6,12 @@ import "../../css/join.css";
 
 import { Input, InputItem } from "../../components/form/input";
 import Button from "../../components/form/button";
-import AddressInput from "../../components/form/addressinput";
 
 const EditProfile = () => {
   const { handleSubmit } = useForm();
   const navigate = useNavigate();
+
+  const [loginMethod, setLoginMethod] = useState("");
 
   let [member, setMember] = useState({
     me_id: '',
@@ -28,6 +29,12 @@ const EditProfile = () => {
   let [year, setYear] = useState('');
   let [month, setMonth] = useState('');
   let [day, setDay] = useState('');
+
+  useEffect(() => {
+    // 로그인 방식 정보를 localStorage에서 불러옴
+    const method = localStorage.getItem("loginMethod");
+    setLoginMethod(method);
+  }, []);
 
   const loadUserData = async () => {
     try {
@@ -142,6 +149,13 @@ const EditProfile = () => {
     }
   };
 
+  function openPasswordChangePopup() {
+    // 비밀번호 변경 팝업을 새 창으로 연다.
+    window.open("password-popup.html", 
+      "passwordChangePopup", 
+      "width=600,height=300");
+  }
+
   return (
     <div className="join-form">
       <h2 className="txt-center page-title">개인 정보 수정</h2>
@@ -153,7 +167,7 @@ const EditProfile = () => {
             name="me_id"
             type="text"
             cls="frm-input"
-            value={member.me_id} // DB에서 가져온 값을 표시
+            value={member.me_id}
             readOnly
             label={"아이디"}
           />
@@ -163,8 +177,8 @@ const EditProfile = () => {
             name="me_name"
             type="text"
             cls="frm-input"
-            value={member.me_name} // DB에서 가져온 값을 표시
-						readOnly
+            value={member.me_name}
+            readOnly
             label={"이름"}
           />
 
@@ -173,22 +187,31 @@ const EditProfile = () => {
             name="me_nickname"
             type="text"
             cls="frm-input"
-            value={member.me_nickname} // DB에서 가져온 값을 표시
-						readOnly
+            value={member.me_nickname}
+            readOnly
             label={"닉네임"}
           />
 
-					<div style={{ display: "flex", alignItems: "center", gap: "1em" }}>
-						<label style={{ marginRight: "auto" }}>비밀번호</label>
-						<Button type="button" cls="btn btn-point" text="비밀번호 변경" style={{ marginLeft: "auto" }} />
-					</div>
+          {/* 비밀번호 변경 버튼 - 일반 로그인인 경우에만 표시 */}
+          {loginMethod === 'general' && (
+            <div style={{ display: "flex", alignItems: "center", gap: "1em" }}>
+              <label style={{ marginRight: "auto" }}>비밀번호</label>
+              <Button 
+                type="button" 
+                cls="btn btn-point" 
+                text="비밀번호 변경" 
+                style={{ marginLeft: "auto" }}
+                click={openPasswordChangePopup} 
+              />
+            </div>
+          )}
 
           <InputItem
             id="me_email"
             name="me_email"
             type="email"
             cls="frm-input"
-            value={member.me_email} // DB에서 가져온 값을 표시, 수정 가능한 필드
+            value={member.me_email}
             label={"이메일"}
           />
 
@@ -197,8 +220,8 @@ const EditProfile = () => {
             name="me_gender"
             type="text"
             cls="frm-input"
-            value={member.me_gender} // DB에서 가져온 값을 표시
-						readOnly
+            value={member.me_gender}
+            readOnly
             label={"성별"}
           />
         </fieldset>
@@ -211,24 +234,15 @@ const EditProfile = () => {
             name="me_phone"
             type="text"
             cls="frm-input"
-            value={member.me_phone} // 수정 가능한 필드
+            value={member.me_phone}
             label={"연락처"}
-          />
-
-          <AddressInput change={setMember} item={member} />
-          <InputItem
-            id="me_addr2"
-            name="me_addr2"
-            type="text"
-            cls="frm-input"
-            value={addr2} // 수정 가능한 필드
-            change={setAddr2}
+            notice="- 를 제외한 번호를 입력해주세요."
           />
 
           <div className="input-item" style={{ display: "flex", gap: "1em" }}>
-            <Input name="year" type="text" max="4" value={year} change={setYear} readOnly/>
-            <Input name="month" type="text" max="2" value={month} change={setMonth} readOnly/>
-            <Input name="day" type="text" max="2" value={day} change={setDay} readOnly/>
+            <Input name="year" type="text" max="4" value={year} change={setYear} readOnly />
+            <Input name="month" type="text" max="2" value={month} change={setMonth} readOnly />
+            <Input name="day" type="text" max="2" value={day} change={setDay} readOnly />
             <label>생년월일(8자리)</label>
           </div>
         </fieldset>
