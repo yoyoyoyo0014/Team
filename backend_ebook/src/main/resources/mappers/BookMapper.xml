@@ -243,5 +243,11 @@
 	<delete id="deleteWriterList">
 		DELETE FROM writer_list WHERE wl_bk_num = #{bk_num};
 	</delete>
+	<!-- 유저의 책 구매 개수 반환 -->
+	<select id="selectCountBookBuy" resultType = "int">
+		select count(*)
+		from book_list
+		where bl_me_id = #{userId}
+	</select>
 	
 </mapper>

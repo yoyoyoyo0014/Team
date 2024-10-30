@@ -184,5 +184,13 @@ public class SearchBookController {
 		if(page == null)
 			page = 0;
 		return page;
-	} 
+	}
+	
+	/**
+	 * @param userId 유저 아이디
+	 * @return 해당 유저가 구매한 책 개수 반환
+	 */
+	public int bookBuyCount(String userId) {
+		return bookService.selectCountBookBuy(userId);
+	}
 }
