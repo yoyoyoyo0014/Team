@@ -112,6 +112,7 @@ function Detail() {
             <label>이벤트 기간</label>
             <input type="text" className="form-control" value={`${post.po_start} ~ ${post.po_end}`} readOnly/>
           </div>
+          <img src={`${post.po_image}`} alt="첨부 이미지"/>
         </div>
         
       )}
