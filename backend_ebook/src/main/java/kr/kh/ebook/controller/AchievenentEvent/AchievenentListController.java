@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.annotation.PostConstruct;
 import kr.kh.ebook.model.vo.AchievenentListVO;
 import kr.kh.ebook.model.vo.AchievenentVO;
+import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.service.AchievenentService;
 import kr.kh.ebook.service.BookService;
 
@@ -28,7 +29,11 @@ public class AchievenentListController {
 	public static AchievenentListController instance;
 
 	@Autowired
-	public AchievenentService achService;
+	AchievenentService achService;
+	
+	@Autowired
+	BookService bookService;
+	
 	//도전과제 목록
 	List<AchievenentVO> achList;
 
@@ -37,8 +42,7 @@ public class AchievenentListController {
 	//책 구매 도전과제
 	List<Achievenents> buyAccountList = new ArrayList<Achievenents>();
 	
-	@Autowired
-	BookService bookService;
+	
 
 
 	@PostConstruct
@@ -51,7 +55,7 @@ public class AchievenentListController {
 		//계정 생성시 달성되는 도전과제 테스트로 추가
 		instance.createAccount("admin123");
 		//책을 하나 구매 시  달성되는 도전과제 테스트로 추가
-		instance.buyBook("admin123");
+		instance.buyBook("admin123", null);
 	}
 
 	//해당 도전과제들 불러오기
@@ -137,13 +141,13 @@ public class AchievenentListController {
 	 * @param achList 이벤트들을 모아둔 List
 	 * @param userId 해당 유저 아이디
 	 */
-	void checkAchievenent(List<Achievenents> achList,String userId) {
+	void checkAchievenent(List<Achievenents> achList,String userId,Object helpConfirmation) {
 		for (Achievenents i : achList) {
 			//이미 달성한 도전과제면 return
 			if(selectAchievenentList(i.achievenentVo.getAc_num(),userId).size()!=0)
 				return;
 			//checkAccount를 통해 검사
-			if(i.CheckAchievenent.checkAccount(userId)) 
+			if(i.CheckAchievenent.checkAccount(userId,helpConfirmation)) 
 				//달성 시 실행
 				insertAchievenentList(i.achievenentVo.getAc_num(),userId);
 		}
@@ -151,7 +155,7 @@ public class AchievenentListController {
 
 	//계정 생성 시 실행되는 메소드
 	public void createAccount(String userId) {
-		checkAchievenent(creatAccountList,userId);
+		checkAchievenent(creatAccountList,userId,null);
 	}
 
 	/**
@@ -203,9 +207,13 @@ public class AchievenentListController {
 		//도전과제 목록에 추가
 		creatAccountList.add(achievenents);
 	}
-	//책 구매 시 실행되는 메소드
-	public void buyBook(String userId) {
-		checkAchievenent(buyAccountList,userId);
+	/**
+	 * 책 구매 시 실행되는 메소드
+	 * @param userId 유저 아이디
+	 * @param book 책 구매 시 해당 책
+	 */
+	public void buyBook(String userId,BookVO book) {
+		checkAchievenent(buyAccountList,userId,book);
 	}
 }
 
