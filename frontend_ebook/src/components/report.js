@@ -29,34 +29,35 @@ export function Report({getReport,exit}) {
       return;
     }
     else{
-      report.rp_me_id = getReport.rp_me_id;
+      report.rp_me_id = "admin123";
       report.rp_target = getReport.rp_target;
       report.rp_content = getReport.rp_content +  '신고 사유 : ' + reportContent;
       report.rp_rt_num = reportTypeNum;
-      report.rp_id = getReport.rp_me_id;
-
+      report.rp_id = getReport.rp_id;
       (async ()=>{
         var exist = await CheckReport(report);
-        if(exist){
-          alert('이미 접수된 신고입니다.')
-          exit();
-        }
-          
-        else{submitReport(report,exit())}
+        // if(exist){
+        //   alert('이미 접수된 신고입니다.')
+        //   exit();
+        // }
+        //else
+        {submitReport(report,exit())}
       })();
     }
   }//신고 보내기
-
-  
   function submitReport(report,successSubmitReport){
-    if(report.rp_me_id == null){
-      alert('로그인을 해주세요.');
-      return;
-    }
-
-    fetch("report/insertReport",{
-      method : "post",
-      body : JSON.stringify(report),
+    // if(report.rp_me_id == null){
+    //   alert('로그인을 해주세요.');
+    //   return;
+    // }
+    var meId = report.rp_me_id;
+    var targetId = report.rp_target;
+    var rpNum = reportTypeNum;
+    var rpId = report.rp_id;
+    console.log(getReport)
+    fetch("/bookReview/report/insertReport/"+meId+"/"+
+      targetId+"/"+reportTypeNum+"/"+"NotUsed"+"/"+reportContent,{
+      //body : JSON.stringify(report),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
@@ -76,25 +77,28 @@ export function Report({getReport,exit}) {
     .catch(e=>console.error(e));
   }//신고 하기
   async function CheckReport(report){
-    if(report.rp_me_id == null){
-      return;
-    }
-
-    try {
-      // fetch 요청이 완료될 때까지 대기
-      const response = await fetch("report/existReport/"+report.rp_id+"/"+
-        report.rp_target+"/"+report.rp_id,{
-          //method: "post",
-          headers: {
-              'Content-Type': 'application/json',
-          },
-      });
-      const exitReport = await response.json();
-      return exitReport;
-    } catch (e) {
-      console.error(e);
-      return false;;
-    }
+    return null;
+    // if(report.rp_me_id == null){
+    //   return;
+    // }
+    // var meId = report.rp_me_id;
+    // var targetId = report.rp_target;
+    // var rpId = report.rpId;
+    // try {
+    //   // fetch 요청이 완료될 때까지 대기
+    //   const response = await fetch("/bookReview/report/existReport/"+meId+"/"+
+    //     targetId+"/NotUsed",{
+    //       //method: "post",
+    //       headers: {
+    //           'Content-Type': 'application/json',
+    //       },
+    //   });
+    //   const exitReport = await response.json();
+    //   return exitReport;
+    // } catch (e) {
+    //   console.error(e);
+    //   return false;;
+    // }
   }//신고있는지 확인
 
   async function settingReportType() {
@@ -114,7 +118,7 @@ export function Report({getReport,exit}) {
       {reportType.map((item,index)=>{
         return(
           <label key ={index}>{item.rt_name}
-            <input defaultChecked={index == 0} onClick={()=>{reportTypeNum =index+1}} type='radio' name ='reportType'/>
+            <input defaultChecked={index == 0} onClick={()=>{reportTypeNum =index+1; console.log(reportTypeNum)}}  type='radio' name ='reportType'/>
           </label>
         )
       })}
@@ -128,6 +132,6 @@ export function Report({getReport,exit}) {
 }
 //
 export function bookReviewReport(targetNum){
-  return 'BR'+targetNum;
+  return 'BR';
 }//책리뷰 신고 할 때
 export default Report;
