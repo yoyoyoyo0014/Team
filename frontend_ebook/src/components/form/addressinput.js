@@ -1,31 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import DaumPostcode from 'react-daum-postcode';
 
 import Button from './button';
-import { Input, InputItem } from "./input";
+import {Input, InputItem} from "./input";
 
-const AddressInput = ({ change, item }) => {
-  const [code, setCode] = useState('');
-  const [addr1, setAddr1] = useState('');
-  const [addr2, setAddr2] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
+const AddressInput = ({change, item}) => {
+	let [code, setCode] = useState('');
+	let [addr1, setAddr1] = useState('');
+	let [addr2, setAddr2] = useState('');
+	let [isOpen, setIsOpen] = useState(false);
+	const style = {
+		width: '400px',
+		height: '600px'
+	}
 
-  // 부모 컴포넌트로부터 초기값을 받아서 설정
-  useEffect(() => {
-    if (item.me_postalCode) setCode(item.me_postalCode);
-    if (item.me_addr1) setAddr1(item.me_addr1);
-    if (item.me_addr2) setAddr2(item.me_addr2);
-  }, [item]);
-
-  const completeHandler = (data) => {
+	const completeHandler = (data) => {
     const { address, zonecode } = data;
-    setCode(zonecode);
+		setCode(zonecode);
     setAddr1(address);
-    change({ ...item, me_postalCode: zonecode, me_addr1: address });
+		let addr1 = address;
+		let me_postalCode = zonecode;
+		change({...item, me_postalCode, addr1});
   };
 
-  const closeHandler = (state) => {
-    if (state === 'FORCE_CLOSE' || state === 'COMPLETE_CLOSE') {
+	const closeHandler = (state) => {
+    if (state === 'FORCE_CLOSE') {
+      setIsOpen(false);
+    } else if (state === 'COMPLETE_CLOSE') {
       setIsOpen(false);
     }
   };
