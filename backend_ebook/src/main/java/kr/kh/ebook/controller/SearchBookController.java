@@ -49,7 +49,6 @@ public class SearchBookController {
 			@PathVariable String country,@PathVariable int genre,
 			@PathVariable String search,
 			@PathVariable int count) {
-		//https://github.com/st8324/java_240528/blob/main/spring%20projects/spring3/src/main/java/kr/kh/spring3/controller/ReactController.java
 		System.out.println("category : " + category +", country : "+country+", genre : " + genre +", search : " + search+" 페이지 : "+count);
 		BookCriteria bookCri = new BookCriteria(count,category,country,genre,search);
 		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
@@ -86,7 +85,7 @@ public class SearchBookController {
 	public List<ReviewVO> reviewList(@PathVariable("bookNum")int bookNum, @PathVariable("pageNum") int pageNum){
 		List<ReviewVO> res = bookService.selectReviewList(bookNum,pageNum);
 		return res;
-	}//리뷰 보기
+	}
 
 	//읽고 있는책 현재 페이지    구매하지 않았다면 -1
 	@GetMapping("/currentBookPage")
