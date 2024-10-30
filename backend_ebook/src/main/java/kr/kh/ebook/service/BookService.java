@@ -104,7 +104,7 @@ public class BookService {
 		return bookDao.deleteReview(bookNum,id);
 	}
 
-	public int insertBook(BookVO book) {
+	public boolean insertBook(BookVO book) {
 		return bookDao.insertBook(book);
 	}
 
@@ -130,6 +130,15 @@ public class BookService {
 
 	public Integer selectMyBookPage(String userId, int bookNum) {
 		return bookDao.selectBookPage(userId,bookNum);
+	}
+
+	public void deleteBook(int bk_num) {
+		bookDao.deleteBook(bk_num);
+		
+	}
+
+	public void deleteWriterList(int bk_num) {
+		bookDao.deleteWriterList(bk_num);
 	}
 	
 }

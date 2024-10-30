@@ -133,33 +133,41 @@ public class SearchBookController {
 		System.out.println(res);
 		return res;
 	}
-
+	//책 추가 기능
 	@PostMapping("/insertBook")
 	public boolean InsertBook(@RequestPart("bK_img") MultipartFile imgFile,@RequestPart("bK_epub") MultipartFile epubFile,
 			@RequestPart("bk_data") String bookVo, @RequestPart("writerList") String writerListStr ) throws JSONException {
-		System.out .println(bookVo);
-		// Jackson ObjectMapper 생성
-		ObjectMapper objectMapper = new ObjectMapper();
-		ObjectMapper bookMapper = new ObjectMapper();
 		try {
 			// JSON 문자열을 List<WriterListVO>로 변환
-			List<WriterListVO> writerList = objectMapper.readValue(writerListStr, new TypeReference<List<WriterListVO>>() {});
+			ObjectMapper writerListMapper = new ObjectMapper();
+			// JSON 문자열을 BookVO로 변환
+			ObjectMapper bookMapper = new ObjectMapper();
+			
+			List<WriterListVO> writerList = writerListMapper.readValue(writerListStr, new TypeReference<List<WriterListVO>>() {});
 			BookVO book= bookMapper.readValue(bookVo, new TypeReference<BookVO>() {});
-			System.out.println(book);
-			// 변환된 객체 출력
+			
+			//책의 epub, 표지 파일 담을 객체
 			List<MultipartFile> fileList =new ArrayList<MultipartFile>();
+			//책 표지, epub 파일 추가
 			fileList.add(imgFile);
 			fileList.add(epubFile);
-
-			bookService.insertBook(book);
+			
+			//책을 DB에 추가,book 객체에 bk_num 값 가져오는 기능  실패시 return
+			if(!bookService.insertBook(book))
+				return false;
 
 			for(int i=0;i<writerList.size();i++) {
 				writerList.get(i).setWl_bk_num(book.getBk_num());
 				if(!bookService.insertWriterList(writerList.get(i))) {
+					//DB에 추가했던 책 삭제
+					bookService.deleteBook(book.getBk_num());
+					//DB에 추가했던 작가리스트 제거
+					bookService.deleteWriterList(book.getBk_num());
 					return false;
 				}
 
 			}
+			//EPUB, 책 표지 파일 업로드
 			if(FileUploadController.uploadFile(book.getBk_num(), fileList))
 				return true;
 
@@ -174,10 +182,8 @@ public class SearchBookController {
 	@ResponseBody
 	public int selectBookshelfPage(@PathVariable("userId") String userId, @PathVariable("bookNum") int bookNum){
 		Integer page = bookService.selectMyBookPage(userId,bookNum);
-		System.out.println(page);
 		if(page == null)
 			page = 0;
-		System.out.println(page);
 		return page;
 	} 
 }

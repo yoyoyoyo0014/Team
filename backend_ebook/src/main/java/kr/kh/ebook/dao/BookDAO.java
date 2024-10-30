@@ -59,7 +59,7 @@ public interface BookDAO {
 	
 	boolean deleteReview(@Param("bookNum")int bookNum, @Param("id")String id);
 
-	int insertBook(@Param("bk")BookVO book);
+	boolean insertBook(@Param("bk")BookVO book);
 
 	boolean insertWriterList(@Param("wr")WriterListVO writerVO);
 
@@ -68,4 +68,8 @@ public interface BookDAO {
 	int selectMyReviewCount(String userId);
 
 	Integer selectBookPage(String userId, int bookNum);
+
+	void deleteBook(int bk_num);
+
+	void deleteWriterList(int bk_num);
 }
