@@ -33,9 +33,12 @@ public class ReportController {
 	}
 	
 	//신고 추가하기
-	@PostMapping("/{anyPath}/report/insertReport")
+	@GetMapping("/{anyPath}/report/insertReport/{meId}/{targetId}/{rpNum}/{rpId}/{reportContent}")
 	@ResponseBody
-	public boolean insertReport(@RequestBody ReportVO report) {
+	public boolean insertReport(@PathVariable("meId") String meId,@PathVariable("targetId") String targetId,
+			@PathVariable("rpNum") int rpNum,@PathVariable("rpId")String rpId,@PathVariable("reportContent")String reportContent) {
+		//System.out.println(meId + targetId + rpNum);
+		ReportVO report = new ReportVO(meId,targetId,rpNum,rpId,reportContent);
 		return reportService.insertReport(report);
 	}
 	//신고 추가하기
