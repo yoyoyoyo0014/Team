@@ -159,6 +159,28 @@ public class PostController {
     @DeleteMapping("/post/delete/{co_num}/{po_num}")
     public HashMap<String, Object> postDeletePost(@PathVariable int co_num, @PathVariable int po_num) {
         HashMap<String, Object> map = new HashMap<>();
+        
+        // 게시글 정보 가져오기
+        PostVO post = postService.getPost(po_num);
+        if (post == null) {
+            map.put("result", false);
+            map.put("redirect", "/post/detail/" + po_num);
+            return map;
+        }
+
+        // 파일 삭제 처리
+        String[] filePaths = {post.getPo_link(), post.getPo_image()};
+        for (String filePath : filePaths) {
+            if (filePath != null && !filePath.isEmpty()) {
+                File file = new File("D:/git/Team/static" + filePath);
+                if (file.exists()) {
+                    if (!file.delete()) {
+                        System.err.println("파일 삭제에 실패했습니다: " + filePath);
+                    }
+                }
+            }
+        }
+        // 게시글 삭제
         boolean res = postService.deletePost(po_num);
         map.put("result", res);
         if (res) {
@@ -168,4 +190,5 @@ public class PostController {
         }
         return map;
     }
+
 }
