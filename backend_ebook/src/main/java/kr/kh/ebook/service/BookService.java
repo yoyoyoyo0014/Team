@@ -127,5 +127,9 @@ public class BookService {
 	public int selectMyReviewCount(String userId) {
 		return bookDao.selectMyReviewCount(userId);
 	}
+
+	public Integer selectMyBookPage(String userId, int bookNum) {
+		return bookDao.selectBookPage(userId,bookNum);
+	}
 	
 }

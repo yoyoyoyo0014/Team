@@ -83,7 +83,6 @@ public class SearchBookController {
 
 	//리뷰 리스트
 	@GetMapping("/{anyPath}/reviewList/{bookNum}/{pageNum}")
-
 	public List<ReviewVO> reviewList(@PathVariable("bookNum")int bookNum, @PathVariable("pageNum") int pageNum){
 		List<ReviewVO> res = bookService.selectReviewList(bookNum,pageNum);
 		return res;
@@ -138,7 +137,7 @@ public class SearchBookController {
 	@PostMapping("/insertBook")
 	public boolean InsertBook(@RequestPart("bK_img") MultipartFile imgFile,@RequestPart("bK_epub") MultipartFile epubFile,
 			@RequestPart("bk_data") String bookVo, @RequestPart("writerList") String writerListStr ) throws JSONException {
-		System.out.println(bookVo);
+		System.out .println(bookVo);
 		// Jackson ObjectMapper 생성
 		ObjectMapper objectMapper = new ObjectMapper();
 		ObjectMapper bookMapper = new ObjectMapper();
@@ -168,9 +167,17 @@ public class SearchBookController {
 			e.printStackTrace();
 			return false;
 		}
-
-
-
 		return true;
 	}
+	//첵꽂이의 책 가져오기
+	@GetMapping("/selectBookList/selectBookshelfPage/{userId}/{bookNum}")
+	@ResponseBody
+	public int selectBookshelfPage(@PathVariable("userId") String userId, @PathVariable("bookNum") int bookNum){
+		Integer page = bookService.selectMyBookPage(userId,bookNum);
+		System.out.println(page);
+		if(page == null)
+			page = 0;
+		System.out.println(page);
+		return page;
+	} 
 }

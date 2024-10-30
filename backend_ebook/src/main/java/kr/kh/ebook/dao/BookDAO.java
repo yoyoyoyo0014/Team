@@ -66,4 +66,6 @@ public interface BookDAO {
 	List<ReviewVO> selectAllMyReview(@Param("cri")Criteria cri, String userId);
 
 	int selectMyReviewCount(String userId);
+
+	Integer selectBookPage(String userId, int bookNum);
 }

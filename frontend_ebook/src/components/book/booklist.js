@@ -79,9 +79,9 @@ export async function UpdateReadBook(userId,bookNum) {
 }
 
 //해당 페이지 가져오기
-export async function selectBookshelf(userId,bookNum) {
+export async function SelectBookshelf(userId,bookNum) {
   try{
-    const response = await fetch('/selectBookList/selectBookshelf/'+userId+"/"+bookNum,{
+    const response = await fetch('/selectBookList/selectBookshelfPage/'+userId+"/"+bookNum,{
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       }

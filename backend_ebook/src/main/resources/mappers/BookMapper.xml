@@ -224,4 +224,10 @@
 		VALUES(#{wr.wl_wr_num}, #{wr.wl_bk_num}, #{wr.wl_wt_num})
 	</insert>
 	
+	<select id="selectBookPage">
+		select bl_nowPage
+		from book_list
+		where bl_me_id = #{userId} and bl_bk_num = #{bookNum}
+	</select>
+	
 </mapper>
