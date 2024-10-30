@@ -84,35 +84,33 @@ const handlePostImageChange = (e) => {
 
 
   function btnClick() {
-    const requestData = {
-      po_num: po_num,
-      po_title: title,
-      po_content: content,
-      po_me_nickname: me_nickname, // 작성자 ID 추가
-      po_start: start ? start.toISOString().split('T')[0] : null,
-      po_end: end ? end.toISOString().split('T')[0] : null,
-      po_link: link,
-      po_image: image
-    };
-  
+    const formData = new FormData();
+    formData.append('po_num', po_num);
+    formData.append('po_title', title);
+    formData.append('po_content', content);
+    formData.append('po_me_nickname', me_nickname);
+    formData.append('po_start', start ? start.toISOString().split('T')[0] : null);
+    formData.append('po_end', end ? end.toISOString().split('T')[0] : null);
+    if (link) {
+        formData.append('po_link', link);
+    }
+    if (image) {
+        formData.append('po_image', image);
+    }
+
     fetch(`/post/update/${po_num}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData),
+        method: 'POST',
+        body: formData,
     })
-      .then((response) => {
+    .then((response) => {
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         alert('게시글이 수정되었습니다.');
-        navigate(`/post/detail/${po_co_num}/${po_num}`); // 수정된 게시글 상세 페이지로 이동
-      })
-      .catch((error) => console.error('Error updating post:', error));
-  }
-  
-  
+        navigate(`/post/detail/${po_co_num}/${po_num}`);
+    })
+    .catch((error) => console.error('Error updating post:', error));
+}
 
   if (loading) {
     return <div>로딩 중...</div>;

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -135,20 +134,89 @@ public class PostController {
     }
 
     @PostMapping("/post/update/{po_num}")
-    public HashMap<String, Object> postUpdatePost(@PathVariable int po_num, @RequestBody PostVO post) {
-        HashMap<String, Object> map = new HashMap<>();
-        post.setPo_num(po_num);
+    public ResponseEntity<?> updatePost(@PathVariable("po_num") int po_num,
+                                        @RequestParam("po_title") String po_title,
+                                        @RequestParam("po_content") String po_content,
+                                        @RequestParam(value = "po_me_nickname", required = false) String po_me_nickname,
+                                        @RequestParam(value = "po_start", required = false) String po_start,
+                                        @RequestParam(value = "po_end", required = false) String po_end,
+                                        @RequestParam(value = "po_link", required = false) MultipartFile po_link,
+                                        @RequestParam(value = "po_image", required = false) MultipartFile po_image) {
+        try {
+            // 파일 저장 경로 설정
+            String savePath = "D:/git/Team/static/event_image/";
+            String poLinkPath = null;
+            String poImagePath = null;
 
-        boolean res = postService.updatePost(post);
-        
-        map.put("result", res);
-        if (res) {
-            map.put("redirect", "/post/detail/" + po_num);
-        } else {
-            map.put("redirect", "/post/update/" + po_num);
+            // 게시물 조회 (기존 정보 가져오기)
+            PostVO existingPost = postService.getPost(po_num);
+            if (existingPost == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 게시글을 찾을 수 없습니다.");
+            }
+
+            // 기존 파일 삭제
+            String[] existingFilePaths = {existingPost.getPo_link(), existingPost.getPo_image()};
+            for (String filePath : existingFilePaths) {
+                if (filePath != null && !filePath.isEmpty()) {
+                    // 저장 경로와 맞추기
+                    File existingFile = new File("D:/git/Team/static" + filePath);
+                    if (existingFile.exists()) {
+                        boolean deleted = existingFile.delete();
+                        if (deleted) {
+                            System.out.println("기존 파일 삭제 성공: " + filePath);
+                        } else {
+                            System.err.println("기존 파일 삭제 실패: " + filePath);
+                        }
+                    } else {
+                        System.out.println("삭제할 파일이 존재하지 않음: " + filePath);
+                    }
+                }
+            }
+
+            // 폴더가 존재하지 않는 경우 생성
+            File dir = new File(savePath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            // 파일 저장 및 경로 설정
+            if (po_link != null && !po_link.isEmpty()) {
+                String fileName = System.currentTimeMillis() + "_" + po_link.getOriginalFilename();
+                File saveFile = new File(savePath + fileName);
+                po_link.transferTo(saveFile);
+                poLinkPath = "/event_image/" + fileName;  // 경로를 /event_image/로 변경
+            }
+
+            if (po_image != null && !po_image.isEmpty()) {
+                String fileName = System.currentTimeMillis() + "_" + po_image.getOriginalFilename();
+                File saveFile = new File(savePath + fileName);
+                po_image.transferTo(saveFile);
+                poImagePath = "/event_image/" + fileName;  // 경로를 /event_image/로 변경
+            }
+
+            // 데이터베이스 업데이트
+            PostVO post = new PostVO();
+            post.setPo_num(po_num);
+            post.setPo_title(po_title);
+            post.setPo_content(po_content);
+            post.setPo_me_nickname(po_me_nickname);
+            post.setPo_start(po_start);
+            post.setPo_end(po_end);
+            post.setPo_link(poLinkPath);
+            post.setPo_image(poImagePath);
+
+            postService.updatePost(post);
+
+            return ResponseEntity.ok("게시글이 수정되었습니다.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장 오류");
         }
-        return map;
     }
+
+
+
+
 
     @GetMapping("/post/detail/{co_num}/{po_num}")
     public HashMap<String, Object> postDetail(@PathVariable int po_num, @PathVariable int co_num) {
