@@ -30,7 +30,8 @@ public class CartController {
 
     @PostMapping("/add")
     public HashMap<String, Object> addCart(@RequestBody CartVO cartVO) {
-        boolean addSuccess = cartService.addCart(cartVO.getBk_num(), cartVO.getCa_me_id());
+    	System.out.println(cartVO);
+    	boolean addSuccess = cartService.addCart(cartVO.getCa_bk_num(), cartVO.getCa_me_id());
         
         HashMap<String, Object> map = new HashMap<String, Object>();
 		

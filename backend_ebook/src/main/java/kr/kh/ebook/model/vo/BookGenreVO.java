@@ -8,5 +8,4 @@ import lombok.NoArgsConstructor;
 public class BookGenreVO {
 	private int ge_num;
 	private String ge_name;
-	private int ge_parent;
 }

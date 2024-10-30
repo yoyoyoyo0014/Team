@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 
-const Order = ({total}) => {
+const OrderPage = ({total, selectedBooks}) => {
 	const [IMP, setIMP] = useState(null);
 	const { me_id } = useParams();
 
@@ -125,9 +125,26 @@ const Order = ({total}) => {
     // });
   };
 	
-	return(<div>
-	order page
-	</div>)
+	return(<>
+	<div className="page-title">
+    <h2>주문하기</h2>
+  </div>
+
+  <div className="theme-box selected-books">
+    <ul>
+      <li>책 이름</li>
+      <li>책 이름</li>
+    </ul>
+  </div>
+
+  <div className="payment">
+    <h3>결제하기</h3>
+
+    <div className="theme-box">
+      
+    </div>
+  </div>
+	</>)
 }
 
-export default Order;
+export default OrderPage;

@@ -1,17 +1,19 @@
 import React, { useEffect, useState, useCallback, Fragment } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useForm } from "react-hook-form";
 import Check from '../../components/form/check';
 import '../../css/cart.css';
 import Button from '../../components/form/button';
+import axios from 'axios';
 
 const CartPage = () => {
+  const { handleSubmit } = useForm();
+  const navigate = useNavigate(); // useNavigate 훅 선언
   const { me_id } = useParams();
   const [cart, setCart] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
-  
-  const [selectedItems, setSelectedItems] = useState({});
-  const [selectAll, setSelectAll] = useState(false); // 전체 선택 상태 추가
   let [total, setTotal] = useState(0);
+  let [selectedBooks, setSelectedBooks] = useState([]);
 
   const fetchCart = useCallback(async () => {
     try {
@@ -23,12 +25,6 @@ const CartPage = () => {
       setCart(data);
       //콘솔
       setErrorMessage('');
-      // // 초기 선택 상태 설정
-      // const initialSelectedItems = {};
-      // data.forEach(item => {
-      //   initialSelectedItems[item.ca_num] = false;
-      // });
-      // setSelectedItems(initialSelectedItems);
     } catch (error) {
       setErrorMessage("카트 아이템을 가져오는 중 오류가 발생했습니다.");
     }
@@ -37,9 +33,26 @@ const CartPage = () => {
   useEffect(() => {
     fetchCart();
   }, [fetchCart]);
-  useEffect(()=>{
+
+  //전체 금액 계산하는 함수
+  const calcPrice = () => {
+    let tmp = 0;
+
+    const inps = document.querySelectorAll('[name="bk_num"]');
+    inps.forEach(inp => {
+      if (inp.checked === true) {
+        tmp += parseInt(inp.parentElement.parentElement.querySelector('[name="bk_price"]').value);
+      }
+    })
+    
+    setTotal(tmp);
+    document.querySelector('[name="total"]').value = total;
+  }
+
+  useEffect(() => {
+    handleSelectAllChange();
     calcPrice();
-  },[selectedItems])
+  }, []);
 
   const removeFromCart = async (itemId) => {
     try {
@@ -59,93 +72,54 @@ const CartPage = () => {
     }
   };
 
-  //전체 금액 계산하는 함수
-  const calcPrice = () => {
-    let tmp = cart.reduce((acc, obj)=>{      
-      // if(selectedItems[obj.ca_num]){
-      //   return acc + obj.bk_price;
-      // }
-      // else
-      //   return acc;
-    }, 0)
-    
-    setTotal(tmp);
-    document.querySelector('[name="total"]').value = total;
-  }
-
-  const handleSelectAllChange = () => {
-    const newSelectedItems = [];
-    cart.forEach((item, i) => {
-      let chk = document.querySelector('#item_' + item.ca_num).querySelector('[type="checkbox"');
-      chk.checked = !chk.checked;
-
-      if(chk.checked === true)
-        newSelectedItems.push(item);
-    });
-
-    setSelectedItems([newSelectedItems]);
-    calcPrice();
-    console.log(selectedItems);
-    // setSelectedItems(newSelectedItems);
-    setSelectAll(!selectAll); // 전체 선택 상태 토글
-  };
-
-
-  const handleSelectChange = (e) => {
-    let arr = []
-    for(let ca_num in selectedItems){
-      if(selectedItems[ca_num]){
-        arr.push(ca_num);
-      }
-    }
-    
-    //console.log(arr)
-    return arr;
-  }
-
   const goOrder = (e) => {
     e.preventDefault();
-    let arr = test();
-    console.log(selectedItems);
-    if(selectedItems.length === 0) {
-      alert("구매할 책을 선택해 주세요.");
-      return ;
-    }
+    let cnt = 0;
 
-    return ;
+    const inps = document.querySelectorAll('[name="bk_num"]');
+    inps.forEach(inp => {
+      if (inp.checked === true) cnt++;
+    });
+    
+    if(cnt === 0) {
+      alert("구매할 책을 선택해 주세요.");
+      return;
+    }
+    return true;
   }
+
+  const handleSelectAllChange = (e) => {
+    if(!e) return;
+    const inps = document.querySelectorAll('[name="bk_num"]');
+    inps.forEach(inp => {
+      if (e.target.checked === true)
+        inp.checked = true;
+      else
+        inp.checked = false;
+    });
+    calcPrice();
+  };
 
   return (
     <Fragment>
       <div className="section-title">
         <h2>장바구니</h2>
       </div>
-
-      <form id="cart" onSubmit={goOrder}>
-        <input type="hidden" name="total" value={total}/>
-        <Check name={"allSelect"} id="allSelect" label={"전체 선택"} change={handleSelectAllChange}/>
+      <form id="cart" onSubmit={goOrder} action="/buy">
+        <Check name={"allSelect"} id="allSelect" label={"전체 선택"} change={e => handleSelectAllChange(e)}/>
         {errorMessage && <p className="error">{errorMessage}</p>}
         <ul className="cart-item-wrapper">
           {cart.length !== 0 ? cart.map(item => (
-            <li id={"item_" + item.ca_num} className="theme-box cart-item" key={item.ca_num}>
-              <input type="hidden" className="bk_num" id={"bk_num_" + item.ca_num} name={"bk_num_" + item.ca_num} value={item.bk_num}/>
-              <input type="hidden" className="bk_price" id={"bk_price_" + item.ca_num} name={"bk_price_" + item.ca_num} value={item.bk_price}/>
+            <li className="theme-box cart-item" key={item.ca_num}>
+              {/* <input type="hidden" className="bk_num" id={"bk_num_" + item.ca_num} name={"bk_num"} value={item.bk_num}/> */}
+              <input type="hidden" className="bk_price" id={"bk_price_" + item.ca_num} name={"bk_price"} value={item.bk_price}/>
+              <input type="hidden" className="ca_num" id={"ca_num_" + item.ca_num} name={"ca_num"} value={item.ca_num}/>
               <Check
-                name={"chk_item_" + item.ca_num}
-                id={"chk_item_" + item.ca_num}
-                cls={"chk_item"}
+                id={"cart_item_" + item.ca_num}
+                name="bk_num"
                 label=""
-                value={item.ca_num}
-                change={handleSelectChange}
-                click={e => {
-                  if(e.target.checked === true)
-                    e.target.checked = false;
-                  else
-                    e.target.checked = true;
-                  calcPrice();
-                }
-                  
-                }/>
+                change={calcPrice}
+                value={item.bk_num}/>
               <div className="book-img">
                 <Link to={"/ebook/selectBook/" + item.bk_num}>
                 <img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="test" />
@@ -165,6 +139,7 @@ const CartPage = () => {
         </ul>
         
         <div className="total theme-box">
+          <input type="hidden" name="total" value={total}/>
           <p><span>상품 금액</span><span>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(total)}</span></p>
           <p><span>할인 금액</span><span>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(0)}</span></p>
           <hr />
@@ -173,7 +148,7 @@ const CartPage = () => {
             <strong>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(total)}</strong>
           </p>
           <p><span>적립 예정 포인트</span><span>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(0)}</span></p>
-          <Button type="submit" cls="btn btn-point full" text="구매하기"/>
+          <Button type="submit" cls="btn btn-point full" text="구매하기" />
         </div>
       </form>
     </Fragment>

@@ -66,7 +66,10 @@ body {
 .frm-input,
 input[type="text"],
 input[type="password"],
-input[type="email"] {
+input[type="email"],
+input[type="date"],
+input[type="file"],
+select {
 	padding: .8em;
 	line-height: 1;
 	background: var(--color-light-grey);
@@ -75,6 +78,9 @@ input[type="email"] {
 	box-shadow: var(--box-inner-shadow);
 }
 .frm-input {width: 100%;}
+::-webkit-file-upload-button {cursor: pointer; border: 0; line-height: .3; font-family: inherit; font-size: inherit; padding: .8em; border-radius: 2em; box-shadow: var(--box-shadow); background: var(--color-default); color: white;}
+
+textarea {box-shadow: var(--box-inner-shadow); border-radius: 1em; background: var(--color-light-grey); width: 100%;}
 
 .input-item {position: relative; padding-left: 8rem;}
 .input-item label {

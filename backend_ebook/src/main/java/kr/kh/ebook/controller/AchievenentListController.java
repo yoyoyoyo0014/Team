@@ -1,17 +1,11 @@
 package kr.kh.ebook.controller;
 
+import java.util.function.Predicate;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import jakarta.annotation.PostConstruct;
-import kr.kh.ebook.model.vo.AchievenentListVO;
-import lombok.AllArgsConstructor;
 
 @Component
 @RestController

@@ -14,7 +14,7 @@
 .section {padding: 4em 0;}
 .section h3 {padding-bottom: .6em;}
 
-.review-write textarea {width: 100%; margin-top: 1em; box-shadow: var(--box-inner-shadow); border-radius: 1em;}
+.review-write textarea {margin-top: 1em;}
 .review-write .btn {float: right; margin-top: 1em; font-weight: 900; padding-left: 2em; padding-right: 2em;}
 .review-write::after {
 	content: '';

@@ -50,10 +50,15 @@ const Header = ({setSection}) => {
 				<li><Link to="/login">로그인</Link></li>
 				<li><Link to="/join">회원가입</Link></li>
 			</ul>)
-		} else {
+		} else if(user.me_authority === 'USER'){
 			return(<ul>
 				<li><Link to={"/cart/" + user?.me_id}>장바구니</Link></li>
 				<li><Link to="/mypage">마이페이지</Link></li>
+				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
+			</ul>)
+		} else {
+			return(<ul>
+				<li><Link to="/mycompany">사업자 정보 수정</Link></li>
 				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
 			</ul>)
 		}

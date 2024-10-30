@@ -80,17 +80,18 @@ const BookDetail = () => {
       method:'POST',
       header: {
         'Accept':'application/json',
-        'Content-Type':  "'application/json';charset=UTP-8'"
+        'Content-Type': "'application/json';charset=UTF-8'"
         //연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
       },
       data: {
-        bk_num: bk_num,
+        ca_bk_num: bk_num,
         ca_me_id: user?.me_id,
       }
     }
 
     axios(options)
     .then(res => {
+      console.log(res);
 			alert('장바구니에 추가했습니다');
 		})
 		.catch((error) => {

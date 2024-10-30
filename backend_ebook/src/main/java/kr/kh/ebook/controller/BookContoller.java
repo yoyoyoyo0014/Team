@@ -91,4 +91,9 @@ public class BookContoller {
 		return bookService.updateReadBook(readBook);
 	}
 	
+	
+	@PostMapping("/insertBook")
+	public int insertBook(@RequestParam BookVO BookVO) {
+		return bookService.insertBook(BookVO);
+	}
 }

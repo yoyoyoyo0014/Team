@@ -85,7 +85,7 @@
   		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
     </select>
 
-		<select id="selectAllGenre" resultType="BookGenreVO">
+	<select id="selectAllGenre" resultType="BookGenreVO">
     	select * from genre
     </select>
     
@@ -205,11 +205,6 @@
    			</when>
    		</choose>
 	</update>
-	
-	<select id="selectGenreList">
-		select *
-		from genre
-	</select>
 	
 	<insert id="insertBook" useGeneratedKeys="true" keyProperty="bk.bk_num">
 		INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_publisher)
