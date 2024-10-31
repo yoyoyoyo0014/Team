@@ -172,9 +172,10 @@ useEffect(() => {
             
         </div>
       )}
-      <button className="btn btn-primary" onClick={btnClick}>
-        게시글 수정
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }}>
+        <a className="btn btn-outline-info" href={`/post/detail/${po_co_num}/${po_num}`}>돌아가기</a>
+        <button className="btn btn-primary" onClick={btnClick}>게시글 수정</button>
+      </div>
     </div>
   );
 }

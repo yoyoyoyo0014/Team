@@ -157,9 +157,11 @@ function Insert() {
             </div>
           </>
         )}
-        <button type="submit" className="btn btn-outline-info col-12">게시글 등록</button>
       </form>
-      <a className="btn btn-outline-info" href={`/post/list/${co_num}`}>목록으로</a>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }}>
+        <a className="btn btn-outline-info" href={`/post/list/${co_num}`}>목록으로</a>
+        <button type="submit" style={{ display: 'flex', gap: '10px' }} className="btn btn-outline-info col-12">게시글 등록</button>
+      </div>
     </div>
   );
 }
