@@ -64,21 +64,22 @@ function Insert() {
     formData.append('po_me_nickname', nickname);
     formData.append('po_content', content);
     formData.append('po_co_num', co_num);
-    formData.append('po_start', start ? start.toISOString().split('T')[0] : null);
-    formData.append('po_end', end ? end.toISOString().split('T')[0] : null);
+    formData.append('po_start', start ? start.toISOString().split('T')[0] : '');
+    formData.append('po_end', end ? end.toISOString().split('T')[0] : '');
     formData.append('po_date', formattedDate);
 
     // 이미지 파일 추가
-    const postLinkFile = document.getElementById('postLinkFile').files[0];
-    if (postLinkFile) {
-      formData.append('po_link', postLinkFile);
-    }
+    if(co_num === '3' || co_num === '4'){
+      const postLinkFile = document.getElementById('postLinkFile').files[0];
+      if (postLinkFile) {
+        formData.append('po_link', postLinkFile);
+      }
 
-    const postImageFile = document.getElementById('postImageFile').files[0];
-    if (postImageFile) {
-      formData.append('po_image', postImageFile);
+      const postImageFile = document.getElementById('postImageFile').files[0];
+      if (postImageFile) {
+        formData.append('po_image', postImageFile);
+      }
     }
-
     fetch(`/post/insert/${co_num}`, {
       method: 'POST',
       body: formData,

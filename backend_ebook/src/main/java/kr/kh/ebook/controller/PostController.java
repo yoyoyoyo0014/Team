@@ -193,6 +193,9 @@ public class PostController {
                 po_image.transferTo(saveFile);
                 poImagePath = "/event_image/" + fileName;  // 경로를 /event_image/로 변경
             }
+            
+            po_start = (po_start == null || po_start.length() == 0) ? null : po_start;
+            po_end = (po_end == null || po_end.length() == 0) ? null : po_end;
 
             // 데이터베이스 업데이트
             PostVO post = new PostVO();

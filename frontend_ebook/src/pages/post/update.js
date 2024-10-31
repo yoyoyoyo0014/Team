@@ -89,8 +89,8 @@ const handlePostImageChange = (e) => {
     formData.append('po_title', title);
     formData.append('po_content', content);
     formData.append('po_me_nickname', me_nickname);
-    formData.append('po_start', start ? start.toISOString().split('T')[0] : null);
-    formData.append('po_end', end ? end.toISOString().split('T')[0] : null);
+    formData.append('po_start', start ? start.toISOString().split('T')[0] : '');
+    formData.append('po_end', end ? end.toISOString().split('T')[0] : '');
     if (link) {
         formData.append('po_link', link);
     }

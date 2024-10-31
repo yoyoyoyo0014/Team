@@ -22,39 +22,6 @@ public class PostVO {
     private String po_link;   // 게시글 리스트에 띄워지는 이미지
     private String po_image;  // 이벤트 이미지
 
-    // Getter와 Setter 추가
-    public String getPo_start() {
-        return po_start;
-    }
-
-    public void setPo_start(String po_start) {
-        this.po_start = po_start;
-    }
-
-    public String getPo_end() {
-        return po_end;
-    }
-
-    public void setPo_end(String po_end) {
-        this.po_end = po_end;
-    }
-    
-    public String getPo_link() {
-        return po_link;
-    }
-
-    public void setPo_link(String po_link) {
-        this.po_link = po_link;
-    }
-
-    public String getPo_image() {
-        return po_image;
-    }
-
-    public void setPo_image(String po_image) {
-        this.po_image = po_image;
-    }
-
 	public PostVO(String title, String writer, String nickname, String content, int coNum, String start, String end,
 			String poLinkPath, String poImagePath) {
 		this.po_title = title;
@@ -62,8 +29,8 @@ public class PostVO {
 		this.po_me_nickname = nickname;
 		this.po_content = content;
 		this.po_co_num = coNum;
-		this.po_start = start;
-		this.po_end = end;
+		this.po_start = start == null || start.length() == 0 ? null : start;
+		this.po_end = end == null || end.length() == 0 ? null : end;
 		this.po_link = poLinkPath;
 		this.po_image = poImagePath;
 	}
