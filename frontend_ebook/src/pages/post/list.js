@@ -218,7 +218,7 @@ const List = () => {
           </button>
         </div>
       <div className="insert">
-        <button style={{ marginBottom: '20px', float: 'right' }} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
+        <button className="btn btn-outline-primary" style={{ marginBottom: '20px', float: 'right' }} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
       </div>
       <div style={{ marginTop: '50px'}}>
         {co_num === '3' || co_num === '4' ? renderCardList() : renderTableList()}

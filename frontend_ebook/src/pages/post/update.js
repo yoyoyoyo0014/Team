@@ -168,7 +168,8 @@ useEffect(() => {
       {(po_co_num !== 3 && po_co_num !== 4) && (
         <div className="form-group">
           <label htmlFor="content">내용</label>
-          <textarea id="content" name="content" placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content} className="form-control" style={{ height: '200px' }}/>
+          <textarea id="content" name="content" placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content} className="form-control" style={{ height: '400px', width: '100%', border: '1px solid lightgray', borderRadius: '15px', padding: '15px 15px' }}/>
+            
         </div>
       )}
       <button className="btn btn-primary" onClick={btnClick}>

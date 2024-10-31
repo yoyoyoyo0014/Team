@@ -118,18 +118,20 @@ function Detail() {
         
       )}
       {(co_num !== '3' && co_num !== '4') && (
-        <div className="form-group">
-          <label htmlFor="po_content">내용</label>
-          <textarea id="po_content" className="form-control" value={post.po_content || ''} readOnly style={{ height: '400px' }} />
+        <div className="form-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <label htmlFor="po_content" style={{ marginBottom: '8px' }}>내용</label>
+          <textarea id="po_content" className="form-control" value={post.po_content || ''} readOnly style={{ height: '400px', width: '100%', border: '1px solid lightgray', borderRadius: '15px', padding: '15px 15px' }} />
         </div>
       )}
 
-      <button className="btn btn-outline-success" onClick={() => navigate(`/post/list/${co_num}`)}>목록으로</button>
-      
-        <div>
+      <div className="button-container" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }}>
+        <button className="btn btn-outline-success" onClick={() => navigate(`/post/list/${co_num}`)}>목록으로</button>
+        
+        <div style={{ display: 'flex', gap: '10px' }}>
           <button className="btn btn-outline-primary" onClick={() => navigate(`/post/update/${po_num}`)}>수정하기</button>
           <button className="btn btn-outline-danger" onClick={handleDelete}>삭제하기</button>
         </div>
+      </div>
     </div>
   );
 }
