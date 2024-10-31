@@ -113,7 +113,7 @@ function Insert() {
 
   return (
     <div>
-      <h1>게시글 등록</h1>
+      <h1 style={{marginBottom: '20px'}}>게시글 등록</h1>
       <form onSubmit={btnClick}>
         <div className="form-group">
           <label htmlFor="title">제목:</label>
@@ -137,7 +137,7 @@ function Insert() {
         {(co_num !== '3' && co_num !== '4') && (
           <div className="form-group">
             <label htmlFor="content">내용:</label>
-            <textarea id="content" name="content" className="form-control" style={{ minHeight: '400px', height: 'auto' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
+            <textarea id="content" name="content" className="form-control" style={{ height: '400px', width: '100%', border: '1px solid lightgray', borderRadius: '15px', padding: '15px 15px' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
           </div>
         )}
         
