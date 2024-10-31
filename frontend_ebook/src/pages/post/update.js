@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 function Update() {
   const { po_num } = useParams();
+  const { po_date } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -40,47 +41,47 @@ const handlePostImageChange = (e) => {
 };
 
 
-  useEffect(() => {
-    // 게시글 정보를 가져오기
-    fetch(`/post/update/${po_num}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.post) {
-          setTitle(data.post.po_title || '');
-          setContent(data.post.po_content || '');
-          setMeId(data.post.po_me_nickname || '');
-          setPoCoNum(data.post.po_co_num || null);
+useEffect(() => {
+  // 게시글 정보를 가져오기
+  fetch(`/post/update/${po_num}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data.post) {
+        setTitle(data.post.po_title || '');
+        setContent(data.post.po_content || '');
+        setMeId(data.post.po_me_nickname || '');
+        setPoCoNum(data.post.po_co_num || null);
 
-          // 기존의 po_link 및 po_image가 있다면 미리보기 설정
-          if (data.post.po_link) {
-            setLink(data.post.po_link);
-            setPostLinkPreview(data.post.po_link); // po_link 경로를 미리보기 설정
-          }
-          if (data.post.po_image) {
-            setImage(data.post.po_image);
-            setPostImagePreview(data.post.po_image); // po_image 경로를 미리보기 설정
-          }
-
-          // po_start와 po_end 값을 Date 객체로 변환하여 설정
-          if (data.post.po_start) {
-            setStart(new Date(data.post.po_start));
-          }
-          if (data.post.po_end) {
-            setEnd(new Date(data.post.po_end));
-          }
+        // 기존의 po_link 및 po_image가 있다면 미리보기 설정
+        if (data.post.po_link) {
+          setLink(data.post.po_link);
+          setPostLinkPreview(data.post.po_link);
         }
+        if (data.post.po_image) {
+          setImage(data.post.po_image);
+          setPostImagePreview(data.post.po_image);
+        }
+
+        // po_start와 po_end 값을 Date 객체로 변환하여 설정
+        if (data.post.po_start) {
+          setStart(new Date(data.post.po_start));
+        }
+        if (data.post.po_end) {
+          setEnd(new Date(data.post.po_end));
+        }
+      }
       setLoading(false);
     })
     .catch((error) => {
       console.error('Error fetching post:', error);
       setLoading(false);
     });
-  }, [po_num]);
+}, [po_num]);
 
 
   function btnClick() {
@@ -91,27 +92,28 @@ const handlePostImageChange = (e) => {
     formData.append('po_me_nickname', me_nickname);
     formData.append('po_start', start ? start.toISOString().split('T')[0] : '');
     formData.append('po_end', end ? end.toISOString().split('T')[0] : '');
+    formData.append('po_date', po_date);
     if (link) {
-        formData.append('po_link', link);
+      formData.append('po_link', link);
     }
     if (image) {
-        formData.append('po_image', image);
+      formData.append('po_image', image);
     }
-
+  
     fetch(`/post/update/${po_num}`, {
-        method: 'POST',
-        body: formData,
+      method: 'POST',
+      body: formData,
     })
-    .then((response) => {
+      .then((response) => {
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         alert('게시글이 수정되었습니다.');
         navigate(`/post/detail/${po_co_num}/${po_num}`);
-    })
-    .catch((error) => console.error('Error updating post:', error));
-}
-
+      })
+      .catch((error) => console.error('Error updating post:', error));
+  }
+  
   if (loading) {
     return <div>로딩 중...</div>;
   }
