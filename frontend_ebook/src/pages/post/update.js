@@ -27,18 +27,25 @@ function Update() {
   const handlePostLinkChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-        setPostLinkPreview(URL.createObjectURL(file)); // 새로 선택한 파일 미리보기 설정
-        setLink(file); // 새로운 파일 설정
+      setPostLinkPreview(URL.createObjectURL(file)); // 새로 선택한 파일 미리보기 설정
+      setLink(file); // 새로운 파일 설정
+    } else if (!file && link) {
+      // 파일이 선택되지 않았을 경우 기존 링크를 그대로 유지
+      setPostLinkPreview(link);
     }
-};
-
-const handlePostImageChange = (e) => {
+  };
+  
+  const handlePostImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-        setPostImagePreview(URL.createObjectURL(file)); // 새로 선택한 파일 미리보기 설정
-        setImage(file); // 새로운 파일 설정
+      setPostImagePreview(URL.createObjectURL(file)); // 새로 선택한 파일 미리보기 설정
+      setImage(file); // 새로운 파일 설정
+    } else if (!file && image) {
+      // 파일이 선택되지 않았을 경우 기존 이미지를 그대로 유지
+      setPostImagePreview(image);
     }
-};
+  };
+  
 
 
 useEffect(() => {

@@ -159,46 +159,34 @@ public class PostController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 게시글을 찾을 수 없습니다.");
             }
 
-            // 기존 파일 삭제
-            String[] existingFilePaths = {existingPost.getPo_link(), existingPost.getPo_image()};
-            for (String filePath : existingFilePaths) {
-                if (filePath != null && !filePath.isEmpty()) {
-                    // 저장 경로와 맞추기
-                    File existingFile = new File("D:/git/Team/static" + filePath);
-                    if (existingFile.exists()) {
-                        boolean deleted = existingFile.delete();
-                        if (deleted) {
-                            System.out.println("기존 파일 삭제 성공: " + filePath);
-                        } else {
-                            System.err.println("기존 파일 삭제 실패: " + filePath);
-                        }
-                    } else {
-                        System.out.println("삭제할 파일이 존재하지 않음: " + filePath);
-                    }
-                }
-            }
-
-            // 폴더가 존재하지 않는 경우 생성
-            File dir = new File(savePath);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            // 파일 저장 및 경로 설정
+            // po_link가 null이면 기존 파일 경로 유지, 아니면 새로운 파일로 교체
             if (po_link != null && !po_link.isEmpty()) {
+                if (existingPost.getPo_link() != null) {
+                    File existingFile = new File("D:/git/Team/static" + existingPost.getPo_link());
+                    if (existingFile.exists()) existingFile.delete();
+                }
                 String fileName = System.currentTimeMillis() + "_" + po_link.getOriginalFilename();
                 File saveFile = new File(savePath + fileName);
                 po_link.transferTo(saveFile);
-                poLinkPath = "/event_image/" + fileName;  // 경로를 /event_image/로 변경
+                poLinkPath = "/event_image/" + fileName;
+            } else {
+                poLinkPath = existingPost.getPo_link(); // po_link가 null이면 기존 경로 유지
             }
 
+            // po_image가 null이면 기존 파일 경로 유지, 아니면 새로운 파일로 교체
             if (po_image != null && !po_image.isEmpty()) {
+                if (existingPost.getPo_image() != null) {
+                    File existingFile = new File("D:/git/Team/static" + existingPost.getPo_image());
+                    if (existingFile.exists()) existingFile.delete();
+                }
                 String fileName = System.currentTimeMillis() + "_" + po_image.getOriginalFilename();
                 File saveFile = new File(savePath + fileName);
                 po_image.transferTo(saveFile);
-                poImagePath = "/event_image/" + fileName;  // 경로를 /event_image/로 변경
+                poImagePath = "/event_image/" + fileName;
+            } else {
+                poImagePath = existingPost.getPo_image(); // po_image가 null이면 기존 경로 유지
             }
-            
+
             po_start = (po_start == null || po_start.length() == 0) ? null : po_start;
             po_end = (po_end == null || po_end.length() == 0) ? null : po_end;
 
@@ -221,6 +209,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장 오류");
         }
     }
+
 
 
 
