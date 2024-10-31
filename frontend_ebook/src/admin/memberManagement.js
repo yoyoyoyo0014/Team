@@ -1,14 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./memberManagement.css";
 
 function MemberManagement() {
-  const reportData = {
-    rp_me_id: "홍길동",
-    rp_target: "대상 이름",
-    rp_content: "신고 내용 예시입니다.",
-    rp_rt_num: 1,
-    rp_date: "2024-10-30 12:34:56"
-  };
+  const [reportData, setReportData] = useState([]); // 데이터 저장용 상태
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
+  const [totalItems, setTotalItems] = useState(0); // 총 아이템 개수 상태 추가
+  const itemsPerPage = 10; // 페이지 당 항목 수
+
+  useEffect(() => {
+    // 백엔드에서 데이터 불러오기
+    fetch(`/report/list?page=${currentPage}&size=${itemsPerPage}`)
+    .then((response) => response.json())
+    .then((data) => {
+
+      console.log("Fetched Data:", data); // 응답 데이터 확인
+
+      setReportData(data.list || []); // 데이터 목록 설정
+      setTotalItems(data.pageMaker?.totalCount || 0); // pageMaker 객체의 totalCount로 접근
+
+      console.log("Total Items:", totalItems);
+      console.log("Items Per Page:", itemsPerPage);
+      console.log("Total Pages:", Math.ceil(totalItems / itemsPerPage));
+
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+  }, [currentPage]);
+
+  // 페이지 변경 함수
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="report-container">
@@ -18,23 +37,42 @@ function MemberManagement() {
       <div className="report-item item-content">신고 내용</div>
       <div className="report-item item-type">신고 유형</div>
       <div className="report-item item-time">신고 시간</div>
-      <div className="report-item item-settings">정지 기간 설정</div>
-      <div className="report-item item-period">º</div>
 
-      {/* 하단 내용 */}
-      <div className="report-content content-sender">{reportData.rp_me_id}</div>
-      <div className="report-content content-target">{reportData.rp_target}</div>
-      <div className="report-content content-content">{reportData.rp_content}</div>
-      <div className="report-content content-type">{reportData.rp_rt_num}</div>
-      <div className="report-content content-time">{reportData.rp_date}</div>
-      <div className="report-content content-settings">정지 기간 설정 값</div>
-      
-			 {/* 확인 버튼 */}
-			 <div className="report-content content-period">
-        <button type="button" className="confirm-button">확인</button>
+      {reportData.length === 0 ? (
+        <div className="no-reports">등록된 신고가 없습니다.</div>
+      ) : (
+        reportData.map((item, index) => (
+          <React.Fragment key={index}>
+            <div className="report-content content-sender">{item.rp_me_id}</div>
+            <div className="report-content content-target">{item.rp_target}</div>
+            <div className="report-content content-content">{item.rp_content}</div>
+            <div className="report-content content-type">{item.rp_rt_num}</div>
+            <div className="report-content content-time">{item.rp_date}</div>
+          </React.Fragment>
+        ))
+      )}
+
+      {/* 페이지네이션 버튼 */}
+      {reportData.length > 0 && (
+        <div className="pagination">
+          <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+            이전
+          </button>
+          {Array.from({ length: Math.ceil(totalItems / itemsPerPage) }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => paginate(index + 1)}
+              className={currentPage === index + 1 ? "active" : ""}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(totalItems / itemsPerPage)}>
+            다음
+          </button>
+        </div>
+      )}
       </div>
-
-    </div>
   );
 }
 

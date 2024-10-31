@@ -20,4 +20,15 @@
 		where rp_id = #{reportId} and
 		rp_me_id = #{userId} and rp_target = #{targetId}
 	</select>
+	
+	<select id="selectReportList" resultType="kr.kh.ebook.model.vo.ReportVO">
+        SELECT * FROM report
+        ORDER BY rp_date DESC
+        LIMIT #{pageStart}, #{perPageNum}
+    </select>
+
+    <select id="selectCountReportList" resultType="int">
+        SELECT COUNT(*) FROM report
+    </select>
+    
 </mapper>
