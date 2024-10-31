@@ -89,11 +89,12 @@ function Detail() {
 
   return (
     <div className="container">
-      <h1 style={{ marginBottom: '50px' }}>게시글 상세</h1>
-      <div className="form-group">
-        <label htmlFor="po_title">제목</label>
-        <input type="text" id="po_title" className="form-control" value={post.po_title || ''} readOnly />
-      </div>
+      {co_num !== '3' && co_num !== '4' && (
+        <div className="form-group">
+          <label htmlFor="po_title">제목</label>
+          <input type="text" id="po_title" className="form-control" value={post.po_title || ''} readOnly />
+        </div>
+      )}
       {co_num === '2' && (
         <>
         <div className="form-group">
@@ -110,7 +111,7 @@ function Detail() {
         <div className="form-group">
           <div>
             <label>이벤트 기간</label>
-            <input type="text" className="form-control" value={`${post.po_start} ~ ${post.po_end}`} readOnly/>
+            <input type="text" className="form-control" value={`${post.po_start} ~ ${post.po_end}`} readOnly style={{marginBottom: '20px'}}/>
           </div>
           <img src={`${post.po_image}`} alt="첨부 이미지"/>
         </div>
