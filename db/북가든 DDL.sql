@@ -113,7 +113,7 @@ CREATE TABLE `buy` (
 CREATE TABLE `post` (
 	`po_num`	int primary key auto_increment	NOT NULL,
 	`po_title`	varchar(50)	NOT NULL,
-	`po_content`	text	NOT NULL default '내용 없음',
+	`po_content`	text	NOT NULL,
 	`po_me_id`	varchar(15)	NOT NULL,
 	`po_me_nickname`	varchar(8)	NOT NULL,
 	`po_date`	datetime	NOT NULL default now(),
