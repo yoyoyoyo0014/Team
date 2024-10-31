@@ -15,6 +15,11 @@ function Insert() {
   const [postLinkPreview, setPostLinkPreview] = useState(null);
   const [postImagePreview, setPostImagePreview] = useState(null);
 
+  // 스크롤을 맨 위로 이동
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     if (co_num === '3' || co_num === '4') {
       setContent("이벤트");

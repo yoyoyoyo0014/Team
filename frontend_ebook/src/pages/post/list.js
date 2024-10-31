@@ -84,15 +84,15 @@ const List = () => {
 
   // 카드 스타일 적용
   const renderCardList = () => (
-    <div className="card-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'space-between' }}>
+    <div className="card-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'flex-start' }}>
       {currentPosts.map((item, idx) => (
         <div key={idx} className="card" style={{ width: '23%', borderRadius: '10px', padding: '20px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)', cursor: 'pointer' }}
         onMouseEnter={() => setHoverIndex(idx)} onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${co_num}/${item.po_num}`)}>
           {item.po_link && (
             <img src={item.po_link} alt="첨부 이미지" style={{ width: '100%', height: 'auto', borderRadius: '10px' }} />
           )}
-          <h3 style={{ margin: '10px 0' }}>{item.po_title}</h3>
-          <p style={{fontSize:'15px'}}>{`${formatDate(item.po_start)} ~ ${formatDate(item.po_end)}`}</p>
+          <p style={{ margin: '10px 0', fontSize: '15px' }}>{item.po_title}</p>
+          <p style={{fontSize:'13px', color: 'gray'}}>{`${formatDate(item.po_start)} ~ ${formatDate(item.po_end)}`}</p>
         </div>
       ))}
     </div>
@@ -159,8 +159,8 @@ const List = () => {
             )}
             {Array.from({ length: pageMaker.endPage - pageMaker.startPage + 1 }, (_, i) => pageMaker.startPage + i).map((page) => (
               <button key={page} onClick={() => handlePageClick(page)}
-                style={{ margin: '0 5px', padding: '10px', cursor: 'pointer', backgroundColor: pageMaker.cri.page === page ? '#007BFF' : '#FFFFFF',
-                  color: pageMaker.cri.page === page ? '#FFFFFF' : '#007BFF', border: '1px solid #007BFF', borderRadius: '5px' }}>
+                style={{ margin: '0 5px', padding: '10px', cursor: 'pointer', backgroundColor: pageMaker.cri.page === page ? '#84cb70' : '#FFFFFF',
+                  color: pageMaker.cri.page === page ? '#FFFFFF' : '#84cb70', border: '1px solid #84cb70', borderRadius: '5px' }}>
                 {page}
               </button>
             ))}
@@ -183,8 +183,8 @@ const List = () => {
             )}
             {Array.from({ length: pageMaker.endPage - pageMaker.startPage + 1 }, (_, i) => pageMaker.startPage + i).map((page) => (
               <button key={page} onClick={() => handlePageClick(page)}
-                style={{ margin: '0 5px', padding: '10px', cursor: 'pointer', backgroundColor: pageMaker.cri.page === page ? '#007BFF' : '#FFFFFF',
-                  color: pageMaker.cri.page === page ? '#FFFFFF' : '#007BFF', border: '1px solid #007BFF', borderRadius: '5px' }}>
+                style={{ margin: '0 5px', padding: '10px', cursor: 'pointer', backgroundColor: pageMaker.cri.page === page ? '#84cb70' : '#FFFFFF',
+                  color: pageMaker.cri.page === page ? '#FFFFFF' : '#84cb70', border: '1px solid #84cb70', borderRadius: '5px' }}>
                 {page}
               </button>
             ))}
@@ -220,8 +220,10 @@ const List = () => {
       <div className="insert">
         <button style={{ marginBottom: '20px', float: 'right' }} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
       </div>
-      {co_num === '3' || co_num === '4' ? renderCardList() : renderTableList()}
-      {renderPagination()}
+      <div style={{ marginTop: '50px'}}>
+        {co_num === '3' || co_num === '4' ? renderCardList() : renderTableList()}
+        {renderPagination()}
+      </div>
     </div>
   );
 };

@@ -38,7 +38,12 @@ public class PostController {
 
         // 설정된 co_num과 페이지 설정
         cri.setCo_num(co_num);
-        cri.setPerPageNum(10);
+        if(co_num == 3 || co_num == 4) {
+        	cri.setPerPageNum(12);
+        }
+        else {
+            cri.setPerPageNum(10);
+        }
         
         // 검색어 추가 설정
         if (cri.getSearch() != null && !cri.getSearch().isEmpty()) {
