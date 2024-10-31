@@ -113,7 +113,7 @@ function Detail() {
             <label>이벤트 기간</label>
             <input type="text" className="form-control" value={`${post.po_start} ~ ${post.po_end}`} readOnly style={{marginBottom: '20px'}}/>
           </div>
-          <img src={`${post.po_image}`} alt="첨부 이미지"/>
+          <img src={`${post.po_image}`} alt="첨부 이미지" style={{ maxWidth: '100%', height: 'auto' }}/>
         </div>
         
       )}
