@@ -55,7 +55,7 @@ export function Report({getReport,exit}) {
     var rpNum = reportTypeNum;
     var rpId = report.rp_id;
     console.log(getReport)
-    fetch("/bookReview/report/insertReport/"+meId+"/"+
+    fetch("/report/insertReport/"+meId+"/"+
       targetId+"/"+reportTypeNum+"/"+"NotUsed"+"/"+reportContent,{
       //body : JSON.stringify(report),
       headers: {
