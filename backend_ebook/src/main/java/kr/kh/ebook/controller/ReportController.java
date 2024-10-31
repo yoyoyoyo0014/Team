@@ -17,14 +17,15 @@ import kr.kh.ebook.model.vo.ReportTypeVO;
 import kr.kh.ebook.model.vo.ReportVO;
 import kr.kh.ebook.service.ReportService;
 
-//@RestController
-@Controller
+@RestController
+@RequestMapping("/report")
+//@Controller
 public class ReportController {
 	@Autowired
 	ReportService reportService;
 	
 	//리폿타입 가져오기
-	@GetMapping("/{anyPath}/selectReportType")
+	@GetMapping("/selectReportType")
 	@ResponseBody
 	public List<ReportTypeVO> selectReportTypeList() {
 	    List<ReportTypeVO> reportTypeList = reportService.selectReportType();
@@ -33,16 +34,16 @@ public class ReportController {
 	}
 	
 	//신고 추가하기
-	@GetMapping("/{anyPath}/report/insertReport/{meId}/{targetId}/{rpNum}/{rpId}/{reportContent}")
+	@GetMapping("/insertReport/{meId}/{targetId}/{rtNum}/{rpId}/{reportContent}")
 	@ResponseBody
 	public boolean insertReport(@PathVariable("meId") String meId,@PathVariable("targetId") String targetId,
-			@PathVariable("rpNum") int rpNum,@PathVariable("rpId")String rpId,@PathVariable("reportContent")String reportContent) {
+			@PathVariable("rtNum") int rtNum,@PathVariable("rpId")String rpId,@PathVariable("reportContent")String reportContent) {
 		//System.out.println(meId + targetId + rpNum);
-		ReportVO report = new ReportVO(meId,targetId,rpNum,rpId,reportContent);
+		ReportVO report = new ReportVO(meId,targetId,rtNum,rpId,reportContent);
 		return reportService.insertReport(report);
 	}
 	//신고 추가하기
-	@GetMapping("/{anyPath}/report/existReport/{userId}/{targetId}/{reportId}")
+	@GetMapping("/existReport/{userId}/{targetId}/{reportId}")
 	@ResponseBody
 	public boolean selectReportid(@PathVariable("userId") String userId,
 			@PathVariable("targetId") String targetId,
