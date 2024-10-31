@@ -86,7 +86,8 @@ const List = () => {
   const renderCardList = () => (
     <div className="card-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'space-between' }}>
       {currentPosts.map((item, idx) => (
-        <div key={idx} className="card" style={{ width: '23%', borderRadius: '10px', padding: '20px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
+        <div key={idx} className="card" style={{ width: '23%', borderRadius: '10px', padding: '20px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)', cursor: 'pointer' }}
+        onMouseEnter={() => setHoverIndex(idx)} onMouseLeave={() => setHoverIndex(null)} onClick={() => navigate(`/post/detail/${co_num}/${item.po_num}`)}>
           {item.po_link && (
             <img src={item.po_link} alt="첨부 이미지" style={{ width: '100%', height: 'auto', borderRadius: '10px' }} />
           )}
