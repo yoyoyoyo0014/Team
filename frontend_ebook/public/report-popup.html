@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신고 대상 제재</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.5em;
+    }
+
+    hr {
+      margin-top: 10px;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    #target-id {
+      margin: 10px 0 20px 0; /* 상단과 하단 여백 설정 */
+      font-size: 1.1em;
+    }
+
+    .suspension-options {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px; /* 버튼과의 간격 추가 */
+    }
+
+    .suspension-options label {
+      display: flex;
+      align-items: center;
+      gap: 5px; /* 체크박스와 텍스트 사이 간격 */
+    }
+
+    .apply-button,
+    .close-button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 0.9em;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .apply-button {
+      background-color: #80c565;
+    }
+
+    .close-button {
+      background-color: #aaa;
+    }
+
+    .apply-button:hover {
+      background-color: #72b354;
+    }
+
+    .close-button:hover {
+      background-color: #888;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>신고 대상 제재</h3>
+    <hr>
+    <div class="form-container">
+      <!-- 신고 대상 정보 표시 -->
+      <p id="target-id">신고 대상: <span id="target-name"></span></p>
+      <div class="suspension-options">
+        <label>
+          <input type="checkbox" name="suspension" value="1일 정지">
+          <span>1일 정지</span>
+        </label>
+        <label>
+          <input type="checkbox" name="suspension" value="7일 정지">
+          <span>7일 정지</span>
+        </label>
+        <label>
+          <input type="checkbox" name="suspension" value="15일 정지">
+          <span>15일 정지</span>
+        </label>
+        <label>
+          <input type="checkbox" name="suspension" value="30일 정지">
+          <span>30일 정지</span>
+        </label>
+      </div>
+
+      <button class="apply-button" onclick="applySuspension()">제재 적용</button>
+      <button class="close-button" onclick="closePopup()">닫기</button>
+    </div>
+    <p id="error-message" class="error-msg"></p>
+  </div>
+
+  <!-- 스크립트 코드 추가 -->
+  <script>
+    // URL 파라미터에서 target 값을 가져와 표시
+    const urlParams = new URLSearchParams(window.location.search);
+    const target = urlParams.get("target");
+    document.getElementById("target-name").innerText = target;
+
+    function closePopup() {
+      window.close(); // 팝업 창 닫기
+    }
+
+    function applySuspension() {
+      const selectedOption = document.querySelector('input[name="suspension"]:checked');
+      const errorMessage = document.getElementById("error-message");
+
+      if (selectedOption) {
+        alert(`${selectedOption.value}가 ${target}에게 적용되었습니다.`);
+        closePopup(); // 적용 후 창 닫기
+      } else {
+        errorMessage.innerText = "제재 기간을 선택하세요.";
+      }
+    }
+  </script>
+</body>
+</html>
