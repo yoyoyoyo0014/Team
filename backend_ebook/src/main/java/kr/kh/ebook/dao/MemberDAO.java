@@ -43,5 +43,7 @@ public interface MemberDAO {
 
 	// 사용자 ID로 비밀번호 업데이트
 	void updatePassword(@Param("userId") String userId, @Param("newPassword") String newPassword);
+
+	void updateMember(MemberVO member);
 	
 }

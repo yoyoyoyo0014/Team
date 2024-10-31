@@ -27,7 +27,7 @@ public class MemberVO {
     private String me_cookie;        // 자동 로그인 쿠키
     private String me_report;        // 신고 여부
     private String me_ms_name;		 // 회원 상태 ( 사용, 기간 정지, 영구 정지 )
-    private String me_stop;          // 정지 여부
+    private Date me_stop;          // 정지 여부
     private String me_cm;			 // 사업자 번호
     private String me_enterCount;	 // 로그인 횟수
     private String me_last;          // 마지막 접속일

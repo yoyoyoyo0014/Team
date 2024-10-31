@@ -22,7 +22,7 @@ function MemberManagement() {
   // 팝업 열기 함수
   function openPopup(target) {
     const popupUrl = `/report-popup.html?target=${target}`;
-    window.open(popupUrl, "_blank", "width=400,height=240");
+    window.open(popupUrl, "_blank", "width=600,height=240");
   }
 
   return (

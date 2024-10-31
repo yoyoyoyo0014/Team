@@ -84,4 +84,11 @@
 	    WHERE me_id = #{userId}
 	</update>
 	
+	<!-- 신고 기간 추가 -->
+	<update id="updateMember" parameterType="MemberVO">
+	    UPDATE member
+	    SET me_stop = #{me_stop}, me_ms_name = #{me_ms_name}
+	    WHERE me_id = #{me_id}
+	</update>
+	
 </mapper>

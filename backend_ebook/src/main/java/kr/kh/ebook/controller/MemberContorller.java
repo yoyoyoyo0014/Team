@@ -192,4 +192,41 @@ public class MemberContorller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+    
+    /* 제재 적용을 위한 메서드 */
+    
+    @PostMapping("/applySuspension")
+    public ResponseEntity<?> applySuspension(@RequestBody Map<String, Object> params) {
+        String userId = (String) params.get("userId");
+        int suspensionDays = (int) params.get("suspensionDays");
+        memberService.applySuspension(userId, suspensionDays);
+        return ResponseEntity.ok("제재가 적용되었습니다.");
+    }
+
+    @PostMapping("/cancelSuspension")
+    public ResponseEntity<?> cancelSuspension(@RequestBody Map<String, Object> params) {
+        String userId = (String) params.get("userId");
+
+        try {
+            // 서비스에서 제재 취소 메서드 호출
+            memberService.cancelSuspension(userId);
+            // 성공 메시지 반환
+            return ResponseEntity.ok("제재가 취소되었습니다.");
+
+        } catch (IllegalStateException e) {
+            // 제재가 없는 사용자에 대한 오류 처리
+            return ResponseEntity.badRequest().body("제재가 적용되지 않은 사용자입니다.");
+        } catch (Exception e) {
+            // 예상치 못한 오류에 대한 일반 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+    }
+
+    @GetMapping("/checkSuspensionStatus")
+    public ResponseEntity<?> checkSuspensionStatus(@RequestParam String userId) {
+        MemberVO member = memberService.getMemberById(userId);
+        boolean isSuspended = memberService.isSuspended(member);
+        return ResponseEntity.ok(Map.of("isSuspended", isSuspended));
+    }
+    
 }
