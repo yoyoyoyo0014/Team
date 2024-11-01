@@ -9,6 +9,7 @@ const List = () => {
   const [hoverIndex, setHoverIndex] = useState(null);
   const [communityName, setCommunityName] = useState('');
   const [isSearchMode, setIsSearchMode] = useState(false);
+  const [searchedTerm, setSearchedTerm] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -62,9 +63,11 @@ const List = () => {
   const handleSearch = () => {
     if (pageMaker && pageMaker.cri && pageMaker.cri.search) {
       setIsSearchMode(true);
+      setSearchedTerm(pageMaker.cri.search); // 검색어를 searchedTerm에 저장
       fetchPosts(1, pageMaker.cri.search);  // 검색어를 포함하여 첫 페이지 데이터 가져오기
     } else {
       setIsSearchMode(false);
+      setSearchedTerm(''); // 검색어 초기화
       fetchPosts(1);  // 검색어가 없을 경우 기본 데이터 가져오기
     }
   };
@@ -135,7 +138,11 @@ const List = () => {
           ))
         ) : (
           <tr>
-            <td colSpan="6">글 목록이 없습니다.</td>
+            <td colSpan="6">
+              {isSearchMode && searchedTerm
+                ? `"${searchedTerm}"와 일치하는 게시글이 없습니다.`
+                : '글 목록이 없습니다.'}
+            </td>
           </tr>
         )}
       </tbody>
