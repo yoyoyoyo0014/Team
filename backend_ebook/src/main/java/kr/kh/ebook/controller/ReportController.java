@@ -7,10 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +45,7 @@ public class ReportController {
     }
 	
 	//리폿타입 가져오기
-	@GetMapping("/{anyPath}/selectReportType")
+	@GetMapping("/selectReportType")
 	@ResponseBody
 	public List<ReportTypeVO> selectReportTypeList() {
 	    List<ReportTypeVO> reportTypeList = reportService.selectReportType();
@@ -57,13 +54,16 @@ public class ReportController {
 	}
 	
 	//신고 추가하기
-	@PostMapping("/{anyPath}/report/insertReport")
+	@GetMapping("/insertReport/{meId}/{targetId}/{rtNum}/{rpId}/{reportContent}")
 	@ResponseBody
-	public boolean insertReport(@RequestBody ReportVO report) {
+	public boolean insertReport(@PathVariable("meId") String meId,@PathVariable("targetId") String targetId,
+			@PathVariable("rtNum") int rtNum,@PathVariable("rpId")String rpId,@PathVariable("reportContent")String reportContent) {
+		//System.out.println(meId + targetId + rpNum);
+		ReportVO report = new ReportVO(meId,targetId,rtNum,rpId,reportContent);
 		return reportService.insertReport(report);
 	}
 	//신고 추가하기
-	@GetMapping("/{anyPath}/report/existReport/{userId}/{targetId}/{reportId}")
+	@GetMapping("/existReport/{userId}/{targetId}/{reportId}")
 	@ResponseBody
 	public boolean selectReportid(@PathVariable("userId") String userId,
 			@PathVariable("targetId") String targetId,

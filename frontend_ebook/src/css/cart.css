@@ -40,10 +40,24 @@ p.error {top: 4em; left: 0;}
 .total p {display: flex; justify-content: space-between; line-height: 1.8;}
 .total strong {font-size: var(--big-font-size);}
 .total hr {margin: 1em 0;}
-.total .btn {margin-top: 1em; font-weight: 900;}
+.total .btn {margin-top: 1em; font-weight: 900; display: block; text-align: center; font-size: var(--big-font-size);}
 
 @media all and (max-width: 768px) {
 	#cart {flex-direction: column; gap: 2em;}
 	.cart-item .book-img {width: 50px;}
 	.total {width: 100%;}
 }
+
+/* order page */
+.selected-books {margin-bottom: 2em;}
+
+.buy-list li {
+	padding: 1em 0;
+	border-bottom: 1px solid var(--color-grey);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.buy-list li:first-of-type {padding-top: 0;}
+.buy-list li:last-of-type {border: 0; padding-bottom: 0;}

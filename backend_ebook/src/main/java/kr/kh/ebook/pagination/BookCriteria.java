@@ -11,7 +11,7 @@ public class BookCriteria extends Criteria  {
 	 int genre;
 
 	public BookCriteria(int page, String category, String country, int genre, String search) {
-		super(page);
+		super(page,search);
 		this.category = category;
 		this.country = country;
 		this.genre = genre;

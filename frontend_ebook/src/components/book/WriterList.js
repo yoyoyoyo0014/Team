@@ -54,7 +54,6 @@ export async function SelectWriterList(bo_num) {
   }
 }
 
-
 export async function SelectWriterBookList(bo_num) {
   try{
     const response = await fetch('/selectWriterBookList/'+bo_num,{

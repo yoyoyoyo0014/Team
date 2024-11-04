@@ -24,7 +24,8 @@ CREATE TABLE `member` (
 	`me_cm`	varchar(20) unique	NULL,
 	`me_entercount`	int	NULL,
 	`me_last`	datetime	NULL,
-	`me_naverId`	varchar(255)	NULL
+	`me_naverId`	varchar(255)	NULL,
+	`me_point` int NOT NULL default '0'
 );
 
 CREATE TABLE `review` (
@@ -38,7 +39,7 @@ CREATE TABLE `review` (
 
 CREATE TABLE `book` (
 	`bk_num`	int primary key auto_increment	NOT NULL,
-	`bk_name`	varchar(50)	NOT NULL,
+	`bk_name`	varchar(255)	NOT NULL,
 	`bk_state`	varchar(4)	NOT NULL,
 	`bk_me_id`	varchar(255)	NOT NULL,
 	`bk_date`	datetime	NOT NULL,
@@ -47,7 +48,7 @@ CREATE TABLE `book` (
 	`bk_price`	int	NOT NULL,
 	`bk_amount`	int	NOT NULL,
 	`bk_index`	varchar(255)	NULL,
-	`bk_isbn`	varchar(13)	NOT NULL,
+	`bk_isbn`	varchar(255)	NOT NULL,
 	`bk_score`	double	NULL,
 	`bk_reviewCount`	int	NULL,
 	`bk_totalPage`	int	NOT NULL,
@@ -140,13 +141,16 @@ CREATE TABLE `writer` (
 CREATE TABLE `achievenent` (
 	`ac_num`	int primary key auto_increment	NOT NULL,
 	`ac_title`	varchar(50)	NOT NULL,
-	`ac_info`	varchar(50)	NOT NULL
+	`ac_info`	varchar(50)	NOT NULL,
+	`ac_id` varchar(50) NOT NULL,
+	`ac_icon` varchar(45) NOT NULL,
 );
 
 CREATE TABLE `achievenent_List` (
 	`acl_ac_num`	int	NOT NULL,
 	`acl_me_id`	varchar(15)	NOT NULL,
-	`acl_date`	datetime	NOT NULL
+	`acl_date`	datetime	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `acl_check` varchar(2) NOT NULL DEFAULT 'X'
 );
 
 CREATE TABLE `book_List` (

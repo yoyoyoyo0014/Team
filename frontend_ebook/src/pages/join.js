@@ -126,28 +126,27 @@ const Join = () => {
       <form name="join" onSubmit={handleSubmit(submit)}>
         <fieldset className="form-wrapper">
 
-        <InputItem
-          id="me_id"
-          name="me_id"
-          type="text"
-          cls="frm-input"
-          registerProps={register("me_id", {
-            required: "아이디를 입력해주세요",
-            pattern: {
-              value: /^[0-9a-zA-Z_]{8,15}$/,
-              message: "아이디는 8~15자이며, 영문 혹은 숫자를 포함해야 합니다",
-            },
-            onBlur: (e) => checkDuplicateId(e.target.value), // 중복 체크
-          })}
-          placeholder="8~15자의 영문 혹은 숫자"
-          error={errors.me_id}
-          label={"아이디"}
-        >
-          {isIdDuplicate && (
-            <p className="error-msg">아이디가 이미 사용 중입니다.</p>
-          )}
-        </InputItem>
-
+          <InputItem
+            id="me_id"
+            name="me_id"
+            type="text"
+            cls="frm-input"
+            registerProps={register("me_id", {
+              required: "아이디를 입력해주세요",
+              pattern: {
+                value: /^[0-9a-zA-Z_]{8,15}$/,
+                message: "아이디는 8~15자이며, 영문 혹은 숫자를 포함해야 합니다",
+              },
+              onBlur: (e) => checkDuplicateId(e.target.value), // 중복 체크
+            })}
+            placeholder="8~15자의 영문 혹은 숫자"
+            error={errors.me_id}
+            label={"아이디"}
+          >
+            {isIdDuplicate && (
+              <p className="error-msg">아이디가 이미 사용 중입니다.</p>
+            )}
+          </InputItem>
 
           <InputItem
             id="me_name"

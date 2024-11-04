@@ -10,10 +10,10 @@ const Header = ({ setSection }) => {
     const { isLoggedIn, setIsLoggedIn, setUser, user } = useContext(LoginContext);
     const { genreList } = useContext(GenreContext);
 
-    let [country, setCountry] = useState('');
-    let [genre, setGenre] = useState('');
-    let [category, setCategory] = useState('');
-    let [keyword, setKeyword] = useState('');
+	let [country, setCountry] = useState('both');
+	let [genre, setGenre] = useState('0');
+	let [category, setCategory] = useState('highPrice');
+	let [keyword, setKeyword] = useState('');
 
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     
@@ -49,42 +49,33 @@ const Header = ({ setSection }) => {
         const logoutUrl = `https://kauth.kakao.com/oauth/logout?client_id=${CLIENT_ID}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`;
         window.location.href = logoutUrl; // 카카오 로그아웃 페이지로 리디렉션
     };
+	function clickSearchBtn(){
+		navigate("/ebook/search/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
+	}
+
+	const UserMenu = ({isLoggedIn}) => {
+		if(isLoggedIn !== true){
+			return(<ul>
+				<li><Link to="/login">로그인</Link></li>
+				<li><Link to="/join">회원가입</Link></li>
+			</ul>)
+		} else if(user.me_authority === 'USER'){
+			return(<ul>
+				<li><Link to={"/cart/" + user?.me_id}>장바구니</Link></li>
+				<li><Link to="/mypage">마이페이지</Link></li>
+				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
+			</ul>)
+		} else {
+			return(<ul>
+				<li><Link to="/mycompany">사업자 정보 수정</Link></li>
+				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
+			</ul>)
+		}
+	}
 
     function clickSearchBtn() {
         navigate("/searchBook/" + country + "/" + genre + "/" + category + "/" + 0 + "/SearchWord=" + keyword);
     }
-
-    // UserMenu 컴포넌트 수정
-    const UserMenu = () => {
-        if (!isLoggedIn) {
-            return (
-                <ul>
-                    <li><Link to="/login">로그인</Link></li>
-                    <li><Link to="/join">회원가입</Link></li>
-                </ul>
-            );
-        } else if (!user) {
-            return (
-                <ul>
-                    <li>로딩 중...</li>
-                </ul>
-            );
-        } else {
-            return (
-                <ul>
-                    {user.me_authority === 'admin' ? (
-                        <li><Link to="/admin">관리자 페이지</Link></li>
-                    ) : (
-                        <>
-                            <li><Link to={`/cart/${user.me_id}`}>장바구니</Link></li>
-                            <li><Link to="/mypage">마이페이지</Link></li>
-                        </>
-                    )}
-                    <li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
-                </ul>
-            );
-        }
-    };
 
     return (
         <header>

@@ -21,6 +21,7 @@ function App() {
 	)
 
   useEffect(() => {
+
     window.addEventListener('resize', ()=> Common.setVh());
     Common.setVh();
   }, []);
@@ -36,7 +37,9 @@ function App() {
 					<Router section={section}/>
 				</main>
 			</div>
+			
 			<Footer />
+			
 		</AppProvider>
 	);
 }

@@ -16,5 +16,6 @@
 	background-color: #fff;
 	box-shadow: var(--box-shadow);
 	border-radius: 50%;
+	margin: 0 auto;
 }
 .badge-item .badge-info {padding-top: 1em;}

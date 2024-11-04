@@ -5,15 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import kr.kh.ebook.dao.AchievenentDAO;
-import kr.kh.ebook.dao.BookDAO;
-import kr.kh.ebook.model.vo.BookListVO;
-import kr.kh.ebook.model.vo.BookSecondGenreVO;
-import kr.kh.ebook.model.vo.BookVO;
-import kr.kh.ebook.model.vo.BookGenreVO;
-import kr.kh.ebook.model.vo.ReviewVO;
-import kr.kh.ebook.model.vo.WriterListVO;
-import kr.kh.ebook.model.vo.WriterVO;
-import kr.kh.ebook.pagination.BookPageMaker;
+import kr.kh.ebook.model.vo.AchievenentListVO;
+import kr.kh.ebook.model.vo.AchievenentVO;
 import lombok.AllArgsConstructor;
 
 
@@ -22,4 +15,32 @@ import lombok.AllArgsConstructor;
 public class AchievenentService {
 
 	AchievenentDAO achDao;
+
+	public List<AchievenentListVO> selectAchievenentList(int achNum, String memberNum) {
+		return achDao.selectAchList(achNum,memberNum);
+	}
+
+	public boolean insertAchList(int achNum, String memberId) {
+		return achDao.insertAchList(achNum,memberId);
+	}
+
+	public AchievenentVO selectAchievenent(int achNum) {
+		return achDao.selectAchievenent(achNum);
+	}
+
+	public List<AchievenentListVO> selecNowCollectAchList(String meId) {
+		return achDao.selecNowCollectAchList(meId);
+	}
+
+	public boolean updateCheckCollectAchList(int archNum, String meId) {
+		return achDao.updateCheckCollectAchList(archNum,meId);
+	}
+
+	public List<AchievenentVO> allAchievenentList() {
+		return achDao.allAchievenentList();
+	}
+
+	public List<AchievenentVO> getUserAchivement(String userId) {
+		return achDao.getUserAchivement(userId);
+	}
 }

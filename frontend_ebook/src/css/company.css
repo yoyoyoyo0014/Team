@@ -1,0 +1,7 @@
+@charset 'utf-8';
+
+.genre-wrapper {
+	display: flex;
+	gap: 3em;
+}
+.genre-wrapper ul li {padding: .3em 0;}

@@ -1,13 +1,19 @@
 package kr.kh.ebook.controller;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.BuyListVO;
 import kr.kh.ebook.model.vo.BuyVO;
 import kr.kh.ebook.service.BuyService;
@@ -19,6 +25,17 @@ public class BuyController {
     @Autowired
     private BuyService buyService;
 
+    @GetMapping("")
+    public HashMap<String, Object> getOrder(@PathVariable List<BookVO> selectedBooks, @PathVariable String me_id) {
+    	System.out.println("hi");
+        System.out.println(selectedBooks);
+        System.out.println(me_id);
+        
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("selectedBooks", selectedBooks);
+        return map;
+    }
+    
     @PostMapping("/verify")
     public ResponseEntity<String> verifyPayment(@RequestParam String imp_uid, @RequestParam int expectedAmount) {
         try {

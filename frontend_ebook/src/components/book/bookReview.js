@@ -1,8 +1,6 @@
 import {Fragment, useState, useEffect, useContext} from 'react';
 import Modal from 'react-modal';
-//import Report from '../reportType';
 import ReportType from '../reportType';
-//import Report from '../../report';
 import { bookReviewReport } from '../report';
 import MakePage from '../pageButton';
 import Report from '../report';
@@ -356,7 +354,7 @@ function BookReview({bookNum, loadBook}) {
         })}
 				</div>
 
-        <textarea onChange={e => changeContent(e)} placeholder="최대 255자 입력 가능"></textarea>
+        <textarea style={{background: '#fff'}} onChange={e => changeContent(e)} placeholder="최대 255자 입력 가능"></textarea>
 
         <Button click={insertReview} text="작성" cls="btn btn-point"/>
       </div>

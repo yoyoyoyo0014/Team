@@ -2,7 +2,6 @@
 
 #my-sub-menu {
 	position: absolute;
-	width: 100px;
 	text-align: right;
 }
 #my-sub-menu div {padding-bottom: 2em;}

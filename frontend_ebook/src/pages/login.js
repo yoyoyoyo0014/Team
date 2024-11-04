@@ -18,8 +18,10 @@ const Login = () => {
     // 페이지 로드 시 localStorage 또는 sessionStorage에서 토큰 확인
     useEffect(() => {
       const token = localStorage.getItem("loginToken") || sessionStorage.getItem("loginToken");
+      const user = localStorage.getItem("user") || sessionStorage.getItem("user");
       if (token) {
         setIsLoggedIn(true);
+        setUser(user);
         console.log("로그인된 상태입니다. 메인 페이지로 이동합니다."); // 디버깅용 로그
         //navigate("/"); // 이미 로그인된 상태라면 메인 페이지로 이동
       }
