@@ -20,4 +20,6 @@ public interface AchievenentDAO {
 	boolean updateCheckCollectAchList(@Param("achNum")int archNum,@Param("meId") String meId);
 
 	List<AchievenentVO> allAchievenentList();
+
+	List<AchievenentVO> getUserAchivement(String userId);
 }

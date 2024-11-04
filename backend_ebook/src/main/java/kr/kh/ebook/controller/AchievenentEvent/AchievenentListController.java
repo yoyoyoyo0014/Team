@@ -1,8 +1,7 @@
 package kr.kh.ebook.controller.AchievenentEvent;
 
-
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.PostConstruct;
@@ -20,10 +20,12 @@ import kr.kh.ebook.model.vo.AchievenentVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.service.AchievenentService;
 import kr.kh.ebook.service.BookService;
+import kr.kh.ebook.service.MemberService;
 
 @Component
 @Controller
 @RestController
+@RequestMapping("/ach")
 public class AchievenentListController {
 
 	public static AchievenentListController instance;
@@ -34,6 +36,9 @@ public class AchievenentListController {
 	@Autowired
 	BookService bookService;
 	
+	@Autowired
+	MemberService memberService;
+	
 	//도전과제 목록
 	List<AchievenentVO> achList;
 
@@ -41,9 +46,6 @@ public class AchievenentListController {
 	List<Achievenents> creatAccountList = new ArrayList<Achievenents>();
 	//책 구매 도전과제
 	List<Achievenents> buyAccountList = new ArrayList<Achievenents>();
-	
-	
-
 
 	@PostConstruct
 	void Init() {
@@ -52,14 +54,16 @@ public class AchievenentListController {
 		achList = allAchievenentList();
 		//도전과제 확인 이벤트 추가
 		divisionAchievenent();
-		//계정 생성시 달성되는 도전과제 테스트로 추가
-		instance.createAccount("admin123");
 		//책을 하나 구매 시  달성되는 도전과제 테스트로 추가
-		instance.buyBook("admin123", null);
+		instance.buyBook("testcpn22", null);
+	}
+
+	private List<AchievenentVO> allAchievenentList() {
+		return achService.allAchievenentList();
 	}
 
 	//해당 도전과제들 불러오기
-	@PostMapping("/{anyPath}/selectAchievenent")
+	@PostMapping("/selectAchievenent")
 	public List<AchievenentVO> selectAchievenent(@RequestBody List<Integer> achNum) {
 		List<AchievenentVO> res = new ArrayList<AchievenentVO>();
 		for(int i =0;i<achNum.size();i++)
@@ -71,20 +75,27 @@ public class AchievenentListController {
 	 * 모든 도전과제 목록 반환
 	 * @return 도전과제 목록 반환
 	 */
-	public List<AchievenentVO> allAchievenentList(){
-		return achService.allAchievenentList();
+	@GetMapping("/getMyAchs/{userId}")
+	public HashMap<String, Object> getUserAchivement(@PathVariable String userId){
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<AchievenentVO> list = achService.getUserAchivement(userId);
+		System.out.println(list);
+		System.out.println(userId);
+		map.put("myAchList", list);
+		return map;
 	}
-
-
+	
 	//방금 달성한 도전과제 가져오기
-	@GetMapping("/{anyPath}/selectNowCollectAchList/{meId}")
-	public List<AchievenentListVO> selectNowCollectAchList(@PathVariable String anyPath,@PathVariable String meId){
-		List<AchievenentListVO> res = achService.selecNowCollectAchList(meId);
-		return res;
+	@GetMapping("/selectNowCollectAchList/{meId}")
+	public HashMap<String, Object> selectNowCollectAchList(@PathVariable String meId){
+		List<AchievenentListVO> list = achService.selecNowCollectAchList(meId);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("nowCollectAchList", list);
+		return map;
 	}
 
 	//달성한 도전과제를 확인했어요
-	@PostMapping("/{anyPath}/checkCollectAchList")
+	@PostMapping("/checkCollectAchList")
 	public boolean UpdateCollectAchList(@RequestBody List<AchievenentListVO> achList){
 		for(AchievenentListVO ach : achList) {
 			if(!achService.updateCheckCollectAchList
@@ -142,6 +153,8 @@ public class AchievenentListController {
 	 * @param userId 해당 유저 아이디
 	 */
 	void checkAchievenent(List<Achievenents> achList,String userId,Object helpConfirmation) {
+		if(memberService.getMemberById(userId)==null)
+			return;
 		for (Achievenents i : achList) {
 			//이미 달성한 도전과제면 return
 			if(selectAchievenentList(i.achievenentVo.getAc_num(),userId).size()!=0)
@@ -216,5 +229,3 @@ public class AchievenentListController {
 		checkAchievenent(buyAccountList,userId,book);
 	}
 }
-
-

@@ -1,35 +1,58 @@
+import { Link } from 'react-router-dom';
+import '../../css/booklist.css';
+import axios from 'axios';
+import { useContext } from 'react';
+import { LoginContext } from '../../context/LoginContext';
+import Button from '../form/button';
 
-import { useNavigate } from 'react-router-dom';
 function BookList({bookList}) {
-  const navigate = useNavigate();
+  const { user } = useContext(LoginContext);
 
-  function clickBookDetail(bookNum){
-    navigate('/selectBook/'+bookNum)
+  const addCart = (bk_num) => {
+    const options = {
+      url: '/cart/add',
+      method:'POST',
+      header: {
+        'Accept':'application/json',
+        'Content-Type': "'application/json';charset=UTF-8'"
+        //연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
+      },
+      data: {
+        ca_bk_num: bk_num,
+        ca_me_id: user?.me_id,
+      }
+    }
+
+    axios(options)
+    .then(res => {
+      console.log(res);
+			alert('장바구니에 추가했습니다');
+		})
+		.catch((error) => {
+			console.log(error);
+		})
   }
+
   return (
-    <div >
-      <table>
-      <thead>
-        <tr>
-          <th>책표지</th>
-          <th>책 제목</th>
-          <th>가격</th>
-        </tr>
-      </thead>
-      <tbody>
-     {
-      Array.isArray(bookList) && bookList.length > 0 &&    bookList.map((item, index) => {
+    <div className="book-list">
+      <ul>
+     {Array.isArray(bookList) && bookList.length > 0 &&    bookList.map((item, index) => {
          return (
-            <tr onClick={()=>{clickBookDetail(item.bk_num)}} key={index}>
-              <td><img src={'/img/book_'+ item.bk_num + '.jpg'} alt="불러오지 못한 이미지"  width="50" height="75"></img></td>
-              <td>{item.bk_name}</td>
-              <td>{item.bk_price}</td>
-              </tr>
+            <li className="theme-box" key={index}>
+              <div className="book-img"><Link to={"/ebook/selectBook/" + item.bk_num}><img src={'/img/book_'+ item.bk_num + '.jpg'} alt="불러오지 못한 이미지"  width="50" height="75" /></Link></div>
+              <div className="book-info">
+                <h3 className="title"><Link to={"/ebook/selectBook/" + item.bk_num}>{item.bk_name}</Link></h3>
+                <p className="writer">{item.bk_writer}</p>
+                <strong className="price">{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(item.bk_price)}</strong>
+                <p>{item.bk_plot.lengt > 200 ? item.bk_plot.slice(0, 200) + '...' : item.bk_plot}</p>
+                <Button text="바로 구매" cls="btn btn-point"/>
+                <Button text="장바구니" click={() => {addCart(item.bk_num)}} cls="btn btn-dark"/>                
+              </div>
+            </li>
             );
           })
       }
-      </tbody>
-      </table>
+      </ul>
     </div>
   );
 }

@@ -1,11 +1,13 @@
-import {useState} from 'react';
-import React, { useEffect } from 'react';
+
+import {useState, useEffect, useContext} from 'react';
 import ReportType from './reportType';
+import { LoginContext } from '../context/LoginContext';
 export function Report({getReport,exit}) {
   //user = 해당 유저
   //reportUser = 신고 당한 유저
   //content = 신고 내용
   let [reportType, setReportType] = useState([]);//신고 타입 객체
+  const {user} = useContext(LoginContext);
 
   let [report,setReport] = useState({
     rp_num : 0,
@@ -27,36 +29,35 @@ export function Report({getReport,exit}) {
     else if(reportTypeNum==0){
       alert("신고 유형을 선택해주세요");
       return;
-    }
-    else{
-      report.rp_me_id = "admin123";
+    } else{
+      report.rp_me_id = user?.me_id;
       report.rp_target = getReport.rp_target;
       report.rp_content = getReport.rp_content +  '신고 사유 : ' + reportContent;
       report.rp_rt_num = reportTypeNum;
       report.rp_id = getReport.rp_id;
       (async ()=>{
         var exist = await CheckReport(report);
-        // if(exist){
-        //   alert('이미 접수된 신고입니다.')
-        //   exit();
-        // }
-        //else
+        if(exist){
+          alert('이미 접수된 신고입니다.')
+          exit();
+        }
+        else
         {submitReport(report,exit())}
       })();
     }
   }//신고 보내기
+
+  
   function submitReport(report,successSubmitReport){
     // if(report.rp_me_id == null){
     //   alert('로그인을 해주세요.');
     //   return;
     // }
-    var meId = report.rp_me_id;
     var targetId = report.rp_target;
     var rpNum = reportTypeNum;
     var rpId = report.rp_id;
-    console.log(getReport)
-    fetch("/report/insertReport/"+meId+"/"+
-      targetId+"/"+reportTypeNum+"/"+"NotUsed"+"/"+reportContent,{
+    fetch("/report/insertReport/"+user?.me_id+"/"+
+      targetId+"/"+reportTypeNum+"/NotUsed/"+reportContent,{
       //body : JSON.stringify(report),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
@@ -69,10 +70,7 @@ export function Report({getReport,exit}) {
         alert('신고가 접수 되었습니다');
         if(successSubmitReport)
           successSubmitReport();// 신고가 접수되면 실행
-      }
-      else{
-        alert('신고 접수가 되지 않았습니다.');
-      }
+      } else alert('신고 접수가 되지 않았습니다.');
     })
     .catch(e=>console.error(e));
   }//신고 하기
@@ -117,9 +115,15 @@ export function Report({getReport,exit}) {
     <div>
       {reportType.map((item,index)=>{
         return(
-          <label key ={index}>{item.rt_name}
-            <input defaultChecked={index == 0} onClick={()=>{reportTypeNum =index+1; console.log(reportTypeNum)}}  type='radio' name ='reportType'/>
-          </label>
+          // <label key={index}>{item.rt_name}
+          //   <input defaultChecked={index === 0} onClick={()=>{reportTypeNum =index+1; console.log(reportTypeNum)}}  type='radio' name ='reportType'/>
+          // </label>
+          <><input
+            defaultChecked={index === 0}
+            onClick={()=>{
+              reportTypeNum = index+1;
+            }} type='radio' name="reportType" id={"reportType_" + item.rt_num} />  
+          <label htmlFor={"reportType_" + item.rt_num}>{item.rt_name}</label></>
         )
       })}
 

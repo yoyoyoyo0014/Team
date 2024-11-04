@@ -21,7 +21,7 @@
 		where 
 			bk_name LIKE CONCAT('%', #{search}, '%') and
 			<choose>
-    			<when test = " country == 'domestic' ">
+    			<when test = "country == 'domestic' ">
     				bk_state = '국내도서'
     			</when>
     			<when test = "country == 'foreign' ">
@@ -37,55 +37,56 @@
 	</select>
     
     <select id="searchBookList">
-    	select *
+    	select book.*, group_concat(wr_name separator ' | ') as bk_writer
     	from book
-    	order by
-   		<choose>
-   			<when test ="pm.cri.category == 'popularity'">
-   				bk_totalPurchase desc
-   			</when>
-   			<when test ="pm.cri.category == 'latest'">
-   				bk_date desc
-   			</when>
-   			<when test ="pm.cri.category == 'orderPurchase'">
-   				bk_totalPurchase desc
-   			</when>
-   			<when test ="pm.cri.category == 'highPrice'">
-   				bk_price desc
-   			</when>
-   			<when test ="pm.cri.category == 'lowPrice'">
-   				bk_price asc
-   			</when>
-   			<when test ="pm.cri.category == 'rating'">
-   				bk_score desc
-   			</when>
-   			<when test ="pm.cri.category == 'review'">
-   				bk_reviewCount desc
-   			</when>
-    	</choose>
+        join writer_list
+		on bk_num = wl_bk_num
+		join writer
+		on wr_num = wl_wr_num
     	where
    		<choose>
    			<when test = "pm.cri.country == 'domestic' ">
-   				 bk_state ='국내도서' and
+   				 bk_state ='국내도서' 
    			</when>
    			<when test = "pm.cri.country == 'foreign' ">
-   				 bk_state = '해외도서' and
+   				 bk_state = '해외도서'
    			</when>
    		</choose>
    		
-   		<if  test ="pm.cri.category == 'popularity'">
-   			bk_date >=date_sub(now(),interval 1 year); and
-   		</if>
-   		<if test ="pm.cri.genre != '0'">
-   			 bk_sg_num = #{pm.cri.genre}
+   		<if test ="pm.cri.genre != 0">
+   			and bk_sg_num = #{pm.cri.genre} and 
 		</if>
-		<if test = "pm.cri.search !=''">
-			bk_name like concat('%',#{pm.cri.search}, '%')
+		<if test = "pm.cri.search != ''">
+			bk_name like concat('%', #{pm.cri.search}, '%')
 		</if>
-  		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
+		group by bk_num
+		order by
+   		<choose>
+ 			<when test ="pm.cri.category == 'popularity'">
+ 				bk_totalPurchase desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'latest'">
+ 				bk_date desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'orderPurchase'">
+ 				bk_totalPurchase desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'highPrice'">
+ 				bk_price desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'lowPrice'">
+ 				bk_price asc
+ 			</when>
+ 			<when test ="pm.cri.category == 'rating'">
+ 				bk_score desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'review'">
+ 				bk_reviewCount desc
+ 			</when>
+    	</choose>
+  		limit 0,5
     </select>
-
-		<select id="selectAllGenre" resultType="BookGenreVO">
+	<select id="selectAllGenre" resultType="BookGenreVO">
     	select * from genre
     </select>
     

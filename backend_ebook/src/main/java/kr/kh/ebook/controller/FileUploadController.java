@@ -18,7 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 public class FileUploadController {
 	//path
-	static String pathStr = "../fronted_ebook/public/";
+	static String pathStr = "../frontend_ebook/public/";
 	//프로그램 시작시 해당 위치에 폴더가 없을 시 폴더 생성
 	static {
 		File uploadDir = new File(pathStr);
@@ -76,7 +76,7 @@ public class FileUploadController {
 	 * @param fileName 파일 이름
 	 * @return 해당 파일 확장자
 	 */
-	private static String getFileExtension(String fileName) {
+	public static String getFileExtension(String fileName) {
 		if (fileName == null) {
 			return null;
 		}

@@ -1,9 +1,7 @@
 import { useState } from "react";
 import MakePage, { PageButton } from "../pageButton";
+import Button from "../form/button";
 function IsbnSearch({exit, onClose}) {
-
-  
-
   let[search,setSearch] = useState('')
   let[searchDataList,setSearchDataList] = useState([])
   let[selectBookData,setSelectBookData] = useState({})
@@ -44,8 +42,11 @@ function IsbnSearch({exit, onClose}) {
   };//객체 넘기기
 
   async function insertBook(data){
-    selectBookData = data
-    setSelectBookData({...selectBookData});
+    selectBookData = data;
+    data.titleInfo = data.titleInfo?.replace(/<[^>]*>/g,'');
+    setSelectBookData(prev => {
+      return ({...prev, bk_name: data.bk_name, bk_isbn: data.isbn})
+    });
     handClose();//넘겨주기
     exit();//나가기
   }//책 추가
@@ -81,18 +82,19 @@ function IsbnSearch({exit, onClose}) {
         
         </thead>
         <tbody>
-      {
-        Array.isArray(searchDataList) && searchDataList.length > 0 && searchDataList.map((item, index) => {
-          return(<tr key={index}>
-            <td>{item.titleInfo.length > 25 ? item.titleInfo.slice(0, 25) + '...' : item.titleInfo}</td>
-            <td>{item.isbn.length > 25 ? item.isbn.slice(0, 25) + '...' : item.isbn}</td>
-            <td onClick={()=>insertBook(item)}>추가</td>
-            </tr>)
-        })
-      }
-      </tbody>
-    </table>
-    <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
+        {Array.isArray(searchDataList) && searchDataList.length > 0 && searchDataList.map((item, index) => {
+            return(<tr key={index}>
+              <td dangerouslySetInnerHTML={{__html: item.titleInfo}}></td>
+              <td>{item.isbn}</td>
+              <td>
+                <Button click={()=>insertBook(item)} cls="btn btn-point" text="추가" />
+              </td>
+              </tr>)
+          })
+        }
+        </tbody>
+      </table>
+      <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
     </div>
   );
 }

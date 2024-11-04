@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.kh.ebook.dao.BuyDAO">
+
+	<select id="getPaymentAmount" parameterType="String" resultType="int">
+        SELECT amount FROM payments WHERE imp_uid = #{imp_uid}
+    </select>
+
+    <insert id="saveBuyInfo" parameterType="BuyVO">
+        INSERT INTO buy (bu_uid, bu_me_id, bu_state, bu_payment, bu_total, bu_ori_total, bu_date)
+        VALUES (#{bu_uid}, #{bu_me_id}, #{bu_state}, #{bu_payment}, #{bu_total}, #{bu_ori_total}, #{bu_date})
+    </insert>
+    <insert id="saveBuyList" parameterType="BuyListVO">
+        INSERT INTO buy_list (bl_bk_num, bl_me_id)
+        VALUES (#{bl_bk_num}, #{bl_me_id})
+    </insert>
+</mapper>

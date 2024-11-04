@@ -25,6 +25,10 @@ public class PostService {
 		return postDao.selectCommuniyList();
 	}
 
+	public List<PostVO> getMyPostList(PostCriteria cri, String userId) {
+		return postDao.selectMyPostList(cri, userId);
+	}
+	
 	public PageMaker getPageMaker(PostCriteria cri) {
 		int count = postDao.selectCountPostList(cri);
 		return new PageMaker(3, cri, count);

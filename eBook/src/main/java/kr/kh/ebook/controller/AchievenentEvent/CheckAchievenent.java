@@ -2,5 +2,5 @@ package kr.kh.ebook.controller.AchievenentEvent;
 
 @FunctionalInterface
 public  interface  CheckAchievenent {
-	public boolean checkAccount();
+	public boolean checkAccount(Object... numbers);
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-function Detail() {
+function PostDetail() {
   const { po_num } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
@@ -26,8 +26,8 @@ function Detail() {
   }
 
   useEffect(() => {
-    // 게시글 정보를 가져오기 위해 fetch 호출 (가정: API 경로는 /post/detail/{po_num})
-    fetch(`/post/detail/${po_num}`)
+    // 게시글 정보를 가져오기 위해 fetch 호출 (가정: API 경로는 /post/PostDetail/{po_num})
+    fetch(`/post/PostDetail/${po_num}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -104,4 +104,4 @@ function Detail() {
   );
 }
 
-export default Detail;
+export default PostDetail;

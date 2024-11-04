@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import kr.kh.ebook.controller.FileUploadController;
 import kr.kh.ebook.dao.BookDAO;
 import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
 import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterListVO;
-import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookPageMaker;
 import kr.kh.ebook.pagination.Criteria;
 import lombok.AllArgsConstructor;
@@ -128,21 +129,25 @@ public class BookService {
 		return bookDao.selectMyReviewCount(userId);
 	}
 
-	public Integer selectMyBookPage(String userId, int bookNum) {
-		return bookDao.selectBookPage(userId,bookNum);
+	public int selectCountBookBuy(String userId) {
+		return bookDao.selectCountBookBuy(userId);
 	}
 
 	public void deleteBook(int bk_num) {
 		bookDao.deleteBook(bk_num);
-		
 	}
 
 	public void deleteWriterList(int bk_num) {
 		bookDao.deleteWriterList(bk_num);
 	}
 
-	public int selectCountBookBuy(String userId) {
-		return bookDao.selectCountBookBuy(userId);
+	public Integer selectMyBookPage(String userId, int bookNum) {
+		return bookDao.selectBookPage(userId,bookNum);
+	}
+
+	public void insertBookFiles(MultipartFile epubFile, MultipartFile imgFile, int bk_num) {
+		bookDao.insertBookFiles(epubFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(epubFile.getOriginalFilename()));
+		bookDao.insertBookFiles(imgFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(imgFile.getOriginalFilename()));
 	}
 	
 }

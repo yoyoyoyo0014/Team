@@ -17,7 +17,7 @@ public interface ReportDAO {
 
 	boolean insertReport(@Param("re") ReportVO report);
 
-	ReportVO selectReport(@Param("userId") String userId,
+	ReportVO selectReport(@Param("userId") String userId, 
 			@Param("targetId")String targetId, 
 			@Param("reportId")String reportId);
 	

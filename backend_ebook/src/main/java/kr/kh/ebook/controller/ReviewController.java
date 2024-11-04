@@ -47,7 +47,7 @@ public class ReviewController {
 		return map;
 	}
 	
-	//리뷰 보기
+	//리뷰 개수
 	@PostMapping("/reviewCount/{bookNum}")
 	@ResponseBody
 	public int reviewCount(@PathVariable("bookNum")int bookNum){
@@ -55,7 +55,7 @@ public class ReviewController {
 		return res;
 	}
 	
-	//리뷰 보기
+	//리뷰 리스트
 	@PostMapping("/selectReview/{bookNum}/{pageNum}")
 	@ResponseBody
 	public HashMap<String, Object> selectReview(@PathVariable("bookNum") int bookNum, @PathVariable("pageNum") int pageNum) {

@@ -22,7 +22,7 @@ public interface WriterDAO {
 
 	boolean insertWriterList(@Param("wl")WriterListVO writerBook);
 
-	List<WriterListVO> selectWriterList(@Param("bookNum")int bookNum);
+	List<WriterVO> selectWriterList(int bookNum);
 
 	WriterVO selectWriter(@Param("writerNum")int wr_num);
 

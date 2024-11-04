@@ -1,8 +1,6 @@
 import {Fragment, useState, useEffect, useContext} from 'react';
 import Modal from 'react-modal';
-//import Report from '../reportType';
 import ReportType from '../reportType';
-//import Report from '../../report';
 import { bookReviewReport } from '../report';
 import MakePage from '../pageButton';
 import Report from '../report';
@@ -326,8 +324,8 @@ function BookReview({bookNum, loadBook}) {
 
   function userReport(id,content,reviewNum){
     report.rp_target = id;
-    report.rp_id =bookReviewReport();//bookReviewReport(reviewNum);
-    report.rp_content = content;
+    report.rp_id =bookReviewReport(reviewNum);//bookReviewReport(reviewNum);
+    report.rp_content = '신고 위치 : 책 리뷰에서 신고, '+ '신고 내용 : ' +content;
     setReport({...report});
   }//유저 리폿할 때
 
@@ -356,7 +354,7 @@ function BookReview({bookNum, loadBook}) {
         })}
 				</div>
 
-        <textarea onChange={e => changeContent(e)} placeholder="최대 255자 입력 가능"></textarea>
+        <textarea style={{background: '#fff'}} onChange={e => changeContent(e)} placeholder="최대 255자 입력 가능"></textarea>
 
         <Button click={insertReview} text="작성" cls="btn btn-point"/>
       </div>
@@ -388,7 +386,7 @@ function BookReview({bookNum, loadBook}) {
               <div className="review-footer">
                 {item.me_nickname ===user.me_nickname ? (<Button click={updateReview} text="수정" cls="btn btn-point"/>) : ''}
                 {item.me_nickname ===user.me_nickname ? (<Button click={deleteReview} text="삭제" cls="btn"/>) : ''}
-                {item.me_nickname !==user.me_nickname ? (<Button click={() => {report.me_id = item.re_me_id;userReport(item.re_me_id,item.re_content,item.re_num); setModalIsOpen(true)}} text="신고" cls="btn btn-danger" />) : ''}
+                {item.me_nickname !==user.me_nickname ? (<Button click={() => {userReport(item.re_me_id,item.re_content,item.re_num); setModalIsOpen(true)}} text="신고" cls="btn btn-danger" />) : ''}
               </div>
             </div>
           </li>

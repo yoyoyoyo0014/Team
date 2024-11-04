@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Update({list, setList, me_id, po_title="", po_content=""}){
+function PostUpdate({list, setList, me_id, po_title="", po_content=""}){
 	let [title, setTitle] = useState(po_title);
 	let [content, setContent] = useState(po_content);
 
@@ -24,4 +24,4 @@ function Update({list, setList, me_id, po_title="", po_content=""}){
 		</div>
 	)
 }
-export default Update;
+export default PostUpdate;

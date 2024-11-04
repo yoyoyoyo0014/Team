@@ -39,4 +39,8 @@ public class AchievenentService {
 	public List<AchievenentVO> allAchievenentList() {
 		return achDao.allAchievenentList();
 	}
+
+	public List<AchievenentVO> getUserAchivement(String userId) {
+		return achDao.getUserAchivement(userId);
+	}
 }

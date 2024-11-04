@@ -46,7 +46,7 @@
 }
 .login-menu a {padding: 0 1em;}
 
-.sns-login .btn {margin-top: 1em;}
+.sns-login .btn {margin-top: 1em; height: 50px; display: flex; align-items: center; justify-content: center;}
 
 .btn-naver {background: #17B75E; color: #fff;}
 .btn-kakao {background: #ffda23; color: #3c1e1e;}
