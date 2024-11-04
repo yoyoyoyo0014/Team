@@ -2,15 +2,18 @@ import Modal from 'react-modal';
 import {useEffect,useState} from 'react';
 import React, { Component, createContext,useContext } from 'react';
 import { AchievenentEventContext } from './AchieventContext';
+import { LoginContext } from '../../context/LoginContext';
 
 //도전과제 가져오기
 export async function SelectNowColleactAchData(meId) {
+  console.log("SelectNowColleactAchData")
   try{
     const response = await fetch('/ach/selectNowCollectAchList/'+meId,{
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
     });
+    console.log(meId)
     const res =await response.json();
     return res;
   }catch(e){
@@ -20,13 +23,14 @@ export async function SelectNowColleactAchData(meId) {
 
 //도전과제 이벤트 후 표시 확인
 export async function CheckColleactAchData(achListData) {
+  console.log(achListData)
   try{
     const response = await fetch('/ach/checkCollectAchList',{
       method: 'POST', // POST 메서드 설정
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
-      body: JSON.stringify(achListData), // 데이터를 JSON 문자열로 변환하여 전송
+      body: JSON.stringify(achListData.nowCollectAchList), // 데이터를 JSON 문자열로 변환하여 전송
     });
     const res =await response.json();
     return res;
@@ -36,13 +40,15 @@ export async function CheckColleactAchData(achListData) {
 }
 
 //해당 도전과제 가져오기
-export async function selectAchievenent(achListData) {
+export async function SelectAchievenent(achListData) {
   var intList = []
 
-  for(var i = 0;i<achListData.length;i++){
-    intList.push(achListData[i].acl_ac_num)
+  for(var i = 0;i<achListData.nowCollectAchList.length;i++){
+    intList.push(achListData.nowCollectAchList[i].acl_ac_num)
   }
-
+  console.log("asdasdsad")
+  console.log(achListData)
+  console.log(intList)
   try{
     const response = await fetch('/ach/selectAchievenent',{
       method: 'POST', // POST 메서드 설정
@@ -58,18 +64,22 @@ export async function selectAchievenent(achListData) {
   }
 }
 
-export function AchievenentEvent() {
+export function AchievenentEvent({meId}) {
   const {modalIsOpen, OnAchievenent, OffAchievenent } = useContext(AchievenentEventContext);
-  var meId = 'admin123'
+  
+
   var collectAchList;// 달성한 도전과제 리스트
   let [achData,setAchData] =useState();//달성한 도전과제 데이터
   useEffect(() => {
     (async () => {
-      collectAchList =await SelectNowColleactAchData(meId);
-      console.log(collectAchList)
-      if(collectAchList.length == 0)
+      if(!meId)
         return;
-      achData = await selectAchievenent(collectAchList);
+      collectAchList =await SelectNowColleactAchData(meId);
+      console.log("collectAchList")
+      console.log(collectAchList)
+      if(collectAchList.nowCollectAchList.length === 0)
+        return;
+      achData = await SelectAchievenent(collectAchList);
       setAchData(achData)
       OnAchievenent();
       await CheckColleactAchData(collectAchList);

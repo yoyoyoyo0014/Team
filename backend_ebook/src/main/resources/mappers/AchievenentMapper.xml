@@ -34,7 +34,12 @@
 		where acl_me_id = #{meId} and acl_ac_num = #{achNum}
 	</update>
 	<select id="allAchievenentList">
-		select *
-		from achievenent
+		select * from achievenent
+	</select>
+	<select id="getUserAchivement">
+		select * from achievenent
+		left join achievenent_list
+		on acl_ac_num = ac_num
+		where acl_me_id = #{userId} or acl_me_id is null
 	</select>
 </mapper>
