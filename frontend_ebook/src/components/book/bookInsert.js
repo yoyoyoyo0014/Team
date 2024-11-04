@@ -44,7 +44,6 @@ function BookInsert() {
     bk_totalPage : 0,  //총 페이지
     bk_agelimit : 0, //연령제한
     bk_me_id : '',//출판사
-    bk_genre: 0,
 
     bk_totalPurchase: 0,  //총 구매 수
     bk_age_60_male: 0,  //60대 남자
@@ -81,21 +80,20 @@ function BookInsert() {
 
   function checkInsertBook(book){
     if(book.bk_name.length == 0){
-      var elm = document.querySelector('#bk_name');
+      let elm = document.querySelector('#bk_name');
       elm.focus();
       alert('이름을 입력해 주세요.')
       return false;
     }
   
     if(!book.bk_date ){
-      var elm = document.querySelector('#bk_date')
+      let elm = document.querySelector('#bk_date')
       elm.focus();
       alert('출판일을 추가해주세요')
       return false;
     }
     if(book.bk_sg_num == 0){
-      
-      var elm = document.querySelector('#book_sg')
+      let elm = document.querySelector('#book_sg')
       elm.focus();
       alert('장르를 선택해주세요')
       return false;
@@ -103,63 +101,64 @@ function BookInsert() {
     if(book.bk_price == 0){
       var free = window.confirm("무료입니까?")
       if(!free) {
-        var elm = document.querySelector('#bk_price')
+        let elm = document.querySelector('#bk_price')
       elm.focus();
       alert('가격을 적어주세요')
         return;
       }
     }
     if(!book.bk_isbn){
-      var elm = document.querySelector('#bk_isbn')
+      let elm = document.querySelector('#bk_isbn')
       elm.focus();
       alert('isbn을 추가해주세요')
       return false;
     }
     if(!bookEqubFile){
-      var elm = document.querySelector('#bk_epub')
+      let elm = document.querySelector('#bk_epub')
       elm.focus();
       alert('EPUB 파일을 넣어주세요')
       return false;
     }
     if(book.bk_totalPage==0){
-      var elm = document.querySelector('#bk_totalpage')
+      let elm = document.querySelector('#bk_totalpage')
       elm.focus();
       alert('총 페이지를 적어주세요.')
       return false;
     }
-    if(!book.bk_me_id){
-      var elm = document.querySelector('#bk_totalpage')
+
+    if(!book.bk_publisher){
+      let elm = document.querySelector('#bk_publisher')
       elm.focus();
-      alert('출판사를 적어주세요.')
+      alert('출판사를 적어주세요.');
       return false;
     }
 
     if(!bookImgFile){
-      var elm = document.querySelector('#bk_img')
+      let elm = document.querySelector('#bk_img')
       elm.focus();
       alert('책 표지 파일을 넣어주세요')
       return false;
     }
-    return true
+    return true;
   }//빈 칸 확인
 
-  function submitFile(){
-    if(!checkInsertBook(book)){
-      return
-    }
-    
+  function submitFile(e){
+    e.preventDefault();
+    if(!checkInsertBook(book))
+      return;
+
     for(var i = 0; i<addWriterList.length;i++)
       delete addWriterList[i].wr_name;
 
     var formData = new FormData();
-    formData.append('bK_img',bookImgFile);
-    formData.append('bK_epub',bookEqubFile);
+    formData.append('bk_img', bookImgFile);
+    formData.append('bk_epub', bookEqubFile);
 
     console.log( book)
     formData.append('bk_data',JSON.stringify(book));
     formData.append('writerList',JSON.stringify(addWriterList));
 
-    fetch('insertBook',{
+    fetch('/ebook/insertBook',{
       method: 'POST',
       body: formData,
     })
@@ -216,10 +215,17 @@ function BookInsert() {
     }
   };
 
+  useEffect(()=>{
+    (async () => {
+      writerTypeList = await selectWriterType();
+      setWriterTypeList([...writerTypeList]);
+    })();
+  },[]);
+
   return (
     <Fragment>
       <h2 className="page-title txt-center">책 정보 입력</h2>
-      <form name="insert_book">
+      <form name="insert_book" onSubmit={e => submitFile(e)}>
         <fieldset className="form-wrapper">
           <div className="input-item">
             <input id="bk_name"
@@ -248,7 +254,6 @@ function BookInsert() {
               name="bk_state"
               onClick={() => {
                 setBook(prev => {return {...prev, bk_state: '국내도서'}});
-                console.log(book);
               }}/>
             <label htmlFor="bk_state_1">국내도서</label>
 
@@ -258,7 +263,6 @@ function BookInsert() {
               name="bk_state"
               onClick={() => {
                 setBook(prev => {return {...prev, bk_state: '해외도서'}});
-                console.log(book);
               }}/>
             <label htmlFor="bk_state_2">해외도서</label>
           </div>
@@ -288,14 +292,14 @@ function BookInsert() {
             <input onChange={e=>{
               book.bk_publisher = e.target.value;
               setBook({...book});
-            }} type="text" maxLength="50" placeholder="출판사 이름 50글자 내외" name="bk_pub" id="bk_pub" />
-            <label htmlFor="bk_pub">출판사 이름</label>
+            }} type="text" maxLength="50" placeholder="출판사 이름 50글자 내외" name="bk_publisher" id="bk_publisher" />
+            <label htmlFor="bk_publisher">출판사 이름</label>
           </div>
 
           
           <div className="input-item">
             <textarea onChange={e=>{
-              book.bk_plot = e.target.value;
+              book.bk_plot = e.target.value.replace(/(?:\r\n|\r|\n)/g, '<br/>');
               setBook({...book});
             }} placeholder="줄거리"></textarea>
             <label htmlFor="bk_log">줄거리</label>
@@ -322,7 +326,7 @@ function BookInsert() {
 
           <div className="input-item">
             <textarea name="bk_index" id="bk_index" onChange={e=>{
-              book.bk_index = e.target.value;
+              book.bk_index = e.target.value.replace(/(?:\r\n|\r|\n)/g, '<br/>');
               setBook({...book});
             }}></textarea>
             <label htmlFor="bk_index">목차</label>
@@ -353,7 +357,7 @@ function BookInsert() {
                         return(<li>
                           <input onClick={()=>{
                             book.bk_sg_num = genre.sg_parent;
-                            setBook({...book, bk_genre: secondGenre.ge_num});
+                            setBook({...book, bk_sg_num: secondGenre.ge_num});
                             }} type='radio' name="secondGenre" id={"genre_" + secondGenre.ge_num} />  
                           <label htmlFor={"genre_" + secondGenre.ge_num}>{secondGenre.ge_name}</label>
                         </li>)
@@ -364,7 +368,7 @@ function BookInsert() {
               }
             )}
             </div>
-            <label htmlFor="bk_genre">장르 선택</label>
+            <label htmlFor="bk_sg_num">장르 선택</label>
           </div>
 
           <div className="input-item">
@@ -387,7 +391,7 @@ function BookInsert() {
                     <tr key={index}>
                       <td>{item.wr_name}</td>
                       <td>{item.wr_profile}</td>
-                      <td><Button cls="btn-point btn" click={()=>{addWriterLists(item)}} text="추가" style={{width: '70px'}}/></td>
+                      <td><Button type="button" cls="btn-point btn" click={()=>{addWriterLists(item)}} text="추가" style={{width: '70px'}}/></td>
                     </tr>
                   )
                   })
@@ -432,7 +436,7 @@ function BookInsert() {
           </table>
           </div>
         </fieldset>
-        <Button text="보내기" click={submitFile} cls="btn btn-point"/>
+        <Button text="보내기" type="submit" cls="btn btn-point"/>
       </form>
 
       <Modal
@@ -446,17 +450,6 @@ function BookInsert() {
       </Modal>
     </Fragment>
   )
-}
-
-export async function InsertBook(book,imgFile,equbFile,writerList){
-  console.log("추가");
-  fetch('insertBook',{
-    method : "post",
-    body : JSON.stringify(book,imgFile,equbFile,writerList),
-    headers: {
-      'Content-Type': 'application/json',  // Content-Type 헤더 설정
-    },
-  })
 }
 
 export default BookInsert;
