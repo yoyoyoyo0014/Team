@@ -134,15 +134,10 @@ public class BookContoller {
 	@GetMapping("/search/{category}/{country}/{genre}/{count}/SearchWord={search}")
 	public List<BookVO> searchBookList(@PathVariable String category, @PathVariable String country,
 			@PathVariable int genre, @PathVariable String search, @PathVariable int count) {
-		System.out.println("category : " + category + ", country : " + country + ", genre : " + genre + ", search : "
-				+ search + ", 페이지 : " + count);
 		BookCriteria bookCri = new BookCriteria(count, category, country, genre, search);
 		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
 		try {
-			System.out.println(pm.getCri().getPageStart());
-			System.out.println(pm.getCri().getSearch());
 			List<BookVO> res = bookService.searchBookList(pm);
-			System.out.println("검색결과"+res);
 			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
