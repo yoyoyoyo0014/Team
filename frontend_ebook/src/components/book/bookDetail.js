@@ -34,7 +34,6 @@ const BookDetail = () => {
     bk_totalPage : 0,  //총 페이지
     bk_agelimit : 0, //연령제한
 
-
     bk_totalPurchase: 0,  //총 구매 수
     bk_age_60_male: 0,  //60대 남성
     bk_age_60_female: 0,  //60대 여성
@@ -109,7 +108,7 @@ const BookDetail = () => {
 		})
   }
 
-  const loadBook = () => {
+  async function loadBook(){
     const options = {
       url: '/api/selectBook/' + bookNum,
       method:'GET',
@@ -123,31 +122,35 @@ const BookDetail = () => {
       }
     }
 
-    axios(options)
-    .then(res => {
+    try {
+      const res = await axios(options);
       setBook(res.data.book);
       setWriter(res.data.writer);
-      console.log("data load 성공")
-    })
-    .catch((error) => {
+      console.log("data load 성공");
+      return res.data.book;
+    } catch (error) {
       if (error.response) {
         // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
         console.log(error.response.status);
       } else if (error.request) {
-        // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
-        // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
-        // node.js에서는 http.ClientRequest 인스턴스입니다.
+        // 요청이 전송되었지만, 응답이 수신되지 않았습니다.
         console.log(error.request);
       } else {
         // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
         console.log('Error', error.message);
       }
       console.log(error.config);
-    })
+    }
   }
 
   useEffect(() => {
-    loadBook();
+    (async () => {
+      book = await loadBook();
+      popularityDistributionChart = PopularityDistributionChart(book);
+      setPopularityDistributionChart(popularityDistributionChart);
+      setBook(book);
+    })();
+    //
   }, [setBook])
   
   return (
@@ -208,6 +211,7 @@ const BookDetail = () => {
 }
 
 function PopularityDistributionChart(book){
+  console.log(book)
   let popularityDistributionChart = {
     bk_age_60_malePer: book.bk_age_50_male/book.bk_totalPurchase  *100,
     bk_age_60_femalePer: book.bk_age_60_female/book.bk_totalPurchase  *100,
