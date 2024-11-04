@@ -2,7 +2,7 @@ import {Fragment, useState, useEffect, useContext} from 'react';
 import Modal from 'react-modal';
 import ReportType from '../reportType';
 import { bookReviewReport } from '../report';
-import MakePage from '../pageButton';
+import MakePage, { PageButton } from '../pageButton';
 import Report from '../report';
 import Button from '../form/button';
 import axios from 'axios';
@@ -335,7 +335,6 @@ function BookReview({bookNum, loadBook}) {
       selectReviewList(page.currentPage);  //리뷰 리스트 목록
       checkReview();  //리뷰 썼는지 확인
   }, []); //처음 시작할 때
-  
   return (
     <Fragment>
       <div className="theme-box review-write">
@@ -396,13 +395,7 @@ function BookReview({bookNum, loadBook}) {
           ))}
         </ul>
         
-        <Button click={()=>changePage(page.currentPage-1)}  cls="btn" disabled = {!page.prev} text="이전"/>
-        
-        {page.pageList.map((item,index)=>{
-            return(<Button click={()=>changePage({index})} disabled={page.currentPage===(index+1)} key={index} cls="btn" text={item}/>)
-        })}
-
-        <Button click={()=>changePage(page.currentPage+1)}  cls="btn" disabled = {!page.next} text="다음"/>
+        <PageButton  getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}/>
       </div>
 
       <Modal
