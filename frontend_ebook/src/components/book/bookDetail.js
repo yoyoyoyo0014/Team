@@ -81,7 +81,6 @@ const BookDetail = () => {
       header: {
         'Accept':'application/json',
         'Content-Type': "'application/json';charset=UTF-8'"
-        //연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
       },
       data: {
         ca_bk_num: bk_num,
@@ -152,10 +151,10 @@ const BookDetail = () => {
   }, [setBook])
   
   return (
-    <div>
-      <div className="book-info">
+    <>
+      <div className="book-detail book-info">
         <div className="book-img">
-          <img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt={book.bk_name}/>
+          <img src={'/img/book_'+ book.bk_num + '.jpg'} alt={book.bk_name}/>
         </div>
         <div className="info">
           <p className="publisher">{book.bk_publisher}</p>
@@ -184,13 +183,19 @@ const BookDetail = () => {
           </div>
         </div>
       </div>
-
+      <hr />
       <div className="book-desc section">
         <h3>책 소개</h3>
-        <p>{book.bk_plot}</p>
+        <p style={{whiteSpace: 'pre-line'}}>{book.bk_plot.split('<br/>').join("\r\n")}</p>
       </div>
-
       <hr/>
+      {book.bk_index ? <>
+        <div className="book-index section">
+          <h3>목차</h3>
+          <p style={{whiteSpace: 'pre-line'}}>{book.bk_index.split('<br/>').join("\r\n")}</p>
+        </div>
+        <hr/>
+      </> : ''}
       <div className="review-container section">
         <h3>리뷰</h3>
         
@@ -198,7 +203,7 @@ const BookDetail = () => {
       </div>
       
       <BarGraph popularityDistributionChart={popularityDistributionChart}/>
-    </div>
+    </>
   )
 }
 
@@ -289,7 +294,6 @@ function BarGraph({popularityDistributionChart}){
         }]
     });
   }
-
 
   return(
     <div>

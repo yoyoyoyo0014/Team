@@ -1,6 +1,7 @@
 @charset 'utf-8';
 
-.book-info {display: flex; padding-bottom: 2em;}
+.book-detail.book-info {display: flex; padding-bottom: 2em;}
+.book-detail.book-info .book-img {width: 300px;}
 
 .info {padding-left: 2em;}
 .info h2 {padding: 0.4em 0 1em;}
