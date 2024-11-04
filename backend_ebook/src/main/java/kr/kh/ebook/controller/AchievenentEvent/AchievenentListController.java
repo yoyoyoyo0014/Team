@@ -55,7 +55,7 @@ public class AchievenentListController {
 		//도전과제 확인 이벤트 추가
 		divisionAchievenent();
 		//책을 하나 구매 시  달성되는 도전과제 테스트로 추가
-		instance.buyBook("testcpn22", null);
+		//instance.buyBook("testcpn22", null);
 	}
 
 	private List<AchievenentVO> allAchievenentList() {
