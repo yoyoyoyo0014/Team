@@ -49,13 +49,11 @@ export function Report({getReport,exit}) {
 
   
   function submitReport(report,successSubmitReport){
-    // if(report.rp_me_id == null){
-    //   alert('로그인을 해주세요.');
-    //   return;
-    // }
+    if(!user?.me_id){
+      alert('로그인을 해주세요')
+      return;
+    }
     var targetId = report.rp_target;
-    var rpNum = reportTypeNum;
-    var rpId = report.rp_id;
     fetch("/report/insertReport/"+user?.me_id+"/"+
       targetId+"/"+reportTypeNum+"/NotUsed/"+reportContent,{
       //body : JSON.stringify(report),
