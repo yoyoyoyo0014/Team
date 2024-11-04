@@ -152,7 +152,8 @@ CREATE TABLE `achievenent` (
 CREATE TABLE `achievenent_List` (
 	`acl_ac_num`	int	NOT NULL,
 	`acl_me_id`	varchar(15)	NOT NULL,
-	`acl_date`	datetime	NOT NULL
+	`acl_date`	datetime	NULL DEFAULT CURRENT_TIMESTAMP,
+	`acl_check` varchar(2) NOT NULL DEFAULT 'X'
 );
 
 CREATE TABLE `book_List` (
