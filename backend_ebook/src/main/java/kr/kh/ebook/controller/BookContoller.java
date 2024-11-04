@@ -51,7 +51,7 @@ public class BookContoller {
 	}// 책 번호를 통해 책 정보 가져오기
 
 	// 책 검색 개수만
-	@PostMapping("/count/{country}/{genre}/SearchWord={search}")
+	@GetMapping("/count/{country}/{genre}/SearchWord={search}")
 	@ResponseBody
 	public int selectBookCount(@PathVariable String country, @PathVariable int genre, @PathVariable String search) {
 
@@ -139,10 +139,10 @@ public class BookContoller {
 		BookCriteria bookCri = new BookCriteria(count, category, country, genre, search);
 		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
 		try {
-			System.out.println(pm);
+			System.out.println(pm.getCri().getPageStart());
 			System.out.println(pm.getCri().getSearch());
 			List<BookVO> res = bookService.searchBookList(pm);
-			System.out.println(res);
+			System.out.println("검색결과"+res);
 			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
