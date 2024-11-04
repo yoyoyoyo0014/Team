@@ -36,5 +36,6 @@ values('공지제목','공지내용','admin123','관리자','2024-10-01','1'),
 ('작가와의 만남','작가와의 만남','admin123','관리자','2024-10-01','4');
 
 #도전과제 추가
-insert into achievenent(ac_title, ac_info)
-values('첫 방문을 축하합니다!','처음 방문 시 달성');
+insert into achievenent(ac_title, ac_info, ac_id, ac_icon)
+values('첫 방문을 축하합니다!','처음 방문 시 달성','creatAccount', 'fa-ribbon'),
+('첫 구매를 축하합니다!','첫 구매 시 달성','buyBookCount=1', 'fa-credit-card');
