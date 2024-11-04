@@ -12,10 +12,12 @@ export const LoginProvider = ({ children }) => {
     const token = localStorage.getItem('loginToken');
     const user = localStorage.getItem('user');
     if (token) {
-      setUser(user);
       setIsLoggedIn(true);
-    }
-  }, []);
+  }
+  if (user) {
+      setUser(user);
+  }
+}, []);
 
   return (
     <LoginContext.Provider value={{ isLoggedIn, setIsLoggedIn, user, setUser }}>

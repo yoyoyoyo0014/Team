@@ -53,29 +53,49 @@ const Header = ({ setSection }) => {
 		navigate("/ebook/search/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
 	}
 
-	const UserMenu = ({isLoggedIn}) => {
-		if(isLoggedIn !== true){
-			return(<ul>
-				<li><Link to="/login">로그인</Link></li>
-				<li><Link to="/join">회원가입</Link></li>
-			</ul>)
-		} else if(user.me_authority === 'USER'){
-			return(<ul>
-				<li><Link to={"/cart/" + user?.me_id}>장바구니</Link></li>
-				<li><Link to="/mypage">마이페이지</Link></li>
-				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
-			</ul>)
-		} else {
-			return(<ul>
-				<li><Link to="/mycompany">사업자 정보 수정</Link></li>
-				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
-			</ul>)
-		}
-	}
-
-    function clickSearchBtn() {
-        navigate("/searchBook/" + country + "/" + genre + "/" + category + "/" + 0 + "/SearchWord=" + keyword);
-    }
+	const UserMenu = () => {
+        const { isLoggedIn, user, setIsLoggedIn, setUser } = useContext(LoginContext);
+    
+        console.log("isLoggedIn in UserMenu:", isLoggedIn);
+        console.log("user in UserMenu:", user);
+    
+        if (isLoggedIn !== true) {
+            return (
+                <ul>
+                    <li><Link to="/login">로그인</Link></li>
+                    <li><Link to="/join">회원가입</Link></li>
+                </ul>
+            );
+        } else if (user && user.me_authority === 'USER') {
+            return (
+                <ul>
+                    <li><Link to={`/cart/${user.me_id}`}>장바구니</Link></li>
+                    <li><Link to="/mypage">마이페이지</Link></li>
+                    <li><Link to="javascript:void(0);" onClick={handleLogout}>로그아웃</Link></li>
+                </ul>
+            );
+        } else {
+            return (
+                <ul>
+                    {!user ? (
+                        <li>로딩 중...</li>
+                    ) : (
+                        <>
+                            {user.me_authority === 'admin' ? (
+                                <li><Link to="/admin">관리자 페이지</Link></li>
+                            ) : (
+                                <>
+                                    <li><Link to={`/cart/${user.me_id}`}>장바구니</Link></li>
+                                    <li><Link to="/mypage">마이페이지</Link></li>
+                                </>
+                            )}
+                            <li><Link to="javascript:void(0);" onClick={handleLogout}>로그아웃</Link></li>
+                        </>
+                    )}
+                </ul>
+            );
+        }
+    };
 
     return (
         <header>

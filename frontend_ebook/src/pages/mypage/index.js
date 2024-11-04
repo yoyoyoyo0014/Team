@@ -148,9 +148,15 @@ const MypageIndex = () => {
 						<div className="pf-nickname">
 							<h2 style={{ marginRight: '5px' }}>{nickname || '닉네임 없음'}</h2>
 							<span style={{ fontSize: '1.2em' }}> 님 </span>
-							<Link to={`/mypage/edit/${user?.member?.me_id || ''}`}>
-								<i className="fa-solid fa-pen"></i>
-							</Link>
+							<Link
+								to="#"
+								onClick={(e) => {
+									e.preventDefault(); // 기본 링크 동작 방지
+									window.open(`/nickname-popup.html?me_id=${user?.member?.me_id || ''}`, '_blank', 'width=500,height=300');
+								}}
+							>
+							<i className="fa-solid fa-pen"></i>
+						</Link>
 						</div>
 						
 						<div className="pf-desc">
