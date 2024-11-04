@@ -335,6 +335,7 @@ function BookReview({bookNum, loadBook}) {
       selectReviewList(page.currentPage);  //리뷰 리스트 목록
       checkReview();  //리뷰 썼는지 확인
   }, []); //처음 시작할 때
+  
   return (
     <Fragment>
       <div className="theme-box review-write">
@@ -386,7 +387,9 @@ function BookReview({bookNum, loadBook}) {
               <div className="review-footer">
                 {item.me_nickname ===user.me_nickname ? (<Button click={updateReview} text="수정" cls="btn btn-point"/>) : ''}
                 {item.me_nickname ===user.me_nickname ? (<Button click={deleteReview} text="삭제" cls="btn"/>) : ''}
-                {item.me_nickname !==user.me_nickname ? (<Button click={() => {userReport(item.re_me_id,item.re_content,item.re_num); setModalIsOpen(true)}} text="신고" cls="btn btn-danger" />) : ''}
+                {user?.me_id&&item.me_nickname !==user.me_nickname ? (<Button click={() => {userReport(item.re_me_id,item.re_content,item.re_num);
+                  setModalIsOpen(true)
+                  }} text="신고" cls="btn btn-danger" />) : ''}
               </div>
             </div>
           </li>
