@@ -64,7 +64,7 @@ public class MemberService {
                     long daysRemaining = remainingTime / (1000 * 60 * 60 * 24);
                     String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stopDate);
                     throw new SuspensionException(
-                        "관리자에 의해 정지되어 " + formattedDate + " 까지\n로그인을 할 수 없습니다.  (" + "잔여기간 : " + daysRemaining  + "일 )"
+                        "관리자에 의해 정지되어 " + formattedDate + " 까지\n로그인을 할 수 없습니다.  (" + " 잔여기간 : " + daysRemaining  + "일 )"
                     );
                 } else {
                     // 제재 종료 시간이 지났다면, 상태를 "사용"으로 변경
