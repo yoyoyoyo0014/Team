@@ -1,0 +1,10 @@
+@charset 'utf-8';
+
+.book-list li {display: flex; gap: 2em;}
+.book-list li .book-img {width: 150px;}
+.book-list li .book-img img {width: 100%; height: auto;}
+.book-list li .book-info {width: 100%;}
+
+.book-list li .book-info .title {font-size: 1.5em;}
+.book-list li .book-info .price {display: block; padding: 1em 0;}
+
