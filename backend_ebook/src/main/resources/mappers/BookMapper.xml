@@ -57,10 +57,10 @@
    		</choose>
    		
    		<if test ="pm.cri.genre != 0">
-   			and bk_sg_num = #{pm.cri.genre} and 
+   			and bk_sg_num = #{pm.cri.genre}
 		</if>
 		<if test = "pm.cri.search != ''">
-			bk_name like concat('%', #{pm.cri.search}, '%')
+			 and  bk_name like concat('%', #{pm.cri.search}, '%')
 		</if>
 		group by bk_num
 		order by
