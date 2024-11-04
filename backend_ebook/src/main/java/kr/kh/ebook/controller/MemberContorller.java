@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.kh.ebook.exception.SuspensionException;
 import kr.kh.ebook.model.vo.MemberVO;
 import kr.kh.ebook.service.MemberService;
 import kr.kh.ebook.util.JwtUtil;
@@ -47,25 +48,27 @@ public class MemberContorller {
     // 일반 회원 로그인 처리
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody MemberVO memberVO) {
-    	
-    	logger.info("Attempting login for user ID: {}", memberVO.getMe_id());
-    	
-        MemberVO member = memberService.login(memberVO.getMe_id(), memberVO.getMe_pw());
         Map<String, Object> response = new HashMap<>();
-        
-        if (member != null) {
-            String token = jwtUtil.generateToken(member.getMe_id());
-            logger.info("Returned Token: {}", token); // 생성된 토큰 로그
 
-            response.put("user", member);
-            response.put("token", token);
-            return ResponseEntity.ok(response);
-        } else {
-            logger.warn("Invalid login attempt for user ID: {}", memberVO.getMe_id());
-            response.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        try {
+            MemberVO member = memberService.login(memberVO.getMe_id(), memberVO.getMe_pw());
+            
+            if (member != null) {
+                String token = jwtUtil.generateToken(member.getMe_id());
+                response.put("user", member);
+                response.put("token", token);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+        } catch (SuspensionException e) {
+            // SuspensionException이 발생하면 예외 메시지를 응답에 포함
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
     }
+
 
     // 회원 가입 처리
     @PostMapping("/register")

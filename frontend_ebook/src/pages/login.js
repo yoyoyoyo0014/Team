@@ -117,12 +117,12 @@ const handleLoginSubmit = (e) => {
   })
     .then((response) => {
       console.log("응답 상태 코드:", response.status); // 응답 상태 코드 디버깅용 로그
-      return response.json();
+      return response.json().then((data) => ({ status: response.status, data })); // 응답 상태와 데이터 함께 반환
     })
-    .then((data) => {
+    .then(({ status, data }) => {
       console.log("서버 응답 데이터:", data); // 응답 전체 데이터 디버깅용 로그
 
-      if (data.token && data.token !== "generated_jwt_token") {
+      if (status === 200 && data.token && data.token !== "generated_jwt_token") {
         console.log("로그인 성공, 토큰:", data.token); // 토큰이 유효할 때 로그 출력
 
         // 로그인 성공 시, 사용자 정보를 LoginContext에 저장
@@ -137,11 +137,16 @@ const handleLoginSubmit = (e) => {
           sessionStorage.setItem("loginToken", data.token);
           localStorage.setItem("loginMethod", "general");
         }
-        
+
         setIsLoggedIn(true); // 로그인 상태 업데이트
         navigate("/"); // 메인 페이지로 이동
+      } else if (status === 403) {
+        // 제재 상태일 때
+        console.warn("로그인 실패: 제재 상태", data.message); // 제재 상태 로그
+        alert(data.message); // 제재 메시지 표시
+        navigate("/"); // 메인 페이지로 이동
       } else {
-        // 로그인 실패 시
+        // 로그인 실패 시 (제재 상태가 아닌 경우)
         console.warn("로그인 실패:", data.message || "로그인 실패"); // 경고 로그
         alert(data.message || "로그인 실패"); // 실패 메시지 알림
         setIsLoggedIn(false); // 로그인 실패 상태 설정
