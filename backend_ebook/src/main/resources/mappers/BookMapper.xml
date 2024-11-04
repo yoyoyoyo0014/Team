@@ -21,7 +21,7 @@
 		where 
 			bk_name LIKE CONCAT('%', #{search}, '%') and
 			<choose>
-    			<when test = " country == 'domestic' ">
+    			<when test = "country == 'domestic' ">
     				bk_state = '국내도서'
     			</when>
     			<when test = "country == 'foreign' ">
@@ -37,55 +37,56 @@
 	</select>
     
     <select id="searchBookList">
-    	select *
+    	select book.*, group_concat(wr_name separator ' | ') as bk_writer
     	from book
-    	order by
-   		<choose>
-   			<when test ="pm.cri.category == 'popularity'">
-   				bk_totalPurchase desc
-   			</when>
-   			<when test ="pm.cri.category == 'latest'">
-   				bk_date desc
-   			</when>
-   			<when test ="pm.cri.category == 'orderPurchase'">
-   				bk_totalPurchase desc
-   			</when>
-   			<when test ="pm.cri.category == 'highPrice'">
-   				bk_price desc
-   			</when>
-   			<when test ="pm.cri.category == 'lowPrice'">
-   				bk_price asc
-   			</when>
-   			<when test ="pm.cri.category == 'rating'">
-   				bk_score desc
-   			</when>
-   			<when test ="pm.cri.category == 'review'">
-   				bk_reviewCount desc
-   			</when>
-    	</choose>
+        join writer_list
+		on bk_num = wl_bk_num
+		join writer
+		on wr_num = wl_wr_num
     	where
    		<choose>
    			<when test = "pm.cri.country == 'domestic' ">
-   				 bk_state ='국내도서' and
+   				 bk_state ='국내도서' 
    			</when>
    			<when test = "pm.cri.country == 'foreign' ">
-   				 bk_state = '해외도서' and
+   				 bk_state = '해외도서'
    			</when>
    		</choose>
    		
-   		<if  test ="pm.cri.category == 'popularity'">
-   			bk_date >=date_sub(now(),interval 1 year); and
-   		</if>
-   		<if test ="pm.cri.genre != '0'">
-   			 bk_sg_num = #{pm.cri.genre}
+   		<if test ="pm.cri.genre != 0">
+   			and bk_sg_num = #{pm.cri.genre} and 
 		</if>
-		<if test = "pm.cri.search !=''">
-			bk_name like concat('%',#{pm.cri.search}, '%')
+		<if test = "pm.cri.search != ''">
+			bk_name like concat('%', #{pm.cri.search}, '%')
 		</if>
-  		limit #{pm.cri.pageStart}, #{pm.cri.perPageNum}
+		group by bk_num
+		order by
+   		<choose>
+ 			<when test ="pm.cri.category == 'popularity'">
+ 				bk_totalPurchase desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'latest'">
+ 				bk_date desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'orderPurchase'">
+ 				bk_totalPurchase desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'highPrice'">
+ 				bk_price desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'lowPrice'">
+ 				bk_price asc
+ 			</when>
+ 			<when test ="pm.cri.category == 'rating'">
+ 				bk_score desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'review'">
+ 				bk_reviewCount desc
+ 			</when>
+    	</choose>
+  		limit 0,5
     </select>
-
-		<select id="selectAllGenre" resultType="BookGenreVO">
+	<select id="selectAllGenre" resultType="BookGenreVO">
     	select * from genre
     </select>
     
@@ -95,6 +96,7 @@
     	<if  test ="ge_num != 0">
    			where sg_parent = #{ge_num}
    		</if>
+    	
     </select>
 	
 	<select id="reviewCount">
@@ -187,33 +189,40 @@
 	<update id="updateReviewCount">
 		update book
 		<choose>
-			<when test ="operator == '+'">
-				set bk_reviewCount = bk_reviewCount + 1 where bk_num = #{re_bk_num}
-			</when>
-			<when test ="operator == '-'">
-				set bk_reviewCount = bk_reviewCount - 1 where bk_num = #{re_bk_num}
-			</when>
-		</choose>
+   			<when test ="operator == '+'">
+   				set bk_reviewCount = bk_reviewCount + 1 where bk_num = #{re_bk_num}
+   			</when>
+   			<when test ="operator == '-'">
+   				set bk_reviewCount = bk_reviewCount - 1 where bk_num = #{re_bk_num}
+   			</when>
+   		</choose>
 	</update>
 	
 	<update id="updateReviewScore">
 		update book
 		<choose>
-			<when test ="operator == '+'">
-				set bk_score = bk_score + #{re_star} where bk_num = #{re_bk_num}
-			</when>
-			<when test ="operator == '-'">
-				set bk_score = bk_score - #{re_star} where bk_num = #{re_bk_num}
-			</when>
-		</choose>
+   			<when test ="operator == '+'">
+   				set bk_score = bk_score + #{re_star} where bk_num = #{re_bk_num}
+   			</when>
+   			<when test ="operator == '-'">
+   				set bk_score = bk_score - #{re_star} where bk_num = #{re_bk_num}
+   			</when>
+   		</choose>
 	</update>
+	
+	<!-- 모든 장르 가져오기 -->
+	<select id="selectGenreList">
+		select *
+		from genre
+	</select>
 	
 	<!-- 책 추가 후 해당 book객채의 bk_num 변수에 ai 값 변환 -->
 	<insert id="insertBook" useGeneratedKeys="true" keyProperty="bk.bk_num">
-		INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_publisher)
-		VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_publisher})
+		INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_me_id)
+		VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_me_id})
 	</insert>
 	
+	<!-- writer_list 에 작가 추가 (작가번호, 책번호, 작가 유형번호) -->
 	<insert id="insertWriterList">
 		insert into writer_list (wl_wr_num, wl_bk_num, wl_wt_num )
 		VALUES(#{wr.wl_wr_num}, #{wr.wl_bk_num}, #{wr.wl_wt_num})

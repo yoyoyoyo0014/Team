@@ -43,7 +43,7 @@ function Router({section}) {
       <Route path="/auth/naver/callback" element={<NaverCallback />} />
 
       <Route path="/ebook/selectBook/:bk_num" element={<BookDetail/>}/>
-      <Route path="/ebook/searchBook" element={<BookSearch/>}/>
+      <Route path="/ebook/search/:bo_country/:bo_genre/:bo_category/:bo_page/:bo_search" element ={<BookSearch/>}/>
 
       <Route path="/mypage" element={isLoggedIn ? <MypageIndex/> : <Navigate to="/login"/>}/>
       <Route

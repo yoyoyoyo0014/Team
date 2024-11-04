@@ -10,9 +10,9 @@ const Header = ({setSection}) => {
 	const { isLoggedIn, setIsLoggedIn, setUser, user } = useContext(LoginContext);
 	const { genreList } = useContext(GenreContext);
 
-	let [country, setCountry] = useState('');
-	let [genre, setGenre] = useState('');
-	let [category, setCategory] = useState('');
+	let [country, setCountry] = useState('both');
+	let [genre, setGenre] = useState('0');
+	let [category, setCategory] = useState('highPrice');
 	let [keyword, setKeyword] = useState('');
 
 
@@ -41,7 +41,7 @@ const Header = ({setSection}) => {
 	};
 
 	function clickSearchBtn(){
-		navigate("/searchBook/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
+		navigate("/ebook/search/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
 	}
 
 	const UserMenu = ({isLoggedIn}) => {

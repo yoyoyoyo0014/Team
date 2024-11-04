@@ -17,8 +17,9 @@ public class Criteria {
 		this.perPageNum = perPageNum;
 	}
 	
-	public Criteria(int page) {
+	public Criteria(int page,String search) {
 		this.page = page;
+		this.search = search;
 	}
 	public int getPageStart() {
 		return (page - 1) * perPageNum;

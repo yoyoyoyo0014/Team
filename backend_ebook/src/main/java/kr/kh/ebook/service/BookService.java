@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import kr.kh.ebook.controller.FileUploadController;
 import kr.kh.ebook.dao.BookDAO;
 import kr.kh.ebook.model.vo.BookGenreVO;
 import kr.kh.ebook.model.vo.BookListVO;
@@ -141,6 +143,11 @@ public class BookService {
 
 	public Integer selectMyBookPage(String userId, int bookNum) {
 		return bookDao.selectBookPage(userId,bookNum);
+	}
+
+	public void insertBookFiles(MultipartFile epubFile, MultipartFile imgFile, int bk_num) {
+		bookDao.insertBookFiles(epubFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(epubFile.getOriginalFilename()));
+		bookDao.insertBookFiles(imgFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(imgFile.getOriginalFilename()));
 	}
 	
 }

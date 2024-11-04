@@ -6,6 +6,8 @@ import MySubMenu from "../../components/mysubmenu";
 import "../../css/mypage.css";
 import axios from "axios";
 import MakePage, { PageButtonV2 } from "../../components/pageButton";
+import { AchievenentSwitch } from "../../components/achievenent/AchieventContext";
+import { AchievenentEvent } from "../../components/achievenent/achievenentEvent";
 
 const MypageIndex = () => {
 	const lookPageContentsCount = 2;
@@ -212,6 +214,11 @@ const MypageIndex = () => {
 					<PageButtonV2 getPage={page} pageEvent={pageChange} url={'/post/list/2/'}/>
 				</div>
 			</section>
+
+			<AchievenentSwitch>
+				<AchievenentEvent meId={user?.me_id}/>
+			</AchievenentSwitch>
+
 		</Fragment>
 	)
 }

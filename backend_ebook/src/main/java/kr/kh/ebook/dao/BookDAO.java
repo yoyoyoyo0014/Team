@@ -74,4 +74,6 @@ public interface BookDAO {
 	void deleteWriterList(int bk_num);
 
 	int selectCountBookBuy(String userId);
+
+	void insertBookFiles(String originalFilename, int bk_num, String extension);
 }
