@@ -75,17 +75,28 @@ const CartPage = () => {
   const goOrder = (e) => {
     e.preventDefault();
     let cnt = 0;
-
+    let tmp = [];
     const inps = document.querySelectorAll('[name="bk_num"]');
+
     inps.forEach(inp => {
-      if (inp.checked === true) cnt++;
+      if (inp.checked === true) {
+        cnt++;
+        tmp.push({
+          bk_num: inp.parentElement.parentElement.querySelector('[name="bk_num"]').value,
+          bk_title: inp.parentElement.parentElement.querySelector('.bk_title').innerText,
+          bk_writer: inp.parentElement.parentElement.querySelector('.bk_writer').innerText,
+          bk_price: inp.parentElement.parentElement.querySelector('.bk_price').value
+        });
+      }
     });
     
     if(cnt === 0) {
       alert("구매할 책을 선택해 주세요.");
       return;
     }
-    return true;
+    navigate('/buy', {
+      state: tmp
+    });
   }
 
   const handleSelectAllChange = (e) => {
@@ -111,7 +122,6 @@ const CartPage = () => {
         <ul className="cart-item-wrapper">
           {cart.length !== 0 ? cart.map(item => (
             <li className="theme-box cart-item" key={item.ca_num}>
-              {/* <input type="hidden" className="bk_num" id={"bk_num_" + item.ca_num} name={"bk_num"} value={item.bk_num}/> */}
               <input type="hidden" className="bk_price" id={"bk_price_" + item.ca_num} name={"bk_price"} value={item.bk_price}/>
               <input type="hidden" className="ca_num" id={"ca_num_" + item.ca_num} name={"ca_num"} value={item.ca_num}/>
               <Check
@@ -126,8 +136,8 @@ const CartPage = () => {
                 </Link>
               </div>
               <div className="book-info">
-                <h3>{item.bk_name}</h3>
-                <p>작가명</p>
+                <h3 className="bk_title">{item.bk_name}</h3>
+                <p className="bk_writer">{item.bk_writer}</p>
               </div>
               
               <div className="cart-item-controller">
