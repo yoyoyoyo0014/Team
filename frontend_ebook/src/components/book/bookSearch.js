@@ -2,12 +2,12 @@ import {useContext, useEffect, useState} from 'react';
 
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import MakePage from '../pageButton';
+import MakePage, { PageButton } from '../pageButton';
 import BookList from './booklist';
 import { GenreContext } from '../../context/GenreContext';
 import { Input } from '../form/input';
 import Button from '../form/button';
-
+import { FormProvider } from 'react-hook-form';
 let bannedSearchTerms =["#","%",";"]
 const helpSearch = "SearchWord="
 
@@ -16,7 +16,7 @@ function BookSearch() {
   const { bo_genre } = useParams();
   const { bo_category } = useParams();
   const { bo_page } = useParams();
-  const { bo_search } = useParams();
+  let { bo_search } = useParams();
   const {genreList} = useContext(GenreContext);
 
   let [bookList,setBookList] = useState([])
@@ -47,7 +47,9 @@ function BookSearch() {
     setCategory(e.target.value);
   }//카테고리 설정
 
-  async function changePage(index){
+  async function changePage(index=null){
+    if(index ===null)
+      index = 1;
     if(typeof index ==='number'){
       page.currentPage = index;
     }else{
@@ -75,7 +77,7 @@ function BookSearch() {
     inputSerch =inputSerch.replace(helpSearch, "");
 
     var searchCount = await getSearchCount(country,genre,inputSerch);
-
+    console.log("검색개수"+searchCount)
     if(!searchCount) return;
     
     page.contentsCount = searchCount;
@@ -103,54 +105,62 @@ function BookSearch() {
     (async () => {
       urlSetting();//url 세팅
       submitSearch(bo_country,bo_genre,bo_search); //그냥 검색
+      bo_search = bo_search.replace(/SearchWord=/g,"");
+      setSearch(bo_search)
     })();
   },[]);
   //console.log('렌더링 횟수')
   return (
+    
     <div>
-      <Input type="text" change={setSearch} placeholder="검색칸"/>
-
+      <form name="serach_book" onSubmit={()=>{changePage(1)}}>
+      <Input value={search} type="text" change={setSearch} placeholder="검색칸"/>
       <div>
-        <div>
-          <input type="radio" name="country" id="all" value="all" defaultChecked={bo_country==='all'} onClick={e=>checkedCountry(e)} />
-          <label htmlFor="all">전체</label>
+        <div className="theme-box genre-wrapper">
+          <div>
+              <input type="radio" name="country" id="both" value="both" defaultChecked={bo_country==='both'} onClick={e=>checkedCountry(e)} />
+              <label htmlFor="both">전체</label>
+            </div>
+            <div>
+              <input type="radio" name="country" id="domestic" value="domestic" defaultChecked={bo_country==='domestic'} onClick={e=>checkedCountry(e)} />
+              <label htmlFor="domestic">국내도서</label>
+            </div>
+            <div>
+              <input type="radio" name="country" id="foreign" value="foreign" defaultChecked={bo_country==='foreign'} onClick={e=>checkedCountry(e)} />
+              <label htmlFor="foreign">해외도서</label>
+            </div>
+          </div>
+          <div className="theme-box genre-wrapper">
+          <div>
+            <input type="radio" name="category" id="popularity" value="popularity" defaultChecked={bo_category==='popularity'} onClick={e=>getCategory(e)} />
+            <label htmlFor="popularity">인기순</label>
+          </div>
+          <div>
+            <input type="radio" name="category" id="latest" value="latest" defaultChecked={bo_category==='latest'} onClick={e=>getCategory(e)} />
+            <label htmlFor="latest">최신순</label>
+          </div>
+          <div>
+            <input type="radio" name="category" id="orderPurchase" value="orderPurchase" defaultChecked={bo_category==='orderPurchase'} onClick={e=>getCategory(e)} />
+            <label htmlFor="orderPurchase">구매순</label>
+          </div>
+          <div>
+            <input type="radio" name="category" id="highPrice" value="highPrice" defaultChecked={bo_category==='highPrice'} onClick={e=>getCategory(e)} />
+            <label htmlFor="highPrice">높은 가격순</label>
+          </div>
+          <div>
+            <input type="radio" name="category" id="lowPrice" value="lowPrice" defaultChecked={bo_category==='lowPrice'} onClick={e=>getCategory(e)} />
+            <label htmlFor="lowPrice">낮은 가격순</label>
+          </div>
+          <div>
+            <input type="radio" name="category" id="rating" value="rating" defaultChecked={bo_category==='rating'} onClick={e=>getCategory(e)} />
+            <label htmlFor="rating">평점순</label>
+          </div>
+          <div>
+            <input type="radio" name="category" id="review" value="review" defaultChecked={bo_category==='review'} onClick={e=>getCategory(e)} />
+            <label htmlFor="review">리뷰순</label>
+          </div>
         </div>
-        <div>
-          <input type="radio" name="country" id="domestic" value="domestic" defaultChecked={bo_country==='domestic'} onClick={e=>checkedCountry(e)} />
-          <label htmlFor="domestic">국내도서</label>
-        </div>
-        <div>
-          <input type="radio" name="country" id="foreign" value="foreign" defaultChecked={bo_country==='foreign'} onClick={e=>checkedCountry(e)} />
-          <label htmlFor="foreign">해외도서</label>
-        </div>
-        <div>
-          <input type="radio" name="category" id="popularity" value="popularity" defaultChecked={bo_category==='popularity'} onClick={e=>getCategory(e)} />
-          <label htmlFor="popularity">인기순</label>
-        </div>
-        <div>
-          <input type="radio" name="category" id="latest" value="latest" defaultChecked={bo_category==='latest'} onClick={e=>getCategory(e)} />
-          <label htmlFor="latest">최신순</label>
-        </div>
-        <div>
-          <input type="radio" name="category" id="orderPurchase" value="orderPurchase" defaultChecked={bo_category==='orderPurchase'} onClick={e=>getCategory(e)} />
-          <label htmlFor="orderPurchase">구매순</label>
-        </div>
-        <div>
-          <input type="radio" name="category" id="highPrice" value="highPrice" defaultChecked={bo_category==='highPrice'} onClick={e=>getCategory(e)} />
-          <label htmlFor="highPrice">높은 가격순</label>
-        </div>
-        <div>
-          <input type="radio" name="category" id="lowPrice" value="lowPrice" defaultChecked={bo_category==='lowPrice'} onClick={e=>getCategory(e)} />
-          <label htmlFor="lowPrice">낮은 가격순</label>
-        </div>
-        <div>
-          <input type="radio" name="category" id="rating" value="rating" defaultChecked={bo_category==='rating'} onClick={e=>getCategory(e)} />
-          <label htmlFor="rating">평점순</label>
-        </div>
-        <div>
-          <input type="radio" name="category" id="review" value="review" defaultChecked={bo_category==='review'} onClick={e=>getCategory(e)} />
-          <label htmlFor="review">리뷰순</label>
-        </div>
+        
 
       </div>
 
@@ -160,16 +170,11 @@ function BookSearch() {
           </label> 
         ))
       }
-      <input onClick={()=>{changePage(1)}} type="submit" value="제출"></input>
-
+      <Button text={'제출'} cls="btn btn-point" type={"submit"} onClick = {()=>{changePage(1)}}/>
       <BookList bookList={bookList}/>
-        
-      <Button click={()=>changePage(page.currentPage-1)} disabled= {!page.prev} text="이전"/>
-      {page.pageList.map((item,index)=>{
-          return(<button  onClick={()=>changePage({index})} disabled={page.currentPage==(index+1)} key={index}>{item}</button>)
-      })}
-
-      <Button click={()=>changePage(page.currentPage+1)} disabled= {!page.next} text="다음"/>
+      </form>
+      <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} 
+      nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
     </div>
   );
 }
@@ -183,7 +188,7 @@ async function getSearchCount(country,genre,inputSerch = ''){
   }
   try {
     // fetch 요청이 완료될 때까지 대기
-    const response = await fetch('/ebook/count/'+country+"/"+genre+"/"+'/SearchWord='+inputSerch,{
+    const response = await fetch('/ebook/count/'+country+"/"+genre+'/SearchWord='+inputSerch,{
       //body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
