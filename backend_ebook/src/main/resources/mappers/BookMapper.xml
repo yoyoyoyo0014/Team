@@ -51,6 +51,9 @@
    			<when test = "pm.cri.country == 'foreign' ">
    				 bk_state = '해외도서'
    			</when>
+   			<otherwise>
+    				(bk_state ='국내도서' or  bk_state = '해외도서') 
+    		</otherwise>
    		</choose>
    		
    		<if test ="pm.cri.genre != 0">
@@ -84,7 +87,7 @@
  				bk_reviewCount desc
  			</when>
     	</choose>
-  		limit 0,5
+  		limit #{pm.cri.pageStart},5
     </select>
 	<select id="selectAllGenre" resultType="BookGenreVO">
     	select * from genre
