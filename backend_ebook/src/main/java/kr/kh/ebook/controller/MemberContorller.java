@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.kh.ebook.controller.AchievenentEvent.AchievenentListController;
 import kr.kh.ebook.model.vo.MemberVO;
+import kr.kh.ebook.service.AchievenentService;
 import kr.kh.ebook.service.MemberService;
 
 @RestController
@@ -24,7 +24,9 @@ public class MemberContorller {
 
     @Autowired
     private MemberService memberService;
-
+    @Autowired
+    private AchievenentService achService;
+    
     // 회원 아이디로 사용자 정보 조회 (일반 로그인, 소셜 로그인 통합)
     @GetMapping("/{me_id}")
     public ResponseEntity<MemberVO> getMember(@PathVariable String me_id) {
@@ -53,17 +55,16 @@ public class MemberContorller {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
-    
+
     // 회원 가입 처리
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerNormalMember(@RequestBody MemberVO memberVO) {
         boolean isRegistered = memberService.registerNormalMember(memberVO);
-        
         Map<String, String> response = new HashMap<>();
         if (isRegistered) {
             response.put("message", "회원 등록 완료");
             response.put("token", "JWT 토큰 예시"); // 회원가입 후 JWT 토큰 발급 가능
-            AchievenentListController.instance.createAccount(memberVO.getMe_id());//도전과제 달성 추가
+            achService.insertAch(1, memberVO.getMe_id());
             return ResponseEntity.ok(response);
         } else {
             response.put("message", "회원 등록 실패");

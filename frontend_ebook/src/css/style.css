@@ -50,6 +50,11 @@ body {
 .scrollbar-no-padding::-webkit-scrollbar {width: 2px !important;}
 .scrollbar-no-padding::-webkit-scrollbar-thumb {border: 0 !important;}
 
+.ReactModal__Overlay.ReactModal__Overlay--after-open {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 
 /* form element */
 .form-wrapper {

@@ -6,7 +6,6 @@ import MySubMenu from "../../components/mysubmenu";
 import "../../css/mypage.css";
 import axios from "axios";
 import MakePage, { PageButtonV2 } from "../../components/pageButton";
-import { AchievenentSwitch } from "../../components/achievenent/AchieventContext";
 import { AchievenentEvent } from "../../components/achievenent/achievenentEvent";
 
 const MypageIndex = () => {
@@ -61,10 +60,8 @@ const MypageIndex = () => {
 					setMyReview(prev => {
 						return {...prev, list: res.data.reviewList, pm: res.data.reviewPm}
 					});
-					console.log('review');
 				} else {
 					let tmp = MakePage(res.data.pm.totalCount,page.currentPage,lookPageContentsCount);
-					console.log('request');
 					setRequestPage(tmp);
 					setMyRequest(prev => {
 						return {...prev, list: res.data.list, pm: res.data.pm}
@@ -72,18 +69,6 @@ const MypageIndex = () => {
 				}
       })
       .catch((error) => {
-        if (error.response) {
-          // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
-          console.log(error.response.status);
-        } else if (error.request) {
-          // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
-          // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
-          // node.js에서는 http.ClientRequest 인스턴스입니다.
-          console.log(error.request);
-        } else {
-          // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
-          console.log('Error', error.message);
-        }
         console.log(error);
       })
 	}
@@ -215,9 +200,7 @@ const MypageIndex = () => {
 				</div>
 			</section>
 
-			<AchievenentSwitch>
-				<AchievenentEvent meId={user?.me_id}/>
-			</AchievenentSwitch>
+			<AchievenentEvent meId={user?.me_id}/>
 
 		</Fragment>
 	)

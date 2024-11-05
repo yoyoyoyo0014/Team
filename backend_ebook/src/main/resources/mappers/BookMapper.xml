@@ -51,16 +51,13 @@
    			<when test = "pm.cri.country == 'foreign' ">
    				 bk_state = '해외도서'
    			</when>
-   			<otherwise>
-    				(bk_state ='국내도서' or  bk_state = '해외도서') 
-    		</otherwise>
    		</choose>
    		
    		<if test ="pm.cri.genre != 0">
-   			and bk_sg_num = #{pm.cri.genre}
+   			and bk_sg_num = #{pm.cri.genre} and 
 		</if>
 		<if test = "pm.cri.search != ''">
-			 and  bk_name like concat('%', #{pm.cri.search}, '%')
+			bk_name like concat('%', #{pm.cri.search}, '%')
 		</if>
 		group by bk_num
 		order by
@@ -87,7 +84,7 @@
  				bk_reviewCount desc
  			</when>
     	</choose>
-  		limit #{pm.cri.pageStart},5
+  		limit 0,5
     </select>
 	<select id="selectAllGenre" resultType="BookGenreVO">
     	select * from genre
