@@ -3,9 +3,12 @@ insert into member(me_id, me_nickname, me_name, me_pw, me_email, me_birth, me_ad
 values('admin123','관리자','관리자','admin123','admin123@naver.com','990909','1','admin','사용'),
 ('asd123','asd닉네임','asd123실명','asd123','asd123@naver.com','990909','1','user','사용');
 
-#책 추가
-insert into book(bk_name, bk_state, bk_publisher, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_isbn, bk_totalPage, bk_agelimit)
-values('빠르게 생각하고 똑똑하게 말하라','해외도서','출판사 이름','20240910','2','줄거리','17100','0','0010011101','320','12');
+#책 추가 (연령,성별구매 표를 보기위해 임의로 구매수 변경)
+insert into book(bk_name, bk_state, bk_publisher, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_isbn, bk_totalPage, bk_agelimit,bk_totalPurchase,bk_age_60_male,bk_age_60_female
+,bk_age_50_male,bk_age_50_female,bk_age_40_male,bk_age_40_female,bk_age_30_male,bk_age_30_female,bk_age_20_male,bk_age_20_female
+,bk_age_10_male,bk_age_10_female)
+values('빠르게 생각하고 똑똑하게 말하라','해외도서','출판사 이름','20240910','2','줄거리','17100','0','0010011101','320','12'
+,400,22,10,14,33,46,66,10,53,43,16,30,57);
 
 #리뷰 추가
 insert into review(re_content, re_bk_num, re_star, re_date, re_me_id)
