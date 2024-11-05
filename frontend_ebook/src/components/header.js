@@ -1,5 +1,5 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { Link, useNavigate, useSearchParams, useParams } from "react-router-dom";
+import { useEffect, useContext, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
 import { GenreContext } from "../context/GenreContext";
 import { Input } from "./form/input";
@@ -34,6 +34,8 @@ const Header = ({ setSection }) => {
         wrapper.classList.toggle('show');
     };
 
+    const { co_num } = useParams();
+
     // 로그아웃 핸들러
     const handleLogout = () => {
         setIsLoggedIn(false);  // 로그인 상태를 false로 업데이트
@@ -53,6 +55,7 @@ const Header = ({ setSection }) => {
     };
 	function clickSearchBtn(){
 		navigate("/ebook/search/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
+        
 	}
 
 	const UserMenu = () => {

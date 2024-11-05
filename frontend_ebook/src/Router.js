@@ -29,6 +29,11 @@ import BookInsert from './components/book/bookInsert.js';
 import AdminIndex from './admin/adminIndex';  // adminIndex 컴포넌트 import
 import MemberManagement from "./admin/memberManagement.js";
 
+import List from './pages/post/list';
+import Detail from "./pages/post/detail.js";
+import Update from "./pages/post/update.js";
+import Insert from "./pages/post/insert.js";
+
 function Router({section}) {
 	const { isLoggedIn } = useContext(LoginContext);
 
@@ -80,6 +85,11 @@ function Router({section}) {
       <Route path="/event/:ev_id" element={<EventDetail />} />
 
       <Route path="/request" element={<PostList />} />
+
+      <Route path="/post/list/:co_num" element={<List />} />
+			<Route path="/post/detail/:co_num/:po_num" element={<Detail />} />
+			<Route path="/post/update/:po_num" element={<Update />} />
+			<Route path="/post/insert/:co_num" element={<Insert />} />
     </Routes>
   );
 }
