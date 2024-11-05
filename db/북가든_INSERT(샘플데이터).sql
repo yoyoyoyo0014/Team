@@ -9,7 +9,7 @@ values('빠르게 생각하고 똑똑하게 말하라','해외도서','출판사
 
 #리뷰 추가
 insert into review(re_content, re_bk_num, re_star, re_date, re_me_id)
-values('리뷰 추천 내용','1','4.5','20241001','asd123');
+values('리뷰 추천 내용','1','4','20241001','asd123');
 
 #저자 추가
 insert into writer(wr_name, wr_profile)
