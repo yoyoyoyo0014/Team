@@ -130,6 +130,7 @@ function BookSearch() {
               <label htmlFor="foreign">해외도서</label>
             </div>
           </div>
+          <br/>
           <div className="theme-box genre-wrapper">
           <div>
             <input type="radio" name="category" id="popularity" value="popularity" defaultChecked={bo_category==='popularity'} onClick={e=>getCategory(e)} />
@@ -160,8 +161,7 @@ function BookSearch() {
             <label htmlFor="review">리뷰순</label>
           </div>
         </div>
-        
-
+        <br/>
       </div>
 
       {genreList.map((item,index)=>(
