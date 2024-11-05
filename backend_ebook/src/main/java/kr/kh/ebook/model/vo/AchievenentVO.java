@@ -11,4 +11,5 @@ public class AchievenentVO {
 	private String ac_info;
 	private String ac_id;
 	private String ac_icon;
+	private String ac_date;
 }
