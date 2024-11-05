@@ -53,7 +53,7 @@ public class MemberContorller {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
-
+    
     // 회원 가입 처리
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerNormalMember(@RequestBody MemberVO memberVO) {
