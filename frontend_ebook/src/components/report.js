@@ -111,5 +111,4 @@ export function Report({getReport,exit}) {
     </div>
   )
 }
-
 export default Report;

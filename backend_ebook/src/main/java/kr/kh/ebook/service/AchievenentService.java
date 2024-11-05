@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import kr.kh.ebook.dao.AchievenentDAO;
-import kr.kh.ebook.model.vo.AchievenentListVO;
 import kr.kh.ebook.model.vo.AchievenentVO;
 import lombok.AllArgsConstructor;
 
@@ -16,28 +15,20 @@ public class AchievenentService {
 
 	AchievenentDAO achDao;
 
-	public List<AchievenentListVO> selectAchievenentList(int achNum, String memberNum) {
-		return achDao.selectAchList(achNum,memberNum);
+	public List<AchievenentVO> selectNewAchList(String meId) {
+		return achDao.selectNewAchList(meId);
 	}
 
-	public boolean insertAchList(int achNum, String memberId) {
-		return achDao.insertAchList(achNum,memberId);
+	public void updateCheckAch(int archNum, String meId) {
+		achDao.updateCheckAch(archNum,meId);
 	}
 
-	public AchievenentVO selectAchievenent(int achNum) {
-		return achDao.selectAchievenent(achNum);
+	public List<AchievenentVO> getUserAchivement(String userId) {
+		return achDao.getUserAchivement(userId);
 	}
 
-	public List<AchievenentListVO> selecNowCollectAchList(String meId) {
-		return achDao.selecNowCollectAchList(meId);
-	}
-
-	public boolean updateCheckCollectAchList(int archNum, String meId) {
-		return achDao.updateCheckCollectAchList(archNum,meId);
-	}
-
-	public List<AchievenentVO> allAchievenentList() {
-		return achDao.allAchievenentList();
+	public void insertAch(int achNum, String me_id) {
+		achDao.insertAch(achNum, me_id);
 	}
 
 	public List<AchievenentVO> getUserAchivement(String userId) {
