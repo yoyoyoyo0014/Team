@@ -2,7 +2,7 @@ import {Fragment, useState, useEffect, useContext} from 'react';
 import Modal from 'react-modal';
 import ReportType from '../reportType';
 import { bookReviewReport } from '../report';
-import MakePage from '../pageButton';
+import MakePage, { PageButton } from '../pageButton';
 import Report from '../report';
 import Button from '../form/button';
 import axios from 'axios';
@@ -386,20 +386,16 @@ function BookReview({bookNum, loadBook}) {
               <div className="review-footer">
                 {item.me_nickname ===user.me_nickname ? (<Button click={updateReview} text="수정" cls="btn btn-point"/>) : ''}
                 {item.me_nickname ===user.me_nickname ? (<Button click={deleteReview} text="삭제" cls="btn"/>) : ''}
-                {item.me_nickname !==user.me_nickname ? (<Button click={() => {userReport(item.re_me_id,item.re_content,item.re_num); setModalIsOpen(true)}} text="신고" cls="btn btn-danger" />) : ''}
+                {user?.me_id&&item.me_nickname !==user.me_nickname ? (<Button click={() => {userReport(item.re_me_id,item.re_content,item.re_num);
+                  setModalIsOpen(true)
+                  }} text="신고" cls="btn btn-danger" />) : ''}
               </div>
             </div>
           </li>
           ))}
         </ul>
         
-        <Button click={()=>changePage(page.currentPage-1)}  cls="btn" disabled = {!page.prev} text="이전"/>
-        
-        {page.pageList.map((item,index)=>{
-            return(<Button click={()=>changePage({index})} disabled={page.currentPage===(index+1)} key={index} cls="btn" text={item}/>)
-        })}
-
-        <Button click={()=>changePage(page.currentPage+1)}  cls="btn" disabled = {!page.next} text="다음"/>
+        <PageButton  getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}/>
       </div>
 
       <Modal
