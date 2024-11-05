@@ -12,8 +12,8 @@
     </select>
    
 	<insert id="insertKakaoMember" parameterType="kr.kh.ebook.model.vo.MemberVO">
-	    INSERT INTO member (me_id, me_nickname, me_email, me_name, me_gender, me_birth, me_phone, me_address)
-	    VALUES (#{me_id}, #{me_nickname}, #{me_email}, #{me_name}, #{me_gender}, #{me_birth}, #{me_phone}, #{me_address})
+	    INSERT INTO member (me_id, me_nickname, me_email, me_name, me_gender, me_birth, me_authority, me_phone, me_address)
+	    VALUES (#{me_id}, #{me_nickname}, #{me_email}, #{me_name}, #{me_gender}, #{me_birth}, #{me_authority}, #{me_phone}, #{me_address})
 	</insert>
 
    

@@ -189,8 +189,8 @@ const handleKakaoLogin = () => {
 
             if (data.user) {
               setUser(data.user);  // user 객체가 제대로 전달되었는지 확인**
+              localStorage.setItem("user", JSON.stringify(data.user)); // user 정보를 localStorage에 저장
               console.log("User 객체:", data.user); // 디버깅용 로그
-              console.log("Member ID:", data.user.me_id); // ID 확인
           } else {
               console.error("User 객체가 null입니다.");
           }

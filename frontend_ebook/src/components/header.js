@@ -39,6 +39,8 @@ const Header = ({ setSection }) => {
         setIsLoggedIn(false);  // 로그인 상태를 false로 업데이트
         setUser(null);
         localStorage.removeItem('loginToken');  // localStorage에서 토큰 삭제
+        localStorage.removeItem("loginMethod");  // loginMethod 삭제
+        localStorage.removeItem("user");         // user 정보 삭제
         sessionStorage.removeItem('loginToken');  // sessionStorage에서도 삭제
         localStorage.removeItem("kakao_access_token"); // 카카오 토큰 삭제 (예시)
 
