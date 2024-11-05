@@ -145,6 +145,10 @@ public class MemberService {
     
     public void applySuspension(String userId, int suspensionDays) {
         MemberVO member = memberDao.getMemberById(userId);
+        
+        if (member == null) {
+            throw new IllegalArgumentException("해당 ID의 사용자를 찾을 수 없습니다.");
+        }
 
         if ("기간 정지".equals(member.getMe_ms_name())) {
             throw new IllegalStateException("이미 제재가 적용된 사용자입니다.");
@@ -159,6 +163,7 @@ public class MemberService {
 
         memberDao.updateMember(member);
     }
+
 
     public void cancelSuspension(String userId) {
         // 회원 정보를 데이터베이스에서 가져옴
