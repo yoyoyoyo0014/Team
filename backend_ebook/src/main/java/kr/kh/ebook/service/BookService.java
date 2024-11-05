@@ -86,12 +86,17 @@ public class BookService {
 
 	public BookVO getRandomBook() {
 		int max = bookDao.selectMaxBookNum();
+		if(max == 0) {
+			return null;
+		}
 		Random random = new Random();
-		int rand = random.nextInt(max);
+		int rand = random.nextInt(max) + 1;
 		BookVO book = new BookVO();
 		do {
 			book = bookDao.selectBook(rand);
 		} while(book == null);
+		System.out.println("hi");
+		System.out.println(book);
 		return book;
 	}
 	

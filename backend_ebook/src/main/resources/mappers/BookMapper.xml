@@ -8,9 +8,9 @@
 	<select id="selectBook">
 		select book.*, group_concat(wr_name separator ' | ') as bk_writer
 		from book
-		join writer_list
+		left join writer_list
 		on bk_num = wl_bk_num
-		join writer
+		left join writer
 		on wr_num = wl_wr_num	
 		where bk_num = #{bookNum}
 	</select>
@@ -172,7 +172,7 @@
 	</select>
 	
 	<select id="selectMaxBookNum" resultType="int">
-		select max(bk_num) from book
+		select ifnull(max(bk_num), 0) from book
 	</select>
 	
 	<update id="updateReview">

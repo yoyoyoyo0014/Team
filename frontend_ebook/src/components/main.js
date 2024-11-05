@@ -5,7 +5,7 @@ import BestSellers from './main/bestsellers';
 import NewBooks from './main/newbooks';
 import EventSection from './main/eventsection';
 import { GenreContext } from '../context/GenreContext';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useParams, useLocation, useNavigate  } from 'react-router-dom';
 const Main = ({section}) => {
 	const {book} = useContext(GenreContext);
@@ -17,11 +17,6 @@ const Main = ({section}) => {
 	const navigate = useNavigate();
 
 	const location = useLocation();
-	let post = location.state;
-	if(post != null){
-		addPost(post);
-		location.state = null;
-	}
 
 	useEffect(() => {
     fetch('/main')

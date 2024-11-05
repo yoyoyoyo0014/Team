@@ -20,6 +20,7 @@ export const GenreProvider = ({children}) => {
 
 	const getInit = useCallback(async () => {
 		let data;
+		console.log('init')
 
 		await axios(options)
 		.then(res => {
@@ -45,6 +46,7 @@ export const GenreProvider = ({children}) => {
 			setMajorGenreList(data.majorGenreList);
 			setBook(data.book);
 		}
+		console.log(data);
 	}, [])
 
 	useEffect(() => {
