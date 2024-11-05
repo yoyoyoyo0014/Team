@@ -8,7 +8,7 @@ CREATE TABLE `member` (
 	`me_id`	varchar(255) primary key	NOT NULL,
 	`me_nickname`	varchar(8) unique	NOT NULL,
     `me_name` varchar(10) NOT NULL,
-	`me_pw`	varchar(15)	NULL,
+	`me_pw`	varchar(255)	NULL,
 	`me_email`	varchar(50) unique	NOT NULL,
 	`me_phone`	varchar(20)	NULL,
 	`me_address`	text	NULL,
@@ -155,7 +155,7 @@ CREATE TABLE `achievenent_List` (
 	`acl_ac_num`	int	NOT NULL,
 	`acl_me_id`	varchar(15)	NOT NULL,
 	`acl_date`	datetime	NULL DEFAULT CURRENT_TIMESTAMP,
-	`acl_check` varchar(2) NOT NULL DEFAULT 'X'
+	`acl_observe` varchar(2) NOT NULL DEFAULT '0'
 );
 
 CREATE TABLE `book_List` (
