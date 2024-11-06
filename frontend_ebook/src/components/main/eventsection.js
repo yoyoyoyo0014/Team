@@ -1,12 +1,15 @@
 import {Link,useParams} from 'react-router-dom';
 import Slide from '../slide';
+import eventLink1 from '../../images/이벤트_링크_01.png';
+import eventLink2 from '../../images/이벤트_링크_02.png';
+import eventLink3 from '../../images/이벤트_링크_03.png';
 
 const EventSection = () => {
 	const { co_num } = useParams();
 	let eventList = [
-		`https://image.aladin.co.kr/img/bn/blog/2024/04/240913_communebut_blog_640_1.jpg`,
-		`https://image.aladin.co.kr/img/bn/book/2024/04/m_241008_ourbook_kimyaong_p.jpg`,
-		`https://image.aladin.co.kr/img/bn/book/2024/04/m_241010_daughter_p.jpg`
+		eventLink1,
+		eventLink2,
+		eventLink3
 	];
 
 	return (
