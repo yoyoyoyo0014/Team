@@ -69,7 +69,7 @@ function BookSearch() {
      
    if(page.currentPage<=0)
       page.currentPage = 1;
-
+   console.log("검색")
    window.location.href =("/ebook/search/"+country+"/"+genre+"/"+category+"/"+page.currentPage+"/"+helpSearch+search);
   }//페이지 바꾸기
 
@@ -77,7 +77,6 @@ function BookSearch() {
     inputSerch =inputSerch.replace(helpSearch, "");
 
     var searchCount = await getSearchCount(country,genre,inputSerch);
-    console.log("검색개수"+searchCount)
     if(!searchCount) return;
     
     page.contentsCount = searchCount;
@@ -113,7 +112,6 @@ function BookSearch() {
   return (
     
     <div>
-      <form name="serach_book" onSubmit={()=>{changePage(1)}}>
       <Input value={search} type="text" change={setSearch} placeholder="검색칸"/>
       <div>
         <div className="theme-box genre-wrapper">
@@ -170,9 +168,8 @@ function BookSearch() {
           </label> 
         ))
       }
-      <Button text={'제출'} cls="btn btn-point" type={"submit"} onClick = {()=>{changePage(1)}}/>
+      <button className="btn btn-point" onClick = {()=>{changePage(1)}}>제출하기</button>
       <BookList bookList={bookList}/>
-      </form>
       <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} 
       nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
     </div>
@@ -222,7 +219,6 @@ async function selectSearch(country,genre,category,inputSerch = '',page){
       },
     })
     const bookListData = await response.json();
-    console.log(bookListData)
     if(bookListData ==null)
       return false;
     return bookListData;

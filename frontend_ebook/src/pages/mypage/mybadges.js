@@ -9,7 +9,7 @@ const MyBadges = () => {
 	let [myAchList, setMyAchList] = useState([]);
 	useEffect(() => {
 		axios({
-			url: '/ach/' + user?.me_id,
+			url: '/ach/getMyAchs/' + user?.me_id,
 			method: 'get'
 		}).then(res => {
 			setMyAchList(res.data.myAchList);
@@ -26,7 +26,7 @@ const MyBadges = () => {
 				<div className="theme-box">	
 					<div className="badge-container">
 						{myAchList && myAchList.map((item, i) => {
-							return(<div className={"badge-item " + (item.ac_date !== null ? "" : "not")}>
+							return(<div className="badge-item">
 								<div className="badge">
 									<i className={"fa-solid " + item.ac_icon}></i>
 								</div>

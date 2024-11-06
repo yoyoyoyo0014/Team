@@ -24,6 +24,8 @@ export const GenreProvider = ({children}) => {
 		await axios(options)
 		.then(res => {
 			data = res.data;
+
+			console.log(res);
 		})
 		.catch((error) => {
 			if (error.response) {
@@ -44,6 +46,9 @@ export const GenreProvider = ({children}) => {
 			setGenreList(data.genreList);
 			setMajorGenreList(data.majorGenreList);
 			setBook(data.book);
+
+			console.log('data');
+			console.log(data);
 		}
 	}, [])
 

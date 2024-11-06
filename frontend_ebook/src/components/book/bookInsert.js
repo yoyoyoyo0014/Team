@@ -25,7 +25,6 @@ function BookInsert() {
     formState: { errors }
   } = useForm();
   const {majorGenreList, genreList} = useContext(GenreContext);
-
   let[bookImgFile,setBookImgFile] = useState(null)//책표지 파일
   let[bookEqubFile,setBookEqubFile] = useState(null)//책 equb 파일
   let [book,setBook] = useState({
@@ -220,6 +219,8 @@ function BookInsert() {
       writerTypeList = await selectWriterType();
       setWriterTypeList([...writerTypeList]);
     })();
+    console.log(genreList);
+    console.log(majorGenreList);
   },[]);
 
   return (
