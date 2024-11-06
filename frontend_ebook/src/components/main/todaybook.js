@@ -8,7 +8,7 @@ const TodayBook = ({book}) => {
 				
 				<div className="book-info">
 					<div className="book-img">
-						<img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="자신만만한 음치 거북이들"/>
+						<img src={'/img/book_'+ book.bk_num + '.jpg'} alt="자신만만한 음치 거북이들"/>
 					</div>
 
 					<div className="book-desc">

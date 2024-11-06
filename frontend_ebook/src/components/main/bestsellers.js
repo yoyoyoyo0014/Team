@@ -47,7 +47,7 @@ const BestSellers = () => {
 							<div className="book-wrapper">
 								<div className="book-img">
 									<span className="rank">{i + 1}</span>
-									<img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt={book.bk_name}/>
+									<img src={'/img/book_'+ book.bk_num + '.jpg'} alt="불러오지 못한 이미지" />
 								</div>
 							</div>
 							<div className="book-info">
