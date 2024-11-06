@@ -19,7 +19,7 @@ const Main = ({section}) => {
 	const location = useLocation();
 
 	useEffect(() => {
-    fetch('/main2')
+    fetch('/main')
       .then((res) => res.json())
       .then(res=>{
 				if (res.postList) {
