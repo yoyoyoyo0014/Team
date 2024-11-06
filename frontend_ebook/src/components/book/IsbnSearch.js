@@ -80,6 +80,12 @@ function IsbnSearch({exit, onClose}) {
   return (
     <div>
       <div>현재 페이지 {page.currentPage}</div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',    // 가로 중앙 정렬
+        alignItems: 'center',        // 세로 중앙 정렬
+        flexDirection: 'column'      // 세로 방향으로 정렬
+      }}>
       <input onChange={e=>
       {
         setSearch(e.target.value)
@@ -133,6 +139,7 @@ function IsbnSearch({exit, onClose}) {
     <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
     </>
 )}
+</div>
     </div>
   );
 }
