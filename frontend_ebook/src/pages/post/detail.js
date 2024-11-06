@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../context/LoginContext';
 
 function Detail() {
   const { co_num, po_num } = useParams(); // co_num과 po_num을 둘 다 받아오기
@@ -7,11 +8,15 @@ function Detail() {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useContext(LoginContext);
+  const [currentPosts, setCurrentPosts] = useState([]);
 
   // 스크롤을 맨 위로 이동
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const canWrite = co_num === '2' && user && currentPosts.some((item) => item.po_me_id === user.me_id);
 
   function formatDate(isoString) {
     const date = new Date(isoString);
@@ -126,11 +131,12 @@ function Detail() {
 
       <div className="button-container" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }}>
         <button className="btn btn-outline-success" onClick={() => navigate(`/post/list/${co_num}`)}>목록으로</button>
-        
+        {canWrite && (
         <div style={{ display: 'flex', gap: '10px' }}>
           <button className="btn btn-outline-primary" onClick={() => navigate(`/post/update/${po_num}`)}>수정하기</button>
           <button className="btn btn-outline-danger" onClick={handleDelete}>삭제하기</button>
         </div>
+        )}
       </div>
     </div>
   );
