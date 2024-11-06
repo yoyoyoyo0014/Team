@@ -66,3 +66,5 @@ test/
 target/
 
 config.properties
+
+application.properties
