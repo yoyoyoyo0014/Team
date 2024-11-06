@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 public class BookVO {
 	private int bk_num;
 	private String bk_name;
+	private String bk_me_id;
+	private String bk_publisher;
 	private String bk_state;
 	private Date bk_date;
 	private int bk_sg_num;
@@ -22,6 +24,7 @@ public class BookVO {
 	private int bk_reviewCount;
 	private int bk_totalPage;
 	private int bk_agelimit;
+	private String bk_writer;
 	
 	private int bk_totalPurchase;
 	private int bk_age_60_male; 

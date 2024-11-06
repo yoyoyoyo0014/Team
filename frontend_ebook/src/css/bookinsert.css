@@ -1,0 +1,7 @@
+@charset 'utf-8';
+
+.theme-box.genre-wrapper {
+	display: flex;
+	gap: 2em;
+}
+.theme-box.genre-wrapper li {padding: .2em 0;}

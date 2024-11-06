@@ -36,9 +36,7 @@ const AddressInput = ({change, item}) => {
   };
 
 	const themeObj = {
-		bgColor: "#fafaf9", 			// 바탕 배경색
-		searchBgColor: "#f5f5f4", 		// 검색창 배경색
-		contentBgColor: "#fafaf9", 		// 본문 배경색(검색결과,결과없음,첫화면,검색서제스트)
+		bgColor: "#fff", 			// 바탕 배경색
 		pageBgColor: "#fafaf9", 		// 페이지 배경색
 		textColor: "#292524", 			// 기본 글자색
 		queryTextColor: "#292524", 		// 검색창 글자색
@@ -73,8 +71,8 @@ const AddressInput = ({change, item}) => {
 			</div>
 			{isOpen && (
 			<div id="wrap">
-				<div className="container">
-					<Button type="button" cls="btn btn-basic" text="닫기" click={toggleHandler}/>
+				<div className="container address-modal theme-box">
+					<Button type="button" style={{cursor: 'pointer', float: 'right'}} text="닫기" click={toggleHandler}/>
 					<DaumPostcode
 						theme={themeObj}
 						style={style}

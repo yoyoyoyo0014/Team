@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.kh.ebook.dao.AchievenentDAO">
+	<select id="selectNewAchList">
+		select *
+		from achievenent_list
+        join achievenent on acl_ac_num = ac_num
+		where acl_me_id = #{meId} and acl_observe = 0
+	</select>
+	
+	<update id="updateCheckAch">
+		update achievenent_list
+		set acl_observe = 1
+		where acl_me_id = #{meId} and acl_ac_num = #{achNum}
+	</update>
+	<select id="allAchievenentList">
+		select * from achievenent
+	</select>
+	<select id="getUserAchivement">
+		select * from achievenent
+		left join achievenent_list
+		on acl_ac_num = ac_num
+		where acl_me_id = #{userId} or acl_me_id is null
+	</select>
+	<update id="insertAch">
+		insert achievenent_list(acl_ac_num, acl_me_id)
+		values(#{achNum}, #{me_id})
+	</update>
+</mapper>

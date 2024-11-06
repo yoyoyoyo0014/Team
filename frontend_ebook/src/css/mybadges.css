@@ -1,0 +1,21 @@
+@charset 'utf-8';
+
+.badge-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	gap: 2em;
+	justify-items: center;
+}
+.badge-item {position: relative;}
+.badge-item .badge {
+	width: 60px;
+	height: 60px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #fff;
+	box-shadow: var(--box-shadow);
+	border-radius: 50%;
+	margin: 0 auto;
+}
+.badge-item .badge-info {padding-top: 1em;}

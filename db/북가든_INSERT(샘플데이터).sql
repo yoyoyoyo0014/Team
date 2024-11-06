@@ -4,8 +4,8 @@ values('admin123','관리자','관리자','admin123','admin123@naver.com','99090
 ('asd123','asd닉네임','asd123실명','asd123','asd123@naver.com','990909','1','user','사용');
 
 #책 추가
-insert into book(bk_name, bk_state, bk_publisher, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_isbn, bk_totalPage, bk_agelimit)
-values('빠르게 생각하고 똑똑하게 말하라','해외도서','출판사 이름','20240910','2','줄거리','17100','0','0010011101','320','12');
+insert into book(bk_name,bk_me_id, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_isbn, bk_totalPage, bk_agelimit)
+values('빠르게 생각하고 똑똑하게 말하라','admin123','해외도서','20240910','2','줄거리','17100','0','0010011101','320','12');
 
 #리뷰 추가
 insert into review(re_content, re_bk_num, re_star, re_date, re_me_id)
@@ -36,6 +36,7 @@ values('공지제목','공지내용','admin123','관리자','2024-10-01','1'),
 ('작가와의 만남','작가와의 만남','admin123','관리자','2024-10-01','4');
 
 #도전과제 추가
-insert into achievenent(ac_title, ac_info, ac_id, ac_icon)
-values('첫 방문을 축하합니다!','처음 방문 시 달성','creatAccount', 'fa-ribbon'),
-('첫 구매를 축하합니다!','첫 구매 시 달성','buyBookCount=1', 'fa-credit-card');
+insert into achievenent(ac_title, ac_info,ac_id)
+values('첫 방문을 축하합니다!','처음 방문 시 달성','creatAccount', 'fa-ribbon');
+insert into achievenent(ac_title, ac_info,ac_id)
+values('첫 구매를 축하합니다!','첫 구매 시 달성','buyBookCount=1', 'fa-credit-card');

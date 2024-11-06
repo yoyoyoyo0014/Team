@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @EnableAspectJAutoProxy
 public class ExecutionTimer {
 
-		@Pointcut("execution(* kr.kh.boot.service..*(..))")
+	@Pointcut("execution(* kr.kh.boot.service..*(..))")
     private void timer(){};
     
     //timer()는 위에서 생성한 메서드

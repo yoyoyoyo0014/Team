@@ -1,30 +1,27 @@
 package kr.kh.ebook.service;
 
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import kr.kh.ebook.controller.FileUploadController;
 import kr.kh.ebook.dao.BookDAO;
-import kr.kh.ebook.model.vo.BookListVO;
-import kr.kh.ebook.model.vo.BookSecondGenreVO;
-import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.BookGenreVO;
+import kr.kh.ebook.model.vo.BookListVO;
+import kr.kh.ebook.model.vo.BookVO;
 import kr.kh.ebook.model.vo.ReviewVO;
 import kr.kh.ebook.model.vo.WriterListVO;
-import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.BookPageMaker;
+import kr.kh.ebook.pagination.Criteria;
 import lombok.AllArgsConstructor;
-
 
 @Service
 @AllArgsConstructor
 public class BookService {
 	private BookDAO bookDao;
-	
-	public int count() {
-		return bookDao.count();
-	}
-	
+
 	//검색할 책 개수
 	public int searchBookCount(String country,int genre,String search) {
 		return bookDao.searchBookCount(country,genre,search);
@@ -66,19 +63,7 @@ public class BookService {
 	public BookVO selectBook(int bookNum) {
 		return bookDao.selectBook(bookNum);
 	}
-	//책 디테일
-	public boolean updateReview(ReviewVO writeUserReview) {
-		return bookDao.updateReview(writeUserReview);
-	}
 
-	public boolean deleteReview(int bookNum, String id) {
-		return bookDao.deleteReview(bookNum,id);
-	}
-
-	public List<BookGenreVO> selectGenreList() {
-		return bookDao.selectGenreList();
-	}
-	
 	public List<BookGenreVO> getAllGenre() {
 		List<BookGenreVO> list = bookDao.selectAllGenre();
 		return list;
@@ -89,19 +74,89 @@ public class BookService {
 		return list;
 	}
 
-	public List<BookSecondGenreVO> selectSecondGenreList() {
-		return bookDao.selectSecondGenre();
+	public List<BookVO> getBestSellers() {
+		List<BookVO> list = bookDao.selectBestSellers();
+		return list;
 	}
 
-	public int insertBook(BookVO book) {
+	public List<BookVO> getNewBooks() {
+		List<BookVO> list = bookDao.selectNewBooks();
+		return list;
+	}
+
+	public BookVO getRandomBook() {
+		int max = bookDao.selectMaxBookNum();
+		if(max == 0) {
+			return null;
+		}
+		Random random = new Random();
+		int rand = random.nextInt(max) + 1;
+		BookVO book = new BookVO();
+		do {
+			book = bookDao.selectBook(rand);
+		} while(book == null);
+		System.out.println("hi");
+		System.out.println(book);
+		return book;
+	}
+	
+	//책 디테일
+	public boolean updateReview(ReviewVO writeUserReview) {
+		return bookDao.updateReview(writeUserReview);
+	}
+
+	public boolean deleteReview(int bookNum, String id) {
+		System.out.println("del : " + bookNum + " " + id);
+		return bookDao.deleteReview(bookNum,id);
+	}
+
+	public boolean insertBook(BookVO book) {
 		return bookDao.insertBook(book);
 	}
 
 	public boolean insertWriterList(WriterListVO writerListVO) {
 		return bookDao.insertWriterList(writerListVO);
 	}
-	
 
-	
+	public void updateReviewCount(int re_bk_num, char operator) {
+		bookDao.updateReviewCount(re_bk_num, operator);
+	}
+
+	public void updateReviewScore(int re_bk_num, double re_star, char operator) {
+		bookDao.updateReviewScore(re_bk_num, re_star, operator);
+	}
+
+	public List<ReviewVO> selectAllMyReview(Criteria cri, String userId) {
+		return bookDao.selectAllMyReview(cri, userId);
+	}
+
+	public int selectMyReviewCount(String userId) {
+		return bookDao.selectMyReviewCount(userId);
+	}
+
+	public int selectCountBookBuy(String userId) {
+		return bookDao.selectCountBookBuy(userId);
+	}
+
+	public void deleteBook(int bk_num) {
+		bookDao.deleteBook(bk_num);
+	}
+
+	public void deleteWriterList(int bk_num) {
+		bookDao.deleteWriterList(bk_num);
+	}
+
+	public Integer selectMyBookPage(String userId, int bookNum) {
+		return bookDao.selectBookPage(userId,bookNum);
+	}
+
+	public void insertBookFiles(MultipartFile epubFile, MultipartFile imgFile, int bk_num) {
+//		bookDao.insertBookFiles(epubFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(epubFile.getOriginalFilename()));
+//		bookDao.insertBookFiles(imgFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(imgFile.getOriginalFilename()));
+	}
+
+	public BookVO bookReviewInfo(int bookNum) {
+		return bookDao.bookReviewInfo(bookNum);
+	}
 	
 }

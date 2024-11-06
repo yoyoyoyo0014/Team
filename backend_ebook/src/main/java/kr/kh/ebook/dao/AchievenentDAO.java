@@ -1,0 +1,22 @@
+package kr.kh.ebook.dao;
+
+import java.util.List;
+
+import kr.kh.ebook.model.vo.AchievenentVO;
+
+public interface AchievenentDAO {
+
+	List<AchievenentVO> selectNewAchList(String meId);
+
+	void updateCheckAch(int achNum, String meId);
+
+	List<AchievenentVO> getUserAchivement(String userId);
+
+	List<AchievenentListVO> selecNowCollectAchList(@Param("meId")String meId);
+
+	boolean updateCheckCollectAchList(@Param("achNum")int archNum,@Param("meId") String meId);
+
+	List<AchievenentVO> allAchievenentList();
+
+	List<AchievenentVO> getUserAchivement(String userId);
+}

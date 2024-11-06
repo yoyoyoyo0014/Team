@@ -32,9 +32,8 @@ public class WriterService {
 		return res;
 	}
 
-	public List<WriterListVO> selectWriterList(int bookNum) {
-		List<WriterListVO> res = writerDao.selectWriterList(bookNum);
-		return res;
+	public List<WriterVO> selectWriterList(int bookNum) {
+		return writerDao.selectWriterList(bookNum);
 	}
 
 	public WriterVO selectWriter(int wr_num) {

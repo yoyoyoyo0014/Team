@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class BookSecondGenreVO {
-	private int sg_num;
-	private String sg_name;
+public class BookSecondGenreVO extends BookGenreVO {
 	private int sg_parent;
 }
