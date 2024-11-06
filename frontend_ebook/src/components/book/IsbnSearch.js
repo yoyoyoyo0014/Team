@@ -89,7 +89,8 @@ function IsbnSearch({exit, onClose}) {
         padding: '8px',
         borderRadius: '4px',
         border: '1px solid #ccc',
-        height: '30px'  
+        height: '30px' ,
+        margin : '15px' 
     }}/><button onClick={()=>{submitSearch();
         page.currentPage = 1; setPage(page)
       }} className="btn btn-point">검색</button>
@@ -105,7 +106,7 @@ function IsbnSearch({exit, onClose}) {
         </thead>
         <tbody>
             {searchDataList.map((item, index) => (
-                <tr key={index}>
+                <tr key={index} style={{ padding: '100px' }}>
                   <td>
                     <TruncateHTML htmlContent={item.titleInfo} maxLength={20} />
                   </td>
@@ -114,9 +115,13 @@ function IsbnSearch({exit, onClose}) {
                             : item.isbn
                         }
                     </td>
-                    <td>
+                    <td >
                         {item.isbn !== null && item.isbn !== '' && (
-                            <Button click={() => insertBook(item)} cls="btn btn-point" text="추가" />
+                            <Button style={{
+                              borderRadius: '2px',
+                              textAlign: 'center',     // 가로 중앙 정렬
+                              verticalAlign: 'middle', // 세로 중앙 정렬
+                            }} click={() => insertBook(item)} cls="btn btn-point" text="추가" />
                         )}
                     </td>
                 </tr>
