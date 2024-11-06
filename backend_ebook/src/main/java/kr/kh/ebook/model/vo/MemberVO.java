@@ -32,5 +32,6 @@ public class MemberVO {
     private String me_enterCount;	 // 로그인 횟수
     private String me_last;          // 마지막 접속일
     private String me_naverId;       // 네이버 사용자 고유 ID (네이버 로그인 시 사용)
+    private int me_point;
     
 }
