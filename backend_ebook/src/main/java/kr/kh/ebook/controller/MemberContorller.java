@@ -33,6 +33,9 @@ public class MemberContorller {
     private MemberService memberService;
     
     @Autowired
+    private AchievenentService achService;
+    
+    @Autowired
     private JwtUtil jwtUtil;
 
     // 회원 아이디로 사용자 정보 조회 (일반 로그인, 소셜 로그인 통합)

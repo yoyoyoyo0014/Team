@@ -12,11 +12,5 @@ public interface AchievenentDAO {
 
 	List<AchievenentVO> getUserAchivement(String userId);
 
-	List<AchievenentListVO> selecNowCollectAchList(@Param("meId")String meId);
-
-	boolean updateCheckCollectAchList(@Param("achNum")int archNum,@Param("meId") String meId);
-
-	List<AchievenentVO> allAchievenentList();
-
-	List<AchievenentVO> getUserAchivement(String userId);
+	void insertAch(int achNum, String me_id);
 }

@@ -30,8 +30,4 @@ public class AchievenentService {
 	public void insertAch(int achNum, String me_id) {
 		achDao.insertAch(achNum, me_id);
 	}
-
-	public List<AchievenentVO> getUserAchivement(String userId) {
-		return achDao.getUserAchivement(userId);
-	}
 }
