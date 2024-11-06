@@ -36,4 +36,7 @@
 	<delete id="deletePost">
 		delete from post where po_num = #{po_num}
 	</delete>
+	<update id="updatePostView">
+		update post set po_view=po_view+1 where po_num = #{po_num}
+	</update>
 </mapper>

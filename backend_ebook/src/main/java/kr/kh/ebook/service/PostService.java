@@ -61,6 +61,10 @@ public class PostService {
 	public boolean deletePost(int po_num) {
 		return postDao.deletePost(po_num);
 	}
+
+	public int updatePostView(int po_num) {
+		return postDao.updatePostView(po_num);
+	}
 	
 	
 }

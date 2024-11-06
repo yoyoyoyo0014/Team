@@ -21,6 +21,8 @@ public interface PostDAO {
 	boolean updatePost(PostVO post);
 
 	boolean deletePost(int po_num);
+
+	int updatePostView(int po_num);
 	
 	
 }
