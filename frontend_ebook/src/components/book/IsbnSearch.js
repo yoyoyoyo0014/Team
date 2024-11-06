@@ -87,7 +87,9 @@ function IsbnSearch({exit, onClose}) {
               <td dangerouslySetInnerHTML={{__html: item.titleInfo}}></td>
               <td>{item.isbn}</td>
               <td>
-                <Button click={()=>insertBook(item)} cls="btn btn-point" text="추가" />
+                {item.isbn !== null && item.isbn !=='' && (
+                    <Button click={() => insertBook(item)} cls="btn btn-point" text="추가" />
+                )}
               </td>
               </tr>)
           })

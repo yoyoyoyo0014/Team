@@ -3,34 +3,16 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.kh.ebook.dao.AchievenentDAO">
-	<select id="selectAchList">
+	<select id="selectNewAchList">
 		select *
 		from achievenent_list
-		where acl_ac_num = #{achNum} and acl_me_id = #{memberNum}
+        join achievenent on acl_ac_num = ac_num
+		where acl_me_id = #{meId} and acl_observe = 0
 	</select>
 	
-	<insert id="insertAchList">
-		insert into achievenent_list(acl_ac_num,acl_me_id)
-		values(#{achNum},#{memberNum})
-	</insert>
-	
-	<select id="selectAchievenent">
-		select *
-		from achievenent
-		<if test = "achNum !=0">
-		where ac_num = #{achNum} 
-		</if>
-	</select>
-	
-	<select id="selecNowCollectAchList">
-		select *
-		from achievenent_list
-		where acl_check = 'X' and acl_me_id = #{meId}
-	</select>
-	
-	<update id="updateCheckCollectAchList">
+	<update id="updateCheckAch">
 		update achievenent_list
-		set acl_check ='O'
+		set acl_observe = 1
 		where acl_me_id = #{meId} and acl_ac_num = #{achNum}
 	</update>
 	<select id="allAchievenentList">
@@ -42,4 +24,8 @@
 		on acl_ac_num = ac_num
 		where acl_me_id = #{userId} or acl_me_id is null
 	</select>
+	<update id="insertAch">
+		insert achievenent_list(acl_ac_num, acl_me_id)
+		values(#{achNum}, #{me_id})
+	</update>
 </mapper>

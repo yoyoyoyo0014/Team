@@ -151,8 +151,12 @@ public class BookService {
 	}
 
 	public void insertBookFiles(MultipartFile epubFile, MultipartFile imgFile, int bk_num) {
-		bookDao.insertBookFiles(epubFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(epubFile.getOriginalFilename()));
-		bookDao.insertBookFiles(imgFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(imgFile.getOriginalFilename()));
+//		bookDao.insertBookFiles(epubFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(epubFile.getOriginalFilename()));
+//		bookDao.insertBookFiles(imgFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(imgFile.getOriginalFilename()));
+	}
+
+	public BookVO bookReviewInfo(int bookNum) {
+		return bookDao.bookReviewInfo(bookNum);
 	}
 	
 }

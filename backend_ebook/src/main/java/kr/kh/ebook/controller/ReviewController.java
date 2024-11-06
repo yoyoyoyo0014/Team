@@ -20,17 +20,17 @@ import kr.kh.ebook.service.BookService;
 @RequestMapping("/review")
 @RestController
 public class ReviewController {
-	
+
 	@Autowired
 	BookService bookService;
-	
+
 	// 내 리뷰 보기 - 없음 null
 	@GetMapping("/myReviewCount/{bookNum}/{userId}")
 	@ResponseBody
 	public ReviewVO selectMyReview(@PathVariable("bookNum") int bookNum, @PathVariable("userId") String userId) {
 		return bookService.selectMyReview(userId, bookNum);
 	}
-	
+
 	// 내 리뷰 리스트 보기 - 없음 null
 	@GetMapping("/selectMyReview/{userId}/{pageNum}")
 	@ResponseBody
@@ -46,7 +46,16 @@ public class ReviewController {
 		map.put("reviewPm", pm);
 		return map;
 	}
-	
+
+	// 해당 책에 내가 쓴 리뷰가 있는지 조회
+	@GetMapping("/existMyReview/{bookNum}/{userId}")
+	@ResponseBody
+	public ReviewVO existMyReview(@PathVariable("bookNum") int bookNum, @PathVariable("userId") String userId) {
+		ReviewVO review = bookService.selectMyReview(userId, bookNum);
+		return review;
+	}
+
+
 	//리뷰 개수
 	@PostMapping("/reviewCount/{bookNum}")
 	@ResponseBody
@@ -54,7 +63,6 @@ public class ReviewController {
 		int res = bookService.reviewCount(bookNum);
 		return res;
 	}
-	
 	//리뷰 리스트
 	@PostMapping("/selectReview/{bookNum}/{pageNum}")
 	@ResponseBody
@@ -64,7 +72,7 @@ public class ReviewController {
 		map.put("reviewList", list);
 		return map;
 	}
-	
+
 	//리뷰 작성
 	@PostMapping("/insertReview")
 	@ResponseBody
@@ -72,7 +80,7 @@ public class ReviewController {
 		System.out.println(writeUserReview.getRe_me_id());
 		ReviewVO Myreview = bookService.selectMyReview(writeUserReview.getRe_me_id(), writeUserReview.getRe_bk_num());
 		if(Myreview != null) return false;
-		
+
 		boolean res = bookService.insertReview(writeUserReview);
 		if (res) {
 			bookService.updateReviewCount(writeUserReview.getRe_bk_num(), '+');
@@ -80,21 +88,31 @@ public class ReviewController {
 			return true;
 		} else return false;
 	}
-	
+
 	//리뷰 수정
 	@PostMapping("/updateReview")
 	@ResponseBody
 	public boolean updateReview(@RequestBody ReviewVO writeUserReview) {
+		ReviewVO oriReview = bookService.selectMyReview(writeUserReview.getRe_me_id(), writeUserReview.getRe_bk_num());
+		System.out.println("점수 : "+  (writeUserReview.getRe_star()- oriReview.getRe_star()));
+		if(writeUserReview.getRe_star()>oriReview.getRe_star()) {
+			double score = writeUserReview.getRe_star()- oriReview.getRe_star();
+			bookService.updateReviewScore(writeUserReview.getRe_bk_num(),score, '+');
+		}else if(writeUserReview.getRe_star()<oriReview.getRe_star()){
+			double score =  oriReview.getRe_star() - writeUserReview.getRe_star();
+			bookService.updateReviewScore(writeUserReview.getRe_bk_num(),score, '-');
+		}
 		boolean res = bookService.updateReview(writeUserReview);
+		
 		return res;
 	}
-	
+
 	//리뷰 삭제
 	@PostMapping("/deleteReview/{bookNum}/{userId}")
 	@ResponseBody
 	public boolean deleteReview(@PathVariable("bookNum") int bookNum, @PathVariable("userId") String userId) {
 		ReviewVO myReview = bookService.selectMyReview(userId, bookNum);
-		
+
 		boolean res = false;
 		//boolean res = 
 		if (myReview != null) {
@@ -104,5 +122,5 @@ public class ReviewController {
 			return true;
 		} else return false;
 	}
-	
+
 }

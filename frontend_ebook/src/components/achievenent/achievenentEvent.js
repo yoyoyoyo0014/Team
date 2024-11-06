@@ -88,14 +88,31 @@ export function AchievenentEvent({meId}) {
 
   return (
     <Modal
-      isOpen={modalIsOpen} // 상태 값 사용
-      onRequestClose={()=>OffAchievenent()} // 함수 전달
+      className="theme-box"
+      isOpen={modalIsOpen}
+      onRequestClose={() => setModalIsOpen(false)}
       style={{
-        overlay: { backgroundColor: 'rgba(1, 1, 1, 0.5)', zIndex: 100 },
-        content: { color: 'black', padding: '20px', borderRadius: '8px' },
+        overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 100 },
+        content: { background: '#fff', maxWidth: '600px', width: '90vw'},
       }}
     >
-      <AchievenentWindow achList={achData} exit={()=>OffAchievenent()} />
+      <div className="section-title">
+        <h3 className="txt-center">새로운 뱃지가 있어요!</h3>
+      </div>
+      <hr />
+      {achList && achList.map((item, i) => {
+        return(<div className="badge-container" style={{marginTop: '2em'}}>
+          <div className="badge-item">
+            <div className="badge">
+              <i className={"fa-solid " + item.ac_icon}></i>
+            </div>
+            <div className="badge-info txt-center">
+              <strong>{item.ac_title}</strong>
+              <p>{item.ac_info}</p>
+            </div>
+          </div>
+        </div>)
+      })}
     </Modal>
   );
 }

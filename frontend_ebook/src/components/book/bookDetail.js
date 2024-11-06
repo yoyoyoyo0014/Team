@@ -34,7 +34,6 @@ const BookDetail = () => {
     bk_totalPage : 0,  //총 페이지
     bk_agelimit : 0, //연령제한
 
-
     bk_totalPurchase: 0,  //총 구매 수
     bk_age_60_male: 0,  //60대 남성
     bk_age_60_female: 0,  //60대 여성
@@ -109,7 +108,23 @@ const BookDetail = () => {
 		})
   }
 
-  const loadBook = () => {
+  function updateReview(){
+    fetch('/ebook/selectBookReviewInfo/'+bookNum,{
+      headers: {
+        'Content-Type': 'application/json',  // Content-Type 헤더 설정
+      },
+    })
+    .then(res=>res.json())
+    .then(reviewData=>{
+      console.log("수정 완료!")
+      book.bk_reviewCount = reviewData.bk_reviewCount;
+      book.bk_score = reviewData.bk_score;
+      setBook({...book})
+    })
+    .catch(e=>console.error(e));
+  }
+
+  async function loadBook(){
     const options = {
       url: '/api/selectBook/' + bookNum,
       method:'GET',
@@ -123,13 +138,13 @@ const BookDetail = () => {
       }
     }
 
-    axios(options)
-    .then(res => {
+    try {
+      const res = await axios(options);
       setBook(res.data.book);
       setWriter(res.data.writer);
-      console.log("data load 성공")
-    })
-    .catch((error) => {
+      console.log("data load 성공");
+      return res.data.book;
+    } catch (error) {
       if (error.response) {
         // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
         console.log(error.response.status);
@@ -143,11 +158,17 @@ const BookDetail = () => {
         console.log('Error', error.message);
       }
       console.log(error.config);
-    })
+    }
   }
 
   useEffect(() => {
-    loadBook();
+    (async () => {
+      book = await loadBook();
+      popularityDistributionChart = PopularityDistributionChart(book);
+      setPopularityDistributionChart(popularityDistributionChart);
+      setBook(book);
+    })();
+    //
   }, [setBook])
   
   return (
@@ -199,7 +220,7 @@ const BookDetail = () => {
       <div className="review-container section">
         <h3>리뷰</h3>
         
-        <BookReview bookNum={bookNum} loadBook={loadBook}></BookReview>
+        <BookReview bookNum={bookNum} loadBook={loadBook} changeReview = {updateReview}></BookReview>
       </div>
       
       <BarGraph popularityDistributionChart={popularityDistributionChart}/>
@@ -208,6 +229,7 @@ const BookDetail = () => {
 }
 
 function PopularityDistributionChart(book){
+  console.log(book)
   let popularityDistributionChart = {
     bk_age_60_malePer: book.bk_age_50_male/book.bk_totalPurchase  *100,
     bk_age_60_femalePer: book.bk_age_60_female/book.bk_totalPurchase  *100,

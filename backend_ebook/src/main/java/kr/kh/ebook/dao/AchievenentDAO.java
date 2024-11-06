@@ -2,18 +2,15 @@ package kr.kh.ebook.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
-import kr.kh.ebook.model.vo.AchievenentListVO;
 import kr.kh.ebook.model.vo.AchievenentVO;
 
 public interface AchievenentDAO {
 
-	List<AchievenentListVO> selectAchList(@Param("achNum")int achNum,@Param("memberNum") String memberNum);
+	List<AchievenentVO> selectNewAchList(String meId);
 
-	boolean insertAchList(@Param("achNum")int achNum,@Param("memberNum") String memberId);
+	void updateCheckAch(int achNum, String meId);
 
-	AchievenentVO selectAchievenent(@Param("achNum") int achNum);
+	List<AchievenentVO> getUserAchivement(String userId);
 
 	List<AchievenentListVO> selecNowCollectAchList(@Param("meId")String meId);
 

@@ -20,11 +20,12 @@ export const GenreProvider = ({children}) => {
 
 	const getInit = useCallback(async () => {
 		let data;
-		console.log('init')
 
 		await axios(options)
 		.then(res => {
 			data = res.data;
+
+			console.log(res);
 		})
 		.catch((error) => {
 			if (error.response) {

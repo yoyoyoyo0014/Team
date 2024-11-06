@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.kh.ebook.exception.SuspensionException;
 import kr.kh.ebook.model.vo.MemberVO;
+import kr.kh.ebook.service.AchievenentService;
 import kr.kh.ebook.service.MemberService;
 import kr.kh.ebook.util.JwtUtil;
 
@@ -74,11 +75,11 @@ public class MemberContorller {
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerNormalMember(@RequestBody MemberVO memberVO) {
         boolean isRegistered = memberService.registerNormalMember(memberVO);
-
         Map<String, String> response = new HashMap<>();
         if (isRegistered) {
             response.put("message", "회원 등록 완료");
             response.put("token", "JWT 토큰 예시"); // 회원가입 후 JWT 토큰 발급 가능
+            achService.insertAch(1, memberVO.getMe_id());
             return ResponseEntity.ok(response);
         } else {
             response.put("message", "회원 등록 실패");

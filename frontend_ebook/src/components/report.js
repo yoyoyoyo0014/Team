@@ -2,6 +2,7 @@
 import {useState, useEffect, useContext} from 'react';
 import ReportType from './reportType';
 import { LoginContext } from '../context/LoginContext';
+import Button from './form/button';
 export function Report({getReport,exit}) {
   //user = 해당 유저
   //reportUser = 신고 당한 유저
@@ -49,13 +50,11 @@ export function Report({getReport,exit}) {
 
   
   function submitReport(report,successSubmitReport){
-    // if(report.rp_me_id == null){
-    //   alert('로그인을 해주세요.');
-    //   return;
-    // }
+    if(!user?.me_id){
+      alert('로그인을 해주세요')
+      return;
+    }
     var targetId = report.rp_target;
-    var rpNum = reportTypeNum;
-    var rpId = report.rp_id;
     fetch("/report/insertReport/"+user?.me_id+"/"+
       targetId+"/"+reportTypeNum+"/NotUsed/"+reportContent,{
       //body : JSON.stringify(report),
@@ -113,6 +112,7 @@ export function Report({getReport,exit}) {
 
   return (
     <div>
+      <div className="theme-box genre-wrapper">
       {reportType.map((item,index)=>{
         return(
           // <label key={index}>{item.rt_name}
@@ -126,11 +126,12 @@ export function Report({getReport,exit}) {
           <label htmlFor={"reportType_" + item.rt_num}>{item.rt_name}</label></>
         )
       })}
-
+      </div>
+      <br/>
       <textarea onChange={e=>reportContent=e.target.value}
         maxLength="255"  placeholder="신고사유"></textarea>
-      <button onClick={clickReportButton}>보내기</button>
-      <button onClick={exit}>닫기</button>
+      <button className="btn btn-point" onClick={clickReportButton}>신고하기</button>
+      <button className="btn btn-point" onClick={exit}>취소</button>
     </div>
   )
 }

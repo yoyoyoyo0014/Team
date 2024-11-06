@@ -2,7 +2,7 @@ import {Fragment, useState, useEffect, useContext} from 'react';
 import Modal from 'react-modal';
 import ReportType from '../reportType';
 import { bookReviewReport } from '../report';
-import MakePage from '../pageButton';
+import MakePage, { PageButton } from '../pageButton';
 import Report from '../report';
 import Button from '../form/button';
 import axios from 'axios';
@@ -12,7 +12,7 @@ import { LoginContext } from '../../context/LoginContext';
 
 Modal.setAppElement('#root'); // 접근성 관련 설정 (필수)
 
-function BookReview({bookNum, loadBook}) {
+function BookReview({bookNum, loadBook,changeReview}) {
   //bookNum = 받을 책 번호
   //userIsBuy = 유저가 이미 책을 샀는가
   //review =  유저가 리뷰를 작성 하면 받는 값
@@ -65,10 +65,11 @@ function BookReview({bookNum, loadBook}) {
   })//신고객체
   
   function insertReview(){
-    if(user === false){
+    if(!user?.me_id){
       alert('로그인을 해주세요.')
       return;
     }
+    
     if(writerIsReview){
       console.log(user?.me_id)
       alert('이미 리뷰를 작성하였습니다.')
@@ -116,6 +117,7 @@ function BookReview({bookNum, loadBook}) {
         selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
         changePageOri();//페이지 번호 재설정
         loadBook();
+        changeReview();
       } else console.log('리뷰가 작성되지 않았습니다.');
     })
 
@@ -161,6 +163,7 @@ function BookReview({bookNum, loadBook}) {
       if(resGetReviewData){
         alert('성공적으로 수정되었습니다.');
         oriWriteUserReview = writeUserReview;
+        changeReview();
         setOriWriteUserReview(writeUserReview);
         selectReviewList(page.currentPage);//리뷰 목록 다시가져오기
         changePageOri();//페이지 번호 재설정
@@ -184,9 +187,10 @@ function BookReview({bookNum, loadBook}) {
       if(resDeleteData){
         alert('성공적으로 삭제되었습니다.');
         oriWriteUserReview = null;
+        writeUserReview.re_star = null;
         //setOriWriteUserReview(writeUserReview);
         setWriterIsReview(false);
-
+        changeReview();
         loadBook();
         writeUserReview.re_content = '';
         setWriteUserReview({...writeUserReview, re_content : ' '});
@@ -224,12 +228,13 @@ function BookReview({bookNum, loadBook}) {
   }//별점이 0점이하 5점 초과 시 false
 
   function checkReview(){
-    if(user?.me_id ==null)
+    if(!user?.me_id)
       return;
 
-    fetch('/review/selectMyReview/' + bookNum + '/' + user?.me_id, {
+    var userId = user?.me_id;
+    fetch('/review/existMyReview/' + bookNum + '/' + userId, {
       //method : "post",
-      body : JSON.stringify(writeUserReview),
+      //body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
@@ -237,6 +242,7 @@ function BookReview({bookNum, loadBook}) {
     .then(res=>res.text())
     .then(userReviewData=>{
       // userReviewData = 유저의 리뷰 없으면 null
+      console.log(userReviewData)
       if(userReviewData){
         setWriterIsReview(true);
         writeUserReview = JSON.parse(userReviewData);
@@ -354,9 +360,17 @@ function BookReview({bookNum, loadBook}) {
         })}
 				</div>
 
-        <textarea style={{background: '#fff'}} onChange={e => changeContent(e)} placeholder="최대 255자 입력 가능"></textarea>
-
-        <Button click={insertReview} text="작성" cls="btn btn-point"/>
+        <textarea value={writeUserReview.re_content} style={{background: '#fff'}} onChange={e => changeContent(e)} placeholder="최대 255자 입력 가능">
+        
+        </textarea>
+        {!writerIsReview ? (
+            <Button click={insertReview} text="작성" cls="btn btn-point" />
+            ) : (
+                <>
+                    <Button click={updateReview} text="수정" cls="btn btn-point" />
+                    <Button click={deleteReview} text="삭제" cls="btn" />
+                </>
+            )}
       </div>
 
       <div className="review-list">
@@ -384,22 +398,18 @@ function BookReview({bookNum, loadBook}) {
               <p>{item.re_content}</p>
               
               <div className="review-footer">
-                {item.me_nickname ===user.me_nickname ? (<Button click={updateReview} text="수정" cls="btn btn-point"/>) : ''}
-                {item.me_nickname ===user.me_nickname ? (<Button click={deleteReview} text="삭제" cls="btn"/>) : ''}
-                {item.me_nickname !==user.me_nickname ? (<Button click={() => {userReport(item.re_me_id,item.re_content,item.re_num); setModalIsOpen(true)}} text="신고" cls="btn btn-danger" />) : ''}
+                {item.me_nickname ===user?.me_nickname ? (<Button click={updateReview} text="수정" cls="btn btn-point"/>) : ''}
+                {item.me_nickname ===user?.me_nickname ? (<Button click={deleteReview} text="삭제" cls="btn"/>) : ''}
+                {user?.me_id&&item.me_nickname !==user?.me_nickname ? (<Button click={() => {userReport(item.re_me_id,item.re_content,item.re_num);
+                  setModalIsOpen(true)
+                  }} text="신고하기" cls="btn btn-danger" />) : ''}
               </div>
             </div>
           </li>
           ))}
         </ul>
         
-        <Button click={()=>changePage(page.currentPage-1)}  cls="btn" disabled = {!page.prev} text="이전"/>
-        
-        {page.pageList.map((item,index)=>{
-            return(<Button click={()=>changePage({index})} disabled={page.currentPage===(index+1)} key={index} cls="btn" text={item}/>)
-        })}
-
-        <Button click={()=>changePage(page.currentPage+1)}  cls="btn" disabled = {!page.next} text="다음"/>
+        <PageButton  getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}/>
       </div>
 
       <Modal
