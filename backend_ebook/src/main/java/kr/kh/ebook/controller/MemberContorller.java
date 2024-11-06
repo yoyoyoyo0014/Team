@@ -79,7 +79,6 @@ public class MemberContorller {
         if (isRegistered) {
             response.put("message", "회원 등록 완료");
             response.put("token", "JWT 토큰 예시"); // 회원가입 후 JWT 토큰 발급 가능
-            achService.insertAch(1, memberVO.getMe_id());
             return ResponseEntity.ok(response);
         } else {
             response.put("message", "회원 등록 실패");

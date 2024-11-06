@@ -6,25 +6,12 @@ import MySubMenu from "../../components/mysubmenu";
 import "../../css/mypage.css";
 import axios from "axios";
 import MakePage, { PageButtonV2 } from "../../components/pageButton";
-import { AchievenentSwitch } from "../../components/achievenent/AchieventContext";
 import { AchievenentEvent } from "../../components/achievenent/achievenentEvent";
 
 const MypageIndex = () => {
 	const lookPageContentsCount = 2;
 	const { user } = useContext(LoginContext);
 	const [nickname, setNickname] = useState(''); // 닉네임 상태 추가
-
-	 // `window` 객체에 `setNickname` 등록
-	 useEffect(() => {
-    window.setNickname = (newNickname) => {
-      setNickname(newNickname);
-    };
-
-    // 컴포넌트가 언마운트될 때 `window`에서 제거
-    return () => {
-      delete window.setNickname;
-    };
-  }, []);
 
 	const [myReview, setMyReview] = useState({
 		list: [],
@@ -73,10 +60,8 @@ const MypageIndex = () => {
 					setMyReview(prev => {
 						return {...prev, list: res.data.reviewList, pm: res.data.reviewPm}
 					});
-					console.log('review');
 				} else {
 					let tmp = MakePage(res.data.pm.totalCount,page.currentPage,lookPageContentsCount);
-					console.log('request');
 					setRequestPage(tmp);
 					setMyRequest(prev => {
 						return {...prev, list: res.data.list, pm: res.data.pm}
@@ -84,18 +69,6 @@ const MypageIndex = () => {
 				}
       })
       .catch((error) => {
-        if (error.response) {
-          // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
-          console.log(error.response.status);
-        } else if (error.request) {
-          // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
-          // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
-          // node.js에서는 http.ClientRequest 인스턴스입니다.
-          console.log(error.request);
-        } else {
-          // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
-          console.log('Error', error.message);
-        }
         console.log(error);
       })
 	}
@@ -120,53 +93,22 @@ const MypageIndex = () => {
 		loadMyList('/post/list/2/' + user?.me_id + '/');
 	}, [setMyRequest])
 
-	const fetchNickname = async () => {
-		try {
-			const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
-			const data = await response.json();
-			setNickname(data.nickname || "닉네임없음");
-		} catch (error) {
-			console.error("닉네임 가져오기 오류:", error);
-			setNickname("닉네임없음");
-		}
-	};
-	
 	useEffect(() => {
+		const fetchNickname = async () => {
+			try {
+				const response = await fetch(`/ebook/member/nickname/${user?.me_id}`);
+				const data = await response.json();
+				setNickname(data.nickname || "닉네임없음");
+			} catch (error) {
+				console.error("닉네임 가져오기 오류:", error);
+				setNickname("닉네임없음");  // 오류 발생 시 기본값 설정
+			}
+		};
+	
 		if (user?.me_id) {
 			fetchNickname();  // 사용자 ID가 있을 때 닉네임을 가져옴
 		}
 	}, [user]);
-
-	const openNicknamePopup = () => {
-		if (!user?.me_id) {
-			alert("사용자 정보를 불러오지 못했습니다.");
-			return;
-		}
- 
-		// 팝업 창 열기
-		const popup = window.open(
-			`/nickname-popup.html?me_id=${user.me_id}`,
-			"닉네임 수정",
-			"width=600,height=150,resizable=no,scrollbars=no,status=no"
-		);
- 
-		// 팝업 창이 로드된 후 실행되는 이벤트
-		popup.onload = () => {
-			console.log("팝업 창 로드 완료");
- 
-			// 여기서 팝업에 데이터를 보내거나 추가 작업을 수행할 수 있습니다.
-			popup.postMessage({ type: 'INIT_DATA', data: { me_id: user.me_id } }, '*');
-		};
- 
-		// 팝업 창이 닫혔는지 주기적으로 확인
-		const popupCheckInterval = setInterval(() => {
-			if (popup.closed) {
-				clearInterval(popupCheckInterval);
-				console.log("팝업 창이 닫혔습니다.");
-				fetchNickname();
-			}
-		}, 500);
-	};
 
 	const openFileUploader = () => {
 		const event = new MouseEvent('click', {
@@ -191,7 +133,9 @@ const MypageIndex = () => {
 						<div className="pf-nickname">
 							<h2 style={{ marginRight: '5px' }}>{nickname || '닉네임 없음'}</h2>
 							<span style={{ fontSize: '1.2em' }}> 님 </span>
-							<i className="fa-solid fa-pen" onClick={openNicknamePopup}></i>
+							<Link to={`/mypage/edit/${user?.member?.me_id || ''}`}>
+								<i className="fa-solid fa-pen"></i>
+							</Link>
 						</div>
 						
 						<div className="pf-desc">
@@ -256,9 +200,7 @@ const MypageIndex = () => {
 				</div>
 			</section>
 
-			<AchievenentSwitch>
-				<AchievenentEvent meId={user?.me_id}/>
-			</AchievenentSwitch>
+			<AchievenentEvent meId={user?.me_id}/>
 
 		</Fragment>
 	)
