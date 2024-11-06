@@ -6,7 +6,6 @@ import { LoginContext } from '../../context/LoginContext';
 
 function Update() {
   const { po_num } = useParams();
-  const { po_date } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -20,15 +19,67 @@ function Update() {
   const [postLinkPreview, setPostLinkPreview] = useState(null);
   const [postImagePreview, setPostImagePreview] = useState(null);
   const { user } = useContext(LoginContext);
-  const [currentPosts, setCurrentPosts] = useState([]);
 
-  // 접근 제한 로직 추가
+  // 게시글 정보 로드 및 접근 제한 확인
   useEffect(() => {
-    if (!user || !currentPosts.some((item) => item.po_me_id === user.me_id)) {
-      alert('접근 권한이 없습니다.');
-      navigate('/');  // 메인 페이지로 리다이렉트
-    }
-  }, [po_co_num, user, currentPosts, navigate]);
+    // 게시글 정보를 가져오기
+    fetch(`/post/update/${po_num}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (!data.post) {
+          // 게시글 데이터가 없을 경우 처리
+          alert('존재하지 않는 게시글입니다.');
+          navigate('/');
+          return;
+        }
+
+        // 게시글 데이터 설정
+        if (data.post) {
+          setTitle(data.post.po_title || '');
+          setContent(data.post.po_content || '');
+          setMeId(data.post.po_me_nickname || '');
+          setPoCoNum(data.post.po_co_num || null);
+
+          // 기존의 po_link 및 po_image가 있다면 미리보기 설정
+          if (data.post.po_link) {
+            setLink(data.post.po_link);
+            setPostLinkPreview(data.post.po_link);
+          }
+          if (data.post.po_image) {
+            setImage(data.post.po_image);
+            setPostImagePreview(data.post.po_image);
+          }
+
+          // po_start와 po_end 값을 Date 객체로 변환하여 설정
+          if (data.post.po_start) {
+            setStart(new Date(data.post.po_start));
+          }
+          if (data.post.po_end) {
+            setEnd(new Date(data.post.po_end));
+          }
+
+          // ** 접근 제한 로직 - 게시글 정보가 로드된 후 검사 **
+          if (!user || user.me_id !== data.post.po_me_id) {
+            alert('접근 권한이 없습니다.');
+            navigate('/');  // 메인 페이지로 리다이렉트
+            return;
+          }
+        }
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching post:', error);
+        alert('존재하지 않는 게시글입니다.');
+        navigate('/');  // 메인 페이지로 리다이렉트
+        setLoading(false);
+      });
+  }, [po_num, user, navigate]);
 
   // 스크롤을 맨 위로 이동
   useEffect(() => {
@@ -45,7 +96,7 @@ function Update() {
       setPostLinkPreview(link);
     }
   };
-  
+
   const handlePostImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -56,64 +107,6 @@ function Update() {
       setPostImagePreview(image);
     }
   };
-  
-
-
-useEffect(() => {
-  // 게시글 정보를 가져오기
-  fetch(`/post/update/${po_num}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      if (!data.post) {
-        // 게시글 데이터가 없을 경우 처리
-        alert('존재하지 않는 게시글입니다.');
-        navigate('/');
-        return;
-      }
-      if (data.post) {
-        setTitle(data.post.po_title || '');
-        setContent(data.post.po_content || '');
-        setMeId(data.post.po_me_nickname || '');
-        setPoCoNum(data.post.po_co_num || null);
-
-        // 기존의 po_link 및 po_image가 있다면 미리보기 설정
-        if (data.post.po_link) {
-          setLink(data.post.po_link);
-          setPostLinkPreview(data.post.po_link);
-        }
-        if (data.post.po_image) {
-          setImage(data.post.po_image);
-          setPostImagePreview(data.post.po_image);
-        }
-
-        // po_start와 po_end 값을 Date 객체로 변환하여 설정
-        if (data.post.po_start) {
-          setStart(new Date(data.post.po_start));
-        }
-        if (data.post.po_end) {
-          setEnd(new Date(data.post.po_end));
-        }
-        // ** 접근 제한 로직 - 게시글 정보가 로드된 후 검사 **
-        if (data.post.po_co_num === 2 && (!user || user.me_id !== data.post.po_me_id)) {
-          alert('접근 권한이 없습니다.');
-          navigate('/');  // 메인 페이지로 리다이렉트
-        }
-      }
-      setLoading(false);
-    })
-    .catch((error) => {
-      console.error('Error fetching post:', error);
-      alert('존재하지 않는 게시글입니다.');
-      navigate('/');  // 메인 페이지로 리다이렉트
-      setLoading(false);
-    });
-}, [po_num]);
-
 
   function btnClick() {
     const formData = new FormData();
@@ -123,14 +116,13 @@ useEffect(() => {
     formData.append('po_me_nickname', me_nickname);
     formData.append('po_start', start ? start.toISOString().split('T')[0] : '');
     formData.append('po_end', end ? end.toISOString().split('T')[0] : '');
-    formData.append('po_date', po_date);
     if (link) {
       formData.append('po_link', link);
     }
     if (image) {
       formData.append('po_image', image);
     }
-  
+
     fetch(`/post/update/${po_num}`, {
       method: 'POST',
       body: formData,
@@ -144,7 +136,7 @@ useEffect(() => {
       })
       .catch((error) => console.error('Error updating post:', error));
   }
-  
+
   if (loading) {
     return <div>로딩 중...</div>;
   }

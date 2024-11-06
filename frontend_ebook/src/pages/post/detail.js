@@ -16,7 +16,7 @@ function Detail() {
     window.scrollTo(0, 0);
   }, []);
 
-  const canWrite = co_num === '2' && user && currentPosts.some((item) => item.po_me_id === user.me_id);
+  const canWrite = user && post && post.po_me_id === user.me_id;
 
   function formatDate(isoString) {
     const date = new Date(isoString);
