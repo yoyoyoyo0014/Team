@@ -9,6 +9,7 @@ import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -135,9 +136,12 @@ public class BookContoller {
 	public List<BookVO> searchBookList(@PathVariable String category, @PathVariable String country,
 			@PathVariable int genre, @PathVariable String search, @PathVariable int count) {
 		BookCriteria bookCri = new BookCriteria(count, category, country, genre, search);
+		System.out.println(count+ category+ country+ genre+ search);
 		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
+		System.out.println(pm.getCri().getSearch());
 		try {
 			List<BookVO> res = bookService.searchBookList(pm);
+			System.out.println(res);
 			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -154,7 +158,14 @@ public class BookContoller {
 			page = 0;
 		return page;
 	}
-
+	
+	//책 스코어, 리뷰 개수 가져오기 가져오기
+	@GetMapping("/selectBookReviewInfo/{bookNum}")
+	@ResponseBody
+	public BookVO getBookReview(@PathVariable("bookNum")int bookNum){
+		BookVO bookReview = bookService.selectBook(bookNum);
+		return bookReview;
+	}
 	/**
 	 * @param userId 유저 아이디
 	 * @return 해당 유저가 구매한 책 개수 반환

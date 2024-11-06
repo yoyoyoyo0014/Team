@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from "react";
-import { InputItem } from "../components/form/input";
 import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import Button from "../components/form/button";
 import { LoginContext } from "../context/LoginContext";  // LoginContext import
@@ -26,7 +25,7 @@ const Login = () => {
         console.log("로그인된 상태입니다. 메인 페이지로 이동합니다."); // 디버깅용 로그
         //navigate("/"); // 이미 로그인된 상태라면 메인 페이지로 이동
       }
-    }, []); // setIsLoggedIn, navigate 의존성 배열 제거 (초기 로드 시만 실행)
+    }, [setIsLoggedIn, navigate]);
 
   useEffect(() => {
     const kakaoScript = document.createElement("script");
@@ -103,53 +102,63 @@ const Login = () => {
   }, [setIsLoggedIn, navigate]);  // setIsLoggedIn과 navigate를 의존성 배열에 추가
 
   // 일반 로그인 처리 함수
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    console.log("로그인 시도: ID:", id, "비밀번호:", password, "자동 로그인 여부:", autoLogin); // 디버깅용 로그
+const handleLoginSubmit = (e) => {
+  e.preventDefault();
 
-    fetch("/ebook/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        me_id: id,
-        me_pw: password,
-      })
+  console.log("로그인 요청을 보냅니다:", { id, password }); // 요청 데이터 디버깅용 로그
+
+  fetch("/ebook/member/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      me_id: id,
+      me_pw: password,
+    }),
+  })
+    .then((response) => {
+      console.log("응답 상태 코드:", response.status); // 응답 상태 코드 디버깅용 로그
+      return response.json().then((data) => ({ status: response.status, data })); // 응답 상태와 데이터 함께 반환
     })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        console.log("로그인 성공, 토큰:", data.token);  // 디버깅용 로그
+    .then(({ status, data }) => {
+      console.log("서버 응답 데이터:", data); // 응답 전체 데이터 디버깅용 로그
+
+      if (status === 200 && data.token && data.token !== "generated_jwt_token") {
+        console.log("로그인 성공, 토큰:", data.token); // 토큰이 유효할 때 로그 출력
 
         // 로그인 성공 시, 사용자 정보를 LoginContext에 저장
         setUser(data.user);
 
         if (autoLogin) {
-          // 자동 로그인이 체크된 경우 localStorage에 토큰 저장
-          console.log("자동 로그인 선택됨. localStorage에 토큰 저장."); // 디버깅용 로그
+          console.log("자동 로그인 선택됨. localStorage에 토큰 저장."); // 자동 로그인 선택 여부 확인
           localStorage.setItem("loginToken", data.token);
-
+          localStorage.setItem("loginMethod", "general");
         } else {
-          // 자동 로그인이 체크되지 않은 경우 sessionStorage에 토큰 저장
-          console.log("자동 로그인 선택되지 않음. sessionStorage에 토큰 저장."); // 디버깅용 로그
+          console.log("자동 로그인 선택되지 않음. sessionStorage에 토큰 저장."); // 자동 로그인 미선택 확인
           sessionStorage.setItem("loginToken", data.token);
+          localStorage.setItem("loginMethod", "general");
         }
+
         setIsLoggedIn(true); // 로그인 상태 업데이트
         navigate("/"); // 메인 페이지로 이동
-
+      } else if (status === 403) {
+        // 제재 상태일 때
+        console.warn("로그인 실패: 제재 상태", data.message); // 제재 상태 로그
+        alert(data.message); // 제재 메시지 표시
+        navigate("/"); // 메인 페이지로 이동
       } else {
-        // 로그인 실패 시
-        console.error("로그인 실패:", data.message || "로그인 실패");  // 디버깅용 로그
-        alert(data.message || "로그인 실패"); // 백엔드에서 반환된 메시지 출력
+        // 로그인 실패 시 (제재 상태가 아닌 경우)
+        console.warn("로그인 실패:", data.message || "로그인 실패"); // 경고 로그
+        alert(data.message || "로그인 실패"); // 실패 메시지 알림
         setIsLoggedIn(false); // 로그인 실패 상태 설정
       }
     })
     .catch((error) => {
-      console.error("로그인 처리 오류", error);
+      console.error("로그인 처리 오류", error); // 네트워크 또는 기타 오류 로그
       alert("로그인 처리 중 오류가 발생했습니다.");
     });
-  };
+};
 
   // 자동 로그인 체크박스 상태 변경 핸들러
   const handleAutoLoginChange = (e) => {
@@ -176,11 +185,12 @@ const handleKakaoLogin = () => {
         .then((data) => {
           if (data.success) {
             localStorage.setItem("loginToken", data.jwtToken); // **jwtToken으로 변경**
+            localStorage.setItem("loginMethod", "kakao");
 
             if (data.user) {
               setUser(data.user);  // user 객체가 제대로 전달되었는지 확인**
+              localStorage.setItem("user", JSON.stringify(data.user)); // user 정보를 localStorage에 저장
               console.log("User 객체:", data.user); // 디버깅용 로그
-              console.log("Member ID:", data.user.me_id); // ID 확인
           } else {
               console.error("User 객체가 null입니다.");
           }
@@ -322,11 +332,10 @@ useEffect(() => {
         <Button type={"submit"} text={"로그인"} cls={"btn btn-point full big"} />
 
         <div className="sns-login">
-          <Button type={"button"} text={"카카오 로그인"} cls={"btn btn-kakao full"} click={handleKakaoLogin}/>
-					<Button type={"button"} text={"네이버 로그인"} cls={"btn btn-naver full"} click={handleNaverLogin}/>
+          <Button type={"button"} cls={"btn btn-kakao full"} click={handleKakaoLogin}/>
+					<Button type={"button"} cls={"btn btn-naver full"} click={handleNaverLogin}/>
 					<Button 
             type={"button"} 
-            text={"구글 로그인"} 
             cls={"btn btn-google full"} 
             click={handleGoogleLoginClick}
         />

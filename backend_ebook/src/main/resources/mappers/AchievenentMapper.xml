@@ -15,9 +15,11 @@
 		set acl_observe = 1
 		where acl_me_id = #{meId} and acl_ac_num = #{achNum}
 	</update>
+	<select id="allAchievenentList">
+		select * from achievenent
+	</select>
 	<select id="getUserAchivement">
-		select achievenent.*, acl_date as 'ac_date'
-		from achievenent
+		select * from achievenent
 		left join achievenent_list
 		on acl_ac_num = ac_num
 		where acl_me_id = #{userId} or acl_me_id is null

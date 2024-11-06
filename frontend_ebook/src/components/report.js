@@ -75,6 +75,27 @@ export function Report({getReport,exit}) {
   }//신고 하기
   async function CheckReport(report){
     return null;
+    // if(report.rp_me_id == null){
+    //   return;
+    // }
+    // var meId = report.rp_me_id;
+    // var targetId = report.rp_target;
+    // var rpId = report.rpId;
+    // try {
+    //   // fetch 요청이 완료될 때까지 대기
+    //   const response = await fetch("/bookReview/report/existReport/"+meId+"/"+
+    //     targetId+"/NotUsed",{
+    //       //method: "post",
+    //       headers: {
+    //           'Content-Type': 'application/json',
+    //       },
+    //   });
+    //   const exitReport = await response.json();
+    //   return exitReport;
+    // } catch (e) {
+    //   console.error(e);
+    //   return false;;
+    // }
   }//신고있는지 확인
 
   async function settingReportType() {
@@ -94,6 +115,9 @@ export function Report({getReport,exit}) {
       <div className="theme-box genre-wrapper">
       {reportType.map((item,index)=>{
         return(
+          // <label key={index}>{item.rt_name}
+          //   <input defaultChecked={index === 0} onClick={()=>{reportTypeNum =index+1; console.log(reportTypeNum)}}  type='radio' name ='reportType'/>
+          // </label>
           <><input
             defaultChecked={index === 0}
             onClick={()=>{
@@ -111,4 +135,8 @@ export function Report({getReport,exit}) {
     </div>
   )
 }
+//
+export function bookReviewReport(targetNum){
+  return 'BR';
+}//책리뷰 신고 할 때
 export default Report;

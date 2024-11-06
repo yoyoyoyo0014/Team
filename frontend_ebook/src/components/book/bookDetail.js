@@ -108,6 +108,22 @@ const BookDetail = () => {
 		})
   }
 
+  function updateReview(){
+    fetch('/ebook/selectBookReviewInfo/'+bookNum,{
+      headers: {
+        'Content-Type': 'application/json',  // Content-Type 헤더 설정
+      },
+    })
+    .then(res=>res.json())
+    .then(reviewData=>{
+      console.log("수정 완료!")
+      book.bk_reviewCount = reviewData.bk_reviewCount;
+      book.bk_score = reviewData.bk_score;
+      setBook({...book})
+    })
+    .catch(e=>console.error(e));
+  }
+
   async function loadBook(){
     const options = {
       url: '/api/selectBook/' + bookNum,
@@ -133,7 +149,9 @@ const BookDetail = () => {
         // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
         console.log(error.response.status);
       } else if (error.request) {
-        // 요청이 전송되었지만, 응답이 수신되지 않았습니다.
+        // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
+        // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+        // node.js에서는 http.ClientRequest 인스턴스입니다.
         console.log(error.request);
       } else {
         // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
@@ -202,7 +220,7 @@ const BookDetail = () => {
       <div className="review-container section">
         <h3>리뷰</h3>
         
-        <BookReview bookNum={bookNum} loadBook={loadBook}></BookReview>
+        <BookReview bookNum={bookNum} loadBook={loadBook} changeReview = {updateReview}></BookReview>
       </div>
       
       <BarGraph popularityDistributionChart={popularityDistributionChart}/>

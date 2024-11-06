@@ -19,5 +19,3 @@
 	margin: 0 auto;
 }
 .badge-item .badge-info {padding-top: 1em;}
-.badge-item.not .badge i,
-.badge-item.not .badge-info {opacity: .3;}

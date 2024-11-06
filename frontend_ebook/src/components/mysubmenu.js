@@ -8,7 +8,7 @@ const MySubMenu = () => {
 		<div>
 			<h3>{user.me_authority === 'USER' ? '내 정보' : '사업자 정보'} 관리</h3>
 			<ul>
-				<li>{user.me_authority === 'USER' ? '개인 정보' : '사업장 정보'} 수정</li>
+				<Link to="/edit-profile">{user.me_authority === 'USER' ? '개인 정보' : '사업장 정보'} 수정</Link>
 			</ul>
 		</div>
 

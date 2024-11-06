@@ -12,6 +12,7 @@ import BookDetail from "./components/book/bookDetail.js";
 import BookSearch from "./components/book/bookSearch.js";
 import CartPage from "./pages/cart/cartpage.js";
 import MypageIndex from "./pages/mypage/index.js";
+import EditProfile from "./pages/mypage/editprofile.js";
 
 import NaverCallback from "./components/auth/NaverCallback.js"; // NaverCallback 컴포넌트 import
 import EpubReader from "./pages/mypage/epubreader.js";
@@ -24,6 +25,14 @@ import JoinSelect from "./pages/joinSelect.js";
 import JoinCompany from "./pages/joincompany.js";
 import MyCompanyIndex from "./pages/mycompany/index.js";
 import BookInsert from './components/book/bookInsert.js';
+
+import AdminIndex from './admin/adminIndex';  // adminIndex 컴포넌트 import
+import MemberManagement from "./admin/memberManagement.js";
+
+import List from './pages/post/list';
+import Detail from "./pages/post/detail.js";
+import Update from "./pages/post/update.js";
+import Insert from "./pages/post/insert.js";
 
 function Router({section}) {
 	const { isLoggedIn } = useContext(LoginContext);
@@ -46,6 +55,10 @@ function Router({section}) {
       <Route path="/ebook/search/:bo_country/:bo_genre/:bo_category/:bo_page/:bo_search" element ={<BookSearch/>}/>
 
       <Route path="/mypage" element={isLoggedIn ? <MypageIndex/> : <Navigate to="/login"/>}/>
+      
+      {/* 개인 정보 수정 */}
+      <Route path="/edit-profile" element={<EditProfile />} />
+      
       <Route
         path="/mypage/mybooks"
         element={isLoggedIn ? <MyBooks /> : <Navigate to="/login" />}
@@ -62,6 +75,9 @@ function Router({section}) {
       <Route path="/mycompany" element={isLoggedIn ? <MyCompanyIndex/> : <Navigate to="/login"/>}/>
       <Route path="/mycompany/bookInsert" element={<BookInsert/>}/>
       
+      <Route path="/admin" element={<AdminIndex />} />  {/* /admin 경로 설정 */}
+      <Route path="/admin/member-management" element={<MemberManagement />} />
+
       <Route path="/cart/:me_id" element={isLoggedIn ? <CartPage/> : <Navigate to="/login" />}/>
       <Route path="/buy" element={isLoggedIn ? <OrderPage/> : <Navigate to="/login" />}/>
 
@@ -69,6 +85,11 @@ function Router({section}) {
       <Route path="/event/:ev_id" element={<EventDetail />} />
 
       <Route path="/request" element={<PostList />} />
+
+      <Route path="/post/list/:co_num" element={<List />} />
+			<Route path="/post/detail/:co_num/:po_num" element={<Detail />} />
+			<Route path="/post/update/:po_num" element={<Update />} />
+			<Route path="/post/insert/:co_num" element={<Insert />} />
     </Routes>
   );
 }
