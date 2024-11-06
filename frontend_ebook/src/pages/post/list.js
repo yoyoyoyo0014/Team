@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../context/LoginContext';
 
 const List = () => {
   const { co_num } = useParams();
@@ -10,10 +11,14 @@ const List = () => {
   const [communityName, setCommunityName] = useState('');
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState('');
+  const { user } = useContext(LoginContext);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // 글쓰기 버튼 렌더링 조건
+  const canWrite = (co_num !== '2' && user && user.me_authority && user.me_authority.toLowerCase() === 'admin') || (co_num === '2' && user && user.me_authority && user.me_authority.toLowerCase() === 'user');
 
   // 날짜 포맷 함수
   function formatDate(isoString) {
@@ -227,9 +232,11 @@ const List = () => {
             검색
           </button>
         </div>
-      <div className="insert">
-        <button className="btn btn-outline-primary" style={{ marginBottom: '20px', float: 'right' }} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
-      </div>
+        <div className="insert">
+          {canWrite && (
+            <button className="btn btn-outline-primary" style={{ marginBottom: '20px', float: 'right' }} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
+          )}
+        </div>
       <div style={{ marginTop: '50px'}}>
         {co_num === '3' || co_num === '4' ? renderCardList() : renderTableList()}
         {renderPagination()}
