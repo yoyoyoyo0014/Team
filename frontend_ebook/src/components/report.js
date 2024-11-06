@@ -132,8 +132,4 @@ export function Report({getReport,exit}) {
     </div>
   )
 }
-//
-export function bookReviewReport(targetNum){
-  return 'BR';
-}//책리뷰 신고 할 때
 export default Report;

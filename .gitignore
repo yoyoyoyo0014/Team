@@ -3,8 +3,6 @@
 .project
 .settings/
 
-java_jik/.gitignore
-
 MANIFEST.MF
 
 *.jar
@@ -68,3 +66,9 @@ test/
 target/
 
 config.properties
+
+# Ignore application.properties
+application.properties
+backend_ebook/src/main/resources/application.properties
+eBook/src/main/java/kr/kh/ebook/controller/ApiController.java
+eBook/pom.xml
