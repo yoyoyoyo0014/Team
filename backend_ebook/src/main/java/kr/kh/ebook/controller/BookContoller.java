@@ -51,7 +51,7 @@ public class BookContoller {
 	}// 책 번호를 통해 책 정보 가져오기
 
 	// 책 검색 개수만
-	@PostMapping("/count/{country}/{genre}/SearchWord={search}")
+	@GetMapping("/count/{country}/{genre}/SearchWord={search}")
 	@ResponseBody
 	public int selectBookCount(@PathVariable String country, @PathVariable int genre, @PathVariable String search) {
 
@@ -134,13 +134,11 @@ public class BookContoller {
 	@GetMapping("/search/{category}/{country}/{genre}/{count}/SearchWord={search}")
 	public List<BookVO> searchBookList(@PathVariable String category, @PathVariable String country,
 			@PathVariable int genre, @PathVariable String search, @PathVariable int count) {
-		System.out.println("category : " + category + ", country : " + country + ", genre : " + genre + ", search : "
-				+ search + ", 페이지 : " + count);
 		BookCriteria bookCri = new BookCriteria(count, category, country, genre, search);
+		System.out.println(count+ category+ country+ genre+ search);
 		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
+		System.out.println(pm.getCri().getSearch());
 		try {
-			System.out.println(pm);
-			System.out.println(pm.getCri().getSearch());
 			List<BookVO> res = bookService.searchBookList(pm);
 			System.out.println(res);
 			return res;
@@ -159,7 +157,14 @@ public class BookContoller {
 			page = 0;
 		return page;
 	}
-
+	
+	//책 스코어, 리뷰 개수 가져오기 가져오기
+	@GetMapping("/selectBookReviewInfo/{bookNum}")
+	@ResponseBody
+	public BookVO getBookReview(@PathVariable("bookNum")int bookNum){
+		BookVO bookReview = bookService.selectBook(bookNum);
+		return bookReview;
+	}
 	/**
 	 * @param userId 유저 아이디
 	 * @return 해당 유저가 구매한 책 개수 반환
