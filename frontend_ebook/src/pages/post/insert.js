@@ -1,30 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { LoginContext } from '../../context/LoginContext';
 
 function Insert() {
-  const { co_num } = useParams();
+  const { co_num, po_me_id } = useParams(); // URL에서 필요한 정보 가져오기
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
-  const [writer, setWriter] = useState(() => localStorage.getItem('writer') || 'admin123');
-  const [nickname, setNickname] = useState("관리자");
+  const [writer, setWriter] = useState("");
+  const [nickname, setNickname] = useState("");
   const [content, setContent] = useState("");
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
   const [postLinkPreview, setPostLinkPreview] = useState(null);
   const [postImagePreview, setPostImagePreview] = useState(null);
+  const { user, loadingUser } = useContext(LoginContext); // LoginContext에서 user 정보와 로딩 상태 가져오기
 
-  // 스크롤을 맨 위로 이동
+  // 접근 제한 로직 (초기 로딩 시 모든 조건 충족 확인 후 접근)
+  useEffect(() => {
+
+    if (!user) {
+      // 사용자 정보가 없을 경우 접근 제한
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+      return;
+    }
+
+    // 유효하지 않은 게시판 번호 접근 시 처리
+    const validBoardNumbers = ['1', '2', '3', '4']; // 유효한 게시판 번호 목록
+    if (!validBoardNumbers.includes(co_num)) {
+      alert('존재하지 않는 게시판입니다.');
+      navigate('/'); // 메인 페이지로 이동
+      return;
+    }
+
+    // 권한 체크 및 접근 제한 로직
+    if (user.me_authority) {
+      const authority = user.me_authority.toLowerCase();
+      if (authority === 'COMPANY') {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+        return;
+      } else if (co_num === '2' && authority !== 'USER') {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+        return;
+      } else if (co_num !== '2' && authority !== 'admin') {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+        return;
+      }
+    }
+  }, [co_num, user, navigate, loadingUser]);
+
+  // user 정보로 writer와 nickname 설정
+  useEffect(() => {
+    if (user) {
+      setWriter(user.me_id || "");
+      setNickname(user.me_nickname || "");
+    }
+  }, [user]);
+
+  // 페이지 로드 시 최상단으로 이동
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    if (co_num === '3' || co_num === '4') {
-      setContent("이벤트");
-    }
-  }, [co_num]);
+  // 페이지 로딩 중에는 아무것도 렌더링하지 않음
+  if (loadingUser || !user) {
+    return <div>로딩 중...</div>;
+  }
 
   const handlePostLinkChange = (e) => {
     const file = e.target.files[0];
@@ -85,6 +131,7 @@ function Insert() {
         formData.append('po_image', postImageFile);
       }
     }
+
     fetch(`/post/insert/${co_num}`, {
       method: 'POST',
       body: formData,
@@ -113,7 +160,7 @@ function Insert() {
 
   return (
     <div>
-      <h1 style={{marginBottom: '20px'}}>게시글 등록</h1>
+      <h1 style={{ marginBottom: '20px' }}>게시글 등록</h1>
       <form onSubmit={btnClick}>
         <div className="form-group">
           <label htmlFor="title">제목:</label>
@@ -123,24 +170,18 @@ function Insert() {
         <input type="hidden" id="nickname" name="nickname" value={nickname} readOnly />
 
         {(co_num === '3' || co_num === '4') && (
-          <div className="form-group" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '15px' }}>
+          <div className="form-group" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '15px'}}>
             <div style={{ flex: 1 }}>
               <label>이벤트 시작일</label>
-              <DatePicker selected={start} onChange={(date) => setStart(date)} dateFormat="yyyy/MM/dd" className="form-control"/>
+              <DatePicker selected={start} onChange={(date) => setStart(date)} dateFormat="yyyy/MM/dd" className="form-control" />
             </div>
             <div style={{ flex: 1 }}>
               <label>이벤트 종료일</label>
-              <DatePicker selected={end} onChange={(date) => setEnd(date)} dateFormat="yyyy/MM/dd" className="form-control"/>
+              <DatePicker selected={end} onChange={(date) => setEnd(date)} dateFormat="yyyy/MM/dd" className="form-control" />
             </div>
           </div>
         )}
-        {(co_num !== '3' && co_num !== '4') && (
-          <div className="form-group">
-            <label htmlFor="content">내용:</label>
-            <textarea id="content" name="content" className="form-control" style={{ height: '400px', width: '100%', border: '1px solid lightgray', borderRadius: '15px', padding: '15px 15px' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
-          </div>
-        )}
-        
+
         {(co_num === '3' || co_num === '4') && (
           <>
             {/* 이미지 파일 입력 필드 및 미리보기 추가 */}
@@ -161,6 +202,14 @@ function Insert() {
             </div>
           </>
         )}
+
+        {(co_num !== '3' && co_num !== '4') && (
+          <div className="form-group">
+            <label htmlFor="content">내용:</label>
+            <textarea id="content" name="content" className="form-control" style={{ height: '400px', width: '100%', border: '1px solid lightgray', borderRadius: '15px', padding: '15px 15px' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
+          </div>
+        )}
+
         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }}>
           <a className="btn btn-outline-info" href={`/post/list/${co_num}`}>목록으로</a>
           <button type="submit" style={{ display: 'flex', gap: '10px' }} className="btn btn-outline-info col-12">게시글 등록</button> 
