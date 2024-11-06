@@ -125,8 +125,8 @@ const Header = ({ setSection }) => {
                             <li><Link to="/">베스트셀러</Link></li>
                             <li><Link to="/newbooks">신상 도서</Link></li>
                             <li><Link to="/forsales">할인 중인 도서</Link></li>
-                            <li><Link to="/event">이벤트</Link></li>
-                            <li><Link to="/request">도서 요청</Link></li>
+                            <li><Link to={`/post/list/${co_num || 3}`}>이벤트</Link></li>
+                            <li><Link to={`/post/list/${co_num || 2}`}>도서 요청</Link></li>
                         </ul>
                     </div>
 
