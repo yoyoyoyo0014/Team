@@ -68,7 +68,6 @@ public class MainController {
 		    map.put("communities", communities);
 		    map.put("pm", pm);
 		    map.put("book", book);
-	
 		    return map;
 	}
 	

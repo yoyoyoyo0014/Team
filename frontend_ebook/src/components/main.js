@@ -19,10 +19,11 @@ const Main = ({section}) => {
 	const location = useLocation();
 
 	useEffect(() => {
-    fetch('/main')
+    fetch('/main2')
       .then((res) => res.json())
       .then(res=>{
 				if (res.postList) {
+					console.log(res.postList)
 					var tmp = res.postList.map((item) => {
 						var date = new Date(item.po_date).toLocaleDateString();
 						item = { ...item, date };
@@ -33,6 +34,11 @@ const Main = ({section}) => {
 			setPm(res.pm || {});
       }).catch(e=>console.log(e))
   }, [])
+
+	 // list가 업데이트될 때마다 console.log(list)로 확인
+	 useEffect(() => {
+		console.log('Updated list:', list);
+		}, [list]);
 
 	const handleMouseEnter = (index) => {
 		setHover(index);
@@ -106,7 +112,9 @@ const Main = ({section}) => {
 					<p>공지사항이 없습니다.</p>
 				)}
 			</div>
-	
+
+			<br/>	
+			
 			<TodayBook book={book}/>
 		</div>
 	)
