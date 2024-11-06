@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { LoginContext } from '../../context/LoginContext';
 
 function Update() {
   const { po_num } = useParams();
@@ -18,6 +19,16 @@ function Update() {
   const [image, setImage] = useState(null);
   const [postLinkPreview, setPostLinkPreview] = useState(null);
   const [postImagePreview, setPostImagePreview] = useState(null);
+  const { user } = useContext(LoginContext);
+  const [currentPosts, setCurrentPosts] = useState([]);
+
+  // 접근 제한 로직 추가
+  useEffect(() => {
+    if (!user || !currentPosts.some((item) => item.po_me_id === user.me_id)) {
+      alert('접근 권한이 없습니다.');
+      navigate('/');  // 메인 페이지로 리다이렉트
+    }
+  }, [po_co_num, user, currentPosts, navigate]);
 
   // 스크롤을 맨 위로 이동
   useEffect(() => {
@@ -58,6 +69,12 @@ useEffect(() => {
       return response.json();
     })
     .then((data) => {
+      if (!data.post) {
+        // 게시글 데이터가 없을 경우 처리
+        alert('존재하지 않는 게시글입니다.');
+        navigate('/');
+        return;
+      }
       if (data.post) {
         setTitle(data.post.po_title || '');
         setContent(data.post.po_content || '');
@@ -81,11 +98,18 @@ useEffect(() => {
         if (data.post.po_end) {
           setEnd(new Date(data.post.po_end));
         }
+        // ** 접근 제한 로직 - 게시글 정보가 로드된 후 검사 **
+        if (data.post.po_co_num === 2 && (!user || user.me_id !== data.post.po_me_id)) {
+          alert('접근 권한이 없습니다.');
+          navigate('/');  // 메인 페이지로 리다이렉트
+        }
       }
       setLoading(false);
     })
     .catch((error) => {
       console.error('Error fetching post:', error);
+      alert('존재하지 않는 게시글입니다.');
+      navigate('/');  // 메인 페이지로 리다이렉트
       setLoading(false);
     });
 }, [po_num]);
