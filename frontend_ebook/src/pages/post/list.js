@@ -52,10 +52,19 @@ const List = () => {
           const community = data.communities.find((community) => community.co_num === parseInt(co_num));
           if (community) {
             setCommunityName(community.co_name);
+          } else {
+            // 유효하지 않은 게시판 번호일 경우 경고 후 메인 페이지로 이동
+            alert('존재하지 않는 게시판입니다.');
+            navigate('/');
           }
         }
       })
-      .catch((error) => console.error('Error fetching posts:', error));
+      .catch((error) => {
+        console.error('Error fetching posts:', error);
+        // 오류 발생 시 경고 후 메인 페이지로 이동
+        alert('존재하지 않는 게시판입니다.');
+        navigate('/');
+      });
   };
 
   useEffect(() => {
