@@ -449,9 +449,10 @@ function BookInsert() {
               color: 'black',
               padding: '20px',
               borderRadius: '8px',
-              width: '500px',       // 모달 창 너비 설정
+              width: '600px',       // 모달 창 너비 설정
               maxWidth: '90%',      // 작은 화면에서 최대 너비 설정
-              margin: '0 auto'      // 화면 중앙에 모달을 정렬
+              margin: '0 auto',      // 화면 중앙에 모달을 정렬
+              height : '600px'
           },
       }}>
         <IsbnSearch exit={()=>setModalIsOpen(false)} onClose={isbnAddBookData} />

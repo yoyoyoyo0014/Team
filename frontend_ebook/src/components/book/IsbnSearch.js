@@ -110,17 +110,19 @@ function IsbnSearch({exit, onClose}) {
                   <td>
                     <TruncateHTML htmlContent={item.titleInfo} maxLength={20} />
                   </td>
-                    <td>{item.isbn.length > 15 
-                            ? item.isbn.slice(0, 15) + "..." 
-                            : item.isbn
-                        }
+                    <td>{item.isbn && item.isbn.length > 0
+    ? (item.isbn.length > 15 
+        ? item.isbn.slice(0, 15) + "..." 
+        : item.isbn)
+    : "존재하지 않음"}
                     </td>
                     <td >
                         {item.isbn !== null && item.isbn !== '' && (
                             <Button style={{
                               borderRadius: '2px',
-                              textAlign: 'center',     // 가로 중앙 정렬
-                              verticalAlign: 'middle', // 세로 중앙 정렬
+    height: '5px',
+    lineHeight: '5px',        // 텍스트가 세로로 중앙 정렬되도록 조정
+    textAlign: 'center',      // 가로 중앙 정렬
                             }} click={() => insertBook(item)} cls="btn btn-point" text="추가" />
                         )}
                     </td>
