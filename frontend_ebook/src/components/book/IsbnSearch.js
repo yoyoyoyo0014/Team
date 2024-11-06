@@ -18,7 +18,6 @@ function IsbnSearch({exit, onClose}) {
   })
 
   async function submitSearch(){
-    
     var objs = await(SearchIsbnBookList(search,page.currentPage));
     searchDataList = objs.result;
     setSearchDataList(searchDataList);
@@ -29,7 +28,7 @@ function IsbnSearch({exit, onClose}) {
     eventButtons = [];
     for(var i = page.startPage;i<=page.endPage;i++){
       console.log("페이지 이벤트 체크 : " + i)
-      var res = i ; 
+      var res = i ;
       eventButtons.push(()=>{changePage(res)});
     }
     setEventButtons(eventButtons);
@@ -62,51 +61,80 @@ function IsbnSearch({exit, onClose}) {
 
     submitSearch();
   }
-  
+  //검색 결과 제목 글자수 제한
+  function TruncateHTML({ htmlContent, maxLength }) {
+    const truncatedHTML = (() => {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(htmlContent, 'text/html');
+        let textContent = doc.body.textContent || "";
+        let truncatedText = textContent.length > maxLength 
+            ? textContent.slice(0, maxLength) + "..."
+            : textContent;
+        return truncatedText;
+    })();
+
+    return (
+        <div dangerouslySetInnerHTML={{ __html: truncatedHTML }}></div>
+    );
+}
   return (
-    <div >
+    <div>
       <div>현재 페이지 {page.currentPage}</div>
-     <input onChange={e=>
+      <input onChange={e=>
       {
         setSearch(e.target.value)
-      }} placeholder="isbn 검색"></input><button onClick={()=>{submitSearch();
+      }} placeholder="isbn 검색" className="input-item"  style={{
+        backgroundColor: '#f0f0f0', // 살짝 어두운 배경색
+        color: '#333',               // 텍스트 색상
+        padding: '8px',
+        borderRadius: '4px',
+        border: '1px solid #ccc',
+        height: '30px'  
+    }}/><button onClick={()=>{submitSearch();
         page.currentPage = 1; setPage(page)
-      }}>검색</button>
-      <table>
+      }} className="btn btn-point">검색</button>
+    {Array.isArray(searchDataList) && searchDataList.length > 0 && (
+    <>
+    <table>
         <thead>
-        <tr>
-            <th>책제목</th>
-            <th>isbn</th>
-            <th></th>
-        </tr>
-        
+            <tr>
+                <th>책제목</th>
+                <th>isbn</th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
-        {Array.isArray(searchDataList) && searchDataList.length > 0 && searchDataList.map((item, index) => {
-            return(<tr key={index}>
-              <td dangerouslySetInnerHTML={{__html: item.titleInfo}}></td>
-              <td>{item.isbn}</td>
-              <td>
-                {item.isbn !== null && item.isbn !=='' && (
-                    <Button click={() => insertBook(item)} cls="btn btn-point" text="추가" />
-                )}
-              </td>
-              </tr>)
-          })
-        }
+            {searchDataList.map((item, index) => (
+                <tr key={index}>
+                  <td>
+                    <TruncateHTML htmlContent={item.titleInfo} maxLength={20} />
+                  </td>
+                    <td>{item.isbn.length > 15 
+                            ? item.isbn.slice(0, 15) + "..." 
+                            : item.isbn
+                        }
+                    </td>
+                    <td>
+                        {item.isbn !== null && item.isbn !== '' && (
+                            <Button click={() => insertBook(item)} cls="btn btn-point" text="추가" />
+                        )}
+                    </td>
+                </tr>
+            ))}
         </tbody>
-      </table>
-      <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
+    </table>
+    <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
+    </>
+)}
     </div>
   );
 }
-
 
 async function SearchIsbnBookList(search,page) {
   try{
     const response = await fetch("/searchBookIsbn/"+page+"/"+search,{
       
-      headers: {
+    headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
       },
     });
@@ -115,7 +143,6 @@ async function SearchIsbnBookList(search,page) {
   }catch(e){
     console.error(e);
   }
-  
 }
 
 export default IsbnSearch;

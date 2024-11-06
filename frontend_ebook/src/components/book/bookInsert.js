@@ -25,7 +25,6 @@ function BookInsert() {
     formState: { errors }
   } = useForm();
   const {majorGenreList, genreList} = useContext(GenreContext);
-
   let[bookImgFile,setBookImgFile] = useState(null)//책표지 파일
   let[bookEqubFile,setBookEqubFile] = useState(null)//책 equb 파일
   let [book,setBook] = useState({
@@ -220,6 +219,8 @@ function BookInsert() {
       writerTypeList = await selectWriterType();
       setWriterTypeList([...writerTypeList]);
     })();
+    console.log(genreList);
+    console.log(majorGenreList);
   },[]);
 
   return (
@@ -443,9 +444,16 @@ function BookInsert() {
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         style={{
-          overlay: { backgroundColor: 'rgba(1, 1, 1, 0.5)', zIndex:100 },
-          content: { color: 'black', padding: '20px', borderRadius: '8px'},
-        }}>
+          overlay: { backgroundColor: 'rgba(1, 1, 1, 0.5)', zIndex: 100 },
+          content: {
+              color: 'black',
+              padding: '20px',
+              borderRadius: '8px',
+              width: '500px',       // 모달 창 너비 설정
+              maxWidth: '90%',      // 작은 화면에서 최대 너비 설정
+              margin: '0 auto'      // 화면 중앙에 모달을 정렬
+          },
+      }}>
         <IsbnSearch exit={()=>setModalIsOpen(false)} onClose={isbnAddBookData} />
       </Modal>
     </Fragment>

@@ -113,7 +113,9 @@ function BookSearch() {
     
     <div>
       <Input value={search} type="text" change={setSearch} placeholder="검색칸"/>
+      
       <div>
+      <br/>
         <div className="theme-box genre-wrapper">
           <div>
               <input type="radio" name="country" id="both" value="both" defaultChecked={bo_country==='both'} onClick={e=>checkedCountry(e)} />
@@ -169,7 +171,9 @@ function BookSearch() {
         ))
       }
       <button className="btn btn-point" onClick = {()=>{changePage(1)}}>제출하기</button>
+      <br/>
       <BookList bookList={bookList}/>
+      <br/>
       <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} 
       nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
     </div>
@@ -201,7 +205,6 @@ async function getSearchCount(country,genre,inputSerch = ''){
 
 async function selectSearch(country,genre,category,inputSerch = '',page){
   inputSerch =inputSerch.replace("SearchWord=", "");
-
 
   for(var i = 0;i<bannedSearchTerms.length;i++){
     if(inputSerch.indexOf(bannedSearchTerms[i]) !==-1){
