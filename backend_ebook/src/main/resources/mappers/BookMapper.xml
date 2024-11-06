@@ -19,17 +19,14 @@
 		select count(*)
 		from book
 		where 
-			bk_name LIKE CONCAT('%', #{search}, '%') and
+			bk_name LIKE CONCAT('%', #{search}, '%')
 			<choose>
     			<when test = "country == 'domestic' ">
-    				bk_state = '국내도서'
+    				and bk_state = '국내도서'
     			</when>
     			<when test = "country == 'foreign' ">
-    				 bk_state = '해외도서' 
+    				and bk_state = '해외도서'
     			</when>
-    			<otherwise>
-    				(bk_state ='국내도서' or  bk_state = '해외도서') 
-    			</otherwise>
     		</choose>
     		<if test ="genre != 0">
     			and bk_sg_num = #{genre}
@@ -46,17 +43,18 @@
     	where
    		<choose>
    			<when test = "pm.cri.country == 'domestic' ">
-   				 bk_state ='국내도서' 
+   				 bk_state = '국내도서' and 
    			</when>
    			<when test = "pm.cri.country == 'foreign' ">
-   				 bk_state = '해외도서'
+   				 bk_state = '해외도서' and 
    			</when>
    		</choose>
    		
-   		<if test ="pm.cri.genre != 0">
-   			and bk_sg_num = #{pm.cri.genre} and 
+   		<if test="pm.cri.genre != 0">
+   			bk_sg_num = #{pm.cri.genre}
 		</if>
-		<if test = "pm.cri.search != ''">
+		<if test="pm.cri.genre != 0 and pm.cri.search != ''">and</if>
+		<if test="pm.cri.search != ''">
 			bk_name like concat('%', #{pm.cri.search}, '%')
 		</if>
 		group by bk_num

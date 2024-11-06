@@ -2,6 +2,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
 import { GenreContext } from "../context/GenreContext";
+import { KeywordContext } from "../context/KeywordContext";
 import { Input } from "./form/input";
 import Button from "./form/button";
 
@@ -9,16 +10,11 @@ const Header = ({setSection}) => {
 	const navigate = useNavigate();
 	const { isLoggedIn, setIsLoggedIn, setUser, user } = useContext(LoginContext);
 	const { genreList } = useContext(GenreContext);
+	let { keyword, setKeyword } = useContext(KeywordContext);
 
 	let [country, setCountry] = useState('both');
 	let [genre, setGenre] = useState('0');
 	let [category, setCategory] = useState('highPrice');
-	let [keyword, setKeyword] = useState('');
-
-
-	const showBooks = (sectionName) => {
-		setSection(sectionName);
-	}
 
 	const showGenre = () =>{
 		const wrapper = document.querySelector('.gnb-genre-wrapper');
@@ -40,7 +36,8 @@ const Header = ({setSection}) => {
 		 window.location.href = logoutUrl; // 카카오 로그아웃 페이지로 리디렉션
 	};
 
-	function clickSearchBtn(){
+	function clickSearchBtn(e){
+		e.preventDefault();
 		navigate("/ebook/search/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
 	}
 
@@ -69,8 +66,13 @@ const Header = ({setSection}) => {
 				
 			<div className="search-box">
 					<form name="search">
-						<Input  type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={e=>setKeyword(e)} value={keyword}/>
-						<Button click={e=>clickSearchBtn()} text={"검색"} cls={"ico btn search"}/>
+						<Input
+							type="text"
+							placeholder={"검색어를 입력해주세요"}
+							cls={"full frm-input"}
+							change={e=>setKeyword(e)}
+							value={keyword}/>
+						<Button click={e=>clickSearchBtn(e)} text={"검색"} cls={"ico btn search"}/>
 					</form>
 				</div>
 

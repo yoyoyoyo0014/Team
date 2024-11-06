@@ -1,23 +1,28 @@
 import {useContext, useEffect, useState} from 'react';
 
-import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import MakePage, { PageButton } from '../pageButton';
 import BookList from './booklist';
 import { GenreContext } from '../../context/GenreContext';
 import { Input } from '../form/input';
 import Button from '../form/button';
 import { FormProvider } from 'react-hook-form';
-let bannedSearchTerms =["#","%",";"]
-const helpSearch = "SearchWord="
+import { KeywordContext } from '../../context/KeywordContext';
+import GenreNavBar from '../../components/genrenavbar';
+
+let bannedSearchTerms =["#","%",";"];
+const helpSearch = "SearchWord=";
 
 function BookSearch() {
+  const navigate = useNavigate();
+  
   const { bo_country } = useParams(0);
   const { bo_genre } = useParams();
   const { bo_category } = useParams();
   const { bo_page } = useParams();
   let { bo_search } = useParams();
-  const {genreList} = useContext(GenreContext);
+  const {majorGenreList, genreList} = useContext(GenreContext);
+  let { keyword, setKeyword } = useContext(KeywordContext);
 
   let [bookList,setBookList] = useState([])
   
@@ -38,10 +43,6 @@ function BookSearch() {
   function checkedCountry(e){
     setCountry(e.target.value);
   }//국내, 국외인지 
-
-  function checkedGenre(num){
-    setGenre(num);
-  }//장르 설정
 
   function getCategory(e){
     setCategory(e.target.value);
@@ -73,65 +74,71 @@ function BookSearch() {
    window.location.href =("/ebook/search/"+country+"/"+genre+"/"+category+"/"+page.currentPage+"/"+helpSearch+search);
   }//페이지 바꾸기
 
-  async function submitSearch(country,genre,inputSerch = ''){
-    inputSerch =inputSerch.replace(helpSearch, "");
+  async function submitSearch(){
+    navigate("/ebook/search/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
 
-    var searchCount = await getSearchCount(country,genre,inputSerch);
+    var searchCount = await getSearchCount(country,genre,keyword);
     console.log("검색개수"+searchCount)
     if(!searchCount) return;
     
     page.contentsCount = searchCount;
     page = MakePage(page.contentsCount,page.currentPage);
-    var searchDataList = await selectSearch(country,genre,category,inputSerch,page);
+    var searchDataList = await selectSearch(country,genre,category,keyword,page);
     setBookList(searchDataList);
     setPage({...page});
   }//책 검색
 
-  function urlSetting(){
-    setCountry(bo_country)
-    setGenre(bo_genre)
-    setCategory(bo_category)
-
-    page.currentPage = bo_page;
-
-    if(page.currentPage<=0)
-      page.currentPage = 1;
-
-    setPage({...page})
-  }//url 세팅에 맞게 세팅
-  
-
   useEffect(()=>{
     (async () => {
-      urlSetting();//url 세팅
-      submitSearch(bo_country,bo_genre,bo_search); //그냥 검색
-      bo_search = bo_search.replace(/SearchWord=/g,"");
-      setSearch(bo_search)
+      await submitSearch(); //그냥 검색
     })();
   },[]);
-  //console.log('렌더링 횟수')
+
+  function clickSearchBtn(e){
+		e.preventDefault();
+    submitSearch(); //그냥 검색
+	}
+
   return (
-    
+  <form name="serach_book" onSubmit={(e)=>{clickSearchBtn(e)}}>
+    <nav id="category-navbar" className="theme-box horizontal">
+			<div className="category-navbar-wrapper scrollbar-no-padding">
+			{genreList && genreList.map(genre => {
+					return(<ul>
+						{genre.length !== undefined && genre.map((secondGenre, i) => {
+								return(<li>
+                  <input type="radio" name="ge_num" id={"ge_num" + secondGenre.ge_num} value={secondGenre.ge_num} onChange={e => setGenre(e.target.value)}  defaultChecked={genre===secondGenre.ge_num}/>
+                  <label htmlFor={"ge_num" + secondGenre.ge_num}>{secondGenre.ge_name}</label>
+                </li>)
+							})
+						}
+					</ul>)
+				}
+			)}
+			</div>
+		</nav>
+
     <div>
-      <form name="serach_book" onSubmit={()=>{changePage(1)}}>
-      <Input value={search} type="text" change={setSearch} placeholder="검색칸"/>
+      <div className="search-form" style={{display: 'flex', gap: '2em'}}>
+        <Input cls="frm-input" value={keyword} type="text" change={e=>setKeyword(e)} placeholder="검색칸"/>
+        <Button text={'제출'} cls="btn btn-point" type={"submit"} onClick = {()=>{changePage(1)}}/>
+      </div>
       <div>
         <div className="theme-box genre-wrapper">
           <div>
-              <input type="radio" name="country" id="both" value="both" defaultChecked={bo_country==='both'} onClick={e=>checkedCountry(e)} />
-              <label htmlFor="both">전체</label>
-            </div>
-            <div>
-              <input type="radio" name="country" id="domestic" value="domestic" defaultChecked={bo_country==='domestic'} onClick={e=>checkedCountry(e)} />
-              <label htmlFor="domestic">국내도서</label>
-            </div>
-            <div>
-              <input type="radio" name="country" id="foreign" value="foreign" defaultChecked={bo_country==='foreign'} onClick={e=>checkedCountry(e)} />
-              <label htmlFor="foreign">해외도서</label>
-            </div>
+            <input type="radio" name="country" id="both" value="both" defaultChecked={bo_country==='both'} onChange={e=>setCountry(e.target.value)} />
+            <label htmlFor="both">전체</label>
           </div>
-          <br/>
-          <div className="theme-box genre-wrapper">
+          <div>
+            <input type="radio" name="country" id="domestic" value="domestic" defaultChecked={bo_country==='domestic'} onChange={e=>setCountry(e.target.value)} />
+            <label htmlFor="domestic">국내도서</label>
+          </div>
+          <div>
+            <input type="radio" name="country" id="foreign" value="foreign" defaultChecked={bo_country==='foreign'} onChange={e=>setCountry(e.target.value)} />
+            <label htmlFor="foreign">해외도서</label>
+          </div>
+        </div>
+        <div className="theme-box genre-wrapper">
           <div>
             <input type="radio" name="category" id="popularity" value="popularity" defaultChecked={bo_category==='popularity'} onClick={e=>getCategory(e)} />
             <label htmlFor="popularity">인기순</label>
@@ -161,21 +168,13 @@ function BookSearch() {
             <label htmlFor="review">리뷰순</label>
           </div>
         </div>
-        <br/>
       </div>
 
-      {genreList.map((item,index)=>(
-          <label key={index} >
-            <input defaultChecked={bo_genre===index+1} onClick={()=>{checkedGenre(item.ge_num)}} type="radio" id={item.ge_num} name="genre" value={item.ge_num}/>{item.ge_name}
-          </label> 
-        ))
-      }
-      <Button text={'제출'} cls="btn btn-point" type={"submit"} onClick = {()=>{changePage(1)}}/>
       <BookList bookList={bookList}/>
-      </form>
       <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} 
       nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
     </div>
+    </form>
   );
 }
 async function getSearchCount(country,genre,inputSerch = ''){
@@ -204,7 +203,6 @@ async function getSearchCount(country,genre,inputSerch = ''){
 
 async function selectSearch(country,genre,category,inputSerch = '',page){
   inputSerch =inputSerch.replace("SearchWord=", "");
-
 
   for(var i = 0;i<bannedSearchTerms.length;i++){
     if(inputSerch.indexOf(bannedSearchTerms[i]) !==-1){

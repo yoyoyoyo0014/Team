@@ -8,3 +8,7 @@
 .book-list li .book-info .title {font-size: 1.5em;}
 .book-list li .book-info .price {display: block; padding: 1em 0;}
 
+#category-navbar.horizontal label {padding: 0; opacity: .3;}
+#category-navbar.horizontal label::before,
+#category-navbar.horizontal label::after {display: none;}
+#category-navbar.horizontal input:checked + label {font-weight: 900; opacity: 1;}

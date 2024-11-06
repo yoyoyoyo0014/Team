@@ -9,6 +9,7 @@ import Footer from "./components/footer.js";
 import * as Common from './js/common.js';
 import './css/default.css';
 import './css/style.css';
+import KeywordProvider from "./context/KeywordContext.js";
 
 function App() {
 	let [section, setSection] = useState('');
@@ -29,7 +30,8 @@ function App() {
 	return (
 		<AppProvider contexts={[
 			LoginProvider,
-			GenreProvider
+			GenreProvider,
+			KeywordProvider
 		]}>
 			<div className="fix-layout">
 				<Header setSection={setSection}/>
