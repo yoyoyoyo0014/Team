@@ -37,5 +37,7 @@ public interface MemberDAO {
 
 	// 닉네임 수정
 	void updateNickname(String memberId, String newNickname);
+
+	void earnPoint(String memberId, int total);
 	
 }

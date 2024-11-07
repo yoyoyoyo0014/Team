@@ -8,8 +8,10 @@ import kr.kh.ebook.model.vo.BuyVO;
 public interface BuyDAO {
 	int getPaymentAmount(@Param("imp_uid") String imp_uid);
 
-	void saveBuyInfo(BuyVO request);
+	int saveBuyInfo(BuyVO request);
 
-	void saveBuyList(BuyListVO buyListVO);
+	void saveBuyList(@Param("bu_num") int bu_num, @Param("bl") BuyListVO buyListVO);
+
+	int selectBuyCount(String bu_me_id);
 
 }

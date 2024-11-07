@@ -1,5 +1,7 @@
 package kr.kh.ebook.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,16 +34,23 @@ public class BuyService {
         return payment.getAmount().intValue() == expectedAmount;
     }
     
-    public void saveBuyInfo(BuyVO buyVO) {
+    public int saveBuyInfo(BuyVO buyVO) {
         // 데이터베이스에 구매 정보를 저장
         if (buyVO.getBu_uid() == null || buyVO.getBu_me_id() == null) {
             throw new IllegalArgumentException("구매 정보가 유효하지 않습니다.");
         }
         buyDao.saveBuyInfo(buyVO);
+        return buyVO.getBu_num();
     }
 
-	public void saveBuyList(BuyListVO buyListVO) {
-		buyDao.saveBuyList(buyListVO);
-		
+	public void saveBuyList(int bu_num, List<BuyListVO> list) {
+		if(list == null) return;
+		for(BuyListVO tmp : list)
+			buyDao.saveBuyList(bu_num, tmp);
 	}
+
+	public int selectBuyCount(String bu_me_id) {
+		return buyDao.selectBuyCount(bu_me_id);
+	}
+	
 }

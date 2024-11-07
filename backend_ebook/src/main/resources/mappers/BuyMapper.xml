@@ -8,12 +8,15 @@
         SELECT amount FROM payments WHERE imp_uid = #{imp_uid}
     </select>
 
-    <insert id="saveBuyInfo" parameterType="BuyVO">
+    <insert id="saveBuyInfo" parameterType="BuyVO" keyProperty="bu_num" useGeneratedKeys="true">
         INSERT INTO buy (bu_uid, bu_me_id, bu_state, bu_payment, bu_total, bu_ori_total, bu_date)
         VALUES (#{bu_uid}, #{bu_me_id}, #{bu_state}, #{bu_payment}, #{bu_total}, #{bu_ori_total}, #{bu_date})
     </insert>
     <insert id="saveBuyList" parameterType="BuyListVO">
-        INSERT INTO buy_list (bl_bk_num, bl_me_id)
-        VALUES (#{bl_bk_num}, #{bl_me_id})
+        INSERT INTO buy_list (bl_bu_num, bl_bk_num, bl_me_id)
+        VALUES (#{bu_num}, #{bl.bl_bk_num}, #{bl.bl_me_id})
     </insert>
+    <select id="selectBuyCount" resultType="Integer">
+    	select count(*) from buy where bu_me_id = #{bu_me_id}
+    </select>
 </mapper>

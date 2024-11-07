@@ -70,5 +70,11 @@
         SET me_nickname = #{newNickname}
         WHERE me_id = #{memberId}
     </update>
+    
+    <update id="earnPoint">
+    	update member
+    	set me_point = me_point + #{total} * 0.1
+    	WHERE me_id = #{memberId}
+    </update>
 	
 </mapper>

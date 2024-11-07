@@ -226,6 +226,12 @@
 		VALUES(#{wr.wl_wr_num}, #{wr.wl_bk_num}, #{wr.wl_wt_num})
 	</insert>
 	
+	<!-- 책꽂이에 구매한 책들 저장 -->
+	<insert id="insertMyBook">
+		insert book_list (bl_me_id, bl_bk_num)
+		values(#{userId}, #{bookNum})
+	</insert>
+	
 	<!-- 책꽂이에서 해당 유저의 선택된 책의 페이지 반환 (유저아이디, 책번호) -->
 	<select id="selectBookPage">
 		select bl_nowPage
@@ -235,17 +241,23 @@
 	
 	<!-- 책 제거 (책 번호) -->
 	<delete id="deleteBook">
-		DELETE FROM book WHERE bk_num = #{bk_num};
+		DELETE FROM book WHERE bk_num = #{bk_num}
 	</delete>
 	
 	<!-- 작가 리스트 제거 (책 번호) -->
 	<delete id="deleteWriterList">
-		DELETE FROM writer_list WHERE wl_bk_num = #{bk_num};
+		DELETE FROM writer_list WHERE wl_bk_num = #{bk_num}
 	</delete>
 	<!-- 유저의 책 구매 개수 반환 -->
 	<select id="selectCountBookBuy" resultType = "int">
 		select count(*)
 		from book_list
+		where bl_me_id = #{userId}
+	</select>
+	
+	<select id="selectMyBook">
+		select * from book_list
+		join book on bl_bk_num = bk_num
 		where bl_me_id = #{userId}
 	</select>
 	

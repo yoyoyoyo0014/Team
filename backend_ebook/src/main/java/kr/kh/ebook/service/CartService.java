@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import kr.kh.ebook.dao.CartDAO;
+import kr.kh.ebook.model.vo.BuyListVO;
 import kr.kh.ebook.model.vo.CartVO;
 import lombok.AllArgsConstructor;
 
@@ -28,6 +29,11 @@ public class CartService {
     public void removeCart(int ca_num) {
         cartDao.removeCart(ca_num); // 카트 삭제
     }
+
+	public void emptyCart(List<BuyListVO> orderList) {
+		for(BuyListVO tmp : orderList)
+			removeCart(tmp.getBl_ca_num()); // 주문 후 카트 비우기
+	}
 
 }
 

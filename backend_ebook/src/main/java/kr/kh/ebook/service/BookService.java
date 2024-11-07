@@ -149,5 +149,13 @@ public class BookService {
 		bookDao.insertBookFiles(epubFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(epubFile.getOriginalFilename()));
 		bookDao.insertBookFiles(imgFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(imgFile.getOriginalFilename()));
 	}
-	
+
+	public void insertMyBook(String userId, int bookNum) {
+		bookDao.insertMyBook(userId, bookNum);
+	}
+
+	public List<BookVO> selectMyBook(String userId) {
+		return bookDao.selectMyBook(userId);
+	}
+
 }

@@ -38,7 +38,7 @@ const CartPage = () => {
   const calcPrice = () => {
     let tmp = 0;
 
-    const inps = document.querySelectorAll('[name="bk_num"]');
+    const inps = document.querySelectorAll('[name="ca_num"]');
     inps.forEach(inp => {
       if (inp.checked === true) {
         tmp += parseInt(inp.parentElement.parentElement.querySelector('[name="bk_price"]').value);
@@ -76,17 +76,23 @@ const CartPage = () => {
     e.preventDefault();
     let cnt = 0;
     let tmp = [];
-    const inps = document.querySelectorAll('[name="bk_num"]');
+    let orderList = [];
+    const inps = document.querySelectorAll('[name="ca_num"]');
 
     inps.forEach(inp => {
       if (inp.checked === true) {
         cnt++;
         tmp.push({
-          bk_num: inp.parentElement.parentElement.querySelector('[name="bk_num"]').value,
           bk_title: inp.parentElement.parentElement.querySelector('.bk_title').innerText,
           bk_writer: inp.parentElement.parentElement.querySelector('.bk_writer').innerText,
           bk_price: inp.parentElement.parentElement.querySelector('.bk_price').value
         });
+        orderList.push({
+          bl_num: 0,
+          bl_ca_num: inp.parentElement.parentElement.querySelector('[name="ca_num"]').value,
+          bl_me_id: me_id,
+          bl_bk_num: inp.parentElement.parentElement.querySelector('.bk_num').value
+        })
       }
     });
     
@@ -95,13 +101,16 @@ const CartPage = () => {
       return;
     }
     navigate('/buy', {
-      state: tmp
+      state: {
+        tmp: tmp,
+        orderList: orderList
+      }
     });
   }
 
   const handleSelectAllChange = (e) => {
     if(!e) return;
-    const inps = document.querySelectorAll('[name="bk_num"]');
+    const inps = document.querySelectorAll('[name="ca_num"]');
     inps.forEach(inp => {
       if (e.target.checked === true)
         inp.checked = true;
@@ -123,16 +132,16 @@ const CartPage = () => {
           {cart.length !== 0 ? cart.map(item => (
             <li className="theme-box cart-item" key={item.ca_num}>
               <input type="hidden" className="bk_price" id={"bk_price_" + item.ca_num} name={"bk_price"} value={item.bk_price}/>
-              <input type="hidden" className="ca_num" id={"ca_num_" + item.ca_num} name={"ca_num"} value={item.ca_num}/>
+              <input type="hidden" className="bk_num" id={"bk_num_" + item.bk_num} name={"bk_num"} value={item.bk_num}/>
               <Check
                 id={"cart_item_" + item.ca_num}
-                name="bk_num"
+                name="ca_num"
                 label=""
                 change={calcPrice}
-                value={item.bk_num}/>
+                value={item.ca_num}/>
               <div className="book-img">
                 <Link to={"/ebook/selectBook/" + item.bk_num}>
-                <img src="https://image.aladin.co.kr/product/34765/53/cover200/k632933028_1.jpg" alt="test" />
+                <img src={'/img/book_'+ item.bk_num + '.jpg'} alt="불러오지 못한 이미지" />
                 </Link>
               </div>
               <div className="book-info">

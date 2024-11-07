@@ -1,56 +1,61 @@
-import { useState, useEffect } from "react";
-import { useParams, useLocation } from 'react-router-dom';
+import { useState, useEffect, useContext } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../../css/cart.css';
-import Check from "../../components/form/check";
 import Button from "../../components/form/button";
+import {Input} from "../../components/form/input";
+import { LoginContext } from "../../context/LoginContext";
 
 const OrderPage = () => {
 	const [IMP, setIMP] = useState(null);
-	const { me_id } = useParams();
+  const [point, setPoint] = useState(0);
+  const {user} = useContext(LoginContext);
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const orderList = location.state;
+  const tmpList = location.state.tmp;
+  const orderList = location.state.orderList;
   let total = 0;
 
-  orderList.map((item, i) => total += parseInt(item.bk_price))
+  // total 계산
+  //tmpList.map((item, i) => total += parseInt(item.bk_price))
 
-	const saveBuyInfo = async (merchant_uid, totalAmount) => {
+  total = 100;
+  //테스트 결제를 위해 합계값 100원으로 고정.
+  //실제 시연 시에는 total += parseInt(item.bk_price)) 주석 해제 및 total = 100 삭제
+
+	const saveBuyInfo = async (merchant_uid, total) => {
     try {
-      const response = await fetch('/buy/save', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          bu_uid: merchant_uid,
-          bu_me_id: me_id,
-          bu_state: '구매 완료',
-          bu_payment: 'CARD',
-          bu_total: total,
-          bu_ori_total: total,
-          bu_date: new Date().toISOString(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      const buyVO = {
+        bu_uid: merchant_uid,
+        bu_me_id: user?.me_id,
+        bu_state: '구매 완료',
+        bu_payment: 'CARD',
+        bu_total: total,
+        bu_ori_total: total,
+        bu_date: new Date().toISOString()
       }
 
-      // buy_list에 저장 (선택한 책 목록)
-      fetch('/buy/list/save', {
+      let response = await fetch('/buy/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          buyVO,
           orderList
-        }),
-      })
-      alert('구매 정보가 저장되었습니다.');
+        })
+      });
+      if (!response.ok)
+        throw new Error(`HTTP error! Status: ${response.status}`);
     } catch (error) {
-      console.error("구매 정보 저장 중 오류 발생:", error);
+      console.error("구매 정보 저장 중 오류 발생");
+      console.log(error)
       alert("구매 정보를 저장하는 중 오류가 발생했습니다.");
     }
+
+    navigate('/order/success', {
+      state: tmpList
+    });
   };
 
 	useEffect(() => {
@@ -59,14 +64,11 @@ const OrderPage = () => {
     const iamport = document.createElement("script");
     iamport.src = "http://cdn.iamport.kr/js/iamport.payment-1.1.7.js";
     
-    iamport.onload = () => {
-      setIMP(window.IMP);
-    };
+    iamport.onload = () => setIMP(window.IMP);
 
     document.head.appendChild(jquery);
-    document.head.appendChild(iamport); 
-  }, [me_id]);
-
+    document.head.appendChild(iamport);
+  }, []);
 
 	const requestPay = (e) => {
     e.preventDefault();
@@ -76,13 +78,15 @@ const OrderPage = () => {
     }
 
     IMP.init('imp48350481');
-  
+
     IMP.request_pay({
       pg: 'html5_inicis.INIpayTest',
       pay_method: 'CARD',
       merchant_uid: new Date().getTime().toString(),
-      name: `${orderList[0].bk_title} 외 ${orderList.length - 1}개`,
+      name: `${tmpList[0].bk_title} 외 ${tmpList.length - 1}개`,
       amount: total,
+      buyer_email: `${user?.me_email}`,
+      buyer_name: `${user?.me_name}`
     }, async (rsp) => {
       if (rsp.success) {
         try {
@@ -98,60 +102,64 @@ const OrderPage = () => {
           });
 
           if (response.ok) {
-            alert('결제 검증 성공');
-            await saveBuyInfo(rsp.merchant_uid, total); // bu_uid와 totalAmount 전달
+            await saveBuyInfo(rsp.merchant_uid, total);
           } else {
             const errorMessage = await response.text();
-            alert(`결제 검증 실패: ${errorMessage}`);
+            alert(`결제에 실패했습니다: ${errorMessage}`);
           }
         } catch (error) {
-          alert('결제 검증 요청 중 오류가 발생했습니다.');
+          alert('결제에 실패했습니다');
         }
         return;
       }
-      alert(`결제 실패: ${rsp.error_msg}`);
+      alert(`결제에 실패했습니다 ${rsp.error_msg}`);
     });
   };
 	
 	return(<form onSubmit={requestPay}>
-  <section className="selected-books">
-    <div className="section-title">
-      <h2>주문하기</h2>
-    </div>
+    <section className="selected-books">
+      <div className="section-title">
+        <h2>주문하기</h2>
+      </div>
 
-    <div className="theme-box">
-      <ul className="buy-list">
-        {orderList.map((item, i) => {
-          return(<li>
-            <div>
-              <strong>{item.bk_title}</strong>
-              <p>{item.bk_writer}</p>
-            </div>
-            <p className="price">{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(item.bk_price)}</p>
-          </li>);
-        })}
-      </ul>
-    </div>
-  </section>
+      <div className="theme-box">
+        <ul className="buy-list">
+          {tmpList.map((item, i) => {
+            return(<li>
+              <div>
+                <strong>{item.bk_title}</strong>
+                <p>{item.bk_writer}</p>
+              </div>
+              <p className="price">{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(item.bk_price)}</p>
+            </li>);
+          })}
+        </ul>
+      </div>
+    </section>
 
-  <section className="payment">
-    <div className="section-title">
-      <h2>결제하기</h2>
-    </div>
+    <section className="payment">
+      <div className="section-title">
+        <h2>결제하기</h2>
+      </div>
 
-    <div className="theme-box">
-      <dl>
-        <dt><strong>총 금액</strong></dt>
-        <dd>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(total)}</dd>
-      </dl>
-      <dl>
-        <dt><strong>포인트</strong></dt>
-        <dd>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(0)}</dd>
-      </dl>
-    </div>
+      <div className="theme-box">
+        <dl>
+          <dt><strong>총 금액</strong></dt>
+          <dd>{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(total)}</dd>
+        </dl>
+        <dl>
+          <dt><strong>포인트</strong></dt>
+          <dd>
+            <Input
+              type="text"
+              change={setPoint}
+              placeholder={Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(user?.me_point)}/>
+          </dd>
+        </dl>
+      </div>
 
-    <Button type="submit" cls="btn btn-point" text="결제하기"/>
-  </section>
+      <Button type="submit" cls="btn btn-point" text="결제하기"/>
+    </section>
 	</form>)
 }
 

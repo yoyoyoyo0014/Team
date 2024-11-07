@@ -76,4 +76,9 @@ public interface BookDAO {
 	int selectCountBookBuy(String userId);
 
 	void insertBookFiles(String originalFilename, int bk_num, String extension);
+
+	void insertMyBook(String userId, int bookNum);
+
+	List<BookVO> selectMyBook(String userId);
+	
 }

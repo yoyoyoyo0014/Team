@@ -1,22 +1,20 @@
 package kr.kh.ebook.controller;
 
-import java.util.HashMap;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.kh.ebook.model.vo.BookVO;
+import kr.kh.ebook.model.dto.BuyDTO;
 import kr.kh.ebook.model.vo.BuyListVO;
-import kr.kh.ebook.model.vo.BuyVO;
+import kr.kh.ebook.service.AchievenentService;
+import kr.kh.ebook.service.BookService;
 import kr.kh.ebook.service.BuyService;
+import kr.kh.ebook.service.CartService;
+import kr.kh.ebook.service.MemberService;
 
 @RestController
 @RequestMapping("/buy")
@@ -24,17 +22,14 @@ public class BuyController {
 
     @Autowired
     private BuyService buyService;
-
-    @GetMapping("")
-    public HashMap<String, Object> getOrder(@PathVariable List<BookVO> selectedBooks, @PathVariable String me_id) {
-    	System.out.println("hi");
-        System.out.println(selectedBooks);
-        System.out.println(me_id);
-        
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("selectedBooks", selectedBooks);
-        return map;
-    }
+    @Autowired
+    private AchievenentService achService;
+    @Autowired
+    private CartService cartService;
+    @Autowired
+    private BookService bookService;
+    @Autowired
+    private MemberService memberService;
     
     @PostMapping("/verify")
     public ResponseEntity<String> verifyPayment(@RequestParam String imp_uid, @RequestParam int expectedAmount) {
@@ -50,26 +45,29 @@ public class BuyController {
             return ResponseEntity.status(500).body("결제 검증 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
+    
     @PostMapping("/save")
-    public ResponseEntity<String> saveBuyInfo(@RequestBody BuyVO buyVO) {
-        try {
+    public ResponseEntity<String> saveBuyInfo(@RequestBody BuyDTO dto) {
+    	try {
             // 구매 정보 저장
-            buyService.saveBuyInfo(buyVO);
+            int bu_num = buyService.saveBuyInfo(dto.getBuyVO());
+            System.out.println(bu_num);
+            buyService.saveBuyList(bu_num, dto.getOrderList());
+            if(buyService.selectBuyCount(dto.getBuyVO().getBu_me_id()) == 1) {
+            	achService.insertAch(2, dto.getBuyVO().getBu_me_id());
+            }
+            System.out.println(buyService.selectBuyCount(dto.getBuyVO().getBu_me_id()));
+            //책꽂이에 저장
+            for(BuyListVO tmp : dto.getOrderList()) {
+            	bookService.insertMyBook(tmp.getBl_me_id(), tmp.getBl_bk_num());
+            }
+            memberService.earnPoint(dto.getBuyVO().getBu_me_id(), dto.getBuyVO().getBu_total());
+            cartService.emptyCart(dto.getOrderList());
             return ResponseEntity.ok("구매 정보가 저장되었습니다.");
         } catch (Exception e) {
             e.printStackTrace(); // 로그 출력
             return ResponseEntity.status(500).body("구매 정보 저장 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
-    @PostMapping("/list/save")
-    public ResponseEntity<String> saveBuyList(@RequestBody BuyListVO buyListVO) {
-        try {
-            // 구매 정보 저장
-            buyService.saveBuyList(buyListVO);
-            return ResponseEntity.ok("구매 리스트가 저장되었습니다.");
-        } catch (Exception e) {
-            e.printStackTrace(); // 로그 출력
-            return ResponseEntity.status(500).body("구매 리스트 저장 중 오류가 발생했습니다: " + e.getMessage());
-        }
-    }
+    
 }

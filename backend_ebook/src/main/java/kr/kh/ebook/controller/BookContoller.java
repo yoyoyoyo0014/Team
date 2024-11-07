@@ -149,6 +149,17 @@ public class BookContoller {
 			return null;
 		}
 	}
+	
+	// 첵꽂이 리스트 가져오기
+	@GetMapping("/selectMyBook/{userId}")
+	public HashMap<String, Object> selectBookshelfPage(@PathVariable String userId) {
+		System.out.println(userId);
+		List<BookVO> list = bookService.selectMyBook(userId);
+		System.out.println(list);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("myBookList", list);
+		return map;
+	}
 
 	// 첵꽂이의 책 가져오기
 	@GetMapping("/selectBookList/selectBookshelfPage/{userId}/{bookNum}")
