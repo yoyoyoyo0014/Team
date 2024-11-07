@@ -15,13 +15,15 @@ function Insert() {
   const [end, setEnd] = useState(null);
   const [postLinkPreview, setPostLinkPreview] = useState(null);
   const [postImagePreview, setPostImagePreview] = useState(null);
-  const { user, loadingUser } = useContext(LoginContext); // LoginContext에서 user 정보와 로딩 상태 가져오기
+  const { user, loadingUser } = useContext(LoginContext);
 
   // 접근 제한 로직 (초기 로딩 시 모든 조건 충족 확인 후 접근)
   useEffect(() => {
-
-    if (!user) {
-      // 사용자 정보가 없을 경우 접근 제한
+    console.log('User:', user);
+    console.log('Loading User:', loadingUser);
+    console.log('Board Number:', co_num);
+    if (loadingUser) return;
+    if (!user.me_id) {
       alert('로그인이 필요합니다.');
       navigate('/login');
       return;
@@ -38,11 +40,7 @@ function Insert() {
     // 권한 체크 및 접근 제한 로직
     if (user.me_authority) {
       const authority = user.me_authority.toLowerCase();
-      if (authority === 'COMPANY') {
-        alert('접근 권한이 없습니다.');
-        navigate('/');
-        return;
-      } else if (co_num === '2' && authority !== 'USER') {
+      if (co_num === '2' && authority !== 'USER') {
         alert('접근 권한이 없습니다.');
         navigate('/');
         return;
@@ -51,6 +49,10 @@ function Insert() {
         navigate('/');
         return;
       }
+    }else{
+      alert('접근 권한이 없습니다.');
+        navigate('/');
+        return;
     }
   }, [co_num, user, navigate, loadingUser]);
 
