@@ -1,8 +1,3 @@
-#관리자 및 사용자, 사업자 추가
-insert into member(me_id, me_nickname, me_name, me_pw, me_email, me_birth, me_adult, me_authority, me_ms_name)
-values('admin123','관리자','관리자','admin123','admin123@naver.com','990909','1','admin','사용'),
-('asd123','asd닉네임','asd123실명','asd123','asd123@naver.com','990909','1','user','사용');
-
 #책 추가
 insert into book(bk_name,bk_me_id, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_isbn, bk_totalPage, bk_agelimit)
 values('빠르게 생각하고 똑똑하게 말하라','admin123','해외도서','20240910','2','줄거리','17100','0','0010011101','320','12');
