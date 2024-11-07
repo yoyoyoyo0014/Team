@@ -31,8 +31,6 @@ public class AchievenentController {
 	public HashMap<String, Object> getUserAchivement(@PathVariable String userId){
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		List<AchievenentVO> list = achService.getUserAchivement(userId);
-		System.out.println(list);
-		System.out.println(userId);
 		map.put("myAchList", list);
 		return map;
 	}

@@ -18,9 +18,8 @@
 	<select id="getUserAchivement">
 		select achievenent.*, acl_date as 'ac_date'
 		from achievenent
-		left join achievenent_list
-		on acl_ac_num = ac_num
-		where acl_me_id = #{userId} or acl_me_id is null
+		left join (select * from achievenent_list where acl_me_id = #{userId}) as t
+		on acl_ac_num = ac_num;
 	</select>
 	<update id="insertAch">
 		insert achievenent_list(acl_ac_num, acl_me_id)
