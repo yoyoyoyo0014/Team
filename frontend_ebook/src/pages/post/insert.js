@@ -37,22 +37,21 @@ function Insert() {
       return;
     }
 
-    // 권한 체크 및 접근 제한 로직
     if (user.me_authority) {
       const authority = user.me_authority.toLowerCase();
-      if (co_num === '2' && authority !== 'USER') {
+      if (String(co_num) === '2' && authority !== 'user') {
         alert('접근 권한이 없습니다.');
         navigate('/');
         return;
-      } else if (co_num !== '2' && authority !== 'admin') {
+      } else if (String(co_num) !== '2' && authority !== 'admin') {
         alert('접근 권한이 없습니다.');
         navigate('/');
         return;
       }
-    }else{
+    } else {
       alert('접근 권한이 없습니다.');
-        navigate('/');
-        return;
+      navigate('/');
+      return;
     }
   }, [co_num, user, navigate, loadingUser]);
 
@@ -103,7 +102,9 @@ function Insert() {
       alert('작성자 정보가 설정되지 않았습니다.');
       return;
     }
-    if (!content) {
+    if (co_num === '3' || co_num === '4') {
+      setContent("내용없음");
+    } else if (!content) {
       alert('내용을 입력하세요.');
       return;
     }
