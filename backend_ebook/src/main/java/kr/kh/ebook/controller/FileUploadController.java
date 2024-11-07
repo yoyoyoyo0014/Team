@@ -46,8 +46,10 @@ public class FileUploadController {
 				if(fileExtension.equals("epub")) {
 					fileName = fileName+".epub";
 					//파일 저장 위치를 '../fronted_ebook/public/epub' 에 설정
+					System.out.println(fileName);
 					String path = pathStr + "epub";
 					directoryPath = Paths.get(path);
+					System.out.println(directoryPath);
 				}
 				//파일 확장자가 jpb일 때
 				else {
