@@ -93,4 +93,8 @@ public class MemberService {
             return false;
         }
     }
+
+	public void earnPoint(String bu_me_id, int bu_total) {
+		memberDao.earnPoint(bu_me_id, bu_total);
+	}
 }
