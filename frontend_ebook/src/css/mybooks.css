@@ -11,12 +11,12 @@
 
 .row {
 	position: relative;
-	display: flex;
-	justify-content: space-evenly;
+	display: grid;
 	width: 100%;
-	padding: 0 .6em;
 	height: 200px;
 	align-items: flex-end;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	justify-items: center;
 }
 .row::before {
 	content: '';
