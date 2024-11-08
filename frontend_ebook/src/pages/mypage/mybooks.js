@@ -35,7 +35,7 @@ const MyBooks = () => {
 										if (j >= myBookList.length) return null;
 										return(
 											<div className="book">
-												<Link to={"/mypage/mybooks/book/" + 0}>
+												<Link to={"/mypage/mybooks/book/" + myBookList[j].bk_num}>
 													<div className="book-img"><img src={'/img/book_'+ myBookList[j].bk_num + '.jpg'} alt={myBookList[j].bk_name}/></div>
 												</Link>
 											</div>
