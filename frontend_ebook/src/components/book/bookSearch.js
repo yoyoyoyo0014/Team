@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from 'react';
 
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import MakePage, { PageButtonV2 } from '../pageButton';
-import BookList from './bookList';
+import BookList from './booklist';
 import { GenreContext } from '../../context/GenreContext';
 import { Input } from '../form/input';
 import Button from '../form/button';

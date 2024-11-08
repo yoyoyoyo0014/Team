@@ -142,8 +142,7 @@ function BookInsert() {
     return true;
   }//빈 칸 확인
 
-  function submitFile(e){
-    e.preventDefault();
+  function submitFile(){
     if(!checkInsertBook(book))
       return;
 
@@ -219,12 +218,12 @@ function BookInsert() {
       writerTypeList = await selectWriterType();
       setWriterTypeList([...writerTypeList]);
     })();
+    //<form name="insert_book" onSubmit={e => submitFile(e)}>
   },[]);
 
   return (
     <Fragment>
       <h2 className="page-title txt-center">책 정보 입력</h2>
-      <form name="insert_book" onSubmit={e => submitFile(e)}>
         <fieldset className="form-wrapper">
           <div className="input-item">
             <input id="bk_name"
@@ -435,8 +434,7 @@ function BookInsert() {
           </table>
           </div>
         </fieldset>
-        <Button text="보내기" type="submit" cls="btn btn-point"/>
-      </form>
+        <button  className="btn btn-point" onClick={submitFile}>보내기</button>
 
       <Modal
         isOpen={modalIsOpen}
