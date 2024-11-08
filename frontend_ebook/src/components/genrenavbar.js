@@ -10,7 +10,7 @@ const GenreNavBar = () => {
 			{genreList && genreList.map(genre => {
 					return(<ul>
 						{genre.length !== undefined && genre.map(secondGenre => {
-								return(<li><Link to={"/ebook/search/both/"+secondGenre.ge_name+"/popularity/"+0+"/SearchWord="}>{secondGenre.ge_name}</Link></li>)
+								return(<li><Link to={"/ebook/search/all/"+secondGenre.ge_num+"/popularity/"+0+"/SearchWord="}>{secondGenre.ge_name}</Link></li>)
 							})
 						}
 					</ul>)

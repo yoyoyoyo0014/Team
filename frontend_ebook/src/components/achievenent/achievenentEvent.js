@@ -6,9 +6,9 @@ import axios from 'axios';
 
 export function AchievenentEvent() {
   const {user} = useContext(LoginContext);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(true);
 
-  let [achList,setAchList] =useState([]);//달성한 도전과제 데이터
+  let [achList,setAchList] = useState([]); //달성한 도전과제 데이터
   useEffect(() => {
     axios({
       url: '/ach/selectNewAchList/' + user?.me_id,
@@ -18,9 +18,9 @@ export function AchievenentEvent() {
       }
     }).then(res => {
       setAchList(res.data.myAchList);
-      if(achList.length !== 0) setModalIsOpen(true);
+      if(achList.length === 0) setModalIsOpen(false);
     });
-  }, []); //처음 시작할 때
+  }, [setAchList]); //처음 시작할 때
 
   return (
     <Modal

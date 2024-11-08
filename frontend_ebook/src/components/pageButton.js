@@ -18,7 +18,6 @@ function MakePage(contentsCount,currentPage,lookPage=5) {
 
   page.endPage = currentPage+2;
   let maxPage = Math.ceil(contentsCount/lookPage);
-  console.log("maxPage = " + maxPage)
   if(page.endPage > maxPage){
     page.next = false;
     page.endPage = maxPage;
