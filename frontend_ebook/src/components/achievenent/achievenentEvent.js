@@ -18,7 +18,7 @@ export function AchievenentEvent() {
       }
     }).then(res => {
       setAchList(res.data.myAchList);
-      if(achList.length === 0) setModalIsOpen(false);
+      // if(achList.length === 0) setModalIsOpen(false);
     });
   }, [setAchList]); //처음 시작할 때
 

@@ -117,7 +117,7 @@ export function PageButtonV2({getPage,pageEvent,url}){
       /> : ''}
 
       <div className="nums">
-      {Array.isArray(page.pageList) && page.pageList.map((item, index) => {
+      {Array.isArray(page.pageList) && page.pageList.length > 0 && page.pageList.map((item, index) => {
           return(
             <Button
               cls={"paging-btn num " + (page.currentPage === (page.pageList[index]) ? "now" : "")}

@@ -43,10 +43,10 @@
     	where
    		<choose>
    			<when test = "pm.cri.country == 'domestic' ">
-   				 bk_state = '국내도서' and 
+   				 bk_state = '국내도서'
    			</when>
    			<when test = "pm.cri.country == 'foreign' ">
-   				 bk_state = '해외도서' and 
+   				 bk_state = '해외도서'
    			</when>
    			<otherwise>
     				(bk_state ='국내도서' or  bk_state = '해외도서') 
@@ -54,11 +54,11 @@
    		</choose>
    		
    		<if test="pm.cri.genre != 0">
-   			bk_sg_num = #{pm.cri.genre}
+   			and bk_sg_num = #{pm.cri.genre}
 		</if>
 		<if test="pm.cri.genre != 0 and pm.cri.search != ''">and</if>
 		<if test="pm.cri.search != ''">
-			bk_name like concat('%', #{pm.cri.search}, '%')
+			and bk_name like concat('%', #{pm.cri.search}, '%')
 		</if>
 		group by bk_num
 		order by
@@ -217,16 +217,10 @@
 		where bk_num = #{bookNum}
 	</select>
 	
-	<!-- 모든 장르 가져오기 -->
-	<select id="selectGenreList">
-		select *
-		from genre
-	</select>
-	
 	<!-- 책 추가 후 해당 book객채의 bk_num 변수에 ai 값 변환 -->
 	<insert id="insertBook" useGeneratedKeys="true" keyProperty="bk.bk_num">
 		INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_publisher)
-		VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_me_id})
+		VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_publisher})
 	</insert>
 	
 	<!-- writer_list 에 작가 추가 (작가번호, 책번호, 작가 유형번호) -->

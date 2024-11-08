@@ -14,7 +14,7 @@ const Header = ({setSection}) => {
 
 	let [country, setCountry] = useState('both');
 	let [genre, setGenre] = useState('0');
-	let [category, setCategory] = useState('highPrice');
+	let [category, setCategory] = useState('popularity');
 
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     
@@ -54,9 +54,9 @@ const Header = ({setSection}) => {
         const logoutUrl = `https://kauth.kakao.com/oauth/logout?client_id=${CLIENT_ID}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`;
         window.location.href = logoutUrl; // 카카오 로그아웃 페이지로 리디렉션
     };
-	function clickSearchBtn(){
+	function clickSearchBtn(e){
+        e.preventDefault();
 		navigate("/ebook/search/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
-        
 	}
 
 	const UserMenu = () => {
@@ -80,6 +80,11 @@ const Header = ({setSection}) => {
                     <li><Link to="javascript:void(0);" onClick={handleLogout}>로그아웃</Link></li>
                 </ul>
             );
+        } else if(user && user.me_authority === 'COMPANY') {
+            return(<ul>
+				<li><Link to="/mycompany">사업자 정보 수정</Link></li>
+				<li><Link to="javascript: void(0);" onClick={handleLogout}>로그아웃</Link></li>
+			</ul>)
         } else {
             return (
                 <ul>
@@ -110,7 +115,7 @@ const Header = ({setSection}) => {
             <div className="search-box">
                 <form name="search">
                     <Input type="text" placeholder={"검색어를 입력해주세요"} cls={"full frm-input"} change={e => setKeyword(e)} value={keyword} />
-                    <Button click={e => clickSearchBtn()} text={"검색"} cls={"ico btn search"} />
+                    <Button click={e => clickSearchBtn(e)} text={"검색"} cls={"ico btn search"} />
                 </form>
             </div>
 
@@ -125,7 +130,6 @@ const Header = ({setSection}) => {
                         <ul>
                             <li><Link to="/">베스트셀러</Link></li>
                             <li><Link to="/newbooks">신상 도서</Link></li>
-                            <li><Link to="/forsales">할인 중인 도서</Link></li>
                             <li><Link to={`/post/list/${co_num || 3}`}>이벤트</Link></li>
                             <li><Link to={`/post/list/${co_num || 2}`}>도서 요청</Link></li>
                         </ul>

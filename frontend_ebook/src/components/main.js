@@ -78,11 +78,10 @@ const Main = ({section}) => {
 			</section>
 			
 			<EventSection/>
-			<div id="notice" style={{ marginTop: '35px' }}>
+			<div id="notice" style={{ margin: '2em 0' }}>
 				<div className="section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '10px' }}>
 					<h2>공지사항</h2>
-					<Link to={`/post/list/${co_num || 1}`} className="notice-link" style={{ float: 'right', textDecoration: hover !== null ? 'underline' : 'none' }}
-						onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+					<Link to={`/post/list/${co_num || 1}`} className="notice-link">
 						<strong>더보기</strong>
 					</Link>
 				</div>

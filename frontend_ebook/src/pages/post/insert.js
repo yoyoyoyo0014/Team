@@ -64,6 +64,7 @@ function Insert() {
     const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')} ${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
 
     const formData = new FormData();
+    formData.content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
     formData.append('po_title', title);
     formData.append('po_me_id', writer);
     formData.append('po_me_nickname', nickname);
@@ -137,7 +138,16 @@ function Insert() {
         {(co_num !== '3' && co_num !== '4') && (
           <div className="form-group">
             <label htmlFor="content">내용:</label>
-            <textarea id="content" name="content" className="form-control" style={{ height: '400px', width: '100%', border: '1px solid lightgray', borderRadius: '15px', padding: '15px 15px' }} placeholder="내용을 입력하세요." onChange={(e) => setContent(e.target.value)} value={content}></textarea>
+            <textarea
+              id="content"
+              name="content"
+              className="form-control"
+              style={{ height: '400px' }}
+              placeholder="내용을 입력하세요."
+              onChange={e=>{
+                setContent(e.target.value)
+              }}
+              value={content}></textarea>
           </div>
         )}
         

@@ -22,8 +22,9 @@
 	</select>
 	
 	<select id="selectReportList" resultType="kr.kh.ebook.model.vo.ReportVO">
-        SELECT * FROM report
-        ORDER BY rp_date DESC
+        SELECT report.*, rt_name FROM report
+		join report_type on rp_rt_num = rt_num
+		ORDER BY rp_date DESC
         LIMIT #{pageStart}, #{perPageNum}
     </select>
 

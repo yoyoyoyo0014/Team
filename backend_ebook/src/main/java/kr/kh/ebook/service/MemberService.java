@@ -61,7 +61,7 @@ public class MemberService {
                 Date stopDate = member.getMe_stop();
                 if (stopDate != null && stopDate.after(new Date())) {
                     long remainingTime = stopDate.getTime() - System.currentTimeMillis();
-                    long daysRemaining = remainingTime / (1000 * 60 * 60 * 24);
+                    int daysRemaining = (int) remainingTime / (1000 * 60 * 60 * 24) + 1;
                     String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stopDate);
                     throw new SuspensionException(
                         "관리자에 의해 정지되어 " + formattedDate + " 까지\n로그인을 할 수 없습니다.  (" + " 잔여기간 : " + daysRemaining  + "일 )"

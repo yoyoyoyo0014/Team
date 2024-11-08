@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../context/LoginContext';
 
 function Detail() {
+  const { user } = useContext(LoginContext);
   const { co_num, po_num } = useParams(); // co_num과 po_num을 둘 다 받아오기
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
@@ -90,10 +92,7 @@ function Detail() {
   return (
     <div className="container">
       {co_num !== '3' && co_num !== '4' && (
-        <div className="form-group">
-          <label htmlFor="po_title">제목</label>
-          <input type="text" id="po_title" className="form-control" value={post.po_title || ''} readOnly />
-        </div>
+        <div className='section-title txt-center'><h2 className='page-title'>{post.po_title}</h2></div>
       )}
       {co_num === '2' && (
         <>
@@ -118,18 +117,15 @@ function Detail() {
         
       )}
       {(co_num !== '3' && co_num !== '4') && (
-        <div className="form-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <label htmlFor="po_content" style={{ marginBottom: '8px' }}>내용</label>
-          <textarea id="po_content" className="form-control" value={post.po_content || ''} readOnly style={{ height: '400px', width: '100%', border: '1px solid lightgray', borderRadius: '15px', padding: '15px 15px' }} />
-        </div>
+        <p>{post.po_content}</p>
       )}
 
-      <div className="button-container" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }}>
-        <button className="btn btn-outline-success" onClick={() => navigate(`/post/list/${co_num}`)}>목록으로</button>
-        
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button className="btn btn-outline-primary" onClick={() => navigate(`/post/update/${po_num}`)}>수정하기</button>
-          <button className="btn btn-outline-danger" onClick={handleDelete}>삭제하기</button>
+      <div className="button-container" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2em'}}>
+        <Link className="btn btn-point" to={`/post/list/${co_num}`}>목록으로</Link>
+
+        <div style={{ display: 'flex', gap: '10px'}}>
+          {user?.me_authority === 'ADMIN' ? <Link className="btn btn-dark" to={`/post/update/${po_num}`}>수정하기</Link> : ''}
+          {user?.me_authority === 'ADMIN' ? <Link className="btn btn-dark" onClick={handleDelete}>삭제하기</Link> : ''}
         </div>
       </div>
     </div>

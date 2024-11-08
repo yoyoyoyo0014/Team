@@ -1,7 +1,5 @@
 package kr.kh.ebook.model.vo;
 
-import java.util.Date;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

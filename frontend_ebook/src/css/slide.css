@@ -10,7 +10,7 @@
 	flex-wrap: wrap;
 	transition: 1s ease;
 }
-.slide-ul li img {float: left;}
+.slide-ul li img {float: left; width: 100%;}
 .slide-btn {cursor: pointer;}
 
 .slide .indicator {

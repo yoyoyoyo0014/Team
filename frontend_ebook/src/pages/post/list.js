@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../context/LoginContext';
 
 const List = () => {
+  const { user } = useContext(LoginContext);
   const { co_num } = useParams();
   const navigate = useNavigate();
   const [currentPosts, setCurrentPosts] = useState([]);
@@ -206,15 +208,14 @@ const List = () => {
     );
   };
   
-
   return (
     <div className="container">
-      <h2 style={{ padding: '30px 0 60px', textAlign: 'center' }}>{communityName} 게시판</h2>
+      <h2 style={{ padding: '30px 0 60px', textAlign: 'center' }}>{communityName}</h2>
         <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div  iv style={{ position: 'relative', display: 'inline-block' }}>
+          <div style={{ position: 'relative', display: 'inline-block' }}>
           <input type="text" placeholder="검색어를 입력하세요" value={pageMaker && pageMaker.cri ? pageMaker.cri.search : ''} 
                   onChange={(e) => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: e.target.value }})} onKeyPress={handleKeyPress}
-            style={{ padding: '10px 40px 10px 10px', width: '400px', borderRadius: '5px', border: '1px solid lightgray' }} />
+            style={{ width: '400px', marginRight: '1em'}} />
             {pageMaker && pageMaker.cri && pageMaker.cri.search && (
               <button onClick={() => setPageMaker({ ...pageMaker, cri: { ...pageMaker.cri, search: '' }})} 
                       style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', 
@@ -223,12 +224,13 @@ const List = () => {
               </button>
             )}
           </div>
-          <button onClick={handleSearch} style={{ padding: '8px 20px', borderRadius: '5px', border: 'none', backgroundColor: '#84cb70', color: 'white', cursor: 'pointer' }}>
+          <button onClick={handleSearch} className='btn btn-point'>
             검색
           </button>
         </div>
+
       <div className="insert">
-        <button className="btn btn-outline-primary" style={{ marginBottom: '20px', float: 'right' }} onClick={() => navigate(`/post/insert/${co_num}`)}>글쓰기</button>
+        {user?.me_authority === 'ADMIN' ? <Link className="btn btn-outline-primary" style={{ marginBottom: '20px', float: 'right' }} to={`/post/insert/${co_num}`}>글쓰기</Link> : ''}
       </div>
       <div style={{ marginTop: '50px'}}>
         {co_num === '3' || co_num === '4' ? renderCardList() : renderTableList()}

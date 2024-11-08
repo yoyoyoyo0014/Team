@@ -47,8 +47,8 @@ function MemberManagement() {
               {item.rp_target}
             </div>
             <div className="report-content content-content">{item.rp_content}</div>
-            <div className="report-content content-type">{item.rp_rt_num}</div>
-            <div className="report-content content-time">{item.rp_date}</div>
+            <div className="report-content content-type">{item.rt_name}</div>
+            <div className="report-content content-time">{new Date(item.rp_date).toLocaleDateString()} {new Date(item.rp_date).toLocaleTimeString()}</div>
           </React.Fragment>
         ))
       )}

@@ -16,6 +16,7 @@ public class ReportVO {
 	private int rp_rt_num;
 	private Date rp_date;
 	private String rp_id;
+	private String rt_name;
 	
 	public ReportVO(String meId, String targetId, int rp_rt_num,String rpId,String reportContent) {
 		this.rp_me_id = meId;
@@ -24,4 +25,5 @@ public class ReportVO {
 		this.rp_id = rpId;
 		this.rp_content = reportContent;
 	}
+
 }

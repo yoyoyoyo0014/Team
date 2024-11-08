@@ -55,10 +55,11 @@ public class BookContoller {
 	@GetMapping("/count/{country}/{genre}/SearchWord={search}")
 	@ResponseBody
 	public int selectBookCount(@PathVariable String country, @PathVariable int genre, @PathVariable String search) {
-
 		if (search.equals("doNotExist"))
 			search = "";
 		int searchBookCount = bookService.searchBookCount(country, genre, search);
+		System.out.println(country + genre + search);
+		System.out.println("검색결과 개수"+ searchBookCount);
 		return searchBookCount;
 	}
 
@@ -104,6 +105,8 @@ public class BookContoller {
 			fileList.add(imgFile);
 			fileList.add(epubFile);
 
+			System.out.println(book);
+			
 			// 책을 DB에 추가,book 객체에 bk_num 값 가져오는 기능 실패시 return
 			if (bookService.insertBook(book)) {
 				bookService.insertBookFiles(epubFile, imgFile, book.getBk_num());
@@ -132,15 +135,17 @@ public class BookContoller {
 	}
 
 	// 책 검색
-	@GetMapping("/search/{category}/{country}/{genre}/{count}/SearchWord={search}")
+	//ebook/search/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword
+	@GetMapping("/search/{country}/{genre}/{category}/{count}/SearchWord={search}")
 	public List<BookVO> searchBookList(@PathVariable String category, @PathVariable String country,
 			@PathVariable int genre, @PathVariable String search, @PathVariable int count) {
 		BookCriteria bookCri = new BookCriteria(count, category, country, genre, search);
 		System.out.println(count+ category+ country+ genre+ search);
 		BookPageMaker pm = new BookPageMaker(5, bookCri, count);
-		System.out.println(pm.getCri().getSearch());
+		System.out.println("검색" + pm.getCri().getSearch());
 		try {
 			List<BookVO> res = bookService.searchBookList(pm);
+			System.out.println("검색결과" + res);
 			System.out.println(res);
 			return res;
 		} catch (Exception e) {

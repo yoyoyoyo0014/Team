@@ -57,6 +57,8 @@ public class WriterController {
 	@ResponseBody
 	public List<WriterVO> searchWriter(@PathVariable("page") int page,@PathVariable("search") String search){
 		search = search.replace("Search=", "");
+		System.out.println(page);
+		System.out.println(search);
 		List<WriterVO> searchList = writerService.searchWriterList(search,page-1);
 		System.out.println(searchList);
 		return searchList;

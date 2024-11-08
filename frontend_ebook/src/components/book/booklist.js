@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../../css/booklist.css';
 import axios from 'axios';
 import { useContext } from 'react';
@@ -7,20 +7,15 @@ import Button from '../form/button';
 
 function BookList({bookList}) {
   const { user } = useContext(LoginContext);
-  const navigate = useNavigate();
 
   const addCart = (bk_num) => {
-    if(user?.me_id === undefined) {
-      navigate('/login');
-      return;
-    }
-
     const options = {
       url: '/cart/add',
       method:'POST',
       header: {
         'Accept':'application/json',
         'Content-Type': "'application/json';charset=UTF-8'"
+        //연결은 됐는데 보내는 타입이 맞지 않음(content type 점검)
       },
       data: {
         ca_bk_num: bk_num,
@@ -31,20 +26,20 @@ function BookList({bookList}) {
     axios(options)
     .then(res => {
       console.log(res);
-      alert('장바구니에 추가했습니다');
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+			alert('장바구니에 추가했습니다');
+		})
+		.catch((error) => {
+			console.log(error);
+		})
   }
 
   return (
     <div className="book-list">
       <ul>
-      {Array.isArray(bookList) && bookList.length > 0 &&    bookList.map((item, index) => {
+     {Array.isArray(bookList) && bookList.length > 0 &&    bookList.map((item, index) => {
          return (
             <li className="theme-box" key={index}>
-              <div className="book-img"><Link to={"/ebook/selectBook/" + item.bk_num}><img src={'/img/book_'+ item.bk_num + '.jpg'} alt="불러오지 못한 이미지"  /></Link></div>
+              <div className="book-img"><Link to={"/ebook/selectBook/" + item.bk_num}><img src={'/img/book_'+ item.bk_num + '.jpg'} alt="불러오지 못한 이미지"  width="50" height="75" /></Link></div>
               <div className="book-info">
                 <h3 className="title"><Link to={"/ebook/selectBook/" + item.bk_num}>{item.bk_name}</Link></h3>
                 <p className="writer">{item.bk_writer}</p>

@@ -57,7 +57,7 @@ function Router({section}) {
       <Route path="/mypage" element={isLoggedIn ? <MypageIndex/> : <Navigate to="/login"/>}/>
       
       {/* 개인 정보 수정 */}
-      <Route path="/edit-profile" element={<EditProfile />} />
+      <Route path="/edit-profile" element={isLoggedIn ? <EditProfile/> : <Navigate to="/login" />} />
       
       <Route
         path="/mypage/mybooks"
@@ -88,8 +88,8 @@ function Router({section}) {
 
       <Route path="/post/list/:co_num" element={<List />} />
 			<Route path="/post/detail/:co_num/:po_num" element={<Detail />} />
-			<Route path="/post/update/:po_num" element={<Update />} />
-			<Route path="/post/insert/:co_num" element={<Insert />} />
+			<Route path="/post/update/:po_num" element={isLoggedIn ? <Update/> : <Navigate to="/login" />} />
+			<Route path="/post/insert/:co_num" element={isLoggedIn ? <Insert/> : <Navigate to="/login" />} />
     </Routes>
   );
 }

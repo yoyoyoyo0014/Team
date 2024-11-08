@@ -1,14 +1,12 @@
 import {useContext, useEffect, useState} from 'react';
 
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import MakePage, { PageButton } from '../pageButton';
-import BookList from './booklist';
+import MakePage, { PageButtonV2 } from '../pageButton';
+import BookList from './bookList';
 import { GenreContext } from '../../context/GenreContext';
 import { Input } from '../form/input';
 import Button from '../form/button';
-import { FormProvider } from 'react-hook-form';
 import { KeywordContext } from '../../context/KeywordContext';
-import GenreNavBar from '../../components/genrenavbar';
 
 let bannedSearchTerms =["#","%",";"];
 const helpSearch = "SearchWord=";
@@ -49,8 +47,11 @@ function BookSearch() {
   }//카테고리 설정
 
   async function changePage(index=null){
-    if(index ===null)
+    if(index ===null){
       index = 1;
+      page.currentPage = 1
+    }
+      
     if(typeof index ==='number'){
       page.currentPage = index;
     }else{
@@ -60,7 +61,8 @@ function BookSearch() {
       i = index;
       page.currentPage = i.index+1;
     }
-
+    
+    
     page = MakePage(page.contentsCount,page.currentPage);
 
     if(page.currentPage>page.endPage){
@@ -68,16 +70,19 @@ function BookSearch() {
       page = MakePage(page.contentsCount,page.currentPage);
     }
      
-   if(page.currentPage<=0)
+    if(page.currentPage<=0)
       page.currentPage = 1;
-   console.log("검색")
-   window.location.href =("/ebook/search/"+country+"/"+genre+"/"+category+"/"+page.currentPage+"/"+helpSearch+search);
+    console.log("검색");
+
+    navigate("/ebook/search/" + country + "/" + genre + "/" + category + "/" + page.currentPage + "/" + helpSearch + search);
   }//페이지 바꾸기
 
   async function submitSearch(){
-    navigate("/ebook/search/"+country+"/"+genre+"/"+category+"/"+0+"/SearchWord="+keyword);
+    console.log("검색시작")
+    console.log(bo_country + bo_genre+bo_category + bo_search + bo_page )
+    navigate("/ebook/search/" + bo_country + "/" + bo_genre + "/" + bo_category + "/" + bo_page + "/" + bo_search);
 
-    var searchCount = await getSearchCount(country,genre,keyword);
+    var searchCount = await getSearchCount(country, genre, keyword);
     console.log("검색개수"+searchCount)
     if(!searchCount) return;
     
@@ -85,6 +90,8 @@ function BookSearch() {
     page = MakePage(page.contentsCount,page.currentPage);
     var searchDataList = await selectSearch(country,genre,category,keyword,page);
     setBookList(searchDataList);
+    console.log('book list')
+    console.log(bookList);
     setPage({...page});
   }//책 검색
 
@@ -117,17 +124,18 @@ function BookSearch() {
 			)}
 			</div>
 		</nav>
-
+    <br/>
     <div>
       <div className="search-form" style={{display: 'flex', gap: '2em'}}>
         <Input cls="frm-input" value={keyword} type="text" change={e=>setKeyword(e)} placeholder="검색칸"/>
-        <Button text={'제출'} cls="btn btn-point" type={"submit"} onClick = {()=>{changePage(1)}}/>
+        <Button text={'검색'} cls="btn btn-point" type={"submit"} onClick = {()=>{changePage(1)}}/>
       </div>
+      <br/>
       <div>
         <div className="theme-box genre-wrapper">
           <div>
-            <input type="radio" name="country" id="both" value="both" defaultChecked={bo_country==='both'} onChange={e=>setCountry(e.target.value)} />
-            <label htmlFor="both">전체</label>
+            <input type="radio" name="country" id="all" value="all" defaultChecked={bo_country==='all' || bo_country==='both'} onChange={e=>setCountry(e.target.value)} />
+            <label htmlFor="all">전체</label>
           </div>
           <div>
             <input type="radio" name="country" id="domestic" value="domestic" defaultChecked={bo_country==='domestic'} onChange={e=>setCountry(e.target.value)} />
@@ -138,6 +146,7 @@ function BookSearch() {
             <label htmlFor="foreign">해외도서</label>
           </div>
         </div>
+        <br/>
         <div className="theme-box genre-wrapper">
           <div>
             <input type="radio" name="category" id="popularity" value="popularity" defaultChecked={bo_category==='popularity'} onClick={e=>getCategory(e)} />
@@ -169,10 +178,10 @@ function BookSearch() {
           </div>
         </div>
       </div>
-
+      <br/>
       <BookList bookList={bookList}/>
-      <PageButton getPage={page} pageEvent={changePage} prevPageEvent={()=>changePage(page.currentPage-1)} 
-      nextPageEvent={()=>changePage(page.currentPage+1)}></PageButton>
+      
+      <PageButtonV2 getPage={page} pageEvent={changePage} url={"/ebook/search/"+country+"/"+genre+"/"+category+"/"+page.currentPage+"/"+helpSearch+search}/>
     </div>
     </form>
   );
@@ -210,10 +219,13 @@ async function selectSearch(country,genre,category,inputSerch = '',page){
       return false;
     }
   }
-  
+  //  const response = await fetch('/ebook/search/'+country+"/"+genre+'/'+
+  //category+'/'+page.currentPage+'/SearchWord='+inputSerch,{
+  //const response = await fetch('/ebook/search/'+category+"/"+country+'/'+
+  //genre+'/'+page.currentPage+'/SearchWord='+inputSerch,{
   try {
-    const response = await fetch('/ebook/search/'+category+"/"+country+'/'+
-      genre+'/'+page.currentPage+'/SearchWord='+inputSerch,{
+      const response = await fetch('/ebook/search/'+country+"/"+genre+'/'+
+      category+'/'+page.currentPage+'/SearchWord='+inputSerch,{
       //body : JSON.stringify(writeUserReview),
       headers: {
         'Content-Type': 'application/json',  // Content-Type 헤더 설정
