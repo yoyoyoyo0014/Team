@@ -101,7 +101,7 @@ CREATE TABLE `cart` (
 );
 
 CREATE TABLE `buy` (
-	`bu_num`	varchar(255) primary key	NOT NULL,
+	`bu_num`	int primary key auto_increment	NOT NULL,
 	`bu_uid`	varchar(45)	NOT NULL,
 	`bu_me_id`	varchar(15)	NOT NULL,
 	`bu_state`	varchar(5)	NOT NULL,
