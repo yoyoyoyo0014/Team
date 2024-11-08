@@ -156,10 +156,10 @@ function Insert() {
             {/* 이미지 파일 입력 필드 및 미리보기 추가 */}
             <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '20px', marginTop: '15px', justifyContent: 'flex-start' }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
-                <label htmlFor="postLinkFile">게시글 리스트 이미지:</label>
+                <label htmlFor="postLinkFile">게시글 썸네일 이미지:</label>
                 <input type="file" id="postLinkFile" name="postLinkFile" className="form-control" onChange={handlePostLinkChange} />
               </div>
-              {postLinkPreview && <img src={postLinkPreview} alt="게시글 리스트 이미지 미리보기" style={{ maxHeight: '150px' }} />}
+              {postLinkPreview && <img src={postLinkPreview} alt="게시글 썸네일 이미지 미리보기" style={{ maxHeight: '150px' }} />}
             </div>
 
             <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '20px', marginTop: '15px', justifyContent: 'flex-start' }}>
