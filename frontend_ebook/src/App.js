@@ -1,24 +1,48 @@
-import Home from "./pages/home.js";
+import React, { useEffect, useState } from "react";
+import { LoginProvider } from "./context/LoginContext"; // LoginContext 제공
+import { GenreProvider } from "./context/GenreContext.js";
 
+import Router from "./Router"; // Router.js 불러오기
 import Header from "./components/header.js";
 import Footer from "./components/footer.js";
 
 import * as Common from './js/common.js';
-
 import './css/default.css';
 import './css/style.css';
+import KeywordProvider from "./context/KeywordContext.js";
 
-const App = () => {
-	let root = document.querySelector('#root');
-  window.addEventListener('resize', Common.setVh(root));
-  Common.setVh(root);
+function App() {
+	let [section, setSection] = useState('');
 
-	return(
-		<div className="fix-layout">
-      <Header />
-      <Home />
-      <Footer />
-    </div>
+	const AppProvider = ({ contexts, children }) => contexts.reduce(
+		(prev, context) => React.createElement(context, {
+			children: prev
+		}),
+		children
+	)
+
+  useEffect(() => {
+
+    window.addEventListener('resize', ()=> Common.setVh());
+    Common.setVh();
+  }, []);
+
+	return (
+		<AppProvider contexts={[
+			LoginProvider,
+			GenreProvider,
+			KeywordProvider
+		]}>
+			<div className="fix-layout">
+				<Header setSection={setSection}/>
+				<main id="body">
+					<Router section={section}/>
+				</main>
+			</div>
+			
+			<Footer />
+			
+		</AppProvider>
 	);
 }
 

@@ -25,7 +25,8 @@ CREATE TABLE `member` (
 	`me_cm`	varchar(20) unique	NULL,
 	`me_entercount`	int	NULL,
 	`me_last`	datetime	NULL,
-	`me_naverId`	varchar(255)	NULL
+	`me_naverId`	varchar(255)	NULL,
+	`me_point` int NOT NULL default '0'
 );
 
 CREATE TABLE `review` (
@@ -116,10 +117,14 @@ CREATE TABLE `post` (
 	`po_content`	text	NOT NULL,
 	`po_me_id`	varchar(15)	NOT NULL,
 	`po_me_nickname`	varchar(8)	NOT NULL,
-	`po_date`	datetime	NOT NULL,
+	`po_date`	datetime	NOT NULL default now(),
 	`po_co_num`	int	NOT NULL,
 	`po_view`	int	NOT NULL default 0,
-	`po_like`	int	NOT NULL default 0
+	`po_like`	int	NOT NULL default 0,
+	`po_link`	varchar(255) NULL,
+	`po_image`	varchar(255) NULL,
+	`po_start`	date NULL,
+	`po_end`	date NULL
 );
 
 CREATE TABLE `community` (
@@ -142,13 +147,16 @@ CREATE TABLE `writer` (
 CREATE TABLE `achievenent` (
 	`ac_num`	int primary key auto_increment	NOT NULL,
 	`ac_title`	varchar(50)	NOT NULL,
-	`ac_info`	varchar(50)	NOT NULL
+	`ac_info`	varchar(50)	NOT NULL,
+	`ac_id` varchar(50) NOT NULL,
+	`ac_icon` varchar(45) NOT NULL,
 );
 
 CREATE TABLE `achievenent_List` (
 	`acl_ac_num`	int	NOT NULL,
 	`acl_me_id`	varchar(15)	NOT NULL,
-	`acl_date`	datetime	NOT NULL
+	`acl_date`	datetime	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `acl_check` varchar(2) NOT NULL DEFAULT 'X'
 );
 
 CREATE TABLE `book_List` (
@@ -369,4 +377,3 @@ ALTER TABLE `secondgenre` ADD CONSTRAINT `FK_genre_TO_secondgenre_1` FOREIGN KEY
 REFERENCES `genre` (
 	`ge_num`
 );
-

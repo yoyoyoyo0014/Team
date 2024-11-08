@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.kh.ebook.dao.ReportDAO">
+
+	<select id="selectReportType">
+		select *
+		from report_type
+	</select>
+	
+	<insert id="insertReport">
+		insert into report(rp_me_id,rp_target,rp_content,rp_rt_num, rp_id)
+		values (#{re.rp_me_id},#{re.rp_target},#{re.rp_content},#{re.rp_rt_num},#{re.rp_id})
+	</insert>
+	
+	<select id="selectReport">
+		select *
+		from report
+		where rp_id = #{reportId} and
+		rp_me_id = #{userId} and rp_target = #{targetId}
+	</select>
+	
+	<select id="selectReportList" resultType="kr.kh.ebook.model.vo.ReportVO">
+        SELECT report.*, rt_name FROM report
+		join report_type on rp_rt_num = rt_num
+		ORDER BY rp_date DESC
+        LIMIT #{pageStart}, #{perPageNum}
+    </select>
+
+    <select id="selectCountReportList" resultType="int">
+        SELECT COUNT(*) FROM report
+    </select>
+    
+</mapper>

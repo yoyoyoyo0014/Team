@@ -1,0 +1,85 @@
+@charset 'utf-8';
+
+.login-form form {
+	max-width: 400px;
+	margin: 0 auto;
+}
+
+.login-form form .input-item {padding: 0;}
+.login-form form .input-item input {padding-left: 3em;}
+.login-form form .input-item label {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 3rem;
+	height: 3rem;
+	font-size: 0;
+	transform: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.login-form form .input-item input + label::before {
+	font-size: var(--font-size);
+	font-family: var(--icon-font-family);
+}
+.login-form form .input-item input[name="me_id"] + label::before {content: '\f007';}
+.login-form form .input-item input[name="me_pw"] + label::before {content: '\f023';}
+
+.login-form form .input-item:nth-of-type(2) {top: 1em;}
+
+.login-form button[type="submit"] {
+	font-weight: 900;
+	margin: 0 auto;
+	display: block;
+	padding-left: 5em;
+	padding-right: 5em;
+	margin-top: 3em;
+}
+
+.login-menu {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 1em 0 3em;
+	color: var(--color-grey);
+}
+.login-menu a {padding: 0 1em;}
+
+.sns-login .btn {margin-top: 1em; height: 50px; display: flex; align-items: center; justify-content: center;}
+
+.btn-google {
+	background-image: url('../images/구글 로그인 버튼(1011).jpg'); /* 원하는 이미지 URL로 변경 */
+	background-size: cover; /* 이미지 크기를 버튼 크기에 맞게 조정 */
+	background-repeat: no-repeat; /* 이미지를 반복하지 않도록 설정 */
+	background-position: center; /* 이미지 중앙에 위치하도록 설정 */
+	border: none; /* 버튼의 기본 테두리 제거 */
+	height: 50px; /* 버튼 높이 설정 */
+	display: flex; /* 텍스트와 아이콘 정렬을 위해 flex 사용 */
+	align-items: center; /* 수직 중앙 정렬 */
+	justify-content: center; /* 수평 중앙 정렬 */
+}
+/* 네이버 로그인 이미지 스타일 */
+.btn-naver {
+	background-image: url('../images/네이버 로그인 버튼(1011).jpg'); /* 원하는 이미지 URL로 변경 */
+	background-size: cover; /* 이미지 크기를 버튼 크기에 맞게 조정 */
+	background-repeat: no-repeat; /* 이미지를 반복하지 않도록 설정 */
+	background-position: center; /* 이미지 중앙에 위치하도록 설정 */
+	background-color: #03C75A;
+	border: none; /* 버튼의 기본 테두리 제거 */
+	height: 50px; /* 버튼 높이 설정 */
+	display: flex; /* 텍스트와 아이콘 정렬을 위해 flex 사용 */
+	align-items: center; /* 수직 중앙 정렬 */
+	justify-content: center; /* 수평 중앙 정렬 */
+}
+.btn-kakao {
+	background-image: url('../images/kakao_login_medium_wide.png'); /* 원하는 이미지 URL로 변경 */
+	background-size: cover; /* 이미지 크기를 버튼 크기에 맞게 조정 */
+	background-repeat: no-repeat; /* 이미지를 반복하지 않도록 설정 */
+	background-position: center; /* 이미지 중앙에 위치하도록 설정 */
+	border: none; /* 버튼의 기본 테두리 제거 */
+	height: 50px; /* 버튼 높이 설정 */
+	display: flex; /* 텍스트와 아이콘 정렬을 위해 flex 사용 */
+	align-items: center; /* 수직 중앙 정렬 */
+	justify-content: center; /* 수평 중앙 정렬 */
+}

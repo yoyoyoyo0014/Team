@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.kh.ebook.dao.BookDAO">
+	
+	<!-- 책 정보 불러오기 -->
+	<select id="selectBook">
+		select book.*, group_concat(wr_name separator ' | ') as bk_writer
+		from book
+		left join writer_list
+		on bk_num = wl_bk_num
+		left join writer
+		on wr_num = wl_wr_num	
+		where bk_num = #{bookNum}
+	</select>
+	
+	<select id="searchBookCount">
+		select count(*)
+		from book
+		where 
+			bk_name LIKE CONCAT('%', #{search}, '%')
+			<choose>
+    			<when test = "country == 'domestic' ">
+    				and bk_state = '국내도서'
+    			</when>
+    			<when test = "country == 'foreign' ">
+    				and bk_state = '해외도서'
+    			</when>
+    		</choose>
+    		<if test ="genre != 0">
+    			and bk_sg_num = #{genre}
+  			</if>
+	</select>
+    
+    <select id="searchBookList">
+    	select book.*, group_concat(wr_name separator ' | ') as bk_writer
+    	from book
+        join writer_list
+		on bk_num = wl_bk_num
+		join writer
+		on wr_num = wl_wr_num
+    	where
+   		<choose>
+   			<when test = "pm.cri.country == 'domestic' ">
+   				 bk_state = '국내도서'
+   			</when>
+   			<when test = "pm.cri.country == 'foreign' ">
+   				 bk_state = '해외도서'
+   			</when>
+   			<otherwise>
+    				(bk_state ='국내도서' or  bk_state = '해외도서') 
+    		</otherwise>
+   		</choose>
+   		
+   		<if test="pm.cri.genre != 0">
+   			and bk_sg_num = #{pm.cri.genre}
+		</if>
+		<if test="pm.cri.genre != 0 and pm.cri.search != ''">and</if>
+		<if test="pm.cri.search != ''">
+			and bk_name like concat('%', #{pm.cri.search}, '%')
+		</if>
+		group by bk_num
+		order by
+   		<choose>
+ 			<when test ="pm.cri.category == 'popularity'">
+ 				bk_totalPurchase desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'latest'">
+ 				bk_date desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'orderPurchase'">
+ 				bk_totalPurchase desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'highPrice'">
+ 				bk_price desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'lowPrice'">
+ 				bk_price asc
+ 			</when>
+ 			<when test ="pm.cri.category == 'rating'">
+ 				bk_score desc
+ 			</when>
+ 			<when test ="pm.cri.category == 'review'">
+ 				bk_reviewCount desc
+ 			</when>
+    	</choose>
+  		limit #{pm.cri.pageStart},5
+    </select>
+	<select id="selectAllGenre" resultType="BookGenreVO">
+    	select * from genre
+    </select>
+    
+    <select id="selectAllSecondGenre" resultType="BookGenreVO">
+    	select sg_num as ge_num, sg_name as ge_name, sg_parent as ge_parent
+    	from secondgenre
+    	<if  test ="ge_num != 0">
+   			where sg_parent = #{ge_num}
+   		</if>
+    	
+    </select>
+	
+	<select id="reviewCount">
+		select count(*)
+		from review
+		where re_bk_num = #{bookNum}
+	</select>
+	
+	<select id="selectMyReview">
+		select *
+		from review
+		where re_me_id = #{userId} and re_bk_num = #{bookNum}
+	</select>
+	
+	<select id="selectAllMyReview" resultType="ReviewVO">
+		select *
+		from review
+		where re_me_id = #{userId}
+		order by re_date asc
+		limit #{cri.page}, #{cri.perPageNum}
+	</select>
+	
+	<select id="selectMyReviewCount" resultType="Integer">
+		select count(*) from review where re_me_id = #{userId}
+	</select>
+	
+	<select id="selectReviewList" resultType="ReviewVO">
+		select *
+		from review
+		join member on me_id = re_me_id
+		where re_bk_num = #{bookNum}
+		order by re_date asc
+		limit #{pageNum}, 5
+	</select>
+	
+	<insert id="insertReview">
+		insert into review(re_content,re_bk_num,re_star,re_me_id)
+		value(#{review.re_content},#{review.re_bk_num},#{review.re_star},#{review.re_me_id})
+	</insert>
+	
+	<select id="selectReadBook">
+		select *
+		from book_list
+		where bl_bk_num = #{bookNum} and bl_me_id = #{userId}
+	</select>
+	
+	<update id="updateReadBook">
+		update book_list
+		set bl_nowPage = #{readBook.bl_nowPage}
+		where bl_me_id = #{readBook.bl_me_id} and bl_bk_num = #{readBook.bl_bk_num}
+	</update>
+	
+	<select id="selectBestSellers" resultType="BookVO">
+		select book.*, group_concat(wr_name separator ' | ') as bk_writer
+		from book
+		join writer_list
+		on bk_num = wl_bk_num
+		join writer
+		on wr_num = wl_wr_num
+		group by bk_num
+		order by bk_totalPurchase desc limit 3
+	</select>
+	
+	<select id="selectNewBooks" resultType="BookVO">
+		select book.*, group_concat(wr_name separator ' | ') as bk_writer
+		from book
+		join writer_list
+		on bk_num = wl_bk_num
+		join writer
+		on wr_num = wl_wr_num
+		group by bk_num
+		order by bk_date desc limit 3
+	</select>
+	
+	<select id="selectMaxBookNum" resultType="int">
+		select ifnull(max(bk_num), 0) from book
+	</select>
+	
+	<update id="updateReview">
+		update review
+		set re_content = #{re.re_content},re_star = #{re.re_star}, re_date = now()
+		where re_me_id = #{re.re_me_id} and re_bk_num = #{re.re_bk_num}
+	</update>
+	
+	<delete id="deleteReview">
+		delete from review
+		where re_bk_num = #{bookNum} and re_me_id = #{id}
+	</delete>
+	
+	<update id="updateReviewCount">
+		update book
+		<choose>
+   			<when test ="operator == '+'">
+   				set bk_reviewCount = bk_reviewCount + 1 where bk_num = #{re_bk_num}
+   			</when>
+   			<when test ="operator == '-'">
+   				set bk_reviewCount = bk_reviewCount - 1 where bk_num = #{re_bk_num}
+   			</when>
+   		</choose>
+	</update>
+	
+	<update id="updateReviewScore">
+		update book
+		<choose>
+   			<when test ="operator == '+'">
+   				set bk_score = bk_score + #{re_star} where bk_num = #{re_bk_num}
+   			</when>
+   			<when test ="operator == '-'">
+   				set bk_score = bk_score - #{re_star} where bk_num = #{re_bk_num}
+   			</when>
+   		</choose>
+	</update>
+	
+	<select id="bookReviewInfo">
+		select bk_score,bk_reviewCount
+		from book
+		where bk_num = #{bookNum}
+	</select>
+	
+	<!-- 책 추가 후 해당 book객채의 bk_num 변수에 ai 값 변환 -->
+	<insert id="insertBook" useGeneratedKeys="true" keyProperty="bk.bk_num">
+		INSERT INTO book (bk_name, bk_state, bk_date, bk_sg_num, bk_plot, bk_price, bk_amount, bk_index, bk_isbn, bk_totalPage, bk_agelimit, bk_publisher)
+		VALUES(#{bk.bk_name},#{bk.bk_state},#{bk.bk_date},#{bk.bk_sg_num},#{bk.bk_plot},#{bk.bk_price},#{bk.bk_amount},#{bk.bk_index},#{bk.bk_isbn},#{bk.bk_totalPage},#{bk.bk_agelimit},#{bk.bk_publisher})
+	</insert>
+	
+	<!-- writer_list 에 작가 추가 (작가번호, 책번호, 작가 유형번호) -->
+	<insert id="insertWriterList">
+		insert into writer_list (wl_wr_num, wl_bk_num, wl_wt_num )
+		VALUES(#{wr.wl_wr_num}, #{wr.wl_bk_num}, #{wr.wl_wt_num})
+	</insert>
+	
+	<!-- 책꽂이에 구매한 책들 저장 -->
+	<insert id="insertMyBook">
+		insert book_list (bl_me_id, bl_bk_num)
+		values(#{userId}, #{bookNum})
+	</insert>
+	
+	<!-- 책꽂이에서 해당 유저의 선택된 책의 페이지 반환 (유저아이디, 책번호) -->
+	<select id="selectBookPage">
+		select bl_nowPage
+		from book_list
+		where bl_me_id = #{userId} and bl_bk_num = #{bookNum}
+	</select>
+	
+	<!-- 책 제거 (책 번호) -->
+	<delete id="deleteBook">
+		DELETE FROM book WHERE bk_num = #{bk_num}
+	</delete>
+	
+	<!-- 작가 리스트 제거 (책 번호) -->
+	<delete id="deleteWriterList">
+		DELETE FROM writer_list WHERE wl_bk_num = #{bk_num}
+	</delete>
+	<!-- 유저의 책 구매 개수 반환 -->
+	<select id="selectCountBookBuy" resultType = "int">
+		select count(*)
+		from book_list
+		where bl_me_id = #{userId}
+	</select>
+	
+	<select id="selectMyBook">
+		select * from book_list
+		join book on bl_bk_num = bk_num
+		where bl_me_id = #{userId}
+	</select>
+	
+</mapper>
