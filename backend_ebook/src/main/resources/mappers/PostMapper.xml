@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.kh.ebook.dao.PostDAO">
 	<select id="selectPostList" resultType="PostVO">
 		select * from post where po_co_num = #{co_num}
+		<choose>
+		    <when test="type == 'title'">
+		        and po_title like concat('%', #{search}, '%')
+		    </when>
+		    <otherwise>
+		        and (po_title like concat('%', #{search}, '%'))
+		    </otherwise>
+		</choose> 
 		order by po_num desc
-    	limit #{pageStart}, #{perPageNum}
-	</select>
-	<select id="selectMyPostList" resultType="PostVO">
-		select * from post where po_co_num = #{co_num} and po_me_id = #{userId}
-		order by po_num desc
-    	limit #{pageStart}, #{perPageNum}
+		limit #{pageStart}, #{perPageNum}
 	</select>
 	<select id="selectCommuniyList" resultType="CommunityVO">
 		select * from community
@@ -20,14 +21,17 @@
     	select count(*) from post where po_co_num = #{co_num} 
     </select>
     <select id="selectPost" resultType="PostVO">
-    	select * from post where po_num = #{po_num}
+    	select post.*,me_nickname as po_me_nickname from post
+    	join member
+    	on post.po_me_id = member.me_id
+    	where po_num = #{po_num}
     </select>
     <insert id="insertPost">
-    	insert into post(po_title, po_me_id, po_co_num, po_content)
-    	values(#{po_title},#{po_me_id},#{po_co_num},#{po_content})
+    	insert into post(po_title, po_me_id, po_me_nickname, po_co_num, po_content,po_start, po_end, po_link, po_image)
+    	values(#{po_title},#{po_me_id},#{po_me_nickname},#{po_co_num},#{po_content},#{po_start},#{po_end},#{po_link},#{po_image})
     </insert>
 	<update id="updatePost">
-		update post set po_title = #{po_title}, po_content = #{po_content} where po_num = #{po_num}
+		update post set po_title = #{po_title}, po_content = #{po_content}, po_start = #{po_start}, po_end = #{po_end}, po_link = #{po_link}, po_image = #{po_image} where po_num = #{po_num}
 	</update>
 	<delete id="deletePost">
 		delete from post where po_num = #{po_num}

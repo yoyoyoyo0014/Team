@@ -180,9 +180,9 @@ public class NaverService {
     // 성별 변환 메서드
     private String convertGender(String gender) {
         if ("M".equals(gender)) {
-            return "Male";
+            return "male";
         } else if ("F".equals(gender)) {
-            return "Female";
+            return "female";
         }
         return null;
     }

@@ -86,12 +86,17 @@ public class BookService {
 
 	public BookVO getRandomBook() {
 		int max = bookDao.selectMaxBookNum();
+		if(max == 0) {
+			return null;
+		}
 		Random random = new Random();
-		int rand = random.nextInt(max);
+		int rand = random.nextInt(max) + 1;
 		BookVO book = new BookVO();
 		do {
 			book = bookDao.selectBook(rand);
 		} while(book == null);
+		System.out.println("hi");
+		System.out.println(book);
 		return book;
 	}
 	
@@ -146,8 +151,12 @@ public class BookService {
 	}
 
 	public void insertBookFiles(MultipartFile epubFile, MultipartFile imgFile, int bk_num) {
-		bookDao.insertBookFiles(epubFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(epubFile.getOriginalFilename()));
-		bookDao.insertBookFiles(imgFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(imgFile.getOriginalFilename()));
+//		bookDao.insertBookFiles(epubFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(epubFile.getOriginalFilename()));
+//		bookDao.insertBookFiles(imgFile.getOriginalFilename(), bk_num, FileUploadController.getFileExtension(imgFile.getOriginalFilename()));
+	}
+
+	public BookVO bookReviewInfo(int bookNum) {
+		return bookDao.bookReviewInfo(bookNum);
 	}
 
 	public void insertMyBook(String userId, int bookNum) {

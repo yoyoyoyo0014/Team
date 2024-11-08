@@ -21,7 +21,7 @@ function BookSearch() {
   const { bo_category } = useParams();
   const { bo_page } = useParams();
   let { bo_search } = useParams();
-  const {majorGenreList, genreList} = useContext(GenreContext);
+  const {genreList} = useContext(GenreContext);
   let { keyword, setKeyword } = useContext(KeywordContext);
 
   let [bookList,setBookList] = useState([])
@@ -70,7 +70,7 @@ function BookSearch() {
      
    if(page.currentPage<=0)
       page.currentPage = 1;
-
+   console.log("검색")
    window.location.href =("/ebook/search/"+country+"/"+genre+"/"+category+"/"+page.currentPage+"/"+helpSearch+search);
   }//페이지 바꾸기
 
@@ -220,7 +220,6 @@ async function selectSearch(country,genre,category,inputSerch = '',page){
       },
     })
     const bookListData = await response.json();
-    console.log(bookListData)
     if(bookListData ==null)
       return false;
     return bookListData;

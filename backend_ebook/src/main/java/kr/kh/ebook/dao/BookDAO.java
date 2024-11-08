@@ -80,5 +80,6 @@ public interface BookDAO {
 	void insertMyBook(String userId, int bookNum);
 
 	List<BookVO> selectMyBook(String userId);
-	
+
+	BookVO bookReviewInfo(@Param("bookNum")int bookNum);
 }

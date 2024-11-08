@@ -2,7 +2,7 @@
 insert into writer_type(wt_name) values('작가'),('저자'),('옮긴이'),('그림');
 
 #커뮤니티
-insert into community(co_name) values ('공지'),('책 요청');
+insert into community(co_name) values ('공지'),('책 요청'),('이벤트'),('작가와의 만남');
 
 #신고 유형
 insert into report_type(rt_name) values('광고'),('음란'),('욕설'),('도용'),('리뷰 형식에 맞지 않음'),('기타');

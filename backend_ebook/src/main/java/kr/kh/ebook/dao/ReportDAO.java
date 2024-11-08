@@ -9,6 +9,7 @@ import kr.kh.ebook.model.vo.ReportTypeVO;
 import kr.kh.ebook.model.vo.ReportVO;
 import kr.kh.ebook.model.vo.WriterVO;
 import kr.kh.ebook.pagination.PageMaker;
+import kr.kh.ebook.pagination.ReportCriteria;
 
 
 public interface ReportDAO {
@@ -20,5 +21,8 @@ public interface ReportDAO {
 	ReportVO selectReport(@Param("userId") String userId, 
 			@Param("targetId")String targetId, 
 			@Param("reportId")String reportId);
+	
+	List<ReportVO> selectReportList(ReportCriteria cri);
+    int selectCountReportList(ReportCriteria cri);
 	
 }

@@ -70,6 +70,7 @@
       margin-top: 10px;
     }
   </style>
+
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('me_id');
@@ -115,41 +116,47 @@
       }
 
       // 사용자 ID 확인
-      if (!userId) {
-        alert("사용자 ID를 가져올 수 없습니다.");
-        return;
-      }
+  if (!userId) {
+    alert("사용자 ID를 가져올 수 없습니다.");
+    return;
+  }
 
-      console.log("사용자 ID:", userId);
+  console.log("사용자 ID:", userId);
 
-      // 서버로 닉네임 수정 요청 전송
-      fetch('/ebook/member/update-nickname', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ me_id: userId, nickname: updatedNickname })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log("응답 데이터:", data);
-        if (data.success) {
-          window.opener.setNickname(updatedNickname); // 부모 창의 닉네임을 업데이트
-          alert("닉네임이 성공적으로 변경되었습니다.");
-          window.close();
-        } else {
-          alert("닉네임 수정 실패: " + data.message);
-        }
-      })
-      .catch(error => {
-        console.error("닉네임 수정 오류:", error);
-        alert("닉네임 수정 중 오류가 발생했습니다.");
-      });
-    }
+  // 서버로 닉네임 수정 요청 전송
+  fetch('/ebook/member/update-nickname', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ me_id: userId, nickname: updatedNickname })
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error("서버 응답 실패: " + response.statusText);
+  }
+  return response.json();
+})
+.then(data => {
+  console.log("응답 데이터:", data);
+  if (data.success) {
+    window.opener.setNickname(updatedNickname); // 부모 창의 닉네임을 업데이트
+    alert("닉네임이 성공적으로 변경되었습니다.");
+    window.close();
+  } else {
+    alert("닉네임 수정 실패: " + data.message);
+  }
+})
+.catch(error => {
+  console.error("닉네임 수정 오류:", error);
+  alert("닉네임 수정 중 오류가 발생했습니다.");
+});
+
+}
   </script>
 </head>
 <body>
-  <div className="container">
+  <div class="container">
     <h3>닉네임 수정</h3>
     <hr>
     <div class="form-container">
