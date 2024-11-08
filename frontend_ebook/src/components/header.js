@@ -62,9 +62,6 @@ const Header = ({setSection}) => {
 	const UserMenu = () => {
         const { isLoggedIn, user, setIsLoggedIn, setUser } = useContext(LoginContext);
     
-        console.log("isLoggedIn in UserMenu:", isLoggedIn);
-        console.log("user in UserMenu:", user);
-    
         if (isLoggedIn !== true) {
             return (
                 <ul>
