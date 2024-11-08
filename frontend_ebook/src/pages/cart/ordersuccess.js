@@ -20,7 +20,7 @@ const OrderSuccess = () => {
             <p className="price">{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(item.bk_price)}</p>
           </li>);
         })}
-				<Link to="/">내 책꽂이로</Link>
+				<Link to="/mypage/mybooks">내 책꽂이로</Link>
 			</div>
 		</section>
 	</>)
