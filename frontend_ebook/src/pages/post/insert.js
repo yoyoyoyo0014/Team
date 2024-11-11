@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { LoginContext } from '../../context/LoginContext';
 
 function Insert() {
   const { co_num } = useParams();
+  const {user} = useContext(LoginContext);
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
-  const [writer, setWriter] = useState(() => localStorage.getItem('writer') || 'admin123');
-  const [nickname, setNickname] = useState("관리자");
+  const [writer, setWriter] = useState(user?.me_id);
+  const [nickname, setNickname] = useState(user?.me_nickname);
   const [content, setContent] = useState("");
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
@@ -46,7 +48,8 @@ function Insert() {
 
   const btnClick = (e) => {
     e.preventDefault(); // 기본 폼 제출 방지
-
+    setContent(content.replace(/(?:\r\n|\r|\n)/g, '<br/>'));
+    console.log(content);
     if (!title) {
       alert('제목을 입력하세요.');
       return;
@@ -145,7 +148,7 @@ function Insert() {
               style={{ height: '400px' }}
               placeholder="내용을 입력하세요."
               onChange={e=>{
-                setContent(e.target.value)
+                setContent(e.target.value);
               }}
               value={content}></textarea>
           </div>

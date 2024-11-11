@@ -96,14 +96,9 @@ function Detail() {
       )}
       {co_num === '2' && (
         <>
-        <div className="form-group">
-          <label htmlFor="po_me_nickname">작성자</label>
-          <input type="text" id="po_me_nickname" className="form-control" value={post.po_me_nickname || ''} readOnly />
-        </div>
-        <div className="form-group">
-          <label htmlFor="po_date">작성일</label>
-          <input type="text" id="po_date" className="form-control" value={formatDate(post.po_date) || ''} readOnly />
-        </div>
+        <p className="txt-center">
+          <strong strong>{post.po_me_nickname}</strong> | {formatDate(post.po_date)}
+        </p>
         </>
       )}
       {(co_num === '3' || co_num === '4') && (
@@ -116,14 +111,17 @@ function Detail() {
         
       )}
       {(co_num !== '3' && co_num !== '4') && (
-        <p>{post.po_content}</p>
+        <p>{post.po_content.split('<br/>').join("\r\n")}</p>
       )}
 
       <div className="button-container" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2em'}}>
         <Link className="btn btn-point" to={`/post/list/${co_num}`}>목록으로</Link>
 
         <div style={{ display: 'flex', gap: '10px'}}>
-          {user?.me_authority === 'ADMIN' && co_num == 3 ? <Link className="btn btn-dark" to={`/post/update/${po_num}`}>수정하기</Link> : ''}
+          {user?.me_authority === 'ADMIN' && co_num == 3 ? <Link className="btn btn-point" to={`/post/update/${po_num}`}>수정하기</Link> : ''}
+          {user?.me_authority === 'ADMIN' && co_num == 3 ? <Link className="btn btn-dark" onClick={handleDelete}>삭제하기</Link> : ''}
+
+          {user?.me_authority === 'USER' && co_num != 3 ? <Link className="btn btn-point" to={`/post/update/${po_num}`}>수정하기</Link> : ''}
           {user?.me_authority === 'USER' && co_num != 3 ? <Link className="btn btn-dark" onClick={handleDelete}>삭제하기</Link> : ''}
         </div>
       </div>
