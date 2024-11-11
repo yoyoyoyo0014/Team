@@ -230,7 +230,8 @@ const List = () => {
         </div>
 
       <div className="insert">
-        {user?.me_authority === 'admin' ? <Link className="btn btn-outline-primary" style={{ marginBottom: '20px', float: 'right' }} to={`/post/insert/${co_num}`}>글쓰기</Link> : ''}
+        {user?.me_authority === 'ADMIN' && co_num == 3 ? <Link className="btn btn-outline-primary" style={{ marginBottom: '20px', float: 'right' }} to={`/post/insert/${co_num}`}>이벤트 추가</Link> : ''}
+        {user?.me_authority === 'USER' && co_num != 3 ? <Link className="btn btn-outline-primary" style={{ marginBottom: '20px', float: 'right' }} to={`/post/insert/${co_num}`}>글쓰기</Link> : ''}
       </div>
       <div style={{ marginTop: '50px'}}>
         {co_num === '3' || co_num === '4' ? renderCardList() : renderTableList()}
