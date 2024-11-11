@@ -116,7 +116,7 @@ const OrderPage = () => {
     });
   };
 	
-	return(<form onSubmit={requestPay}>
+	return(<form id="order" onSubmit={requestPay}>
     <section className="selected-books">
       <div className="section-title">
         <h2>주문하기</h2>
@@ -156,9 +156,9 @@ const OrderPage = () => {
               placeholder={Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(user?.me_point)}/>
           </dd>
         </dl>
-      </div>
 
-      <Button type="submit" cls="btn btn-point" text="결제하기"/>
+        <Button type="submit" cls="btn btn-point full" text="결제하기"/>
+      </div>
     </section>
 	</form>)
 }

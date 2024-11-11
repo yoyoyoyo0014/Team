@@ -7,7 +7,7 @@ p.error {top: 4em; left: 0;}
 	left: 0;
 	top: 0;
 }
-#cart {position: relative; display: flex; justify-content: space-between; align-items: flex-start; gap: 5em; padding-top: 3em;}
+#cart {position: relative; display: flex; justify-content: space-between; align-items: flex-start; gap: 3em; padding-top: 3em;}
 .cart-item-wrapper {width: 100%;}
 .cart-item {
 	position: relative;
@@ -42,12 +42,6 @@ p.error {top: 4em; left: 0;}
 .total hr {margin: 1em 0;}
 .total .btn {margin-top: 1em; font-weight: 900; display: block; text-align: center; font-size: var(--big-font-size);}
 
-@media all and (max-width: 768px) {
-	#cart {flex-direction: column; gap: 2em;}
-	.cart-item .book-img {width: 50px;}
-	.total {width: 100%;}
-}
-
 /* order page */
 .selected-books {margin-bottom: 2em;}
 
@@ -61,3 +55,28 @@ p.error {top: 4em; left: 0;}
 
 .buy-list li:first-of-type {padding-top: 0;}
 .buy-list li:last-of-type {border: 0; padding-bottom: 0;}
+
+#order {
+	display: flex;
+	justify-content: space-between;
+	gap: 3em;
+}
+#order .selected-books {width: 100%;}
+#order .payment dl {padding-bottom: 1em;}
+#order .payment dl input[type="text"] {background: #fff; text-align: right;}
+#order .payment .btn-point {
+	margin-top: 1em; font-weight: 900; display: block; text-align: center; font-size: var(--big-font-size);
+}
+
+@media all and (max-width: 768px) {
+	#cart, #order {flex-direction: column; gap: 2em;}
+	.cart-item .book-img {width: 50px;}
+	.total {width: 100%;}
+}
+
+#success ul li {border-bottom: 1px solid var(--color-grey); padding: 2em 0;}
+#success ul li:first-of-type {padding-top: 0;}
+#success ul li:last-of-type {border: 0; padding-bottom: 0;}
+#success ul li .price {text-align: right;}
+
+#success a {float: right; margin-top: 2em;}

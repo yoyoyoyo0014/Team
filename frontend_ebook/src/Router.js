@@ -29,6 +29,8 @@ import BookInsert from './components/book/bookInsert.js';
 import AdminIndex from './admin/adminIndex';  // adminIndex 컴포넌트 import
 import MemberManagement from "./admin/memberManagement.js";
 
+import OrderSuccess from "./pages/cart/ordersuccess.js";
+
 import List from './pages/post/list';
 import Detail from "./pages/post/detail.js";
 import Update from "./pages/post/update.js";
@@ -93,7 +95,7 @@ function Router({section}) {
 			<Route path="/post/update/:po_num" element={isLoggedIn ? <Update/> : <Navigate to="/login" />} />
 			<Route path="/post/insert/:co_num" element={isLoggedIn ? <Insert/> : <Navigate to="/login" />} />
 
-      <Route path="/order/success" element={<OrderSuccess />} />
+      <Route path="/order/success" element={isLoggedIn ? <OrderSuccess/> : <Navigate to="/login" />}/>
     </Routes>
   );
 }

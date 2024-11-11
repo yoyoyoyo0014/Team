@@ -108,10 +108,9 @@ function Detail() {
       )}
       {(co_num === '3' || co_num === '4') && (
         <div className="form-group">
-          <div>
-            <label>이벤트 기간</label>
-            <input type="text" className="form-control" value={`${post.po_start} ~ ${post.po_end}`} readOnly style={{marginBottom: '20px'}}/>
-          </div>
+          <p className='txt-center' style={{padding: '1em 0'}}>
+            <strong>이벤트 기간</strong> {post.po_start} ~ {post.po_end}
+          </p>
           <img src={`${post.po_image}`} alt="첨부 이미지" style={{ display: 'block', margin: '0 auto', maxWidth: '100%', height: 'auto' }}/>
         </div>
         
