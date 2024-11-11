@@ -89,7 +89,7 @@ const Header = ({setSection}) => {
                         <li>로딩 중...</li>
                     ) : (
                         <>
-                            {user.me_authority === 'admin' ? (
+                            {user.me_authority === 'ADMIN' ? (
                                 <li><Link to="/admin">관리자 페이지</Link></li>
                             ) : (
                                 <>

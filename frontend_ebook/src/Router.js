@@ -31,12 +31,9 @@ import MemberManagement from "./admin/memberManagement.js";
 
 import OrderSuccess from "./pages/cart/ordersuccess.js";
 
-import List from './pages/post/list';
 import Detail from "./pages/post/detail.js";
 import Update from "./pages/post/update.js";
 import Insert from "./pages/post/insert.js";
-
-import OrderSuccess from "./pages/cart/ordersuccess.js";
 
 function Router({section}) {
 	const { isLoggedIn } = useContext(LoginContext);
@@ -90,7 +87,7 @@ function Router({section}) {
 
       <Route path="/request" element={<PostList />} />
 
-      <Route path="/post/list/:co_num" element={<List />} />
+      <Route path="/post/list/:co_num" element={<PostList />} />
 			<Route path="/post/detail/:co_num/:po_num" element={<Detail />} />
 			<Route path="/post/update/:po_num" element={isLoggedIn ? <Update/> : <Navigate to="/login" />} />
 			<Route path="/post/insert/:co_num" element={isLoggedIn ? <Insert/> : <Navigate to="/login" />} />

@@ -13,11 +13,6 @@ function AdminIndex() {
 							<Link to="/admin/member-management">
 								<Button type="button" text="회원 관리" cls="btn btn-admin full" />
 							</Link>
-                <Button 
-								type="button" 
-								text="도서 관리" 
-								cls="btn btn-admin full" 
-								click={() => alert("도서 관리")} />
             </div>
         </div>
     );
