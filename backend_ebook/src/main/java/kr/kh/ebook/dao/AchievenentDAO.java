@@ -13,4 +13,6 @@ public interface AchievenentDAO {
 	List<AchievenentVO> getUserAchivement(String userId);
 
 	void insertAch(int achNum, String me_id);
+
+	int selectAchCount(String userId);
 }

@@ -20,7 +20,7 @@ export function AchievenentEvent() {
       setAchList(res.data.myAchList);
       // if(achList.length === 0) setModalIsOpen(false);
     });
-  }, [setAchList]); //처음 시작할 때
+  }, [achList]); //처음 시작할 때
 
   return (
     <Modal

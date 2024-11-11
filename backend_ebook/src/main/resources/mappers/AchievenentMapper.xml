@@ -25,4 +25,7 @@
 		insert achievenent_list(acl_ac_num, acl_me_id)
 		values(#{achNum}, #{me_id})
 	</update>
+	<select id="selectAchCount">
+		select count(*) from achievenent_list where acl_me_id = #{me_id}
+	</select>
 </mapper>

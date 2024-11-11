@@ -30,4 +30,9 @@ public class AchievenentService {
 	public void insertAch(int achNum, String me_id) {
 		achDao.insertAch(achNum, me_id);
 	}
+
+	public int selectAchCount(String userId) {
+		return achDao.selectAchCount(userId);
+	}
+
 }

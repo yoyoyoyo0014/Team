@@ -85,6 +85,27 @@ const MypageIndex = () => {
       })
 	}
 
+	const loadCnt = () => {
+		const options = {
+			url: '/mypage',
+			method:'post',
+			header: {
+				'Accept': 'application/json',
+				'Content-Type': "'application/json';charset=UTP-8'"
+			},
+			body: {
+				userId: user?.me_id
+			}
+		}
+		axios(options)
+      .then(res => {
+				console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+	}
+
 	function pageChange(num, table){
 		if(table === '/review/selectMyReview/' + user?.me_id + '/') {
 			page.currentPage = num;
@@ -99,11 +120,9 @@ const MypageIndex = () => {
 
 	useEffect(() => {
 		loadMyList('/review/selectMyReview/' + user?.me_id + '/');
-	}, [setMyReview])
-
-	useEffect(() => {
 		loadMyList('/post/list/2/' + user?.me_id + '/');
-	}, [setMyRequest])
+		loadCnt();
+	}, []);
 
 	const fetchNickname = async () => {
 		try {

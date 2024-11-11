@@ -44,7 +44,7 @@ function BookList({bookList}) {
                 <h3 className="title"><Link to={"/ebook/selectBook/" + item.bk_num}>{item.bk_name}</Link></h3>
                 <p className="writer">{item.bk_writer}</p>
                 <strong className="price">{Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(item.bk_price)}</strong>
-                <p>{item.bk_plot.lengt > 200 ? item.bk_plot.slice(0, 200) + '...' : item.bk_plot}</p>
+                <p style={{whiteSpace: 'pre-line'}}>{item.bk_plot.length > 200 ? item.bk_plot.slice(0, 200).split('<br/>').join("\r\n") + '...' : item.bk_plot.split('<br/>').join("\r\n")}</p>
                 <Button text="바로 구매" cls="btn btn-point"/>
                 <Button text="장바구니" click={() => {addCart(item.bk_num)}} cls="btn btn-dark"/>                
               </div>

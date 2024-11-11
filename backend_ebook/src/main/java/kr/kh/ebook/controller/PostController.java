@@ -210,11 +210,6 @@ public class PostController {
         }
     }
 
-
-
-
-
-
     @GetMapping("/post/detail/{co_num}/{po_num}")
     public HashMap<String, Object> postDetail(@PathVariable int po_num, @PathVariable int co_num) {
         HashMap<String, Object> map = new HashMap<>();
