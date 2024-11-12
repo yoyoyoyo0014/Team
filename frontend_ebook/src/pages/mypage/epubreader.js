@@ -65,6 +65,7 @@ const EpubReader = () => {
             }
           });
         }
+        saveCurrentPage();
       } catch (error) {
         console.error("EPUB 책 로드 중 오류:", error);
       }
@@ -116,17 +117,26 @@ const EpubReader = () => {
       localStorage.setItem('currentPage', newPageNumber);
     }
   };
-
   
   const progress = totalPages > 0 ? ((currentPage + 1) / totalPages) * 100 : 0;
 
+  const saveCurrentPage = () => {
+    console.log(currentPage + 1);
+  }
+
   return (
-    <div>
+    <>
       <div ref={viewerRef} style={{ width: '100%', height: '600px' }} />
       <div className="book-paging">
-        <Button cls="btn" click={goToPrevPage} disabled={currentPage <= 0} text="이전"/>
+        <Button cls="btn" click={() => {
+          goToPrevPage();
+          saveCurrentPage();
+        }} disabled={currentPage <= 0} text="이전"/>
         <span>{currentPage + 1} / {totalPages}</span>
-        <Button cls="btn" click={goToNextPage} disabled={currentPage >= totalPages - 1} text="다음"/>
+        <Button cls="btn" click={() => {
+          goToNextPage();
+          saveCurrentPage();
+        }} disabled={currentPage >= totalPages - 1} text="다음"/>
       </div>
       {/* <p>{progress.toFixed(2)}%</p> */}
       <input
@@ -135,10 +145,13 @@ const EpubReader = () => {
         min="0" 
         max={totalPages - 1} 
         value={currentPage}
-        onChange={handleSliderChange}
+        onChange={(e) => {
+          handleSliderChange(e);
+          saveCurrentPage();
+        }}
         style={{ width: '100%' }}
       />
-    </div>
+    </>
   );
 };
 

@@ -1,8 +1,8 @@
 import {Link,useParams} from 'react-router-dom';
 import Slide from '../slide';
-import eventLink1 from '../../images/이벤트_링크_01.png';
-import eventLink2 from '../../images/이벤트_링크_02.png';
-import eventLink3 from '../../images/이벤트_링크_03.png';
+import eventLink1 from '../../images/event1.jpg';
+import eventLink2 from '../../images/event2.jpg';
+import eventLink3 from '../../images/event3.jpg';
 
 const EventSection = () => {
 	const { co_num } = useParams();

@@ -19,12 +19,12 @@ const Main = ({section}) => {
 	const location = useLocation();
 
 	useEffect(() => {
-    fetch('/main2')
+    fetch('/post/list/1')
       .then((res) => res.json())
       .then(res=>{
-				if (res.postList) {
-					console.log(res.postList)
-					var tmp = res.postList.map((item) => {
+				if (res.list) {
+					console.log(res.list)
+					var tmp = res.list.map((item) => {
 						var date = new Date(item.po_date).toLocaleDateString();
 						item = { ...item, date };
 						return item;
@@ -78,41 +78,27 @@ const Main = ({section}) => {
 			</section>
 			
 			<EventSection/>
-			<div id="notice" style={{ margin: '2em 0' }}>
+			<div id="notice" style={{ margin: '2em 0 4em' }}>
 				<div className="section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '10px' }}>
 					<h2>공지사항</h2>
-					<Link to={`/post/list/${co_num || 1}`} className="notice-link">
-						<strong>더보기</strong>
-					</Link>
+					<Link to={`/post/list/${co_num || 1}`} className="notice-link">더보기</Link>
 				</div>
 
+				<ul>
 				{list && list.length > 0 ? (
-					<table className="article-table" style={{ textAlign: 'center', width: '100%', borderCollapse: 'collapse' }}>
-						<thead style={{ color: 'gray', borderBottom: '1px solid gray' }}>
-							<tr>
-								<th style={{ width: '80%' }}>제목</th>
-								<th style={{ width: '15%' }}>작성일</th>
-							</tr>
-						</thead>
-						<tbody>
-							{list.slice(0, 3).map((item, index) => (
-								<tr key={item.po_num || index} style={{ height: '75px', borderBottom: '1px solid lightgray' }}>
-									<td style={{ textAlign: 'left', cursor: 'pointer', textDecoration: hover === index ? 'underline' : 'none' }}
-										onClick={() => navigate(`/post/detail/${co_num || 1}/${item.po_num}`)}
-										onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>
-										{item.po_title}
-									</td>
-									<td>{item.date}</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
+					list.slice(0, 3).map((item, index) => (
+						<li key={item.po_num || index}>
+							<Link to={`/post/detail/${co_num || 1}/${item.po_num}`}>
+								<strong>{item.po_title}</strong>
+								<span>{item.date}</span>
+							</Link>
+						</li>
+					))
 				) : (
-					<p>공지사항이 없습니다.</p>
+					<li><p>공지사항이 없습니다.</p></li>
 				)}
+				</ul>
 			</div>
-
-			<br/>	
 			
 			<TodayBook book={book}/>
 		</div>

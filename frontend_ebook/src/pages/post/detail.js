@@ -118,11 +118,11 @@ function Detail() {
         <Link className="btn btn-point" to={`/post/list/${co_num}`}>목록으로</Link>
 
         <div style={{ display: 'flex', gap: '10px'}}>
-          {user?.me_authority === 'ADMIN' && co_num == 3 ? <Link className="btn btn-point" to={`/post/update/${po_num}`}>수정하기</Link> : ''}
-          {user?.me_authority === 'ADMIN' && co_num == 3 ? <Link className="btn btn-dark" onClick={handleDelete}>삭제하기</Link> : ''}
+          {user?.me_authority === 'ADMIN' ? <Link className="btn btn-point" to={`/post/update/${po_num}`}>수정하기</Link> : ''}
+          {user?.me_authority === 'ADMIN' ? <Link className="btn btn-dark" onClick={handleDelete}>삭제하기</Link> : ''}
 
-          {user?.me_authority === 'USER' && co_num != 3 ? <Link className="btn btn-point" to={`/post/update/${po_num}`}>수정하기</Link> : ''}
-          {user?.me_authority === 'USER' && co_num != 3 ? <Link className="btn btn-dark" onClick={handleDelete}>삭제하기</Link> : ''}
+          {user?.me_authority === 'USER' && co_num != 3 && co_num != 1 ? <Link className="btn btn-point" to={`/post/update/${po_num}`}>수정하기</Link> : ''}
+          {user?.me_authority === 'USER' && co_num != 3 && co_num != 1 ? <Link className="btn btn-dark" onClick={handleDelete}>삭제하기</Link> : ''}
         </div>
       </div>
     </div>

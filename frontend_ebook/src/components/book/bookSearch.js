@@ -72,7 +72,6 @@ function BookSearch() {
      
     if(page.currentPage<=0)
       page.currentPage = 1;
-    console.log("검색");
 
     navigate("/ebook/search/" + country + "/" + genre + "/" + category + "/" + page.currentPage + "/" + helpSearch + search);
   }//페이지 바꾸기
@@ -126,9 +125,9 @@ function BookSearch() {
 		</nav>
     <br/>
     <div>
-      <div className="search-form" style={{display: 'flex', gap: '2em'}}>
+      <div className="search-form" style={{display: 'flex', gap: '1em'}}>
         <Input cls="frm-input" value={keyword} type="text" change={e=>setKeyword(e)} placeholder="검색칸"/>
-        <Button text={'검색'} cls="btn btn-point" type={"submit"} onClick = {()=>{changePage(1)}}/>
+        <Button text={<i className="fa-solid fa-magnifying-glass"></i>} cls="btn btn-point" type={"submit"} onClick = {()=>{changePage(1)}}/>
       </div>
       <br/>
       <div>
